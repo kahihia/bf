@@ -1,0 +1,7 @@
+.idea
+
+.env
+node_modules
+bower_components
+
+/blackfriday/settings/local.py

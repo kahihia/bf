@@ -1,0 +1,6 @@
+{
+    "name": "blackfriday",
+    "dependencies": {
+        "bower": "*"
+    }
+}

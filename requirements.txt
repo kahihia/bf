@@ -1,0 +1,7 @@
+psycopg2 ~= 2.6.0
+
+django ~= 1.10.0
+django-compressor ~= 2.1.0
+
+djangorestframework ~= 3.4.0
+django-rest-swagger <= 2.0.0
