@@ -5,6 +5,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^users/', include('apps.users.urls', namespace='users')),
+    url(r'^advertisers/', include('apps.advertisers.urls', namespace='advertisers')),
 
     url(r'^api/', include('api', namespace='api')),
 
