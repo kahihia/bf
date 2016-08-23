@@ -1,0 +1,29 @@
+.main-merchants-row
+	clearfix()
+	margin: 0 -15px 30px
+
+	&__merchants
+		padding: 0 15px
+
+		.party-carousel
+			.carousel__pager
+				text-align: right
+
+	&__banner
+		display: none
+		padding: 16px 15px 0
+
+		img
+			max-width: 100%
+			height: auto
+
+	+above(768px)
+		.main-merchants-row
+			&__merchants
+				float: left
+				width: 77%
+
+			&__banner
+				display: block
+				float: right
+				width: 23%

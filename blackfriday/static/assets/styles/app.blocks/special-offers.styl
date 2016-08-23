@@ -1,0 +1,54 @@
+.special-offers
+	text-align: center
+
+	+above(768px)
+		text-align: left
+
+	&__item
+		text-align: left
+		margin-bottom: 35px
+		position: relative
+
+	&__banner
+		display: block
+
+	&__link
+		display: block
+		padding-bottom: 57.47%
+
+		&:focus
+		&:hover
+			text-decoration: none
+
+	&__shop
+		display: inline-block
+		position: relative
+		height: 29px
+		line-height: 25px
+		padding: 0 17px 0 85px
+		color: #494949
+		border: 1px solid #eee
+		border-radius: 0 0 3px 3px
+		white-space: nowrap
+
+		&:hover
+			text-decoration: none
+
+		&:after
+			content: ''
+			display: inline-block
+			width: 6px
+			height: 9px
+			background: url(/static/icons/special-offers-right.png) 0 0 no-repeat
+			margin-left: 4px
+
+	&__logo
+		display: block
+		position: absolute
+		bottom: -1px
+		left: -1px
+		border-radius: 3px
+		height: auto
+		max-width: 69px
+		max-height: 42px
+		background-color: #fff

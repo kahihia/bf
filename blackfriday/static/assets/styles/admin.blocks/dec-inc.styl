@@ -1,0 +1,52 @@
+.dec-inc
+	control = 26px
+	display: inline-block
+	position: relative
+	padding: 0 control
+
+	&__control
+		display: block
+		position: absolute
+		top: 0
+		cursor: pointer
+		width: control
+		height: control
+
+		&::after
+			content: ''
+			display: block
+			width: 16px
+			height: 16px
+			position: absolute
+			top: 50%
+			left: 50%
+			transform: translate(-50%, -50%)
+
+		&_disabled
+			display: none
+
+		&_type_dec
+			left: 0
+
+			&::after
+				background: url(/static/icons/admin/icon_name_dec-inc__dec.png)
+
+			&:hover
+				&::after
+					background: url(/static/icons/admin/icon_name_dec-inc__dec_hover.png)
+
+		&_type_inc
+			right: 0
+
+			&::after
+				background: url(/static/icons/admin/icon_name_dec-inc__inc.png)
+
+			&:hover
+				&::after
+					background: url(/static/icons/admin/icon_name_dec-inc__inc_hover.png)
+
+	&__value
+		width: 35px
+		font-size: 13px
+		color: #666
+		text-align: right

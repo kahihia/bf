@@ -1,0 +1,25 @@
+.akit-copy
+	pt = 10px
+	pl = 60px
+	color: #909090
+	font-size: 11px
+	line-height: 1.2
+	text-align: left
+	width: 215px
+	padding-top: pt
+	padding-left: pl
+	overflow: hidden
+	display: inline-block
+
+	+above(768px)
+		color: #666
+		width: 150px
+		font-size: 10px
+
+	&:hover
+		text-decoration: none
+
+	&__logo
+		float: left
+		margin-top: -(pt)
+		margin-left: -(pl)

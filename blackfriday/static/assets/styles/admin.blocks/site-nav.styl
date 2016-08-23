@@ -1,0 +1,66 @@
+.site-nav
+	&__simple-menu
+		{}
+
+	.simple-menu__item
+		border-bottom: 1px solid #292c37
+
+		&.is-active
+			background-color: #1c1f29
+
+			.simple-menu__link
+				color: #fff
+
+				> span
+					color: #5f6366
+
+	.simple-menu__link
+		color: #b6bfc6
+		font-size: 17px
+		display: block
+		padding: 10px 10px 10px 58px
+		transition: all ease 0.15s
+
+		&:hover
+		&:focus
+			color: #fff
+			background-color: rgba(255, 255, 255, 0.025)
+
+	.simple-submenu
+		img
+			width: 35px
+			height: auto
+			background-color: #fff
+			float: left
+
+		span
+			display: block
+			margin-left: 45px
+
+	.simple-submenu__item
+		&.is-active
+			background-color: #14161d
+
+			.simple-submenu__link
+				color: #fff
+
+	.simple-submenu__link
+		color: #fff
+		font-size: 17px
+		line-height: 1.2
+		display: block
+		padding: 10px 10px 10px 58px
+
+	&__action
+		display: block
+		padding: 1px 10px 19px 58px
+		font-size: 13px
+		color: #b2bac1
+		transition: all ease 0.15s
+
+		&:hover
+		&:focus
+			color: #fff
+
+		.icon
+			margin: -3px 3px 0 0

@@ -1,0 +1,38 @@
+.vip-plan
+	&__title
+		height: 45px
+		padding-top: 5px
+		text-align: center
+
+	&__name
+		font-size: 18px
+		font-weight: bold
+		color: #ddb070
+		position: relative
+
+		&::before
+			content: ''
+			display: block
+			width: 14px
+			height: 12px
+			background: url(/static/icons/admin/icon_name_vip-plan-name.png)
+			position: absolute
+			bottom: 100%
+			left: 50%
+			margin-bottom: -2px
+			transform: translate(-50%, 0)
+
+	&__content
+		text-align: center
+		background-color: #fafdff
+		padding: 80px 10px 20px
+
+		.icon
+			margin-bottom: 20px
+
+	&__desc
+		font-size: 13px
+		color: #666
+
+	&__link
+		margin-top: 10px

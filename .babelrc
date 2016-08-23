@@ -1,0 +1,12 @@
+{
+  "presets": [
+    "es2015",
+    "stage-1",
+    "react"
+  ],
+  "plugins": [
+    "add-module-exports",
+    "transform-es3-property-literals",
+    "transform-es3-member-expression-literals"
+  ]
+}

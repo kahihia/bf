@@ -1,0 +1,110 @@
+.category-tabs
+	.tabs-navigation
+		margin-bottom: 30px
+		border-bottom: none
+
+		.tabs-menu
+			clearfix()
+			list-style-type: none
+			display: inline-block
+			margin: 0
+			padding: 0
+			border: 1px solid #e0e0e0
+			border-radius: 3px
+
+		.tabs-menu-item
+			float: left
+			user-select: none
+
+			&:first-child.is-active
+				box-shadow: inset -1px 0 0 #e5e5e8, inset -2px 0 0 #eaeaed
+
+			&.is-active
+				box-shadow: inset 1px 0 0 #e5e5e8, inset 2px 0 0 #eaeaed
+				background-color: #f3f3f5
+
+				> a:focus
+				> a:hover
+				> a
+					color: #000
+
+					span
+						border-bottom: 1px dotted transparent
+
+			> a
+				display: block
+				cursor: pointer
+				margin-right: 0
+				border-radius: 0
+				padding: 4px 20px
+				text-decoration: none
+				font-weight: bold
+				font-size: 19px
+
+				span
+					border-bottom: 1px dotted
+
+			& + .tabs-menu-item
+				border-left: 1px solid #dddde0
+
+	.tab-panel
+		display: none
+
+		&.is-active
+			display: block
+
+	.banner-list
+		clearfix()
+		margin: 0 -15px
+
+		&__item
+			float: left
+			padding: 0 15px
+			width: 100%
+
+	.product-list
+		clearfix()
+		margin: 0 -15px
+
+		&__item
+			float: left
+			padding: 0 11px
+			width: 100%
+
+	// Banners media
+	+above(504px)
+		.banner-list__item
+			width: 50%
+
+	+above(768px)
+		.banner-list__item
+			width: 50%
+
+	+above(992px)
+		.banner-list__item
+			width: 50%
+
+	+above(1200px)
+		.banner-list__item
+			width: 50%
+
+	// Goods media
+	+above(420px)
+		.product-list__item
+			width: 50%
+
+	+above(608px)
+		.product-list__item
+			width: 33.33333333333333%
+
+	+above(768px)
+		.product-list__item
+			width: 25%
+
+	+above(992px)
+		.product-list__item
+			width: 25%
+
+	+above(1200px)
+		.product-list__item
+			width: 20%

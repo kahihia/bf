@@ -1,0 +1,101 @@
+.partners-carousel
+	margin-bottom: 2px
+	position: relative
+
+	.carousel__content
+		box-shadow: 0 0 0 1px #efefef
+
+	&:hover
+		.carousel__prev
+		.carousel__next
+			&:after
+				opacity: 0.25
+
+	.carousel__pager
+		text-align: right
+		margin-top: 8px
+
+	.carousel__page
+		display: inline-block
+		text-align: center
+		width: 16px
+
+		&::after
+			content: ''
+			display: inline-block
+			width: 8px
+			height: 8px
+			border-radius: 50%
+			background-color: #e4e5e6
+			transition: background-color 0.15s ease
+
+		&.is-active
+			&::after
+				background-color: #0089ff
+
+		&:hover
+			&::after
+				background-color: #83c6ff
+
+	.carousel.is-pager
+		.carousel__prev
+		.carousel__next
+			bottom: 28px
+
+	controlWidth = 26px
+	.carousel__prev
+	.carousel__next
+		position: absolute
+		top: 0
+		bottom: 0
+		width: controlWidth
+
+		&:hover
+			&:after
+				opacity: 1
+
+		&:before
+			content: ''
+			display: block
+			position: absolute
+			transform: translate(0, -50%)
+			top: 50%
+			width: $carousel_nav_bg_next_width
+			height: $carousel_nav_bg_next_height
+
+		&:after
+			transition: opacity ease 0.15s
+			opacity: 0.1
+			content: ''
+			display: block
+			position: absolute
+			transform: translate(0, -50%)
+			top: 50%
+			width: $carousel_nav_next_width
+			height: $carousel_nav_next_height
+
+	.carousel__prev
+		left: -13px
+
+		&:before
+			sprite $carousel_nav_bg_prev
+			left: 12px
+
+		&:after
+			sprite $carousel_nav_prev
+			left: 0
+
+	.carousel__next
+		right -13px
+
+		&:before
+			sprite $carousel_nav_bg_next
+			right: 12px
+
+		&:after
+			sprite $carousel_nav_next
+			right: 0
+
+	.item
+		display: block
+		padding: 13px

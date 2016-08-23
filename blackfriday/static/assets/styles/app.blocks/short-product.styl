@@ -1,0 +1,108 @@
+.short-product
+	pt = 15px
+	pr = 10px
+	padding: pt pr
+	margin-bottom: 25px
+	border: 1px solid #e8e8e8
+	border-radius: 3px
+	position: relative
+	transition: border-color ease 0.15s
+
+	&__link
+		display: block
+
+		&
+		&:focus
+		&:hover
+			text-decoration: none
+
+	&__preview
+		width: 100%
+		height: 150px
+		line-height: 150px
+		text-align: center
+		margin-bottom: 10px
+
+		img
+			display: inline-block
+			max-height: 100%
+
+	&__name
+		display: block
+		color: #242424
+		line-height: 1.1
+		height: (2 * @line-height)em
+		margin-bottom: 7px
+		transition: color ease 0.15s
+		overflow: hidden
+
+	&__cat
+		font-size: 13px
+		line-height: 1.1
+		height: (@line-height)em
+		color: #9a9a9a
+		margin-bottom: 7px
+		text-overflow: ellipsis
+		white-space: nowrap
+		overflow: hidden
+
+	&__price
+		lineHeight = 1
+		padding-top: 6px
+		text-align: left
+
+		.price
+			white-space: nowrap
+			word-spacing: -0.1em
+			line-height: lineHeight
+
+			&__cost
+				{}
+
+			&__currency
+				margin-left: 0.15em
+
+		.price_theme_normal
+			font-size: 16px
+			height: (lineHeight)em
+			color: #242424
+
+			.price__cost
+				font-weight: bold
+
+			.price__currency
+				{}
+
+		.price_old
+			display: block
+			font-size: 14px
+			height: (lineHeight)em
+			color: #ff1855
+			text-decoration: none
+			margin-bottom: 3px
+
+			.price__cost
+				text-decoration: line-through
+
+			.price__currency
+				{}
+
+	&__shop
+		position: absolute
+		bottom: pt
+		right: pr
+		width: 52px
+		height: 33px
+
+	&__logo
+		display: block
+		border-radius: 3px
+		max-width: 100%
+		height: auto
+		max-height: 100%
+
+.short-product:hover
+	border-color: #00a1fd
+
+	.short-product__name
+		color: #016cde

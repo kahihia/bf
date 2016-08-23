@@ -1,0 +1,62 @@
+.simple-shop-card
+	pad = 12px
+	logoWidth = 146px
+	logoMarginRight = 20px
+	border: 1px solid #eaecee
+	padding: pad 10px pad (pad + logoWidth + logoMarginRight)
+
+	&__logo
+		width: logoWidth
+		float: left
+		margin-left: -(logoWidth + logoMarginRight)
+		height: auto
+
+	&__name
+		font-size: 25px
+		color: #222121
+		margin-bottom: 6px
+		text-overflow: ellipsis
+		white-space: nowrap
+		overflow: hidden
+		width: 100%
+
+	&__props
+		font-size: 14px
+
+		.props__item
+			text-overflow: ellipsis
+			white-space: nowrap
+			overflow: hidden
+			width: 100%
+
+			+ .props__item
+				margin-top: 3px
+
+		.props__label
+			color: #949494
+			margin-right: 5px
+
+		.props__value
+			color: #545454
+			font-weight: bold
+
+			.text-danger
+				margin-right: 3px
+
+		a.props__value
+			color: #0089ff
+
+	&__action-list
+		margin-top: 12px
+
+		.action-list__item
+			display: inline-block
+			vertical-align: middle
+			padding: 5px
+			border: 1px solid #dadde1
+			border-radius: 50%
+			line-height: 1
+			cursor: pointer
+
+			+ .action-list__item
+				margin-left: 5px

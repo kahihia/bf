@@ -1,0 +1,88 @@
+.card-description
+	pad = 17px
+	logoWidth = 210px
+	logoHeight = 130px
+	margin-bottom: 33px
+
+	&__title
+		margin-top: 0
+		margin-bottom: 17px
+		font-weight: bold
+		font-size: 28px
+
+		a
+			display: inline-block
+			text-decoration: none
+			color: inherit
+
+			&:after
+				content: ''
+				display: inline-block
+				width: 16px
+				height: 16px
+				background: url(/static/icons/card-description-link.png) 0 0 no-repeat
+				margin-left: 0.3em
+
+	&__content
+		background-color: #f8f8f8
+		padding: pad
+
+	&__logo
+		display: block
+		margin-bottom: 10px
+		box-shadow: 0 0 0 1px #e6e7ea
+
+	&__promocode
+		font-weight: bold
+		font-size: 1.2em
+
+		code
+			color: #176cd9
+
+	&__desc
+		font-size: 15px
+		overflow: hidden
+
+		> *:first-child
+			margin-top: 0
+
+		&.collapsed
+			height: 6em
+			overflow: hidden
+			position: relative
+
+			&:after
+				display: block
+				content: 'Развернуть'
+				position: absolute
+				bottom: 0
+				left: 0
+				width: 100%
+				color: #666
+				height: 1.75em
+				line-height: 1.7em
+				background-color: #fff
+				border: 1px solid #e5e5e5
+				text-align: center
+				cursor: pointer
+
+	&__paysys
+		margin-top: 5px
+		padding-top: 15px
+		border-top: 1px solid #e5e5e5
+
+	+above(768px)
+		position: relative
+		background: #f8f8f8 url(/static/images/card-description-bgr.png) 100% 0 no-repeat
+		padding: pad pad pad (logoWidth + pad + 22px)
+		min-height: pad + logoHeight + pad
+
+		&__content
+			padding: 0
+			background-color: transparent
+
+		&__logo
+			margin-bottom: 0
+			position: absolute
+			top: pad
+			left: pad

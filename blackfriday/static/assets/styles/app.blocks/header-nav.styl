@@ -1,0 +1,73 @@
+.header-nav
+	padding: 8px 0
+	background-color: #176cd9
+	position: fixed
+	top: 0
+	left: 0
+	width: 100%
+	z-index: 1001
+
+	a
+		color: #fff
+
+	&__placeholder
+		height: 53px
+
+		+above(768px)
+			height: 148px
+
+		+above(992px)
+			height: 122px
+
+		+above(1200px)
+			height: 100px
+
+	&.navbar
+		border-radius: 0
+		margin: 0
+		border: none
+
+	.navbar-toggle
+		width: 100%
+		float: none
+		margin: 0
+		padding: 9px 19px
+
+		.icon-bar
+			width: 20px
+			height: 3px
+			background-color: #fff
+
+	.navbar-collapse
+		border: none
+		box-shadow: none
+
+.header-menu
+	text-align: center
+
+	.simple-menu
+		{}
+
+		&__item:first-child
+			background: url(/static/images/header-menu__item_rf.png) 50% 50% no-repeat
+
+		&__link
+			text-transform: uppercase
+			font-weight: bold
+			display: inline-block
+			padding: 4px 0
+
+.header-cats
+	padding-top: 2px
+	font-size: 13px
+
+	.simple-menu
+		ml = 9px
+		margin-left: -(ml)
+
+		&__item
+			display: inline-block
+
+		&__link
+			display: inline-block
+			padding: 4px ml

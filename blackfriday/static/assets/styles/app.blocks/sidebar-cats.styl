@@ -1,0 +1,69 @@
+.sidebar-cats
+	.dropdown
+		&--active
+			.dropdown__content
+				display: block
+
+		&__trigger
+			text-transform: uppercase
+			text-decoration: none
+			font-weight: bold
+			font-size: 20px
+			color: #fff
+			display: inline-block
+			width: 100%
+			text-align: center
+			padding: 9px 13px 9px 36px
+			background: none
+			background-color: #016cde
+			position: relative
+			border: none
+
+			&:after
+				content: ''
+				display: block
+				position: absolute
+				left: 19px
+				top: 14px
+				width: 20px
+				height: 3px
+				border-radius: 2px
+				background-color: #fff
+				box-shadow: 0 8px 0 #fff, 0 16px 0 #fff
+
+			+above(992px)
+				font-size: 16px
+
+				&:after
+					top: 12px
+					box-shadow: 0 7px 0 #fff, 0 14px 0 #fff
+
+			+above(1200px)
+				font-size: 20px
+
+				&:after
+					top: 14px
+
+		&__content
+			display: none
+			position: absolute
+			z-index: 1
+			width: 100%
+
+	.simple-menu
+		padding-top: 33px
+		margin-top: 0
+		border: none
+		border-radius: 0
+		box-shadow: none
+		width: 100%
+		background-color: #f7f7f7
+
+		&__link
+			color: #232323
+			display: block
+			padding: 6px 5px 6px 19px
+
+			&:hover
+				background-color: #efefef
+				text-decoration: none
