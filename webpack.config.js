@@ -69,7 +69,7 @@ module.exports = {
 	output: {
 		path: PATH_DIST,
 		filename: '[name].js',
-		publicPath: '/static/static/'
+		publicPath: '/static/build/'
 	},
 	module: {
 		preLoaders: [
