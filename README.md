@@ -62,6 +62,22 @@ open http://blackfriday.local:8080/
 npm install
 ```
 
+### Develop
+Autobuild
+```
+npm run start
+```
+
+Manual build
+```
+npm run build
+```
+
+Manual build without compression
+```
+npm run build:dev
+```
+
 
 ## Update
 ```
