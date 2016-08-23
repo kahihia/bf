@@ -1,1 +1,1 @@
-require('styles/auth.styl');
+require('css/auth.styl');

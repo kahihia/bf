@@ -2,7 +2,7 @@
 /* eslint "react/no-danger": "off" */
 /* eslint "react/require-optimization": "off" */
 
-require('styles/app.styl');
+require('css/app.styl');
 
 import Scroll from 'react-scroll';
 

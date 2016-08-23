@@ -31,8 +31,8 @@ let plugins = [
 			glob: '*.png'
 		},
 		target: {
-			image: path.resolve(PATH_SRC, 'styles/spritesmith-generated/sprite.png'),
-			css: path.resolve(PATH_SRC, 'styles/spritesmith-generated/sprite.styl')
+			image: path.resolve(PATH_SRC, 'css/spritesmith-generated/sprite.png'),
+			css: path.resolve(PATH_SRC, 'css/spritesmith-generated/sprite.styl')
 		},
 		apiOptions: {
 			cssImageRef: '~sprite.png'
@@ -128,7 +128,7 @@ module.exports = {
 		extensions: ['', '.js', '.jsx', '.styl'],
 		modulesDirectories: ['node_modules', 'spritesmith-generated'],
 		alias: {
-			styles: path.resolve(PATH_SRC, 'styles'),
+			css: path.resolve(PATH_SRC, 'css'),
 			node_modules: path.join(__dirname, 'node_modules')
 		},
 		root: [PATH_SRC]

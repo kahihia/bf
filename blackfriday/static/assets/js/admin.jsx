@@ -1,6 +1,6 @@
 /* global React, ReactDOM, window, document */
 
-require('styles/admin.styl');
+require('css/admin.styl');
 require('node_modules/react-datepicker/dist/react-datepicker.css');
 
 (function () {
