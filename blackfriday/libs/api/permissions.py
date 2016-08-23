@@ -27,11 +27,31 @@ class ComplexPermissionMetaClass(type):
         return Permission
 
 
+class BaseComplexPermission(permissions.BasePermission, metaclass=ComplexPermissionMetaClass):
+    pass
+
+
+class IsOwner(BaseComplexPermission):
+    def has_permission(self, request, view):
+        return 'pk' in view.kwargs
+
+    def has_object_permission(self, request, view, obj):
+        return obj.owner_id == request.user.id
+
+
+class IsActive(BaseComplexPermission):
+    def has_permission(self, request, view):
+        return request.user.is_active
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_active
+
+
 def role_permission(*role_list):
     classes_cache = {}
 
     if role_list not in classes_cache:
-        class RoleBasedPermission(permissions.BasePermission, metaclass=ComplexPermissionMetaClass):
+        class RoleBasedPermission(BaseComplexPermission):
             def has_permission(self, request, view):
                 return request.user.role in role_list
         classes_cache[role_list] = RoleBasedPermission
@@ -39,3 +59,4 @@ def role_permission(*role_list):
 
 
 IsAdmin = role_permission('admin')
+IsAdvertiser = role_permission('advertiser')

@@ -1,4 +1,5 @@
 import os
+import sys
 
 ADMINS = [
     ('Artem', 'sukhanon@220-volt.ru'),
@@ -11,6 +12,8 @@ ALLOWED_HOSTS = []
 
 DJANGO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(DJANGO_ROOT)
+
+sys.path.append(DJANGO_ROOT)
 
 SECRET_KEY = '_3-o!9msf++1k*hlyf9-+@x7lk5jc5^^zm8%0%sa$_x!36-@&j'
 
@@ -74,6 +77,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'apps.users',
+    'apps.advertisers',
 ]
 
 AUTH_USER_MODEL = 'users.User'

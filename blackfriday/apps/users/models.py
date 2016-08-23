@@ -2,11 +2,13 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.template.loader import render_to_string
 from django.utils import timezone
+
+from apps.advertisers.models import AdvertiserProfile
 
 
 class UserManager(BaseUserManager):
@@ -82,14 +84,6 @@ class Token(models.Model):
         return cls.objects.get(token=token, **({'type': type} if type else {}))
 
 
-class Advertiser(models.Model):
-    class Meta:
-        verbose_name = 'Профиль рекламодателя'
-        verbose_name_plural = 'Профили рекламодателей'
-
-    # TODO: profile fields (other task)
-
-
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, blank=False, verbose_name='Электронная почта')
     name = models.CharField(max_length=120, null=True, blank=True, verbose_name='Имя')
@@ -99,7 +93,7 @@ class User(AbstractBaseUser):
 
     is_active = models.BooleanField(default=False, verbose_name='Пользователь активен')
     is_admin = models.BooleanField(default=False, verbose_name='Администратор')
-    profile = models.OneToOneField(Advertiser, null=True, blank=True, on_delete=models.SET_NULL,
+    profile = models.OneToOneField(AdvertiserProfile, null=True, blank=True, on_delete=models.SET_NULL,
                                    verbose_name='Профиль рекламодателя')
 
     USERNAME_FIELD = 'email'
@@ -127,10 +121,14 @@ class User(AbstractBaseUser):
         self.is_admin = (value == 'admin')
         if value == 'advertiser':
             if not self.profile:
-                self.profile = Advertiser.objects.create()
+                self.profile = AdvertiserProfile.objects.create()
         elif self.profile:
             self.profile.delete()
             self.profile = None
+
+    @property
+    def owner_id(self):
+        return self.id
 
     class Meta:
         verbose_name = 'Пользователь'
