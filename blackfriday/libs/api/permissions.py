@@ -2,9 +2,8 @@ from rest_framework import permissions
 
 
 class ComplexPermissionMetaClass(type):
-
     def __or__(cls, other):
-        class Permission(permissions.BasePermission):
+        class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
                 return (cls().has_permission(request, view) or
                         other().has_permission(request, view))
@@ -16,7 +15,7 @@ class ComplexPermissionMetaClass(type):
         return Permission
 
     def __and__(cls, other):
-        class Permission(permissions.BasePermission):
+        class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
                 return (cls().has_permission(request, view) and
                         other().has_permission(request, view))
@@ -31,20 +30,22 @@ class BaseComplexPermission(permissions.BasePermission, metaclass=ComplexPermiss
     pass
 
 
+class ReadOnly(BaseComplexPermission):
+    def has_permission(self, request, view):
+        return request.method in permissions.SAFE_METHODS
+
+
+class IsAuthenticated(BaseComplexPermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.is_active
+
+
 class IsOwner(BaseComplexPermission):
     def has_permission(self, request, view):
         return 'pk' in view.kwargs
 
     def has_object_permission(self, request, view, obj):
         return obj.owner_id == request.user.id
-
-
-class IsActive(BaseComplexPermission):
-    def has_permission(self, request, view):
-        return request.user.is_active
-
-    def has_object_permission(self, request, view, obj):
-        return request.user.is_active
 
 
 def role_permission(*role_list):
