@@ -1,0 +1,94 @@
+.ms-container{
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAANCAMAAACuAq9NAAAAV1BMVEXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXFxcXfDLrkAAAAHHRSTlMABRMUKy4vMz5BSV5gaWxvcXV5kpSWm5zS6/X+lBJD4AAAAEtJREFUCB1NwYsSQCAUBcATKSrvEJ3//05jptHdRdEOkBw3CGrnAunkBCnmAGhbGJMY8FC4oW3RmUSP6sge1cURPxU5o3JcITQ9Pi+1wASNVxaBBAAAAABJRU5ErkJggg==");
+    background-repeat: no-repeat;
+    background-position: 50% 9px;
+    width: 370px;
+}
+
+.ms-container:after{
+  content: ".";
+  display: block;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  clear: both;
+  min-height: 0;
+  visibility: hidden;
+}
+
+.ms-container .ms-selectable,
+.ms-container .ms-selection{
+  background: #fff;
+  color: #545454;
+  float: left;
+  width: 45%;
+}
+.ms-container .ms-selection{
+  float: right;
+}
+
+.ms-container .ms-list{
+  -webkit-transition: border linear 0.2s;
+  -moz-transition: border linear 0.2s;
+  -ms-transition: border linear 0.2s;
+  -o-transition: border linear 0.2s;
+  transition: border linear 0.2s;
+  border: 1px solid #e4ebf1;
+  border-radius: 1px;
+  position: relative;
+  height: 127px;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.ms-container .ms-list.ms-focus{
+  border-color: #66afe9;
+  outline: 0;
+  outline: thin dotted \9;
+}
+
+.ms-container ul{
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+.ms-container .ms-optgroup-container{
+  width: 100%;
+}
+
+.ms-container .ms-optgroup-label{
+  margin: 0;
+  padding: 5px 0px 0px 5px;
+  cursor: pointer;
+  color: #999;
+}
+
+.ms-container .ms-selectable li.ms-elem-selectable,
+.ms-container .ms-selection li.ms-elem-selection{
+  padding: 4px 10px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.ms-container .ms-selectable li.ms-hover,
+.ms-container .ms-selection li.ms-hover{
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  background-color: #08c;
+}
+
+.ms-container .ms-selectable li.disabled,
+.ms-container .ms-selection li.disabled{
+  background-color: #eee;
+  color: #aaa;
+  cursor: text;
+}
+
+.ms-selection__header {
+    padding: 3px 0;
+    border: 1px solid #e4ebf1;
+    border-width: 1px 1px 0;
+}

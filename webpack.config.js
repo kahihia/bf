@@ -13,7 +13,7 @@ const rupture = require('rupture');
 const autoprefixer = require('autoprefixer-stylus');
 
 const PATH_SRC = path.join(__dirname, 'blackfriday', 'static', 'assets');
-const PATH_DIST = path.join(__dirname, 'blackfriday', 'static', 'static');
+const PATH_DIST = path.join(__dirname, 'blackfriday', 'static', 'static', 'build');
 
 // env: 'dev', 'dist'
 let env;
