@@ -1,6 +1,6 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import ControlLabel from './control-label.jsx';
 import FormRow, {Input} from './form-row.jsx';
 

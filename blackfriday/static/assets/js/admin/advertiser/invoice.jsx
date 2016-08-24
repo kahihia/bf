@@ -1,5 +1,6 @@
-/* global React, moment, toastr, saveAs, Blob */
+/* global moment, toastr, saveAs, Blob */
 
+import React from 'react';
 import Price from 'react-price';
 import xhr from 'xhr';
 import Scroll from 'react-scroll';

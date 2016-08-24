@@ -1,7 +1,8 @@
-/* global React, toastr */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
-import xhr from 'xhr';
 
+import React from 'react';
+import xhr from 'xhr';
 import {resolveImgPath} from '../utils.js';
 
 export default class MerchantItem extends React.Component {

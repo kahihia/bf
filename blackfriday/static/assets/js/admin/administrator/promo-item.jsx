@@ -1,8 +1,8 @@
-/* global React, moment */
-/* eslint "react/require-optimization": "off" */
+/* global moment */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import Price from 'react-price';
-
 import {formatPrice} from '../utils.js';
 import MakeInvoiceBtn from './make-invoice-btn.jsx';
 import {promoActions} from './promo-list.jsx';

@@ -1,8 +1,7 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import Price from 'react-price';
-
 import {resolveImgPath, formatPrice} from '../utils.js';
 import Radio from '../components/radio.jsx';
 import Icon from '../components/icon.jsx';

@@ -1,7 +1,5 @@
-/* global React */
-
+import React from 'react';
 import arrayShuffle from 'array-shuffle';
-
 import {resolveImgPath} from './utils.js';
 
 const Wrotator = React.createClass({

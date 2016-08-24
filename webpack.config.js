@@ -119,8 +119,6 @@ module.exports = {
 	devtool: 'cheap-module-source-map',
 	plugins: plugins,
 	externals: {
-		react: 'React',
-		'react-dom': 'ReactDOM',
 		moment: 'moment',
 		toastr: 'toastr',
 		lodash: '_',

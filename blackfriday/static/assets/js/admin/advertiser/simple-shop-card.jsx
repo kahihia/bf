@@ -1,5 +1,4 @@
-/* global React */
-
+import React from 'react';
 import {resolveImgPath, hasRole} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';

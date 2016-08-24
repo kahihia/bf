@@ -1,7 +1,7 @@
-/* global React, toastr */
+/* global toastr */
 
+import React from 'react';
 import xhr from 'xhr';
-
 import {invoiceActions} from './invoice-list.jsx';
 
 export default class ChangeManyInvoiceStatusesBtn extends React.Component {

@@ -1,4 +1,4 @@
-/* global React */
+import React from 'react';
 
 const Select = React.createClass({
 	propTypes: {

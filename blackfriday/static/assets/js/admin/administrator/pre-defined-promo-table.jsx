@@ -1,5 +1,6 @@
-/* global React, _ */
+/* global _ */
 
+import React from 'react';
 import Price from 'react-price';
 import {formatPrice} from '../utils.js';
 

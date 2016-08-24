@@ -1,4 +1,4 @@
-/* global React */
+import React from 'react';
 
 const SimpleMenu = React.createClass({
 	propTypes: {

@@ -1,7 +1,7 @@
-/* global React */
 /* eslint no-useless-escape: 0 */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import {promoActions} from './promo-maker.jsx';
 
 export default class PromoOption extends React.Component {

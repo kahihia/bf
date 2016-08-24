@@ -1,7 +1,10 @@
-/* global React, ReactDOM, window, document */
+/* global window document */
 
 require('css/admin.styl');
 require('node_modules/react-datepicker/dist/react-datepicker.css');
+
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 (function () {
 	'use strict';

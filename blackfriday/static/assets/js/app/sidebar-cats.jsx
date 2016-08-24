@@ -1,7 +1,5 @@
-/* global React */
-
+import React from 'react';
 import Dropdown, {DropdownTrigger, DropdownContent} from 'react-simple-dropdown';
-
 import SimpleMenu from './simple-menu.jsx';
 import {categoriesSorting} from './utils.js';
 

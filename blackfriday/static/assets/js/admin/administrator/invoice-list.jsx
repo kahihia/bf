@@ -1,9 +1,9 @@
-/* global React, moment, _ */
+/* global moment, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
 import DatePicker from 'react-datepicker';
-
 import InvoiceActions from './invoice-actions.js';
 import InvoiceItem from './invoice-item.jsx';
 import {invoiceStatuses} from './invoice-status.jsx';

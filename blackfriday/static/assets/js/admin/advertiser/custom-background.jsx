@@ -1,8 +1,8 @@
-/* global React, _, toastr */
+/* global _, toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
-
 import {resolveImgPath} from '../utils.js';
 import Select from '../components/select.jsx';
 import {getLimit} from './limits.js';

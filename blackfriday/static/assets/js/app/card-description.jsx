@@ -1,6 +1,6 @@
-/* global React */
-/* eslint "react/no-danger": "off" */
+/* eslint react/no-danger: 0 */
 
+import React from 'react';
 import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 

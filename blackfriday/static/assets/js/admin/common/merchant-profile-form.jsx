@@ -1,8 +1,8 @@
-/* global React, toastr, FormData, _ */
+/* global toastr, FormData, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
-
 import FormRow from '../components/form-row.jsx';
 import FormCol from '../components/form-col.jsx';
 

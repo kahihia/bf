@@ -1,9 +1,9 @@
-/* global React, window, toastr, FormData, _ */
+/* global window, toastr, FormData, _ */
 /* eslint-disable no-alert */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
-
 import {hasRole} from '../utils.js';
 import Icon from '../components/icon.jsx';
 import FormRow from '../components/form-row.jsx';

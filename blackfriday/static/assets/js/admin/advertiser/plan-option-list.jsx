@@ -1,8 +1,6 @@
-/* global React */
-
+import React from 'react';
 import Price from 'react-price';
 import DecInc from 'react-decinc';
-
 import {resolveImgPath, formatPrice} from '../utils.js';
 import Radio from '../components/radio.jsx';
 import Icon from '../components/icon.jsx';

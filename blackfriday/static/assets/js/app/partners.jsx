@@ -1,6 +1,6 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import Carousel from './carousel.jsx';
 import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';

@@ -1,10 +1,10 @@
-/* global React, window, toastr, moment, _ */
+/* global window, toastr, moment, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
+import React from 'react';
 import xhr from 'xhr';
 import Scroll from 'react-scroll';
-
 import Invoice from './invoice.jsx';
 
 const PageMerchantInvoices = React.createClass({

@@ -1,6 +1,5 @@
-/* global React */
+import React from 'react';
 import xhr from 'xhr';
-
 import ModerateItem from './moderate-item.jsx';
 
 export class ModerateList extends React.Component {

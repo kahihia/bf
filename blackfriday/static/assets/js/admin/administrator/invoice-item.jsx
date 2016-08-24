@@ -1,8 +1,8 @@
-/* global React, moment */
+/* global moment */
 
+import React from 'react';
 import Price from 'react-price';
 import DatePicker from 'react-datepicker';
-
 import {formatPrice} from '../utils.js';
 import {invoiceActions} from './invoice-list.jsx';
 import {InvoiceStatus} from './invoice-status.jsx';

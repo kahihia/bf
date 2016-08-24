@@ -1,9 +1,9 @@
-/* global React, window, toastr, _ */
+/* global window, toastr, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
-
 import {hasRole, formatPrice} from '../utils.js';
 import PlanOptionList from './plan-option-list.jsx';
 import ShopPlanSelect from './shop-plan-select.jsx';

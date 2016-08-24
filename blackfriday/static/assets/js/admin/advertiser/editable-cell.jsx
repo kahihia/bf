@@ -1,5 +1,6 @@
-/* global React, _ */
+/* global _ */
 
+import React from 'react';
 import Glyphicon from '../components/glyphicon.jsx';
 
 class EditableCell extends React.Component {

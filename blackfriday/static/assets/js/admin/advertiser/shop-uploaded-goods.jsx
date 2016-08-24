@@ -1,11 +1,11 @@
-/* global React, window, toastr, _, jQuery */
+/* global window, toastr, _, jQuery */
 /* eslint camelcase: ["error", {properties: "never"}] */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
 import Scroll from 'react-scroll';
-
 import {formatPrice} from '../utils.js';
 import Select from '../components/select.jsx';
 import EditableCell from './editable-cell.jsx';

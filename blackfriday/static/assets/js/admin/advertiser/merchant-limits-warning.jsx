@@ -1,6 +1,7 @@
-/* global React, _, $ */
+/* global _, $ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import {getLimit} from './limits.js';
 
 const TYPES = {

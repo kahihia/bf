@@ -1,5 +1,6 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
+
+import React from 'react';
 
 export default class MultiselectControls extends React.Component {
 	render() {

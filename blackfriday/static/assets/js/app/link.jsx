@@ -1,5 +1,6 @@
-/* global React, window */
+/* global window */
 
+import React from 'react';
 import Cookie from 'js-cookie';
 
 const ADMITAD_REGEX = /ad.admitad.com/;

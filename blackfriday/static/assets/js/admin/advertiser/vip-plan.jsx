@@ -1,5 +1,6 @@
-/* global React, jQuery */
+/* global jQuery */
 
+import React from 'react';
 import Icon from '../components/icon.jsx';
 
 const VipPlan = React.createClass({

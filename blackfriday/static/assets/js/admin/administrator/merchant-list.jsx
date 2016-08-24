@@ -1,7 +1,8 @@
-/* global React, ReactDOM, document, jQuery, _ */
+/* global document, jQuery, _ */
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-
 import {hasRole} from '../utils.js';
 import MerchantProfileForm from '../common/merchant-profile-form.jsx';
 import FormRow from '../components/form-row.jsx';

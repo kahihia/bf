@@ -1,6 +1,7 @@
-/* global React, document, jQuery, toastr, _ */
+/* global document, jQuery, toastr, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
 import MultiselectControls from './multiselect-controls.jsx';
 

@@ -1,11 +1,11 @@
-/* global React, window, toastr, _ */
+/* global window, toastr, _ */
 /* eslint max-nested-callbacks: 0 */
 /* eslint no-useless-escape: 0 */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
-
 import {formatPrice} from '../utils.js';
 import PreDefinedPromoTable from './pre-defined-promo-table.jsx';
 import PromoActions from './promo-actions.js';

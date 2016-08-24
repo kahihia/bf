@@ -1,9 +1,9 @@
-/* global React, window, toastr, _ */
+/* global window, toastr, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
-
 import ControlLabel from '../components/control-label.jsx';
 import FormHorizontalRow from '../components/form-horizontal-row.jsx';
 import Select from '../components/select.jsx';

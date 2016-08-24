@@ -1,6 +1,6 @@
 /* eslint react/jsx-no-bind: 0 */
-/* global React */
 
+import React from 'react';
 import classNames from 'classnames';
 
 const Tabs = React.createClass({

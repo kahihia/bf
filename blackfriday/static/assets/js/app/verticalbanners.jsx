@@ -1,5 +1,4 @@
-/* global React */
-
+import React from 'react';
 import Carousel from './carousel.jsx';
 import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';

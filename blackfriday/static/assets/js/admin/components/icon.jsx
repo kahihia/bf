@@ -1,5 +1,6 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
+
+import React from 'react';
 
 class Icon extends React.Component {
 	render() {

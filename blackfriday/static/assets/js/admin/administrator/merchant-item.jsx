@@ -1,5 +1,4 @@
-/* global React */
-
+import React from 'react';
 import {resolveImgPath} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 

@@ -1,5 +1,7 @@
-/* global React, ReactDOM, document */
+/* global document */
 
+import React from 'react';
+import ReactDOM from 'react-dom';
 import {getLimit} from './limits.js';
 
 const GoodsCounter = React.createClass({

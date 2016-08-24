@@ -1,6 +1,6 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import Pager from './pager.js';
 
 class Carousel extends React.Component {

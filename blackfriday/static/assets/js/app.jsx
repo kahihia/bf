@@ -1,8 +1,11 @@
-/* global React, ReactDOM, window, document */
-/* eslint "react/no-danger": "off" */
-/* eslint "react/require-optimization": "off" */
+/* global window document */
+/* eslint react/no-danger: 0 */
+/* eslint react/require-optimization: 0 */
 
 require('css/app.styl');
+
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 import Scroll from 'react-scroll';
 

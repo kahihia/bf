@@ -1,8 +1,8 @@
-/* global React, toastr, FormData */
+/* global toastr, FormData */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
+import React from 'react';
 import xhr from 'xhr';
-
 import FormRow from '../components/form-row.jsx';
 
 const PASSWORD_REGEXP = /^\S{8,}$/;

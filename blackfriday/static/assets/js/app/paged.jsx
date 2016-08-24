@@ -1,5 +1,4 @@
-/* global React */
-
+import React from 'react';
 import LoadMore from './load-more.jsx';
 import Pager from './pager.js';
 

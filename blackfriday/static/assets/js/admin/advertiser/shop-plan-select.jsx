@@ -1,5 +1,4 @@
-/* global React */
-
+import React from 'react';
 import Icon from '../components/icon.jsx';
 import VipPlan from './vip-plan.jsx';
 import PlanTable from './plan-table.jsx';

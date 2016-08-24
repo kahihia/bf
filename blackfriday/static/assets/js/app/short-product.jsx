@@ -1,7 +1,7 @@
-/* global React, window */
+/* global window */
 
+import React from 'react';
 import formatThousands from 'format-thousands';
-
 import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 

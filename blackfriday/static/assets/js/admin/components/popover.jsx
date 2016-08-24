@@ -1,4 +1,6 @@
-/* global React, jQuery */
+/* global jQuery */
+
+import React from 'react';
 
 const Popover = React.createClass({
 	propTypes: {

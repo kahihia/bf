@@ -1,7 +1,8 @@
-/* global React, window */
+/* global window */
 /* eslint react/require-optimization: 0 */
 /* eslint react/jsx-no-bind: ["error", {ignoreRefs: true}] */
 
+import React from 'react';
 import SimpleMenu from './simple-menu.jsx';
 import {categoriesSorting} from './utils.js';
 

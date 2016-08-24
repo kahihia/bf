@@ -1,8 +1,7 @@
-/* global React */
-/* eslint "react/require-optimization": "off" */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import MaskedInput from 'react-maskedinput';
-
 import ControlLabel from './control-label.jsx';
 
 class FormRow extends React.Component {

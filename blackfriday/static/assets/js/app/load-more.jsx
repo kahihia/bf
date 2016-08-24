@@ -1,6 +1,7 @@
-/* global React, window */
-/* eslint "react/require-optimization": "off" */
+/* global window */
+/* eslint react/require-optimization: 0 */
 
+import React from 'react';
 import Waypoint from 'react-waypoint';
 
 class LoadMore extends React.Component {
