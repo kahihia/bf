@@ -2,11 +2,10 @@ from smtplib import SMTPException
 
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from libs.api.exceptions import ServiceUnavailable
-from libs.api.permissions import IsAdmin
+from libs.api.permissions import IsAdmin, IsAuthenticated
 
 from .serializers import User, UserSerializer, UserUpdateSerializer
 
