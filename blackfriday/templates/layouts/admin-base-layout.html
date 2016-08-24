@@ -48,15 +48,11 @@
     {% block extra_css %}{% endblock %}
 
     <!--[if lt IE 9]>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.4.1/es5-shim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.4.1/es5-sham.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ie8/0.2.11/ie8.js"></script>
-    <script>
-    window.html5 || document.write('<script src="{% static 'js/html5shiv.min.js' %}"><\/script>');
-    window.matchMedia || document.write('<script src="{% static 'js/respond.min.js' %}"><\/script>');
-    </script>
+    <script src="{% static 'js/html5shiv.min.js' %}"></script>
+    <script src="{% static 'js/respond.min.js' %}"></script>
+    <script src="{% static 'js/es5-shim.min.js' %}"></script>
+    <script src="{% static 'js/es5-sham.min.js' %}"></script>
+    <script src="{% static 'js/ie8.js' %}"></script>
     <![endif]-->
 </head>
 <body class="site">
@@ -316,18 +312,8 @@ window.ENV = {
 </script>
 
 {% block appjs %}
-    {% if debug %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
-    {% else %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.min.js"></script>
-    {% endif %}
-
-    <script>
-    window.React || document.write('<script src="{% static 'js/react.min.js' %}"><\/script>');
-    window.ReactDOM || document.write('<script src="{% static 'js/react-dom.min.js' %}"><\/script>');
-    </script>
+    <script src="{% static 'js/react.min.js' %}"></script>
+    <script src="{% static 'js/react-dom.min.js' %}"></script>
 
     {% render_bundle 'admin' 'js' %}
 {% endblock appjs %}
