@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.catalog',
     'apps.advertisers',
+    'apps.banners',
 ]
 
 AUTH_USER_MODEL = 'users.User'
