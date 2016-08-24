@@ -1,3 +1,6 @@
+{% load render_bundle from webpack_loader %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,27 +14,28 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="address=no">
     <meta name="google" value="notranslate">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" sizes="57x57" href="/static/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/static/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/static/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/static/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/static/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/static/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/static/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/static/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" href="/static/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/static/favicon-194x194.png" sizes="194x194">
-    <link rel="icon" type="image/png" href="/static/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="/static/android-chrome-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="/static/favicon-16x16.png" sizes="16x16">
-    <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'apple-touch-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'apple-touch-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'apple-touch-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'apple-touch-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'apple-touch-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'apple-touch-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'apple-touch-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'favicon-194x194.png' %}" sizes="194x194">
+    <link rel="icon" type="image/png" href="{% static 'favicon-96x96.png' %}" sizes="96x96">
+    <link rel="icon" type="image/png" href="{% static 'android-chrome-192x192.png' %}" sizes="192x192">
+    <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16">
+    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#2b5797">
-    <meta name="msapplication-TileImage" content="/static/mstile-144x144.png">
+    <meta name="msapplication-TileImage" content="{% static 'mstile-144x144.png' %}">
     <meta name="theme-color" content="#ffffff">
-    <link rel="manifest" href="/static/manifest.json">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
     <meta name="application-name" content="">
     <meta name="msapplication-tooltip" content="">
 
@@ -50,7 +54,10 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.0.0-beta.3/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic" rel="stylesheet">
-    <link href="/static/build/app.css" rel="stylesheet">
+
+    {% block css %}
+        {% render_bundle 'app' 'css' %}
+    {% endblock css %}
 
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -59,8 +66,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ie8/0.2.11/ie8.js"></script>
     <script>
-    window.html5 || document.write('<script src="/static/js/html5shiv.min.js"><\/script>');
-    window.matchMedia || document.write('<script src="/static/js/respond.min.js"><\/script>');
+    window.html5 || document.write('<script src="{% static 'js/html5shiv.min.js' %}"><\/script>');
+    window.matchMedia || document.write('<script src="{% static 'js/respond.min.js' %}"><\/script>');
     </script>
     <![endif]-->
 </head>
@@ -90,17 +97,17 @@
 
                     <div class="footer-social__list">
                         <a href="https://vk.com/cmondayru" target="_blank" rel="noopener noreferrer">
-                            <img src="/static/icons/social-vk.png" class="icon" alt="" />
+                            <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
                         </a>
                         <a href="https://www.facebook.com/cmondayru" target="_blank" rel="noopener noreferrer">
-                            <img src="/static/icons/social-fb.png" class="icon" alt="" />
+                            <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
                         </a>
                     </div>
                 </div>
 
                 <div class="footer-mnogo-left">
                     <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
-                        <img src="/static/images/footer-mnogo-1.png" alt="">
+                        <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
                     </a>
                 </div>
             </div>
@@ -110,7 +117,7 @@
 
                 <div class="footer-mnogo-center">
                     <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
-                        <img src="/static/images/footer-mnogo-2.png" alt="">
+                        <img src="{% static 'images/footer-mnogo-2.png' %}" alt="">
                     </a>
                 </div>
             </div>
@@ -119,13 +126,13 @@
                 <div class="footer-copy__placeholder">
                     <div class="footer-copy">
                         <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
-                            <img src="/static/images/footer-copy.png" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
+                            <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
                         </a>
 
                         <div class="footer-mnogo-right">
                             <span>При поддержке программы:</span>
-                            <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="/static/images/footer-mnogo-3.png" alt=""></a>
-                            <img src="/static/images/footer-qiwi.png" alt="">
+                            <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
+                            <img src="{% static 'images/footer-qiwi.png' %}" alt="">
                         </div>
                     </div>
                 </div>
@@ -135,21 +142,22 @@
 </div>
 
 <div class="mnogoru-gift" id="mnogoru-gift">
-    <img src="/static/images/mnogoru-gift-toggler.png" alt="">
-    <a href="http://www.mnogo.ru/anketa.html?range=1063" target="_blank" rel="noopener noreferrer"><img src="/static/images/mnogoru-gift-bg.png" alt=""></a>
+    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://www.mnogo.ru/anketa.html?range=1063" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
 
 
 {% if debug %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.js"></script>
 {% else %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.6/react-dom.min.js"></script>
 {% endif %}
+
 <script>
-window.React || document.write('<script src="/static/js/react.min.js"><\/script>');
-window.ReactDOM || document.write('<script src="/static/js/react-dom.min.js"><\/script>');
+window.React || document.write('<script src="{% static 'js/react.min.js' %}"><\/script>');
+window.ReactDOM || document.write('<script src="{% static 'js/react-dom.min.js' %}"><\/script>');
 </script>
 
 <script>
@@ -164,11 +172,11 @@ window.DATA = {
         ajaxUrl: 'super_banners',
         ajaxUrlRoot: true,
         {% block superbanner %}
-        pages: 0,
-        isRandom: true,
-        isControlsShown: true,
-        isPagerShown: false,
-        data: [],
+            pages: 0,
+            isRandom: true,
+            isControlsShown: true,
+            isPagerShown: false,
+            data: [],
         {% endblock %}
         speed: 3000
     },
@@ -192,24 +200,27 @@ window.DATA = {
 {% block data %}{% endblock %}
 </script>
 
-<script src="/static/build/app.js"></script>
+{% block js %}
+    {% render_bundle 'app' 'js' %}
+{% endblock js %}
+
 <script>
-    (function () {
-        console.log('Let\'s target all external links to _blank!');
+(function () {
+    console.log('Let\'s target all external links to _blank!');
 
-        var links = document.getElementsByTagName('a');
+    var links = document.getElementsByTagName('a');
 
-        for (var i = 0; i < links.length; i++) {
-            var a = links[i],
-                href = a.getAttribute('href'),
-                target = a.target;
+    for (var i = 0; i < links.length; i++) {
+        var a = links[i],
+            href = a.getAttribute('href'),
+            target = a.target;
 
-            if (/^https?:\/\/.*/.test(href) && (a.target !== '_blank')) {
-                a.setAttribute('target', '_blank');
-                console.log('Link to', href, 'has been targeted to _blank.');
-            }
+        if (/^https?:\/\/.*/.test(href) && (a.target !== '_blank')) {
+            a.setAttribute('target', '_blank');
+            console.log('Link to', href, 'has been targeted to _blank.');
         }
-    })();
+    }
+})();
 </script>
 
 </body>

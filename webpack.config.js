@@ -8,6 +8,7 @@ const webpack = require('webpack');
 const args = require('minimist')(process.argv.slice(2));
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const SpritesmithPlugin = require('webpack-spritesmith');
+const BundleTracker = require('webpack-bundle-tracker');
 const bootstrap = require('bootstrap-styl');
 const rupture = require('rupture');
 const autoprefixer = require('autoprefixer-stylus');
@@ -39,7 +40,8 @@ let plugins = [
 		}
 	}),
 	// Save CSS as external file
-	new ExtractTextPlugin('[name].css', {allChunks: true})
+	new ExtractTextPlugin('[name]-[hash].css', {allChunks: true}),
+	new BundleTracker({filename: './webpack-stats.json'})
 ];
 
 if (env === 'dev') {
@@ -68,7 +70,7 @@ module.exports = {
 	},
 	output: {
 		path: PATH_DIST,
-		filename: '[name].js',
+		filename: '[name]-[hash].js',
 		publicPath: '/static/build/'
 	},
 	module: {
