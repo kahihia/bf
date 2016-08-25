@@ -52,7 +52,7 @@ cd /sites/blackfriday
 source .env/bin/activate
 ./manage.py runserver
 ```
-open http://blackfriday.local:8080/
+open http://blackfriday.local:8000/
 
 
 ## JavaScript
