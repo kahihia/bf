@@ -66,68 +66,75 @@
     <script src="{% static 'js/ie8.js' %}"></script>
     <![endif]-->
 </head>
-<body>
+<body class="site">
 
-<div id="wrotator" class="wrotator"></div>
+<!-- begin site__content -->
+<div class="site__content">
+    <div id="wrotator" class="wrotator"></div>
 
-<nav class="navbar header-nav" id="header"></nav>
-<div class="header-nav__placeholder"></div>
+    <nav class="navbar header-nav" id="header"></nav>
+    <div class="header-nav__placeholder"></div>
 
-<div class="content-container container">
-    {% block container %}
-    block container
-    {% endblock container %}
+    <div class="content-container container">
+        {% block container %}
+        block container
+        {% endblock container %}
+    </div>
 </div>
+<!-- end site__content -->
 
-<div class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="footer__social col-sm-4">
-                <div class="footer-social">
-                    <div class="footer-social__title">
-                        Официальные группы
-                        <br>
-                        в соц.сетях
+<!-- begin site__footer -->
+<div class="site__footer">
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="footer__social col-sm-4">
+                    <div class="footer-social">
+                        <div class="footer-social__title">
+                            Официальные группы
+                            <br>
+                            в соц.сетях
+                        </div>
+
+                        <div class="footer-social__list">
+                            <a href="https://vk.com/cmondayru" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
+                            </a>
+                            <a href="https://www.facebook.com/cmondayru" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="footer-social__list">
-                        <a href="https://vk.com/cmondayru" target="_blank" rel="noopener noreferrer">
-                            <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
-                        </a>
-                        <a href="https://www.facebook.com/cmondayru" target="_blank" rel="noopener noreferrer">
-                            <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
+                    <div class="footer-mnogo-left">
+                        <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
+                            <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
                         </a>
                     </div>
                 </div>
 
-                <div class="footer-mnogo-left">
-                    <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
-                        <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
-                    </a>
-                </div>
-            </div>
+                <div class="footer__navigation col-sm-4">
+                    <div id="footer-cats" class="footer-cats"></div>
 
-            <div class="footer__navigation col-sm-4">
-                <div id="footer-cats" class="footer-cats"></div>
-
-                <div class="footer-mnogo-center">
-                    <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
-                        <img src="{% static 'images/footer-mnogo-2.png' %}" alt="">
-                    </a>
-                </div>
-            </div>
-
-            <div class="footer__copyright col-sm-4 col-sm-offset-0">
-                <div class="footer-copy__placeholder">
-                    <div class="footer-copy">
-                        <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
-                            <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
+                    <div class="footer-mnogo-center">
+                        <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
+                            <img src="{% static 'images/footer-mnogo-2.png' %}" alt="">
                         </a>
+                    </div>
+                </div>
 
-                        <div class="footer-mnogo-right">
-                            <span>При поддержке программы:</span>
-                            <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
-                            <img src="{% static 'images/footer-qiwi.png' %}" alt="">
+                <div class="footer__copyright col-sm-4 col-sm-offset-0">
+                    <div class="footer-copy__placeholder">
+                        <div class="footer-copy">
+                            <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
+                            </a>
+
+                            <div class="footer-mnogo-right">
+                                <span>При поддержке программы:</span>
+                                <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
+                                <img src="{% static 'images/footer-qiwi.png' %}" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -135,6 +142,7 @@
         </div>
     </div>
 </div>
+<!-- end site__footer -->
 
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
