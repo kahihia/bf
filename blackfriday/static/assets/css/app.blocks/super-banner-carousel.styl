@@ -1,0 +1,83 @@
+.super-banner-carousel
+	margin-bottom: 33px
+	position: relative
+
+	.carousel__content
+		box-shadow: 0 0 0 1px #efefef
+
+	&:hover
+		.carousel__prev
+		.carousel__next
+			opacity: 0.25
+
+	.carousel__pager
+		position: absolute
+		top: 6px
+		right: 6px
+
+	.carousel__page
+		display: inline-block
+		text-align: center
+		width: 16px
+
+		&::after
+			content: ''
+			display: inline-block
+			width: 8px
+			height: 8px
+			border-radius: 50%
+			background-color: #e4e5e6
+			transition: background-color 0.15s ease
+
+		&.is-active
+			&::after
+				background-color: #0089ff
+
+		&:hover
+			&::after
+				background-color: #83c6ff
+
+	.carousel__prev
+	.carousel__next
+		position: absolute
+		top: 50%
+		transform: translate(0, -50%)
+		width: 30px
+		height: 50px
+		line-height: 46px
+		text-align: center
+		background-color: rgba(0, 0, 0, 0.4)
+		transition: opacity ease 0.15s
+		opacity: 0.1
+
+		&:hover
+			opacity: 1
+
+		&:after
+			content: ''
+			display: inline-block
+			vertical-align: middle
+			width: $supercarousel_nav_next_width
+			height: $supercarousel_nav_next_height
+
+	.carousel__prev
+		left: 0
+
+		&:after
+			sprite $supercarousel_nav_prev
+
+	.carousel__next
+		right: 0
+
+		&:after
+			sprite $supercarousel_nav_next
+
+.super-banner-carousel-content
+	&__item
+		padding-bottom: 30.55%
+
+		a
+			display: block
+
+		img
+			display: block

@@ -1,0 +1,47 @@
+{# Index page layout #}
+
+{% extends "layouts/app-base-layout.html" %}
+
+{% load static %}
+
+{% block container %}
+<div class="row row-main">
+    <div class="col-md-3">
+        <div class="left-sidebar">
+
+            {% block sidebar %}
+                <a href="/" class="logo">
+                    <img src="{% static 'images/logo.png' %}" alt="">
+                </a>
+
+                <div class="left-sidebar__share share">
+                    <div class="share__title"><strong>Расскажи</strong> друзьям:</div>
+                    <div class="share__content">
+                        <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+                        <div class="ya-share2" data-services="facebook,twitter,vkontakte,odnoklassniki,gplus" data-size="s"></div>
+                    </div>
+                </div>
+
+                <div class="sidebar-cats left-sidebar__sidebar-cats"></div>
+            {% endblock sidebar %}
+
+        </div>
+    </div>
+
+    <div class="col-md-9">
+
+        <div id="superbanner"></div>
+
+    </div>
+</div>
+
+<div class="row row-main">
+    <div class="col-md-12">
+
+        {% block content %}
+        block content
+        {% endblock %}
+
+    </div>
+</div>
+{% endblock container %}

@@ -80,6 +80,8 @@ INSTALLED_APPS = [
     'apps.catalog',
     'apps.advertisers',
     'apps.banners',
+
+    'webpack_loader',
 ]
 
 AUTH_USER_MODEL = 'users.User'

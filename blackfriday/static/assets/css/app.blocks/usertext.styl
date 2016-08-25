@@ -1,0 +1,50 @@
+.usertext
+	color: #000
+	font-size: 16px
+
+	h1
+		color: #000
+		font-size: 28px
+		font-weight: normal
+
+	h2
+		font-size: 26px
+		font-weight: bold
+
+	h3
+		font-size: 21px
+		font-weight: bold
+
+	h4
+		font-size: 18px
+		font-weight: bold
+
+	h5
+		font-weight: bold
+
+	h6
+		font-weight: bold
+
+	p
+		color: #000
+
+	ul
+		margin: 0
+		padding: 0
+
+		li
+			pl = 19px
+			list-style-type: none
+			padding-left: pl
+			position: relative
+
+			+ li
+				margin-top: 7px
+
+			&:before
+				content: ''
+				display: inline-block
+				vertical-align: middle
+				margin-left: -(pl)
+				margin-right: (pl - $usertext_ul_width)
+				sprite $usertext_ul

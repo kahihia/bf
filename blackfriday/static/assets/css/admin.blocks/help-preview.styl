@@ -1,0 +1,34 @@
+.help-preview
+	display: inline-block
+	position: relative
+
+	&:hover
+		img
+			display: block
+
+	.icon
+		{}
+
+	img
+		borWidth = 5px
+		display: none
+		position: absolute
+		right: 100%
+		top: 0
+		margin-right: 5px
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.25)
+		border: borWidth solid #fff
+		background-color: #fff
+		width: 250px
+		height: auto
+		transform: translateY(-50%)
+
+		&::after
+			content: ''
+			display: block
+			position: absolute
+			top: 10px
+			left: 100%
+			margin-left: borWidth
+			border: 10px solid #fff
+			border-color: transparent transparent transparent #fff

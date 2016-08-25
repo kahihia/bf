@@ -52,7 +52,7 @@ cd /sites/blackfriday
 source .env/bin/activate
 ./manage.py runserver
 ```
-open http://blackfriday.local:8080/
+open http://blackfriday.local:8000/
 
 
 ## JavaScript
@@ -60,6 +60,22 @@ open http://blackfriday.local:8080/
 ### Init
 ```
 npm install
+```
+
+### Develop
+Autobuild
+```
+npm run start
+```
+
+Manual build
+```
+npm run build
+```
+
+Manual build without compression
+```
+npm run build:dev
 ```
 
 

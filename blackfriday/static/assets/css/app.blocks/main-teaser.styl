@@ -1,0 +1,105 @@
+.main-teaser
+	position: relative
+	margin-bottom: 27px
+
+	&__footer
+		text-align: right
+
+	+below(767px)
+		border: 1px solid #e9ebef
+		border-radius: 3px
+
+		.main-teaser__body
+			padding: 22px 22px 0
+			background-color: #fff
+
+		.pseudo-link
+			display: none
+
+		.short-product
+			background-color: #fff
+			margin-bottom: 0
+
+		.special-offers__item
+			margin-bottom: 0
+
+	+above(768px)
+		.main-teaser__body
+			padding: 22px 22px 0
+			background-color: #f2f6fa
+
+		.pseudo-link
+			padding: 7px 0
+			display: inline-block
+			text-decoration: none
+			font-weight: bold
+			cursor: pointer
+			font-size: 18px
+
+			&::after
+				content: ''
+				display: inline-block
+				sprite $pseudo_link_icon
+				margin-left: 5px
+
+			span
+				border-bottom: 1px dotted
+
+		.short-product
+			background-color: #fff
+			margin-bottom: 0
+
+		.special-offers__item
+			margin-bottom: 0
+
+	.product-list
+		clearfix()
+		margin: 0 -15px
+
+		&__item
+			margin-bottom: 22px
+			padding: 0 11px
+
+	controlWidth = 26px
+	.slick-prev
+	.slick-next
+		position: absolute
+		top: 0
+		bottom: 0
+		width: controlWidth
+		background: none
+		border: none
+		outline: none
+		font: 0/0 a
+		color: transparent
+		text-shadow: none
+
+		&.slick-disabled
+			visibility: hidden
+
+		&:hover
+			&:after
+				opacity: 1
+
+		&:after
+			transition: opacity ease 0.15s
+			opacity: 0.1
+			content: ''
+			display: block
+			position: absolute
+			transform: translate(0, -50%)
+			top: 50%
+			width: $carousel_nav_next_width
+			height: $carousel_nav_next_height
+
+	.slick-prev
+		left: -13px
+
+		&:after
+			sprite $carousel_nav_prev
+
+	.slick-next
+		right -13px
+
+		&:after
+			sprite $carousel_nav_next

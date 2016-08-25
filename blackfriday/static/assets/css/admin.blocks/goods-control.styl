@@ -1,0 +1,99 @@
+.goods-control
+	position: relative
+
+	&__disabled
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		background-color: #fff
+		opacity: 0.5
+		z-index: 3
+
+	&__info-block
+		font-size: 14px
+		background-color: #f8fcff
+		border: 1px solid #ededee
+		border-width: 1px 0
+		padding: 15px
+		margin-bottom: 5px
+		overflow: hidden
+
+		.error-list
+			float: left
+			width: 55%
+			padding-left: 28px
+			margin-right: 5%
+			background: url(/static/icons/admin/icon_name_good-warning.png) 0 0 no-repeat
+
+			.props
+				&__item
+					{}
+
+				&__label
+					{}
+
+				&__value
+					font-weight: bold
+					margin-left: 0.5em
+
+				&__link
+					margin-left: 0.75em
+					text-decoration: none
+					border-bottom: 1px dotted
+					cursor: pointer
+
+		.warning-list
+			float: left
+			width: 40%
+
+			.props
+				&__item
+					{}
+
+				&__label
+					{}
+
+				&__value
+					font-weight: bold
+					margin-left: 0.5em
+
+				&__link
+					margin-left: 0.75em
+					text-decoration: none
+					border-bottom: 1px dotted
+					cursor: pointer
+
+	.goods-control__status-list
+		padding: 10px 0
+
+	.status-list
+		font-size: 15px
+
+		&__types
+			display: flex
+			flex-direction: row
+			justify-content: space-between
+			padding: 0
+			margin: 0
+
+		&__item
+			margin-left: 40px
+
+			&_type_count
+				font-weight: bold
+				list-style-type: none
+				margin-left: 0
+
+			&_type_published
+				color: green
+
+			&_type_unpublished
+				color: orange
+
+			&_type_error
+				color: red
+
+			&_type_limit
+				color: gray

@@ -1,0 +1,23 @@
+.editable-cell
+	position: relative
+
+	&:hover
+		& ^[0]__btn
+			opacity: 1
+
+	&__btn
+		opacity: 0
+		padding: 5px
+		transition: opacity ease 0.15s
+
+	.popover
+		display: block
+		top: auto
+		left: 50%
+		transform: translate(-50%, 0)
+		bottom: 100%
+		margin: 0 0 10px
+		width: 260px
+
+	textarea
+		resize: none

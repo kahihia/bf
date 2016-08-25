@@ -1,0 +1,91 @@
+.sidebar-teaser
+	ma = 11px
+	position: relative
+	margin-bottom: 27px
+	margin-left: -(ma)
+	margin-right: -(ma)
+
+	.short-product
+		margin-left: ma
+		margin-right: ma
+
+	&:hover
+		.slick-prev
+		.slick-next
+			&:after
+				opacity: 0.25
+
+	.slick-track
+		+above(992px)
+			width: auto !important
+			transform: none !important
+
+	.slick-slide
+		float: left
+
+		+above(992px)
+			float: none
+			width: auto !important
+
+	controlWidth = 26px
+	.slick-prev
+	.slick-next
+		position: absolute
+		top: 0
+		bottom: 0
+		width: controlWidth
+		background: none
+		border: none
+		outline: none
+		font: 0/0 a
+		color: transparent
+		text-shadow: none
+
+		&.slick-disabled
+			visibility: hidden
+
+		&:hover
+			&:after
+				opacity: 1
+
+		&:before
+			content: ''
+			display: block
+			position: absolute
+			transform: translate(0, -50%)
+			top: 50%
+			width: $carousel_nav_bg_next_width
+			height: $carousel_nav_bg_next_height
+
+		&:after
+			transition: opacity ease 0.15s
+			opacity: 0.1
+			content: ''
+			display: block
+			position: absolute
+			transform: translate(0, -50%)
+			top: 50%
+			width: $carousel_nav_next_width
+			height: $carousel_nav_next_height
+
+	.slick-prev
+		left: -13px + ma
+
+		&:before
+			sprite $carousel_nav_bg_prev
+			left: 12px
+
+		&:after
+			sprite $carousel_nav_prev
+			left: 0
+
+	.slick-next
+		right -13px + ma
+
+		&:before
+			sprite $carousel_nav_bg_next
+			right: 12px
+
+		&:after
+			sprite $carousel_nav_next
+			right: 0

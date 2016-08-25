@@ -1,0 +1,69 @@
+{# Default page layout #}
+
+{% extends "layouts/app-base-layout.html" %}
+
+{% load static %}
+
+{% block container %}
+<div class="row row-main">
+    <div class="col-md-3">
+        <div class="left-sidebar">
+
+            {% block sidebar %}
+                <a href="/" class="logo">
+                  <img src="{% static 'images/logo.png' %}" alt="">
+                </a>
+
+                <div class="left-sidebar__share share">
+                    <div class="share__title"><strong>Расскажи</strong> друзьям:</div>
+                    <div class="share__content">
+                        <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+                        <div class="ya-share2" data-services="facebook,twitter,vkontakte,odnoklassniki,gplus" data-size="s"></div>
+                    </div>
+                </div>
+
+                <div class="sidebar-cats left-sidebar__sidebar-cats"></div>
+
+                <div id="categories-rus"></div>
+
+                <div id="sidebar-hidden-block">
+                    <div class="teasers">
+                        {% block teasers__body %}
+                            <div class="teasers__title">Лучшие предложения</div>
+                            {% block category_retailrocket %}{% endblock %}
+                            <div class="sidebar-teaser" id="sidebar-teasers" style="visibility: hidden;">
+                                <!--# include virtual="/teasers/" -->
+                                <!--# include virtual="/teasers/" -->
+                                <!--# include virtual="/teasers/" -->
+                            </div>
+                        {% endblock teasers__body %}
+
+                        <a class="teasers__all" href="/merchants">Все участники</a>
+                        <a class="teasers__all" href="/actions#tab=2">Все товары</a>
+                    </div>
+                    <a href="/russian-goods" class="left-sidebar__banner">
+                        <img class="img-responsive" src="{% static 'images/left-sidebar__banner.png' %}" alt="">
+                    </a>
+                </div>
+            {% endblock sidebar %}
+
+            <div class="disclaimer">
+                Акции предоставлены магазинами-участниками.
+                <br>
+                Фактическое наличие и цену товаров необходимо уточнять и требовать в магазине, разместившем предложение.
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-9">
+
+        <div id="superbanner"></div>
+
+        {% block content %}
+        block content
+        {% endblock %}
+
+    </div>
+</div>
+{% endblock container %}
