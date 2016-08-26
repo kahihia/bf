@@ -1,0 +1,110 @@
+<div
+    class="modal fade"
+    id="feedbackModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="feedbackModalLabel"
+    >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="feedbackModalLabel">
+                    Служба поддержки
+                </h4>
+            </div>
+
+            <div class="modal-body">
+                <form
+                    class=""
+                    id="feedbackForm"
+                    action="/admin/help_request"
+                    method="POST"
+                    >
+                    <label class="form-group">
+                        <span class="control-label">
+                            ФИО<span class="">*</span>
+                        </span>
+                        <div class="">
+                            <input class="form-control" name="name" type="text" required>
+                        </div>
+                    </label>
+
+                    <label class="form-group">
+                        <span class="control-label">
+                            Контактный телефон<span class="">*</span>
+                        </span>
+                        <div class="">
+                            <input class="form-control" name="phone" type="tel" required>
+                        </div>
+                    </label>
+
+                    <label class="form-group">
+                        <span class="control-label">
+                            Email<span class="">*</span>
+                        </span>
+                        <div class="">
+                            <input class="form-control" name="email" type="email" required>
+                        </div>
+                    </label>
+
+                    <label class="form-group">
+                        <span class="control-label">
+                            Сообщение<span class="">*</span>
+                        </span>
+                        <div class="">
+                            <textarea class="form-control" name="text" rows="7" required></textarea>
+                        </div>
+                    </label>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    Отмена
+                </button>
+                <button type="button" class="btn btn-primary" id="feedbackSubmit">
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function () {
+    var $form = $('#feedbackForm');
+    $('#feedbackSubmit').on('click', function () {
+        $form.submit();
+    });
+
+    $form.ajaxForm({
+        beforeSubmit: function (arr, $form, options) {
+            var isValid = true;
+
+            _.forEach(arr, function (item) {
+                if (item.required && !item.value.trim()) {
+                    isValid = false;
+                }
+            });
+
+            if (!isValid) {
+                toastr.warning('Заполните обязательные поля');
+            }
+
+            return isValid;
+        },
+        success: function () {
+            toastr.success('Ваш запрос принят. В ближайшее время наши менеджеры свяжутся с Вами');
+            $('#feedbackModal').modal('hide');
+        },
+        error: function (jqXHR) {
+            if (jqXHR.responseText && jqXHR.status < 500) {
+                toastr.warning(jqXHR.responseText);
+            } else {
+                toastr.error('Не удалось отправить сообщение');
+            }
+        }
+    });
+});
+</script>
