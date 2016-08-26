@@ -1,9 +1,8 @@
-/* global document jQuery toastr _ */
+/* global document jQuery */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import xhr from 'xhr';
 import b from 'b_';
 import Glyphicon from '../components/glyphicon.jsx';
 import ChangePasswordForm from '../common/change-password-form.jsx';
@@ -15,53 +14,17 @@ const USER_ROLES = {
 };
 
 const UserList = React.createClass({
-	getInitialState() {
-		return {
-			users: []
-		};
+	propTypes: {
+		users: React.PropTypes.array,
+		onVerificationClick: React.PropTypes.func
 	},
 
-	componentWillMount() {
-		this.requestUsers();
-	},
-
-	requestUsers() {
-		xhr({
-			url: '/api/users/',
-			method: 'GET',
-			json: true
-		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					this.setState({users: data});
-				}
-			} else {
-				toastr.error('Не удалось получить список пользователей');
-			}
-		});
-	},
-
-	requestVerification(userId) {
-		xhr({
-			url: `/api/users/${userId}/verification/`,
-			method: 'POST',
-			json: true
-		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					const user = this.getUserById(userId);
-					_.merge(user, data);
-					this.forceUpdate();
-					toastr.success('Письмо верификации успешно отправлено');
-				}
-			} else {
-				toastr.error('Не удалось отправить письмо верификации');
-			}
-		});
+	getDefaultProps() {
+		return {};
 	},
 
 	handleVerificationClick(userId) {
-		this.requestVerification(userId);
+		this.props.onVerificationClick(userId);
 	},
 
 	handleChangePasswordClick(userId) {
@@ -80,12 +43,8 @@ const UserList = React.createClass({
 		);
 	},
 
-	getUserById(userId) {
-		return _.find(this.state.users, {id: userId});
-	},
-
 	render() {
-		const {users} = this.state;
+		const {users} = this.props;
 
 		return (
 			<div className={b('user-list')}>

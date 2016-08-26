@@ -3,7 +3,9 @@
 
 import React from 'react';
 import xhr from 'xhr';
+import Cookie from 'js-cookie';
 import b from 'b_';
+import {processErrors} from '../utils.js';
 import FormHorizontalRow from '../components/form-horizontal-row.jsx';
 
 const PASSWORD_REGEXP = /^\S{8,}$/;
@@ -14,6 +16,10 @@ const USER_ROLES = {
 };
 
 const AddUser = React.createClass({
+	propTypes: {
+		onAddUser: React.PropTypes.func
+	},
+
 	getInitialState() {
 		return {
 			fields: {
@@ -55,18 +61,32 @@ const AddUser = React.createClass({
 		xhr({
 			url: '/api/users/',
 			method: 'POST',
+			headers: {
+				'X-CSRFToken': Cookie.get('csrftoken')
+			},
 			json
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					toastr.success('Пользователь успешно добавлен');
-					this.resetForm();
+			if (data) {
+				switch (resp.statusCode) {
+					case 201: {
+						toastr.success('Пользователь успешно добавлен');
+						this.resetForm();
+
+						if (this.props.onAddUser) {
+							this.props.onAddUser(data);
+						}
+						break;
+					}
+					default: {
+						processErrors(data);
+						break;
+					}
 				}
-			} else if (resp.statusCode === 400) {
-				toastr.error('Неверный формат пароля');
-			} else {
-				toastr.error('Не удалось добавить пользователя');
+
+				return;
 			}
+
+			toastr.error('Не удалось добавить пользователя');
 		});
 	},
 

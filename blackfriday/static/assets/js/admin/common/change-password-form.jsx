@@ -3,6 +3,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
+import Cookie from 'js-cookie';
 import FormRow from '../components/form-row.jsx';
 
 const PASSWORD_REGEXP = /^\S{8,}$/;
@@ -53,12 +54,17 @@ const ChangePasswordForm = React.createClass({
 			return;
 		}
 
+		const json = {
+			password: this.state.fields.password.value
+		};
+
 		xhr({
 			url: `/api/users/${this.props.userId}/`,
 			method: 'PATCH',
-			json: {
-				password: this.state.fields.password.value
-			}
+			headers: {
+				'X-CSRFToken': Cookie.get('csrftoken')
+			},
+			json
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
 				if (data) {
