@@ -10,9 +10,9 @@ import FormHorizontalRow from '../components/form-horizontal-row.jsx';
 
 const PASSWORD_REGEXP = /^\S{8,}$/;
 const USER_ROLES = {
-	admin: 'Администратор',
+	advertiser: 'Рекламодатель',
 	manager: 'Менеджер',
-	advertiser: 'Рекламодатель'
+	admin: 'Администратор'
 };
 
 const AddUser = React.createClass({
@@ -38,7 +38,7 @@ const AddUser = React.createClass({
 				},
 				role: {
 					label: 'Роль',
-					value: '',
+					value: 'advertiser',
 					options: USER_ROLES,
 					type: 'select',
 					required: true
