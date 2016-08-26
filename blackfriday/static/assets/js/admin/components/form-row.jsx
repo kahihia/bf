@@ -3,6 +3,7 @@
 import React from 'react';
 import MaskedInput from 'react-maskedinput';
 import ControlLabel from './control-label.jsx';
+import Select from './select.jsx';
 
 class FormRow extends React.Component {
 	constructor() {
@@ -23,28 +24,24 @@ class FormRow extends React.Component {
 	}
 
 	render() {
+		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+
 		return (
 			<label className="form-group">
 				<ControlLabel
-					name={this.props.label}
-					required={!this.props.readOnly && this.props.required}
+					name={label}
+					required={!readOnly && required}
 					/>
 
 				<Input
-					className="form-control"
-					value={this.props.value}
-					type={this.props.type}
-					name={this.props.name}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
-					required={this.props.required}
-					readOnly={this.props.readOnly}
-					mask={this.props.mask}
+					{...{value, options, type, name, required, readOnly, mask}}
 					/>
 
-				{this.props.help ? (
+				{help ? (
 					<span className="help-block">
-						{this.props.help}
+						{help}
 					</span>
 				) : null}
 			</label>
@@ -54,6 +51,10 @@ class FormRow extends React.Component {
 FormRow.propTypes = {
 	label: React.PropTypes.string.isRequired,
 	value: React.PropTypes.string.isRequired,
+	options: React.PropTypes.oneOfType([
+		React.PropTypes.array,
+		React.PropTypes.object
+	]),
 	name: React.PropTypes.string,
 	type: React.PropTypes.string,
 	onChange: React.PropTypes.func.isRequired,
@@ -74,6 +75,10 @@ export default FormRow;
 export const Input = React.createClass({
 	propTypes: {
 		value: React.PropTypes.string.isRequired,
+		options: React.PropTypes.oneOfType([
+			React.PropTypes.array,
+			React.PropTypes.object
+		]),
 		name: React.PropTypes.string,
 		type: React.PropTypes.string,
 		onChange: React.PropTypes.func.isRequired,
@@ -92,7 +97,18 @@ export const Input = React.createClass({
 	},
 
 	handleChange(e) {
-		this.props.onChange(e);
+		let ev = e;
+
+		if (this.props.type === 'select') {
+			ev = {
+				target: {
+					name: this.props.name,
+					value: e
+				}
+			};
+		}
+
+		this.props.onChange(ev);
 	},
 
 	handleKeyUp(e) {
@@ -103,9 +119,19 @@ export const Input = React.createClass({
 	},
 
 	render() {
-		const {value, name, type, required, readOnly, mask} = this.props;
+		const {value, options, name, type, required, readOnly, mask} = this.props;
 
-		if (this.props.mask) {
+		if (type === 'select') {
+			return (
+				<Select
+					onChange={this.handleChange}
+					selected={value}
+					{...{options, name}}
+					/>
+			);
+		}
+
+		if (mask) {
 			return (
 				<MaskedInput
 					className="form-control"
