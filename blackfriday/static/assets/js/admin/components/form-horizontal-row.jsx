@@ -6,28 +6,26 @@ import FormRow, {Input} from './form-row.jsx';
 
 class FormHorizontalRow extends FormRow {
 	render() {
+		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+
 		return (
 			<label className="form-group">
 				<ControlLabel
-					name={this.props.label}
+					name={label}
 					className="col-sm-2"
-					required={!this.props.readOnly && this.props.required}
+					required={!readOnly && required}
 					/>
+
 				<div className="col-sm-10">
 					<Input
-						className="form-control"
-						value={this.props.value}
-						type={this.props.type}
-						name={this.props.name}
 						onChange={this.handleChange}
 						onKeyUp={this.handleKeyUp}
-						required={this.props.required}
-						readOnly={this.props.readOnly}
-						mask={this.props.mask}
+						{...{value, options, type, name, required, readOnly, mask}}
 						/>
-					{this.props.help ? (
+
+					{help ? (
 						<span className="help-block">
-							{this.props.help}
+							{help}
 						</span>
 					) : null}
 				</div>

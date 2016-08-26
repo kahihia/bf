@@ -41,11 +41,9 @@
 
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic" rel="stylesheet">
 
-    {% block css %}
-        {% render_bundle 'admin' 'css' %}
-    {% endblock css %}
-
-    {% block extra_css %}{% endblock %}
+    {# CSS #}
+    {% render_bundle 'admin' 'css' %}
+    {% block css %}{% endblock css %}
 
     <!--[if lt IE 9]>
     <script src="{% static 'js/html5shiv.min.js' %}"></script>
@@ -64,7 +62,7 @@
 
     <nav class="header-nav site-header__header-nav">
         <ul class="simple-menu">
-            {% if not has_role('advertiser') %}
+            {% if user.role is 'advertiser' %}
                 <li class="simple-menu__item">
                     <button
                         type="button"
@@ -84,7 +82,7 @@
             </li>
 
             <li class="simple-menu__item">
-                <a class="simple-menu__link" href="/admin/_logout">Выход</a>
+                <a class="simple-menu__link" href="/django-admin/logout">Выход</a>
             </li>
         </ul>
     </nav>
@@ -97,8 +95,8 @@
                 <ul class="simple-menu site-nav__simple-menu">
                     {% block navbar %}
                         {# Admin Menu #}
-                        {% if has_role('admin') %}
-                            {# comment %}
+                        {% if user.role == 'admin' %}
+                            {% comment %}
                             {% for m in models %}
                                 {% if models[m].in_admin %}
                                     <li class="simple-menu__item">
@@ -106,7 +104,7 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            {% endcomment #}
+                            {% endcomment %}
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="/admin/merchant-list">Рекламодатели</a>
                             </li>
@@ -158,18 +156,16 @@
                                 <a class="simple-menu__link" href="/admin/landing">Лэндинг</a>
                             </li>
 
-                            {# comment %}
-                            {% block sidebar %}{% endblock %}
-                            {% endcomment #}
-
                         {# Manager Menu #}
-                        {% elif has_role('manager') %}
+                        {% elif user.role == 'manager' %}
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="/admin/moderate-list">
                                     Модерация
+                                    {% comment %}
                                     {% if request.moderation_count %}
                                         <span>({{ request.moderation_count }})</span>
                                     {% endif %}
+                                    {% endcomment %}
                                 </a>
                             </li>
                             <li class="simple-menu__item">
@@ -183,10 +179,13 @@
                             </li>
 
                         {# Advertiser Menu #}
-                        {% elif has_role('advertiser') %}
+                        {% elif user.role == 'advertiser' %}
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="/admin/merchant">
-                                    Мои магазины <span>({{ request.merchant_count }})</span>
+                                    Мои магазины
+                                    {% comment %}
+                                    <span>({{ request.merchant_count }})</span>
+                                    {% endcomment %}
                                 </a>
                                 <a class="site-nav__action" href="/admin/merchant/create">
                                     <i class="icon icon_name_menu-add"></i> Добавить магазин
@@ -194,7 +193,10 @@
                             </li>
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="/admin/merchant/invoices">
-                                    Мои счета <span>({{ request.invoice_count }})</span>
+                                    Мои счета
+                                    {% comment %}
+                                    <span>({{ request.invoice_count }})</span>
+                                    {% endcomment %}
                                 </a>
                             </li>
                             <li class="simple-menu__item">
@@ -221,7 +223,7 @@
 
         <div class="site-sidebar__footer">
             <footer class="site-footer">
-                <a class="akit-copy" target="_blank" href="{{'http://www.akit.ru'|e}}">
+                <a class="akit-copy" target="_blank" href="http://www.akit.ru/">
                     <img class="akit-copy__logo" src="{% static 'images/admin/akit-logo.png' %}" alt="retail hotline" title="" />Ассоциация компаний интернет-торговли
                 </a>
 
@@ -236,7 +238,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-9 col-md-10 main">
+
                     {% block content %}{% endblock %}
+
                 </div>
             </div>
         </div>
@@ -244,7 +248,7 @@
 </div>
 
 {# Форма обратной связи #}
-{% include "admin/templates/merchant/_feedback_modal.jinja2" %}
+{% include "includes/feedback_modal.html" %}
 
 <script>
 $(function () {
@@ -306,14 +310,14 @@ $(function () {
 window.ENV = {
     imgBaseUrl: '/media/images/',
     imgStaticBaseUrl: '/',
-    userId: {{request.user_id}},
-    userRoles: {{request.roles|default([], true)}}
+    userId: {{ user.id }},
+    userRoles: ['{{ user.role }}']
 };
 </script>
 
-{% block appjs %}
-    {% render_bundle 'admin' 'js' %}
-{% endblock appjs %}
+{# JS #}
+{% render_bundle 'admin' 'js' %}
+{% block js %}{% endblock js %}
 
 </body>
 </html>

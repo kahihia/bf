@@ -6,26 +6,24 @@ import FormRow, {Input} from './form-row.jsx';
 
 class FormCol extends FormRow {
 	render() {
+		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+
 		return (
 			<label className={this.props.className}>
 				<ControlLabel
-					name={this.props.label}
-					required={!this.props.readOnly && this.props.required}
+					name={label}
+					required={!readOnly && required}
 					/>
+
 				<Input
-					className="form-control"
-					value={this.props.value}
-					type={this.props.type}
-					name={this.props.name}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
-					required={this.props.required}
-					readOnly={this.props.readOnly}
-					mask={this.props.mask}
+					{...{value, options, type, name, required, readOnly, mask}}
 					/>
-				{this.props.help ? (
+
+				{help ? (
 					<span className="help-block">
-						{this.props.help}
+						{help}
 					</span>
 				) : null}
 			</label>

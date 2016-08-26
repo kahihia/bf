@@ -1,4 +1,4 @@
-/* global window */
+/* global window toastr _ */
 
 import formatThousands from 'format-thousands';
 
@@ -26,4 +26,27 @@ export function formatPrice(price) {
 	return price.replace(/\d+/gi, match => {
 		return formatThousands(match);
 	});
+}
+
+export function processErrors(errors) {
+	process(errors);
+}
+
+function process(errors) {
+	if (_.isObject(errors)) {
+		processObject(errors);
+	} else if (_.isArray(errors)) {
+		processArray(errors);
+	} else if (_.isString(errors)) {
+		processString(errors);
+	}
+}
+function processObject(errors) {
+	_.forEach(errors, process);
+}
+function processArray(errors) {
+	_.forEach(errors, process);
+}
+function processString(error) {
+	toastr.warning(error);
 }
