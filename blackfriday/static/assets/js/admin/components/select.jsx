@@ -2,7 +2,10 @@ import React from 'react';
 
 const Select = React.createClass({
 	propTypes: {
-		options: React.PropTypes.array,
+		options: React.PropTypes.oneOfType([
+			React.PropTypes.array,
+			React.PropTypes.object
+		]),
 		selected: React.PropTypes.oneOfType([
 			React.PropTypes.string,
 			React.PropTypes.number
@@ -26,6 +29,16 @@ const Select = React.createClass({
 	render() {
 		const {options, selected, disabled, ...props} = this.props;
 
+		let o = options;
+		if (!Array.isArray(options)) {
+			o = Object.keys(options).map(key => {
+				return {
+					id: key,
+					name: options[key]
+				};
+			});
+		}
+
 		return (
 			<select
 				className="form-control"
@@ -34,7 +47,7 @@ const Select = React.createClass({
 				disabled={disabled}
 				style={props.style}
 				>
-				{options.map(option => {
+				{o.map(option => {
 					return (
 						<option
 							key={option.id}
