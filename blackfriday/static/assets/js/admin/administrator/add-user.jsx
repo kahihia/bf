@@ -3,17 +3,11 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
 import b from 'b_';
 import {processErrors} from '../utils.js';
+import {USER_ROLE, REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import FormHorizontalRow from '../components/form-horizontal-row.jsx';
 
-const PASSWORD_REGEXP = /^\S{8,}$/;
-const USER_ROLES = {
-	advertiser: 'Рекламодатель',
-	manager: 'Менеджер',
-	admin: 'Администратор'
-};
 const DEFAULT_ROLE = 'advertiser';
 
 const AddUser = React.createClass({
@@ -39,7 +33,7 @@ const AddUser = React.createClass({
 				password: {
 					label: 'Пароль',
 					value: '',
-					help: 'Не менее 8 симв., латинские буквы или цифры.',
+					help: HELP_TEXT.password,
 					type: 'password',
 					required: true
 				},
@@ -47,7 +41,7 @@ const AddUser = React.createClass({
 					label: 'Роль',
 					value: DEFAULT_ROLE,
 					defaultValue: DEFAULT_ROLE,
-					options: USER_ROLES,
+					options: USER_ROLE,
 					type: 'select',
 					required: true
 				}
@@ -70,7 +64,7 @@ const AddUser = React.createClass({
 			url: '/api/users/',
 			method: 'POST',
 			headers: {
-				'X-CSRFToken': Cookie.get('csrftoken')
+				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
 		}, (err, resp, data) => {
@@ -120,7 +114,7 @@ const AddUser = React.createClass({
 	},
 
 	checkPassword() {
-		return PASSWORD_REGEXP.test(this.state.fields.password.value);
+		return REGEXP.password.test(this.state.fields.password.value);
 	},
 
 	handleChange(e) {

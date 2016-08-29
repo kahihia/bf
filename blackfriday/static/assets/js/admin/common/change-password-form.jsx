@@ -3,10 +3,8 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
+import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import FormRow from '../components/form-row.jsx';
-
-const PASSWORD_REGEXP = /^\S{8,}$/;
 
 const ChangePasswordForm = React.createClass({
 	propTypes: {
@@ -23,7 +21,7 @@ const ChangePasswordForm = React.createClass({
 				password: {
 					label: 'Введите новый пароль',
 					value: '',
-					help: 'Не менее 8 симв., латинские буквы или цифры.',
+					help: HELP_TEXT.password,
 					type: 'password',
 					required: true
 				},
@@ -62,7 +60,7 @@ const ChangePasswordForm = React.createClass({
 			url: `/api/users/${this.props.userId}/`,
 			method: 'PATCH',
 			headers: {
-				'X-CSRFToken': Cookie.get('csrftoken')
+				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
 		}, (err, resp, data) => {
@@ -87,7 +85,7 @@ const ChangePasswordForm = React.createClass({
 	},
 
 	checkPassword() {
-		return PASSWORD_REGEXP.test(this.state.fields.password.value);
+		return REGEXP.password.test(this.state.fields.password.value);
 	},
 
 	comparePasswords() {

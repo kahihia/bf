@@ -3,10 +3,8 @@
 
 import React from 'react';
 import xhr from 'xhr';
+import {REGEXP, HELP_TEXT} from '../const.js';
 import FormRow from '../components/form-row.jsx';
-
-const PASSWORD_REGEXP = /^\S{8,}$/;
-const EMAIL_REGEXP = /\S@\S+\.\S/;
 
 const AddAdvertiserForm = React.createClass({
 	propTypes: {
@@ -61,12 +59,12 @@ const AddAdvertiserForm = React.createClass({
 	},
 
 	checkEmail() {
-		return EMAIL_REGEXP.test(this.state.login);
+		return REGEXP.email.test(this.state.login);
 	},
 
 	checkPassword() {
 		const {password, password2} = this.state;
-		return PASSWORD_REGEXP.test(password) && password === password2;
+		return REGEXP.password.test(password) && password === password2;
 	},
 
 	render() {
@@ -102,7 +100,7 @@ const AddAdvertiserForm = React.createClass({
 					type="password"
 					onChange={this.handleChange}
 					required
-					help="Не менее 8 симв., латинские буквы или цифры."
+					help={HELP_TEXT.password}
 					/>
 
 				<FormRow
