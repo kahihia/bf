@@ -1,6 +1,6 @@
 /* global window */
 
-const ENV = JSON.parse(JSON.stringify(window.ENV));
+const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function resolveImgPath(path) {
 	return `${ENV.imgBaseUrl}${path}`;

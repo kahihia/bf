@@ -2,7 +2,7 @@
 
 import formatThousands from 'format-thousands';
 
-const ENV = JSON.parse(JSON.stringify(window.ENV));
+const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function resolveImgPath(path, type) {
 	if (!type) {
