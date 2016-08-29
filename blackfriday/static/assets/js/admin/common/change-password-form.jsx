@@ -17,6 +17,7 @@ const ChangePasswordForm = React.createClass({
 
 	getInitialState() {
 		return {
+			isLoading: false,
 			fields: {
 				password: {
 					label: 'Введите новый пароль',
@@ -52,6 +53,8 @@ const ChangePasswordForm = React.createClass({
 			return;
 		}
 
+		this.setState({isLoading: true});
+
 		const json = {
 			password: this.state.fields.password.value
 		};
@@ -64,6 +67,8 @@ const ChangePasswordForm = React.createClass({
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				if (data) {
 					toastr.success('Пароль успешно изменен');
@@ -144,7 +149,7 @@ const ChangePasswordForm = React.createClass({
 					<button
 						className="btn btn-primary"
 						onClick={this.handleClickSubmit}
-						disabled={!this.validate()}
+						disabled={this.state.isLoading || !this.validate()}
 						type="button"
 						>
 						{'Сохранить'}
