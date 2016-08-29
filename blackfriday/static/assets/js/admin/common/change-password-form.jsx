@@ -43,7 +43,7 @@ const ChangePasswordForm = React.createClass({
 	resetForm() {
 		const fields = this.state.fields;
 		_.forEach(fields, field => {
-			field.value = '';
+			field.value = field.defaultValue || '';
 		});
 		this.forceUpdate();
 	},
