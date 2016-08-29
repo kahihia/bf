@@ -14,6 +14,7 @@ const USER_ROLES = {
 	manager: 'Менеджер',
 	admin: 'Администратор'
 };
+const DEFAULT_ROLE = 'advertiser';
 
 const AddUser = React.createClass({
 	propTypes: {
@@ -29,6 +30,12 @@ const AddUser = React.createClass({
 					type: 'email',
 					required: true
 				},
+				name: {
+					label: 'Имя/Название',
+					value: '',
+					type: 'text',
+					required: false
+				},
 				password: {
 					label: 'Пароль',
 					value: '',
@@ -38,7 +45,8 @@ const AddUser = React.createClass({
 				},
 				role: {
 					label: 'Роль',
-					value: 'advertiser',
+					value: DEFAULT_ROLE,
+					defaultValue: DEFAULT_ROLE,
 					options: USER_ROLES,
 					type: 'select',
 					required: true
@@ -128,7 +136,7 @@ const AddUser = React.createClass({
 	resetForm() {
 		const fields = this.state.fields;
 		_.forEach(fields, field => {
-			field.value = '';
+			field.value = field.defaultValue || '';
 		});
 		this.forceUpdate();
 	},
@@ -163,6 +171,7 @@ const AddUser = React.createClass({
 					action=""
 					>
 					{this.buildRow('email')}
+					{this.buildRow('name')}
 					{this.buildRow('password')}
 					{this.buildRow('role')}
 
