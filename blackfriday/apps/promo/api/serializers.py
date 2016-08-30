@@ -43,3 +43,9 @@ class PromoSerializer(serializers.ModelSerializer):
         promo = super().create(validated_data)
         PromoOption.objects.bulk_create(PromoOption(promo=promo, **kw) for kw in promo_options)
         return promo
+
+
+class PromoTinySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Promo
+        fields = ('id', 'name')
