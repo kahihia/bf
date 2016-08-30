@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Glyphicon from '../components/glyphicon.jsx';
 import RegistrationForm from '../common/registration-form.jsx';
 import MerchantProfileForm from '../common/merchant-profile-form.jsx';
 
@@ -19,7 +20,7 @@ const UserRegistration = React.createClass({
 	},
 
 	handleSubmitMerchantProfile() {
-		console.log('success');
+		this.setState({step: 3});
 	},
 
 	render() {
@@ -44,6 +45,10 @@ const UserRegistration = React.createClass({
 						isNew
 						/>
 				) : null}
+
+				{step === 3 ? (
+					<RegistrationSuccess/>
+				) : null}
 			</div>
 		);
 	}
@@ -59,10 +64,19 @@ const RegistrationHeader = props => (
 			</strong>
 
 			<small>
-				{`Шаг ${props.step} `}
-				<span className="text-muted">
-					{'/ 2'}
-				</span>
+				{props.step < 3 ? (
+					<span>
+						{`Шаг ${props.step} `}
+						<span className="text-muted">
+							{'/ 2'}
+						</span>
+					</span>
+				) : (
+					<Glyphicon
+						name="ok"
+						className="text-success"
+						/>
+				)}
 			</small>
 		</h1>
 	</div>
@@ -71,3 +85,23 @@ RegistrationHeader.propTypes = {
 	step: React.PropTypes.number.isRequired
 };
 
+const RegistrationSuccess = () => (
+	<div>
+		<p>
+			{'На ваш Email отправлено письмо со ссылкой о подтверждении регистрации.'}
+		</p>
+
+		<p>
+			<strong>
+				{'Чтобы войти в личный кабинет, пожалуйста, подтвердите регистрацию.'}
+			</strong>
+		</p>
+
+		<a
+			className="btn btn-primary"
+			href="/admin/login/"
+			>
+			{'Продолжить'}
+		</a>
+	</div>
+);
