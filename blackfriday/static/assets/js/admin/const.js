@@ -11,6 +11,11 @@ export const USER_ROLE = {
 	admin: 'Администратор'
 };
 
+export const HEAD_BASIS = {
+	0: 'На основании устава',
+	1: 'На основании доверенности'
+};
+
 export const HELP_TEXT = {
 	password: 'Не менее 8 симв., латинские буквы или цифры.'
 };

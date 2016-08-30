@@ -3,11 +3,12 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {TOKEN} from '../const.js';
+import {HEAD_BASIS, TOKEN} from '../const.js';
 import FormRow from '../components/form-row.jsx';
 import FormCol from '../components/form-col.jsx';
 
 const PHONE_MASK = '+7 (111) 111-11-11';
+const DEFAULT_BASIS = '0';
 
 const MerchantProfileForm = React.createClass({
 	propTypes: {
@@ -46,13 +47,28 @@ const MerchantProfileForm = React.createClass({
 					value: '',
 					required: true
 				},
-				inn: {
-					label: 'ИНН',
+				contactPhone: {
+					label: 'Сотовый тел. отв. лица',
 					value: '',
 					required: true
 				},
-				legalAddress: {
-					label: 'Юридический адрес',
+				headAppointment: {
+					label: 'Должность руководителя',
+					value: ''
+				},
+				headBasis: {
+					label: 'На основании чего действует руководитель',
+					value: DEFAULT_BASIS,
+					defaultValue: DEFAULT_BASIS,
+					options: HEAD_BASIS,
+					type: 'select'
+				},
+				headName: {
+					label: 'ФИО руководителя',
+					value: ''
+				},
+				inn: {
+					label: 'ИНН',
 					value: '',
 					required: true
 				},
@@ -65,13 +81,13 @@ const MerchantProfileForm = React.createClass({
 					value: '',
 					required: true
 				},
-				name: {
-					label: 'Наименование юридического лица',
+				legalAddress: {
+					label: 'Юридический адрес',
 					value: '',
 					required: true
 				},
-				contactPhone: {
-					label: 'Сотовый тел. отв. лица',
+				name: {
+					label: 'Наименование юридического лица',
 					value: '',
 					required: true
 				}
@@ -251,7 +267,7 @@ const MerchantProfileForm = React.createClass({
 	},
 
 	buildRow(name) {
-		const {label, required} = this.state.fields[name];
+		const field = this.state.fields[name];
 		let mask;
 
 		if (name === 'contactPhone') {
@@ -263,13 +279,14 @@ const MerchantProfileForm = React.createClass({
 				value={this.state.fields[name].value}
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
-				{...{name, label, required, mask}}
+				{...{name, mask}}
+				{...field}
 				/>
 		);
 	},
 
 	buildCol(name) {
-		const {label, required} = this.state.fields[name];
+		const field = this.state.fields[name];
 
 		return (
 			<FormCol
@@ -277,7 +294,8 @@ const MerchantProfileForm = React.createClass({
 				value={this.state.fields[name].value}
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
-				{...{name, label, required}}
+				{...{name}}
+				{...field}
 				/>
 		);
 	},
@@ -320,6 +338,10 @@ const MerchantProfileForm = React.createClass({
 				</div>
 
 				{this.buildRow('contactPhone')}
+
+				{this.buildRow('headName')}
+				{this.buildRow('headAppointment')}
+				{this.buildRow('headBasis')}
 
 				{readOnly ? null : (
 					<div className="form-group">
