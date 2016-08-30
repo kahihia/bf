@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.views.generic.base import TemplateView
 
 
 urlpatterns = [
@@ -10,6 +11,8 @@ urlpatterns = [
     url(r'^api/', include('api', namespace='api')),
 
     url(r'^django-admin/', include(admin.site.urls)),
+
+    url(r'^admin\/registration/$', TemplateView.as_view(template_name='users/registration.html')),
 ]
 
 

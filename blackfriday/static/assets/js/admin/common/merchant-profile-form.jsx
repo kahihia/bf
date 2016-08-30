@@ -1,8 +1,9 @@
-/* global toastr, FormData, _ */
+/* global toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
+import {TOKEN} from '../const.js';
 import FormRow from '../components/form-row.jsx';
 import FormCol from '../components/form-col.jsx';
 
@@ -21,13 +22,14 @@ const MerchantProfileForm = React.createClass({
 
 	getInitialState() {
 		return {
+			isLoading: false,
 			profileId: '',
 			fields: {
 				account: {
 					label: 'Расчётный счёт',
 					value: ''
 				},
-				addr: {
+				address: {
 					label: 'Фактический адрес',
 					value: ''
 				},
@@ -39,7 +41,7 @@ const MerchantProfileForm = React.createClass({
 					label: 'БИК',
 					value: ''
 				},
-				contact: {
+				contactName: {
 					label: 'ФИО ответственного лица',
 					value: '',
 					required: true
@@ -49,7 +51,7 @@ const MerchantProfileForm = React.createClass({
 					value: '',
 					required: true
 				},
-				jur_addr: {
+				legalAddress: {
 					label: 'Юридический адрес',
 					value: '',
 					required: true
@@ -68,7 +70,7 @@ const MerchantProfileForm = React.createClass({
 					value: '',
 					required: true
 				},
-				phone: {
+				contactPhone: {
 					label: 'Сотовый тел. отв. лица',
 					value: '',
 					required: true
@@ -93,27 +95,35 @@ const MerchantProfileForm = React.createClass({
 		this.requestProfileUser();
 	},
 
+	// Get profile info
 	requestProfileUser() {
+		this.setState({isLoading: true});
+
 		xhr({
-			url: `/profile/user/${this.props.userId}`,
+			url: `/api/advertisers/${this.props.userId}/`,
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
 			json: true
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				const state = this.state;
 
 				if (data) {
-					if (data.name) {
-						state.fields.name.value = data.name;
-					}
-
 					if (data.id) {
 						state.profileId = data.id;
 					}
 
-					if (data.adprofile) {
+					if (data.profile) {
 						Object.keys(state.fields).forEach(key => {
-							state.fields[key].value = data.adprofile[key] || '';
+							state.fields[key].value = data.profile[key] || '';
 						});
+					}
+
+					if (data.name) {
+						state.fields.name.value = data.name;
 					}
 				}
 
@@ -124,15 +134,18 @@ const MerchantProfileForm = React.createClass({
 		});
 	},
 
+	// Update profile info
 	requestProfileUserSave() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
+		this.setState({isLoading: true});
+
 		const data = this.state.fields;
-		const requestData = {
+		const json = {
 			name: data.name.value,
-			adprofile: Object.keys(data).reduce((a, b) => {
+			profile: Object.keys(data).reduce((a, b) => {
 				if (b !== 'name') {
 					a[b] = data[b].value || '';
 				}
@@ -141,10 +154,15 @@ const MerchantProfileForm = React.createClass({
 		};
 
 		xhr({
-			url: `/profile/${this.state.profileId}`,
-			method: 'PUT',
-			json: requestData
+			url: `/api/advertisers/${this.state.profileId}/`,
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
 		}, (err, resp) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
@@ -156,18 +174,35 @@ const MerchantProfileForm = React.createClass({
 		});
 	},
 
+	// Create profile info
 	requestProfileUserCreate() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
-		const formData = new FormData(this.form);
+		this.setState({isLoading: true});
+
+		const data = this.state.fields;
+		const json = {
+			name: data.name.value,
+			profile: Object.keys(data).reduce((a, b) => {
+				if (b !== 'name') {
+					a[b] = data[b].value || '';
+				}
+				return a;
+			}, {})
+		};
 
 		xhr({
-			url: '/admin/profile',
-			method: 'POST',
-			body: formData
+			url: `/api/advertisers/${this.props.userId}/`,
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
 		}, (err, resp) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
@@ -179,13 +214,15 @@ const MerchantProfileForm = React.createClass({
 		});
 	},
 
-	validate() {
+	validate(warnings) {
 		let isValid = true;
 
 		_.forEach(this.state.fields, field => {
 			if (field.required && !field.value) {
 				isValid = false;
-				toastr.warning(`Заполните поле "${field.label}"`);
+				if (warnings) {
+					toastr.warning(`Заполните поле "${field.label}"`);
+				}
 				return false;
 			}
 		});
@@ -217,7 +254,7 @@ const MerchantProfileForm = React.createClass({
 		const {label, required} = this.state.fields[name];
 		let mask;
 
-		if (name === 'phone') {
+		if (name === 'contactPhone') {
 			mask = PHONE_MASK;
 		}
 
@@ -246,19 +283,17 @@ const MerchantProfileForm = React.createClass({
 	},
 
 	render() {
-		const form = ref => {
-			this.form = ref;
-		};
+		const {profileId, isLoading} = this.state;
+		const {userId, readOnly} = this.props;
 
 		return (
 			<form
-				ref={form}
-				action={`/profile/${this.state.profileId}`}
+				action={`/profile/${profileId}`}
 				method="POST"
 				>
 				<input
 					name="user_id"
-					value={this.props.userId}
+					value={userId}
 					type="hidden"
 					/>
 
@@ -271,8 +306,8 @@ const MerchantProfileForm = React.createClass({
 					</div>
 				</div>
 
-				{this.buildRow('jur_addr')}
-				{this.buildRow('addr')}
+				{this.buildRow('legalAddress')}
+				{this.buildRow('address')}
 				{this.buildRow('account')}
 				{this.buildRow('bank')}
 				{this.buildRow('korr')}
@@ -280,20 +315,21 @@ const MerchantProfileForm = React.createClass({
 				<div className="form-group">
 					<div className="row">
 						{this.buildCol('bik')}
-						{this.buildCol('contact')}
+						{this.buildCol('contactName')}
 					</div>
 				</div>
 
-				{this.buildRow('phone')}
+				{this.buildRow('contactPhone')}
 
-				{this.props.readOnly ? null : (
+				{readOnly ? null : (
 					<div className="form-group">
 						<button
 							className="btn btn-primary"
 							onClick={this.handleClickSubmit}
+							disabled={isLoading || !this.validate()}
 							type="submit"
 							>
-							Сохранить
+							{'Сохранить'}
 						</button>
 					</div>
 				)}
