@@ -41,12 +41,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merchant
-        fields = ('status', 'comment')
 
     def get_default_field_names(self, declared_fields, model_info):
         fields = ['status']
-        user = self.context['request'].user
-        if user and user.is_authenticated and user.role == 'admin':
+        request = self.context.get('request')
+        if not request or (request.user and request.user.is_authenticated and request.user.role == 'admin'):
             fields += ['comment']
         return fields
 

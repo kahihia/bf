@@ -84,3 +84,7 @@ class Merchant(models.Model):
     def options_count(self):
         # ToDo: количество опций из счетов
         return None
+
+    @property
+    def owner_id(self):
+        return self.advertiser_id
