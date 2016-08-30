@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import TemplateView
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -13,6 +14,7 @@ urlpatterns = [
     url(r'^django-admin/', include(admin.site.urls)),
 
     url(r'^admin\/registration/$', TemplateView.as_view(template_name='users/registration.html')),
+    url(r'^admin\/login/$', auth_views.login, {'template_name': 'users/login.html'}),
 ]
 
 
