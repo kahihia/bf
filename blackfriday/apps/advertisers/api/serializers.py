@@ -12,7 +12,8 @@ from ..models import AdvertiserProfile, Merchant, ModerationStatus
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdvertiserProfile
-        fields = ('account', 'inn', 'bik', 'kpp', 'okpo', 'address', 'legal_address', 'contact_name', 'contact_phone')
+        fields = ('account', 'inn', 'bik', 'kpp', 'okpo', 'address', 'legal_address', 'contact_name', 'contact_phone',
+                  'head_name', 'head_appointment', 'head_basis')
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
