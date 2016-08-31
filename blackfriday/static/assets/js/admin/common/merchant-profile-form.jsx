@@ -319,24 +319,24 @@ const MerchantProfileForm = React.createClass({
 
 				<div className="form-group">
 					<div className="row">
+						{this.buildCol('bik')}
 						{this.buildCol('inn')}
-						{this.buildCol('kpp')}
 					</div>
 				</div>
-
-				{this.buildRow('legalAddress')}
-				{this.buildRow('address')}
-				{this.buildRow('account')}
-				{this.buildRow('bank')}
-				{this.buildRow('korr')}
 
 				<div className="form-group">
 					<div className="row">
-						{this.buildCol('bik')}
-						{this.buildCol('contactName')}
+						{this.buildCol('kpp')}
+						{this.buildCol('korr')}
 					</div>
 				</div>
 
+				{this.buildRow('account')}
+				{this.buildRow('bank')}
+
+				{this.buildRow('address')}
+				{this.buildRow('legalAddress')}
+				{this.buildRow('contactName')}
 				{this.buildRow('contactPhone')}
 
 				{this.buildRow('headName')}
@@ -346,7 +346,7 @@ const MerchantProfileForm = React.createClass({
 				{readOnly ? null : (
 					<div className="form-group">
 						<button
-							className="btn btn-primary"
+							className="btn btn-primary btn-lg"
 							onClick={this.handleClickSubmit}
 							disabled={isLoading || !this.validate()}
 							type="submit"

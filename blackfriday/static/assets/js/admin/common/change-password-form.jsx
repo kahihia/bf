@@ -147,7 +147,7 @@ const ChangePasswordForm = React.createClass({
 					</button>
 
 					<button
-						className="btn btn-primary"
+						className="btn btn-primary btn-lg"
 						onClick={this.handleClickSubmit}
 						disabled={this.state.isLoading || !this.validate()}
 						type="button"

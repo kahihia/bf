@@ -191,7 +191,7 @@ const RegistrationForm = React.createClass({
 
 					<div className="form-group">
 						<button
-							className="btn btn-primary"
+							className="btn btn-primary btn-lg"
 							disabled={this.state.isLoading || !this.validate()}
 							type="submit"
 							>
