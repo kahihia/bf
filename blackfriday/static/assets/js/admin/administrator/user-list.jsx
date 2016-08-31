@@ -4,14 +4,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
+import {USER_ROLE} from '../const.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import ChangePasswordForm from '../common/change-password-form.jsx';
-
-const USER_ROLES = {
-	admin: 'Администратор',
-	manager: 'Менеджер',
-	advertiser: 'Рекламодатель'
-};
 
 const UserList = React.createClass({
 	propTypes: {
@@ -148,7 +143,7 @@ const UserListItem = React.createClass({
 				</td>
 
 				<td className={b('user-list', 'table-td', {name: 'role'})}>
-					{USER_ROLES[role]}
+					{USER_ROLE[role]}
 				</td>
 
 				<td className={b('user-list', 'table-td', {name: 'status'})}>

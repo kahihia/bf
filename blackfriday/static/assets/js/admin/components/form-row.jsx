@@ -61,7 +61,10 @@ FormRow.propTypes = {
 	onKeyUp: React.PropTypes.func,
 	required: React.PropTypes.bool,
 	readOnly: React.PropTypes.bool,
-	help: React.PropTypes.string,
+	help: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.node
+	]),
 	mask: React.PropTypes.string
 };
 FormRow.defaultProps = {

@@ -3,10 +3,8 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
+import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import FormRow from '../components/form-row.jsx';
-
-const PASSWORD_REGEXP = /^\S{8,}$/;
 
 const ChangePasswordForm = React.createClass({
 	propTypes: {
@@ -19,11 +17,12 @@ const ChangePasswordForm = React.createClass({
 
 	getInitialState() {
 		return {
+			isLoading: false,
 			fields: {
 				password: {
 					label: 'Введите новый пароль',
 					value: '',
-					help: 'Не менее 8 симв., латинские буквы или цифры.',
+					help: HELP_TEXT.password,
 					type: 'password',
 					required: true
 				},
@@ -44,7 +43,7 @@ const ChangePasswordForm = React.createClass({
 	resetForm() {
 		const fields = this.state.fields;
 		_.forEach(fields, field => {
-			field.value = '';
+			field.value = field.defaultValue || '';
 		});
 		this.forceUpdate();
 	},
@@ -54,6 +53,8 @@ const ChangePasswordForm = React.createClass({
 			return;
 		}
 
+		this.setState({isLoading: true});
+
 		const json = {
 			password: this.state.fields.password.value
 		};
@@ -62,10 +63,12 @@ const ChangePasswordForm = React.createClass({
 			url: `/api/users/${this.props.userId}/`,
 			method: 'PATCH',
 			headers: {
-				'X-CSRFToken': Cookie.get('csrftoken')
+				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				if (data) {
 					toastr.success('Пароль успешно изменен');
@@ -87,7 +90,7 @@ const ChangePasswordForm = React.createClass({
 	},
 
 	checkPassword() {
-		return PASSWORD_REGEXP.test(this.state.fields.password.value);
+		return REGEXP.password.test(this.state.fields.password.value);
 	},
 
 	comparePasswords() {
@@ -144,9 +147,9 @@ const ChangePasswordForm = React.createClass({
 					</button>
 
 					<button
-						className="btn btn-primary"
+						className="btn btn-primary btn-lg"
 						onClick={this.handleClickSubmit}
-						disabled={!this.validate()}
+						disabled={this.state.isLoading || !this.validate()}
 						type="button"
 						>
 						{'Сохранить'}

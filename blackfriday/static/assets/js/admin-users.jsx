@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
+import {TOKEN} from './admin/const.js';
 import AddUser from './admin/administrator/add-user.jsx';
 import UserList from './admin/administrator/user-list.jsx';
 
@@ -42,7 +42,7 @@ import UserList from './admin/administrator/user-list.jsx';
 				url: `/api/users/${userId}/verification/`,
 				method: 'POST',
 				headers: {
-					'X-CSRFToken': Cookie.get('csrftoken')
+					'X-CSRFToken': TOKEN.csrftoken
 				}
 			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
