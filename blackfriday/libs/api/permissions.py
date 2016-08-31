@@ -59,5 +59,17 @@ def role_permission(*role_list):
     return classes_cache[role_list]
 
 
+def action_permission(*action_list):
+    classes_cache = {}
+
+    if action_list not in classes_cache:
+        class ActionBasedPermission(BaseComplexPermission):
+            def has_permission(self, request, view):
+                return view.action in action_list
+        classes_cache[action_list] = ActionBasedPermission
+    return classes_cache[action_list]
+
+
 IsAdmin = role_permission('admin')
 IsAdvertiser = role_permission('advertiser')
+IsManager = role_permission('manager')

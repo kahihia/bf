@@ -7,3 +7,9 @@ class PartnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partner
         fields = ('id', 'name', 'url', 'image')
+
+
+class PartnerTinySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Partner
+        fields = ('id', 'name')
