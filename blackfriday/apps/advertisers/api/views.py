@@ -55,7 +55,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         obj = self.get_object()
         if request.method.lower() in ('put', 'patch'):
             partners = set(map(int, request.data))
-            if len(Partner.objects.filter(id__in=partners)) < len(partners):
+            if Partner.objects.filter(id__in=partners).count() < len(partners):
                 raise ValidationError('Партнер не найден')
             obj.partners.clear()
             obj.partners.add(*partners)
