@@ -7,3 +7,41 @@ DATABASES = {
         'HOST': '127.0.0.1'
     }
 }
+
+# при DEBUG = False обязательно
+#ALLOWED_HOSTS = [
+#    'blackfriday.py.220-volt.us',
+#]
+
+#   Sentry
+#   ======
+#from .logging import LOGGING
+#from .common import PROJECT_ROOT, INSTALLED_APPS
+
+# raven нужно устанавливать через pip отдельно
+#try:
+#    import raven
+#except ImportError:
+#    raise RuntimeError('Unable to import `raven` module, please install it with `pip install raven==5.21.0`.')
+
+#INSTALLED_APPS += [
+#    'raven.contrib.django.raven_compat',
+#]
+
+#LOGGING['handlers']['sentry'] = {
+#    'level': 'ERROR',
+#    'class': 'raven.contrib.django.handlers.SentryHandler'
+#}
+
+#LOGGING['loggers']['management_commands'] = {
+#    'handlers': ['sentry'],
+#    'level': 'ERROR'
+#}
+
+# значения брать из соответствующего проекта в Sentry
+#RAVEN_CONFIG = {
+#    # Insert actual DSN from Sentry here
+#    'dsn': '',
+#    # Automatically configure the release based on the git info.
+#    'release': raven.fetch_git_sha(PROJECT_ROOT)
+#}
