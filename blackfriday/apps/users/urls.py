@@ -4,5 +4,5 @@ from .views import UserListView
 
 
 urlpatterns = [
-    url(r'^$', UserListView.as_view(), name='list'),
+    url(r'^users/$', UserListView.as_view(), name='list'),
 ]
