@@ -5,7 +5,7 @@ from ..models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.RegexField(r'^\S+$', write_only=True)
+    password = serializers.RegexField(r'^\w{8,}$$', write_only=True)
     role = serializers.ChoiceField(choices=[(x, x) for x in ['admin', 'manager', 'advertiser']])
 
     class Meta:
