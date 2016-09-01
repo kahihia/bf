@@ -15,6 +15,8 @@ urlpatterns = [
 
     url(r'^admin\/registration/$', TemplateView.as_view(template_name='users/registration.html')),
     url(r'^admin\/login/$', auth_views.login, {'template_name': 'users/login.html'}),
+
+    url(r'^landing/$', TemplateView.as_view(template_name='landing.html')),
 ]
 
 

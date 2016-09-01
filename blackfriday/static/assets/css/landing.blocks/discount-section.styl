@@ -1,0 +1,65 @@
+.discount-section
+	text-align: center
+	padding: 80px 0 100px
+
+	&__title
+		font-weight: bold
+		font-size: 37px
+		line-height: 1.4
+		text-transform: uppercase
+		margin-bottom: 65px
+
+		small
+			display: block
+			font-size: 24px
+
+	&__steps
+		margin: 0 0 60px
+		padding: 0
+
+	&__step
+		list-style-type: none
+		text-align: center
+
+		&:first-child
+			.discount-section__step-icon
+				&:before
+					display: none
+
+	&__step-icon
+		color = #a9e100
+
+		border: 2px solid color
+		border-radius: 50%
+		width: 118px
+		height: 118px
+		margin: 0 auto 20px
+		line-height: 114px
+		text-align: center
+		position: relative
+
+		&:before
+			content: ''
+			position: absolute
+			top: 45%
+			right: 100%
+			margin-right: 30px
+			width: 8px
+			height: 8px
+			border-radius: 50%
+			background-color: color
+			box-shadow: -20px 0 0 color,
+						-40px 0 0 color,
+						-60px 0 0 color,
+						-80px 0 0 color,
+						-100px 0 0 color,
+						-120px 0 0 color,
+						-140px 0 0 color
+
+	&__step-text
+		text-align: center
+		font-size: 15px
+		line-height: 1.2
+
+	&__action
+		text-align: center
