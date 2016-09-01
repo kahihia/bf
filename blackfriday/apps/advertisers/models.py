@@ -20,7 +20,7 @@ class AdvertiserProfile(models.Model):
     )
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
-    inn = models.CharField(max_length=12, null=True, blank=True, verbose_name='ИНН')
+    inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
     bik = models.CharField(max_length=9, null=True, blank=True, verbose_name='БИК')
     kpp = models.CharField(max_length=9, null=True, blank=True, verbose_name='КПП')
     korr = models.CharField(max_length=20, null=True, blank=True, verbose_name='Корр. счет')
@@ -50,8 +50,8 @@ class Merchant(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
-    url = models.URLField(null=True, blank=True, verbose_name='URL')
-    slug = models.SlugField(null=True, blank=True, verbose_name='Слаг')
+    url = models.URLField(null=True, blank=True, unique=True, verbose_name='URL')
+    slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
     image = models.ImageField(upload_to='merchants', verbose_name='Изображение')
