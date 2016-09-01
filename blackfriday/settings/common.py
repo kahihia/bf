@@ -79,6 +79,8 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'users.User'
 
 VERIFICATION = {
-    'subject': 'Verification',
-    'from_email': 'test@test.ru'
+    'subject': 'RealBlackFriday — активация учётной записи',
+    'from_email': 'test@test.ru',
 }
+
+VERIFICATION_TTL = 24

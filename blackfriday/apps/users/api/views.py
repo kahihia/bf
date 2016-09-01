@@ -1,5 +1,7 @@
 from smtplib import SMTPException
 
+from django.conf import settings
+
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticated
@@ -25,8 +27,13 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def verification(self, request, *args, **kwargs):
         instance = self.get_object()
+        context = {
+            'host': request.get_host(),
+            'hours': '{} час{}'.format(settings.VERIFICATION_TTL, 'а' if settings.VERIFICATION_TTL % 10 else 'ов')
+        }
+
         try:
-            instance.send_verification()
+            instance.send_verification(request, context=context)
         except SMTPException:
             raise ServiceUnavailable('Ошибка отправки почты')
         return Response(self.get_serializer(instance).data)
