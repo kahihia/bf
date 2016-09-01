@@ -90,6 +90,8 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_URL = '/django-admin/login/'
 
 VERIFICATION = {
-    'subject': 'Verification',
-    'from_email': 'test@test.ru'
+    'subject': 'RealBlackFriday — активация учётной записи',
+    'from_email': 'test@test.ru',
 }
+
+VERIFICATION_TTL = 24
