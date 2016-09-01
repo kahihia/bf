@@ -87,7 +87,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
-LOGIN_URL = '/django-admin/login/'
+LOGIN_URL = '/admin/login/'
 
 VERIFICATION = {
     'subject': 'Verification',
