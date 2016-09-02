@@ -132,8 +132,18 @@
                             за 5 часов до начала акции:
                         </div>
 
-                        <form class="aa-section__form" action="">
-                            <input class="form-control" placeholder="Оставьте ваш e-mail" type="email">
+                        <form
+                            class="aa-section__form"
+                            method="POST"
+                            action="/api/subscribers/"
+                            >
+                            <input
+                                class="form-control"
+                                placeholder="Оставьте ваш e-mail"
+                                name="email"
+                                type="email"
+                                required
+                                >
 
                             <button class="btn btn-primary btn-lg" type="submit">
                                 <img
@@ -397,7 +407,11 @@
 
         <div class="row">
             <div class="col-sm-5 col-sm-offset-7">
-                <form class="subscribe-section__form" action="">
+                <form
+                    class="subscribe-section__form"
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
                     <p class="subscribe-section__form-text">
                         Оставьте вашу почту,<br>
                         чтобы принять участие<br>
@@ -405,8 +419,20 @@
                     </p>
 
                     <div class="form-group subscribe-section__form-inputs">
-                        <input class="form-control" placeholder="Ваше имя" type="text">
-                        <input class="form-control" placeholder="E-mail" type="email">
+                        <input
+                            class="form-control"
+                            placeholder="Ваше имя"
+                            name="name"
+                            type="text"
+                            >
+
+                        <input
+                            class="form-control"
+                            placeholder="E-mail"
+                            name="email"
+                            type="email"
+                            required
+                            >
                     </div>
 
                     <div class="form-group">
@@ -524,26 +550,61 @@
             </div>
 
             <div class="col-sm-7">
-                <form class="party-section__form" action="">
+                <form
+                    class="party-section__form"
+                    method="POST"
+                    action="/api/applications/"
+                    >
                     <div class="row">
                         <div class="col-sm-5">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Ваше имя" type="text">
+                                <input
+                                    class="form-control"
+                                    placeholder="Ваше имя"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    >
                             </div>
+
                             <div class="form-group">
-                                <input class="form-control" placeholder="Название организации" type="text">
+                                <input
+                                    class="form-control"
+                                    placeholder="Название организации"
+                                    name="organizationName"
+                                    type="text"
+                                    required
+                                    >
                             </div>
+
                             <div class="form-group">
-                                <input class="form-control" placeholder="Контактный телефон" type="text">
+                                <input
+                                    class="form-control"
+                                    placeholder="Контактный телефон"
+                                    name="phone"
+                                    type="text"
+                                    required
+                                    >
                             </div>
+
                             <div class="form-group">
-                                <input class="form-control" placeholder="E-mail" type="email">
+                                <input
+                                    class="form-control"
+                                    placeholder="E-mail"
+                                    name="email"
+                                    type="email"
+                                    required
+                                    >
                             </div>
                         </div>
 
                         <div class="col-sm-7">
                             <div class="form-group">
-                                <textarea class="form-control" placeholder="Комментарий о сотрудничестве" name=""></textarea>
+                                <textarea
+                                    class="form-control"
+                                    placeholder="Комментарий о сотрудничестве"
+                                    name="comment"
+                                    ></textarea>
                             </div>
 
                             <div class="form-group">
@@ -634,6 +695,7 @@
 <script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
 <script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>
+<script src="{% static 'js/landing/jquery.form.min.js' %}"></script>
 
 {% block js %}
     {% render_bundle 'landing' 'js' %}
