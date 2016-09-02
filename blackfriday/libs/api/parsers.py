@@ -18,7 +18,6 @@ class CamelCaseMultiPartParser(MultiPartParser):
     def parse(self, stream, media_type=None, parser_context=None):
         data = super().parse(stream, media_type, parser_context)
         data = underscore_data_and_files(data)
-        print(data)
         return data
 
 
