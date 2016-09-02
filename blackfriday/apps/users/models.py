@@ -152,7 +152,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
 
-    def send_verification(self):
-        token = Token.create(self, type=TokenType.VERIFICATION)
-        message = render_to_string('users/messages/verification.txt', context={'user': self, 'token': token})
+    def send_verification(self, context=None):
+        token = Token.create(self, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL)
+
+        _context = {'user': self, 'token': token}
+        if context:
+            _context.update(context)
+
+        message = render_to_string('users/messages/verification.txt', context=_context)
         send_mail(message=message, recipient_list=[self.email], **settings.VERIFICATION)

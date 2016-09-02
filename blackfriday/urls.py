@@ -6,15 +6,15 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    url(r'^users/', include('apps.users.urls', namespace='users')),
-    url(r'^advertisers/', include('apps.advertisers.urls', namespace='advertisers')),
-
+    url(r'^admin/', include([
+        url(r'^registration/$', TemplateView.as_view(template_name='users/registration.html')),
+        url(r'^login/$', auth_views.login, {'template_name': 'users/login.html'}),
+        url(r'^', include('apps.users.urls', namespace='users')),
+        url(r'^', include('apps.advertisers.urls', namespace='advertisers')),
+        url(r'^', include('apps.leads.urls', namespace='leads')),
+    ])),
     url(r'^api/', include('api', namespace='api')),
-
     url(r'^django-admin/', include(admin.site.urls)),
-
-    url(r'^admin\/registration/$', TemplateView.as_view(template_name='users/registration.html')),
-    url(r'^admin\/login/$', auth_views.login, {'template_name': 'users/login.html'}),
 
     url(r'^landing/$', TemplateView.as_view(template_name='landing.html')),
 ]

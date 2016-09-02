@@ -81,14 +81,17 @@ INSTALLED_APPS = [
     'apps.advertisers',
     'apps.banners',
     'apps.promo',
+    'apps.leads',
 
     'webpack_loader',
 ]
 
 AUTH_USER_MODEL = 'users.User'
-LOGIN_URL = '/django-admin/login/'
+LOGIN_URL = '/admin/login/'
 
 VERIFICATION = {
-    'subject': 'Verification',
-    'from_email': 'test@test.ru'
+    'subject': 'RealBlackFriday — активация учётной записи',
+    'from_email': 'test@test.ru',
 }
+
+VERIFICATION_TTL_HOURS = 24

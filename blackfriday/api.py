@@ -5,5 +5,6 @@ urlpatterns = [
     url('^', include('apps.advertisers.api.urls', namespace='advertisers')),
     url('^', include('apps.catalog.api.urls', namespace='catalog')),
     url('^', include('apps.banners.api.urls', namespace='banners')),
-    url('^', include('apps.promo.api.urls', namespace='promo'))
+    url('^', include('apps.promo.api.urls', namespace='promo')),
+    url('^', include('apps.leads.api.urls', namespace='leads'))
 ]
