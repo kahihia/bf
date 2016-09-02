@@ -92,3 +92,5 @@ VERIFICATION = {
     'subject': 'Verification',
     'from_email': 'test@test.ru'
 }
+
+CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')

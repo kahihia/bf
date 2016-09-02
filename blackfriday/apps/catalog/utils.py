@@ -11,7 +11,8 @@ def csv_dict_reader(f):
 
 
 def xls_dict_reader(f, sheet_index=0):
-    book = xlrd.open_workbook(file_contents=mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ))
+
+    book = xlrd.open_workbook(file_contents=f.read())
     sheet = book.sheet_by_index(sheet_index)
     headers = dict(
         (i, sheet.cell_value(0, i)) for i in range(sheet.ncols)

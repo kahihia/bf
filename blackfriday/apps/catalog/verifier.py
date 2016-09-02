@@ -3,44 +3,43 @@ from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
-from .parser import Row, Column, Related, GenericChainedValidator, GenericValidator
+from .parser import Row, Column, Grouped, GenericChainedValidator, GenericValidator
 
 from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 
-PRODUCT_URLS = set()
+
+def together(**cleaned_data):
+    return all(cleaned_data.values()) or not any([cleaned_data.values()])
 
 
-def together(*columns):
-    return all([col.value for col in columns]) or all([not col.value for col in columns])
-
-
-def old_price_gte_price(*columns):
-    old_price = next(col.val for col in columns if col.field == 'oldprice')
-    price = next(col.val for col in columns if col.field == 'model')
-    return price > old_price
+def old_price_gte_price(oldprice, price):
+    return price < oldprice
 
 
 def duplicate_product_urls(value):
-    if value not in PRODUCT_URLS:
-        PRODUCT_URLS.add(value)
+    if value not in ProductRow.PRODUCT_URLS:
+        ProductRow.PRODUCT_URLS.add(value)
         return True
     else:
         return False
 
 
+def validate_images(extra_images):
+    return all([s in image_url for s in ['http://', 'https://'] for image_url in extra_images])
+
+
 class ProductRow(Row):
+    PRODUCT_URLS = set()
     _columns = (
         Column(
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
-        Column(
-            'description', pipes=('str'),
-            validators=(Required(),)),
-        Related(
+        Grouped(
             [
                 GenericChainedValidator(message='Оба поля должны быть валидны', rule=together),
                 GenericChainedValidator(
-                    message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)],
+                    message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
+            ],
             Column(
                 'oldprice', pipes=(float, int),
                 validators=(IsNumeric(blank=True),)),
@@ -53,7 +52,7 @@ class ProductRow(Row):
             validators=(IsNumeric(blank=True), MaxValue(rule=100, blank=True),)),
         Column(
             'startprice', pipes=(float, int),
-            validators=(Required(), Choices(rule=settings.START_PRICE_CHOICES),)),
+            validators=(IsNumeric(blank=True),)),
         Column(
             'currencyid', pipes=(str, str.lower),
             validators=(Choices(rule=settings.CURRENCY_IDS, blank=True),)),
@@ -68,13 +67,11 @@ class ProductRow(Row):
         Column(
             'url', pipes=(str,),
             validators=(
-                Required(), Substring(rule=('http://', 'https://')), GenericValidator(rule=duplicate_product_urls),
-                UtmRequired(is_warning=True))),
+                Required(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
+                GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
             'main_image', pipes=(str,),
             validators=(Required(), Substring(rule=('http://', 'https://')))),
-        # TODO: extra_images
-
     )
 
 
@@ -85,9 +82,7 @@ class FeedParser:
     def __iter__(self):
         reader = self.get_reader()
         for row in reader:
-            parsed_feed = self.parse_feed(row)
-            if parsed_feed:
-                yield parsed_feed
+            yield self.parse_feed(row)
 
     def get_reader(self):
         if self.is_csv():
@@ -97,10 +92,10 @@ class FeedParser:
         return xls_dict_reader(self.attach.file)
 
     def is_csv(self):
-        return self.attach.filename.lower().endswith('.csv')
+        return self.attach.name.lower().endswith('.csv')
 
     def is_xml(self):
-        return self.attach.filename.lower().endswith('.xml')
+        return self.attach.name.lower().endswith('.xml')
 
     def row_is_blank(self, row):
         return not any(row.values())
@@ -108,4 +103,4 @@ class FeedParser:
     @classmethod
     def parse_feed(self, row):
         # TODO: clean empty strings with category from xlsx
-        return ProductRow(row).verify()
+        return ProductRow(row).validate()

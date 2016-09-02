@@ -7,8 +7,8 @@ class BaseValidator:
         self.rule = rule
         self.is_warning = is_warning
 
-    def __call__(self, value):
-        return self.validate(value)
+    def __call__(self, *values, **kwargs):
+        return self.validate(*values, **kwargs)
 
     def validate(self, value):
         raise NotImplementedError
@@ -25,7 +25,7 @@ class BaseValidator:
 
 class GenericValidator(BaseValidator):
     def __init__(self, message, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._message = message
 
     def validate(self, value):
@@ -34,8 +34,8 @@ class GenericValidator(BaseValidator):
 
 class GenericChainedValidator(BaseValidator):
     def __init__(self, message, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
         self._message = message
+        super().__init__(*args, **kwargs)
 
-    def validate(self, *columns):
-        return self.rule(columns)
+    def validate(self, **cleaned_data):
+        return self.rule(**cleaned_data)

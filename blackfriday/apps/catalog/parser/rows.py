@@ -1,35 +1,13 @@
-import collections
-
-
-def flatten(x):
-    ans = []
-    for i in x:
-        if isinstance(i, collections.Iterable):
-            ans.extend(flatten(i))
-        else:
-            ans.append(i)
-    return ans
-
-
-def _collect(instance, errors, warnings):
-    if errors:
-        instance.errors.extend(errors)
-    if warnings:
-        instance.warnings.extend(warnings)
-
-
 class Column:
     def __init__(self, field, pipes=None, validators=None):
         self.pipes = pipes or []
         self.validators = validators or []
         self.field = field
-        self.errors = []
-        self.warnings = []
+
+    def __str__(self):
+        return self.field
 
     def clean_value(self, value):
-        self.value = self._clean_value(value)
-
-    def _clean_value(self, value):
         if not value:
             return None
         try:
@@ -40,53 +18,60 @@ class Column:
         else:
             return value
 
-    def validate(self):
+    def validate(self, row):
+        value = self.clean_value(row.get(self.field))
+        errors = []
+        warnings = []
         for validator in self.validators:
-            if not validator(self.value):
+            if validator(value) is False:
                 result = {
                     'field': self.field,
                     'message': validator.message
                 }
-                self.warnings.append(result) if validator.is_warning else self.errors.append(result)
-        return self.errors, self.warnings
+                warnings.append(result) if validator.is_warning else errors.append(result)
+        return {self.field: value}, errors, warnings
 
 
-class Related:
+class Grouped:
     def __init__(self, validators=None, *columns):
         self.columns = columns
         self.validators = validators or []
-        self.errors = []
-        self.warnings = []
 
-    def __iter__(self):
+    def validate(self, row):
+        errors = []
+        warnings = []
+        cleaned_data = {}
         for col in self.columns:
-            yield col
-
-    def validate(self):
-        for col in self.columns:
-            self._collect(col.validate())
+            data, errors, warnings = col.validate(row)
+            errors.extend(errors)
+            warnings.extend(warnings)
+            cleaned_data.update(data)
         for validator in self.validators:
-            _collect(self, validator.validate(self.columns))
-            self._collect(validator.validate(self.columns))
-        return self.errors, self.warnings
+            if not validator(**cleaned_data):
+                result = [
+                    {
+                        'field': col.field,
+                        'message': validator.message
+                    } for col in self.columns
+                ]
+                warnings.extend(result) if validator.is_warning else errors.extend(result)
+
+        return cleaned_data, errors, warnings
 
 
 class Row:
     _columns = ()
 
-    @property
-    def columns(self):
-        return [col for col in flatten(self._columns)]
-
     def __init__(self, row):
+        self._row = {key.lower(): value for key, value in row.items()}
         self.warnings = []
         self.errors = []
-        for col in self.columns:
-            col.clean_value(row.get(col.field))
+        self.cleaned_data = {}
 
-    def validate(self, row):
-        errors = []
-        warnings = []
+    def validate(self):
         for col in self._columns:
-            _collect(self, col.validate())
-        return errors, warnings
+            cleaned_data, errors, warnings = col.validate(self._row)
+            self.errors.extend(errors)
+            self.warnings.extend(warnings)
+            self.cleaned_data.update(cleaned_data)
+        return self.cleaned_data, self.errors, self.warnings

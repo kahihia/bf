@@ -6,7 +6,7 @@ class IsNumeric(BaseValidator):
 
     def validate(self, value):
         if not value:
-            return self.blank
+            return None
 
         try:
             float(value)
@@ -19,9 +19,9 @@ class MaxValue(BaseValidator):
 
     def validate(self, value):
         if not value:
-            return self.blank
+            return None
         if isinstance(value, str):
-            return False
+            return None
         return self.rule >= value
 
     def get_message(self):
@@ -32,7 +32,7 @@ class Choices(BaseValidator):
 
     def validate(self, value):
         if not value:
-            return self.blank
+            return None
         return value in self.rule
 
     def get_message(self):
@@ -43,7 +43,7 @@ class Substring(BaseValidator):
 
     def validate(self, value):
         if not value:
-            return self.blank
+            return None
         if isinstance(self.rule, str):
             return self.rule in value
         return any(map(lambda r: r in value, self.rule))
@@ -57,13 +57,15 @@ class UtmRequired(Substring):
 
     def validate(self, value):
         if not value:
-            return self.blank
+            return None
         return all([utm in value for utm in ['utm_source', 'utm_medium', 'utm_campaign']])
 
 
 class Length(BaseValidator):
 
     def validate(self, value):
+        if not value:
+            return None
         return len(value) < self.rule
 
     def get_message(self):
