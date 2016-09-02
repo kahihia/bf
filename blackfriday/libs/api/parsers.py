@@ -17,15 +17,16 @@ def underscore_data_and_files(data_and_files):
 class CamelCaseMultiPartParser(MultiPartParser):
     def parse(self, stream, media_type=None, parser_context=None):
         data = super().parse(stream, media_type, parser_context)
-        return underscore_data_and_files(data)
+        data = underscore_data_and_files(data)
+        print(data)
+        return data
 
 
 class CamelCaseFormParser(FormParser):
     def parse(self, stream, media_type=None, parser_context=None):
         data = super().parse(stream, media_type, parser_context)
-
+        data = underscoreize(data)
         for key in data:
             if data[key] == 'null':
                 data[key] = None
-
         return data
