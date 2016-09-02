@@ -15,6 +15,8 @@ urlpatterns = [
     ])),
     url(r'^api/', include('api', namespace='api')),
     url(r'^django-admin/', include(admin.site.urls)),
+
+    url(r'^landing/$', TemplateView.as_view(template_name='landing.html')),
 ]
 
 

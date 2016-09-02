@@ -1,0 +1,791 @@
+{% load render_bundle from webpack_loader %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru" prefix="og: http://ogp.me/ns#">
+<head itemscope itemtype="http://schema.org/WebSite">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Черная пятница 2016 в России - официальный сайт Real Black Friday</title>
+    <meta name="description" content="Черная пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов">
+    <meta name="keywords" content="">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://www.realblackfriday.ru/">
+    <meta property="og:title" content="Черная пятница 2016 в России - официальный сайт Real Black Friday">
+    <meta property="og:description" content="Черная пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов">
+    <meta property="og:image" content="http://www.realblackfriday.ru/images/logo-share.png">
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32">
+    <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#060606">
+    <meta name="theme-color" content="#060606">
+
+    <link href="{% static 'css/landing/jquery.fancybox.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/jquery.countdown.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/jquery.bxslider.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/toastr.min.css' %}" rel="stylesheet">
+
+    {# CSS #}
+    {% render_bundle 'landing' 'css' %}
+    {% block css %}{% endblock css %}
+
+    <!-- Flocktory -->
+    <script src="//api.flocktory.com/v2/loader.js?site_id=1966" async="async"></script>
+
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/html5shiv.min.js' %}"></script>
+    <script src="{% static 'js/respond.min.js' %}"></script>
+    <script src="{% static 'js/es5-shim.min.js' %}"></script>
+    <script src="{% static 'js/es5-sham.min.js' %}"></script>
+    <script src="{% static 'js/ie8.js' %}"></script>
+    <![endif]-->
+</head>
+<body>
+
+
+<div class="site-header-info">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10">
+                <span class="site-header-info__text">
+                    Официальный сайт распродажи «Черная пятница» — Real Black Friday 2016 в России. Проект АКИТ. Для рекламодателей: +7 (800) 505-37-04
+                </span>
+            </div>
+
+            <div class="col-sm-2">
+                <span class="rpt">
+                    <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
+                    <span class="rpt__text">
+                        При поддержке Роспотребнадзора
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div><!-- site-header-info -->
+
+
+<div class="header-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="header-section__logo">
+                    <img src="{% static 'images/landing/header-section__logo.png' %}" alt="">
+                </div>
+
+                <p class="header-section__slogan">
+                    On-line распродажа года
+                </p>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="header-section__title">
+                    <strong>«Черная пятница»</strong>
+                    24 и 25 ноября 2016
+                </div>
+
+                <p class="header-section__text">
+                    <strong>Скидки до 90%</strong> на лучшие товары<br>
+                    крупнейших магазинов
+                </p>
+
+                <a class="header-section__action" href="#anchor-shops" data-offset="30">
+                    <span>Список магазинов-участников</span> ↓
+                </a>
+            </div>
+        </div>
+    </div>
+</div><!-- header-section -->
+
+
+<div class="aa-section">
+    <div class="container">
+        <div class="aa-section__body">
+            <div class="row">
+                <div class="col-sm-6">
+
+                    <div class="counter-block">
+                        <div class="counter-block__title">
+                            До начала акции осталось:
+                        </div>
+
+                        <div class="counter-block__counter">
+
+                            <div class="event-countdown">
+                                <div id="countdown"></div>
+                                <div class="countdown-labels">
+                                    <span id="countdown-d">дней</span><span id="countdown-h">часов</span><span id="countdown-m">минут</span><span id="countdown-s">секунд</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="aa-section__subscribe">
+                        <div class="aa-section__subscribe-title">
+                            Получите доступ к скидкам<br>
+                            за 5 часов до начала акции:
+                        </div>
+
+                        <form
+                            class="aa-section__form"
+                            method="POST"
+                            action="/api/subscribers/"
+                            >
+                            <input
+                                class="form-control"
+                                placeholder="Оставьте ваш e-mail"
+                                name="email"
+                                type="email"
+                                required
+                                >
+
+                            <button class="btn btn-primary btn-lg" type="submit">
+                                <img
+                                    src="{% static 'images/landing/aa-section__subscribe-submit-icon.png' %}"
+                                    width="25"
+                                    height="22"
+                                    alt=""
+                                    />
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="aa-section__footer">
+            <div class="share-block">
+                <span class="share-block__label">
+                    Рассказать друзьям
+                </span>
+
+                <div class="share-block__buttons">
+                    <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+                    <script src="//yastatic.net/share2/share.js"></script>
+                    <div class="ya-share2" data-services="collections,vkontakte,facebook,odnoklassniki,moimir" data-counter=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- aa-section -->
+
+
+<div class="about-section">
+    <a name="anchor-about"></a>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <img
+                    class="about-section__copter"
+                    src="{% static 'images/landing/action-section__copter.png' %}"
+                    alt=""
+                    />
+
+                <div class="about-section__title">
+                    Что это такое?
+                </div>
+
+                <div class="about-section__text">
+                    Черная пятница — это масштабная<br>
+                    онлайн-распродажа в ведущих<br>
+                    интернет-магазинах и онлайн-сервисах<br>
+                    России, Белоруссии и Казахстана.<br>
+                    Мы собрали все предложения на одном<br>
+                    сайте для вашего удобства. Покупайте<br>
+                    со скидками не выходя из дома.
+                </div>
+
+                <div class="action-go-go">
+                    <div class="action-go-go__title">
+                        Торопитесь!
+                    </div>
+
+                    <div class="action-go-go__desc">
+                        Акция идет всего
+                    </div>
+
+                    <div class="action-go-go__icon">
+                        <div class="action-go-go__hours">
+                            48
+                        </div>
+
+                        <div class="action-go-go__hours-label">
+                            часов
+                        </div>
+
+                        <img
+                             src="{% static 'images/landing/action-go-go__icon.png' %}"
+                             alt=""
+                             />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-sm-offset-3">
+                <div class="about-section__action">
+                    <div class="about-section__action-title">
+                        Получи<br>
+                        скидки до 90%
+                    </div>
+
+                    <button
+                        class="about-section__action-link btn btn-primary btn-lg"
+                        data-toggle="modal"
+                        data-target="#subscribe-modal"
+                        type="button"
+                        >
+                        Подписаться
+                        <img
+                            src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                            width="18"
+                            height="17"
+                            style="margin: 0 0 0 3px; vertical-align: baseline;"
+                            alt=""
+                            />
+                    </button>
+
+                    <img
+                        class="about-section__action-img"
+                        src="{% static 'images/landing/action-section__img.jpg' %}"
+                        alt=""
+                        />
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- about-section -->
+
+
+<div class="partners-section">
+    <a name="anchor-partners"></a>
+
+    <div class="container">
+        <div class="partners-section__title">
+            Наши партнеры
+        </div>
+
+        <div class="partners-section__carousel">
+            <div class="bxslider-multi">
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/yandexmoney.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/upd.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/inpost.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/rp.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/yandexmarket.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/mastercity.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/mnogoru.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/flocktory.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/maxipost.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/cdek.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/nr.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/rnl.png' %}" alt="">
+                </div>
+                <div class="new-59-partners__slide">
+                    <img src="{% static 'images/landing/pa/businessfm.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- partners-section -->
+
+
+<div class="shops-section">
+    <a name="anchor-shops"></a>
+
+    <div class="container">
+        <div class="shops-section__title">
+            Магазины-участники «Черной пятницы − 2016»
+        </div>
+
+        <ul class="shops-section__list">
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item">
+                <a class="shops-section__link" href="#" target="_blank" rel="noopener noreferrer">
+                    <img
+                        class="shops-section__logo"
+                        src="{% static 'images/landing/p/ozon.png' %}"
+                        alt=""
+                        />
+                </a>
+            </li>
+
+            <li class="shops-section__item"></li>
+            <li class="shops-section__item"></li>
+            <li class="shops-section__item"></li>
+            <li class="shops-section__item"></li>
+
+        </ul>
+    </div>
+</div><!-- shops-section -->
+
+
+<div class="subscribe-section">
+    <div class="container">
+        <div class="subscribe-section__title">
+            Как узнать о лучших предложениях?
+        </div>
+
+        <p class="subscribe-section__text">
+            Подпишитесь на акции и получите приглашение на Черную пятницу, заходите на сайт<br>
+            24 ноября и покупайте со скидкой до 90%!
+        </p>
+
+        <div class="row">
+            <div class="col-sm-5 col-sm-offset-7">
+                <form
+                    class="subscribe-section__form"
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
+                    <p class="subscribe-section__form-text">
+                        Оставьте вашу почту,<br>
+                        чтобы принять участие<br>
+                        в распродаже:
+                    </p>
+
+                    <div class="form-group subscribe-section__form-inputs">
+                        <input
+                            class="form-control"
+                            placeholder="Ваше имя"
+                            name="name"
+                            type="text"
+                            >
+
+                        <input
+                            class="form-control"
+                            placeholder="E-mail"
+                            name="email"
+                            type="email"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            Подписаться
+                            <img
+                                src="{% static 'images/landing/submit-icon_dark.png' %}"
+                                width="15"
+                                height="14"
+                                style="margin: 0 0 0 3px; vertical-align: text-top;"
+                                alt=""
+                                />
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- subscribe-section -->
+
+
+<div class="discount-section">
+    <a name="anchor-buyer"></a>
+
+    <div class="container">
+        <div class="discount-section__title">
+            Как получить 90% скидки
+            <small>на лучшие товары рунета?</small>
+        </div>
+
+        <ul class="discount-section__steps row">
+            <li class="discount-section__step col-sm-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_subscribe.png' %}"
+                        width="63"
+                        height="63"
+                        style="margin-top: -2px;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    Оставьте ваш e-mail
+                </div>
+            </li>
+
+            <li class="discount-section__step col-sm-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_message.png' %}"
+                        width="63"
+                        height="63"
+                        style="margin-top: -12px;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    Получите приглашение
+                </div>
+            </li>
+
+            <li class="discount-section__step col-sm-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_buy.png' %}"
+                        width="67"
+                        height="75"
+                        style="margin: -8px -12px 0 0;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    Заходите на сайт 24 ноября<br>
+                    2016 и делайте выгодные<br>
+                    покупки со скидкой до 90%
+                </div>
+            </li>
+        </ul>
+
+        <div class="discount-section__action">
+            <button
+                class="btn btn-primary btn-lg"
+                data-toggle="modal"
+                data-target="#subscribe-modal"
+                type="button"
+                >
+                Получить скидку
+                <img
+                    src="{% static 'images/landing/submit-icon_dark.png' %}"
+                    width="15"
+                    height="14"
+                    style="margin: 0 0 0 3px; vertical-align: text-top;"
+                    alt=""
+                    />
+            </button>
+        </div>
+    </div>
+</div><!-- discount-section -->
+
+
+<div class="party-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="party-section__title">
+                    Представителям<br>
+                    интернет-магазинов<br>
+                    и онлайн-сервисов
+                </div>
+
+                <p class="party-section__text">
+                    Если вы хотите стать партнером акции <br>
+                    и предложить свои скидки в «Черной пятнице»,<br>
+                    заполните заявку. Наши менеджеры свяжутся<br>
+                    с вами в кратчайшее время.
+                </p>
+            </div>
+
+            <div class="col-sm-7">
+                <form
+                    class="party-section__form"
+                    method="POST"
+                    action="/api/applications/"
+                    >
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="Ваше имя"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="Название организации"
+                                    name="organizationName"
+                                    type="text"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="Контактный телефон"
+                                    name="phone"
+                                    type="text"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="E-mail"
+                                    name="email"
+                                    type="email"
+                                    required
+                                    >
+                            </div>
+                        </div>
+
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <textarea
+                                    class="form-control"
+                                    placeholder="Комментарий о сотрудничестве"
+                                    name="comment"
+                                    ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-default btn-block" type="submit">
+                                    Отправить
+                                    <img
+                                        src="{% static 'images/landing/submit-icon_light.png' %}"
+                                        width="15"
+                                        height="14"
+                                        style="margin: 0 0 0 3px; vertical-align: text-top;"
+                                        alt=""
+                                        />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- party-section -->
+
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                <ul class="simple-menu">
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-about" data-offset="60">
+                            О «Черной пятнице»
+                        </a>
+                    </li>
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-buyer" data-offset="65">
+                            Покупателям
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-4">
+                <ul class="simple-menu">
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-shops" data-offset="60">
+                            Участники
+                        </a>
+                    </li>
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="{% static 'docs/Политика конфиденциальности.pdf' %}">
+                            Политика конфиденциальности
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="footer-social">
+                    <span class="footer-social__title">
+                        Мы в соц.сетях:
+                    </span>
+                    <ul class="footer-social__list">
+                        <li class="footer-social__item">
+                            <a class="footer-social__link" href="https://vk.com/cmondayru" target="_blank" rel="noopener noreferrer">
+                                <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_vk.png' %}" alt="vkontakte">
+                            </a>
+                        </li>
+                        <li class="footer-social__item">
+                            <a class="footer-social__link" href="https://www.facebook.com/cmondayru" target="_blank" rel="noopener noreferrer">
+                                <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_fb.png' %}" alt="facebook">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
+                    <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
+                </a>
+            </div>
+        </div>
+    </div>
+</footer><!-- site-footer -->
+
+
+<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="subscribe-modal-label"
+    id="subscribe-modal"
+    >
+    <div
+        class="modal-dialog"
+        role="document"
+        >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="subscribe-modal-label">
+                    Получить скидку
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+                <form
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="Ваше имя"
+                            name="name"
+                            type="text"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="E-mail"
+                            name="email"
+                            type="email"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <button
+                            class="btn btn-default btn-block btn-lg"
+                            type="submit"
+                            >
+                            Отправить
+                            <img
+                                src="{% static 'images/landing/submit-icon_light.png' %}"
+                                width="15"
+                                height="14"
+                                style="margin: 0 0 0 3px; vertical-align: text-top;"
+                                alt=""
+                                />
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
+<script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
+<script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>
+<script src="{% static 'js/landing/jquery.form.min.js' %}"></script>
+<script src="{% static 'js/landing/toastr.min.js' %}"></script>
+
+{% block js %}
+    {% render_bundle 'landing' 'js' %}
+{% endblock js %}
+
+</body>
+</html>

@@ -67,7 +67,8 @@ module.exports = {
 		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
 		app: path.resolve(PATH_SRC, 'js/app.jsx'),
-		auth: path.resolve(PATH_SRC, 'js/auth.jsx')
+		auth: path.resolve(PATH_SRC, 'js/auth.jsx'),
+		landing: path.resolve(PATH_SRC, 'js/landing.jsx')
 	},
 	output: {
 		path: PATH_DIST,
