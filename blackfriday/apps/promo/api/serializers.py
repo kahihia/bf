@@ -5,9 +5,11 @@ from ..models import Option, Promo, PromoOption
 
 
 class OptionSerializer(serializers.ModelSerializer):
+    max_value = serializers.IntegerField(source='max_count')
+
     class Meta:
         model = Option
-        fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available')
+        fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value')
 
 
 class PromoOptionSerializer(serializers.ModelSerializer):
