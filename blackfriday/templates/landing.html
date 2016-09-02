@@ -24,6 +24,7 @@
     <link href="{% static 'css/landing/jquery.fancybox.css' %}" rel="stylesheet">
     <link href="{% static 'css/landing/jquery.countdown.css' %}" rel="stylesheet">
     <link href="{% static 'css/landing/jquery.bxslider.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/toastr.min.css' %}" rel="stylesheet">
 
     {# CSS #}
     {% render_bundle 'landing' 'css' %}
@@ -236,7 +237,12 @@
                         скидки до 90%
                     </div>
 
-                    <a class="about-section__action-link btn btn-primary btn-lg" href="#">
+                    <button
+                        class="about-section__action-link btn btn-primary btn-lg"
+                        data-toggle="modal"
+                        data-target="#subscribe-modal"
+                        type="button"
+                        >
                         Подписаться
                         <img
                             src="{% static 'images/landing/about-section__submit-icon.png' %}"
@@ -245,7 +251,7 @@
                             style="margin: 0 0 0 3px; vertical-align: baseline;"
                             alt=""
                             />
-                    </a>
+                    </button>
 
                     <img
                         class="about-section__action-img"
@@ -516,7 +522,12 @@
         </ul>
 
         <div class="discount-section__action">
-            <a class="btn btn-primary btn-lg" href="#">
+            <button
+                class="btn btn-primary btn-lg"
+                data-toggle="modal"
+                data-target="#subscribe-modal"
+                type="button"
+                >
                 Получить скидку
                 <img
                     src="{% static 'images/landing/submit-icon_dark.png' %}"
@@ -525,7 +536,7 @@
                     style="margin: 0 0 0 3px; vertical-align: text-top;"
                     alt=""
                     />
-            </a>
+            </button>
         </div>
     </div>
 </div><!-- discount-section -->
@@ -691,11 +702,80 @@
 </footer><!-- site-footer -->
 
 
+<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="subscribe-modal-label"
+    id="subscribe-modal"
+    >
+    <div
+        class="modal-dialog"
+        role="document"
+        >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="subscribe-modal-label">
+                    Получить скидку
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+                <form
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="Ваше имя"
+                            name="name"
+                            type="text"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="E-mail"
+                            name="email"
+                            type="email"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <button
+                            class="btn btn-default btn-block btn-lg"
+                            type="submit"
+                            >
+                            Отправить
+                            <img
+                                src="{% static 'images/landing/submit-icon_light.png' %}"
+                                width="15"
+                                height="14"
+                                style="margin: 0 0 0 3px; vertical-align: text-top;"
+                                alt=""
+                                />
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
 <script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
 <script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>
 <script src="{% static 'js/landing/jquery.form.min.js' %}"></script>
+<script src="{% static 'js/landing/toastr.min.js' %}"></script>
 
 {% block js %}
     {% render_bundle 'landing' 'js' %}
