@@ -45,3 +45,7 @@ DATABASES = {
 #    # Automatically configure the release based on the git info.
 #    'release': raven.fetch_git_sha(PROJECT_ROOT)
 #}
+
+# ReCaptcha
+#RECAPTCHA_SITE_KEY = '...'
+#RECAPTCHA_SECRET_KEY = '...'
