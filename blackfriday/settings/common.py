@@ -83,4 +83,4 @@ VERIFICATION = {
     'from_email': 'test@test.ru',
 }
 
-VERIFICATION_TTL = 24
+VERIFICATION_TTL_HOURS = 24

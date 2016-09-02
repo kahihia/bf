@@ -29,7 +29,10 @@ class UserViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         context = {
             'host': request.get_host(),
-            'hours': '{} час{}'.format(settings.VERIFICATION_TTL, 'а' if settings.VERIFICATION_TTL % 10 else 'ов')
+            'hours': '{} час{}'.format(
+                settings.VERIFICATION_TTL_HOURS,
+                'а' if settings.VERIFICATION_TTL_HOURS % 10 == 1 else 'ов'
+            )
         }
 
         try:
