@@ -5,6 +5,7 @@
 node_modules
 
 /blackfriday/settings/local.py
+/landing/
 
 *.pyc
 

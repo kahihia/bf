@@ -16,12 +16,19 @@ class SubscribersViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.
     serializer_class = SubscriberSerializer
     queryset = Subscriber.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        subscriber = Subscriber.objects.filter(email=request.data.get('email')).first()
+        serializer = self.get_serializer(instance=subscriber, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK if subscriber else status.HTTP_201_CREATED)
+
 
 class AdvertiserRequestsViewSet(viewsets.ModelViewSet):
     queryset = AdvertiserRequest.objects.all()
     permission_classes = [
         action_permission('create') |
-        action_permission('list', 'update', 'partial_update') & IsAdmin & IsManager |
+        action_permission('list', 'update', 'partial_update') & IsAuthenticated & IsManager |
         IsAuthenticated & IsAdmin
     ]
 
