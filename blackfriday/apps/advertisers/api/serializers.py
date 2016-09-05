@@ -5,6 +5,7 @@ from apps.users.models import User
 from apps.promo.models import Promo
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import empty
 
 from ..models import AdvertiserProfile, Merchant, ModerationStatus
 
@@ -15,6 +16,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis')
 
+    def bind(self, field_name, parent):
+        super().bind(field_name, parent)
+        self.instance = parent.instance.profile
+
 
 class AdvertiserSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
@@ -23,6 +28,9 @@ class AdvertiserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'name', 'email', 'profile')
         extra_kwargs = {'email': {'read_only': True}}
+
+    def __init__(self, instance=None, data=empty, **kwargs):
+        super().__init__(instance, data, **kwargs)
 
     def update(self, instance, validated_data):
         if 'profile' in validated_data:
