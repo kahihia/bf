@@ -75,7 +75,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'rest_framework',
-
+    'blackfriday',
     'apps.users',
     'apps.catalog',
     'apps.advertisers',
