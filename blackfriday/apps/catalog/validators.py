@@ -4,7 +4,7 @@ from .parser import BaseValidator
 class IsNumeric(BaseValidator):
     _message = 'Отсутствует числовое значение'
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
 
@@ -17,7 +17,7 @@ class IsNumeric(BaseValidator):
 
 class MaxValue(BaseValidator):
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
         if isinstance(value, str):
@@ -30,7 +30,7 @@ class MaxValue(BaseValidator):
 
 class Choices(BaseValidator):
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
         return value in self.rule
@@ -41,7 +41,7 @@ class Choices(BaseValidator):
 
 class Substring(BaseValidator):
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
         if isinstance(self.rule, str):
@@ -55,7 +55,7 @@ class Substring(BaseValidator):
 class UtmRequired(Substring):
     _message = 'Отсутствуют utm метки'
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
         return all([utm in value for utm in ['utm_source', 'utm_medium', 'utm_campaign']])
@@ -63,7 +63,7 @@ class UtmRequired(Substring):
 
 class Length(BaseValidator):
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         if not value:
             return None
         return len(value) < self.rule
@@ -75,5 +75,5 @@ class Length(BaseValidator):
 class Required(BaseValidator):
     _message = 'Обязательное поле'
 
-    def validate(self, value):
+    def validate(self, value, **kwargs):
         return bool(value)

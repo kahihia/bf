@@ -1,4 +1,7 @@
-class Column:
+import inspect
+
+
+class Column(object):
     def __init__(self, field, pipes=None, validators=None):
         self.pipes = pipes or []
         self.validators = validators or []
@@ -7,23 +10,28 @@ class Column:
     def __str__(self):
         return self.field
 
-    def clean_value(self, value):
+    def clean_value(self, value, context):
         if not value:
             return None
         try:
             for func in self.pipes:
-                value = func(value)
+                try:
+                    signature = inspect.signature(func)
+                    if 'context' in signature.parameters:
+                        value = func(value, context)
+                except ValueError:
+                    value = func(value)
         except:
             return str(value)
         else:
             return value
 
-    def validate(self, row):
-        value = self.clean_value(row.get(self.field))
+    def validate(self, row, context):
+        value = self.clean_value(row.get(self.field), context)
         errors = []
         warnings = []
         for validator in self.validators:
-            if validator(value) is False:
+            if validator(value=value, context=context) is False:
                 result = {
                     'field': self.field,
                     'message': validator.message
@@ -32,22 +40,22 @@ class Column:
         return {self.field: value}, errors, warnings
 
 
-class Grouped:
+class Grouped(object):
     def __init__(self, validators=None, *columns):
         self.columns = columns
         self.validators = validators or []
 
-    def validate(self, row):
+    def validate(self, row, context):
         errors = []
         warnings = []
         cleaned_data = {}
         for col in self.columns:
-            data, errors, warnings = col.validate(row)
+            data, errors, warnings = col.validate(row, context=context)
             errors.extend(errors)
             warnings.extend(warnings)
             cleaned_data.update(data)
         for validator in self.validators:
-            if not validator(**cleaned_data):
+            if validator(**cleaned_data, context=context) is False:
                 result = [
                     {
                         'field': col.field,
@@ -59,18 +67,19 @@ class Grouped:
         return cleaned_data, errors, warnings
 
 
-class Row:
+class Row(object):
     _columns = ()
 
-    def __init__(self, row):
+    def __init__(self, row, context):
         self._row = {key.lower(): value for key, value in row.items()}
         self.warnings = []
         self.errors = []
         self.cleaned_data = {}
+        self.context = context
 
     def validate(self):
         for col in self._columns:
-            cleaned_data, errors, warnings = col.validate(self._row)
+            cleaned_data, errors, warnings = col.validate(self._row, self.context)
             self.errors.extend(errors)
             self.warnings.extend(warnings)
             self.cleaned_data.update(cleaned_data)

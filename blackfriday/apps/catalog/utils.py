@@ -1,13 +1,31 @@
 import xlrd
-import mmap
 import xml.etree.ElementTree as ET
 import csv
 from io import StringIO
 
 
+COLUMNS_MAPPING = {
+    'name': 'name',
+    'oldprice': 'old_price',
+    'price': 'price',
+    'discount': 'discount',
+    'startprice': 'start_price',
+    'currencyid': 'currency',
+    'vendor': 'brand',
+    'category': 'category',
+    'countryoforigin': 'country',
+    'url': 'url',
+    'image': 'image',
+}
+
+
 def csv_dict_reader(f):
     data = StringIO(f.read().decode('utf-8'))
-    return csv.DictReader(data, delimiter=';', quotechar='"')
+    return (
+        {
+            COLUMNS_MAPPING[key]: value for key, value in row.items()
+        } for row in csv.DictReader(data, delimiter=';', quotechar='"')
+    )
 
 
 def xls_dict_reader(f, sheet_index=0):
@@ -20,7 +38,7 @@ def xls_dict_reader(f, sheet_index=0):
 
     return (
         dict(
-            (headers[column], sheet.cell_value(row, column))
+            (COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
             for column in headers
         ) for row in range(1, sheet.nrows)
     )
@@ -34,16 +52,14 @@ def yml_dict_reader(f):
         yield {
             'name': offer.findtext('name'),
             'description': offer.findtext('description'),
-            'oldprice': offer.findtext('oldprice'),
+            'old_price': offer.findtext('oldprice'),
             'price': offer.findtext('price'),
             'discount': None,
-            'startprice': 'Нет',
-            'currencyid': offer.findtext('currencyId'),
-            'vendor': offer.findtext('vendor'),
+            'start_price': None,
+            'currency': offer.findtext('currencyId'),
+            'brand': offer.findtext('vendor'),
             'category': categories.get(offer.findtext('categoryId'), 'другое'),
-            'countryoforigin': offer.findtext('country_of_origin'),
+            'country': offer.findtext('country_of_origin'),
             'url': offer.findtext('url'),
-            'image1': offer.findtext('picture'),
-            'image2': None,
-            'image3': None,
+            'image': offer.findtext('picture'),
         }

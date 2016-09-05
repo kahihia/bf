@@ -1,16 +1,17 @@
 from rest_framework import routers
 from django.conf.urls import url
+from libs.api.routers import ExtendedNestedRouter
 
-from .views import CategoryViewSet, product_feed_parse, product_feed_verify
+from apps.advertisers.api.urls import router as adv_router
+
+from .views import CategoryViewSet, ProductViewSet
 
 
 router = routers.SimpleRouter()
 router.register(r'categories', CategoryViewSet)
+merchant_router = ExtendedNestedRouter(adv_router, r'merchants', lookup='merchant')
+merchant_router.register(r'products', ProductViewSet)
 
 
 urlpatterns = router.urls
-
-urlpatterns += [
-    url('products/parse', product_feed_parse),
-    url('products/verify', product_feed_verify),
-]
+urlpatterns += merchant_router.urls

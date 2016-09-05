@@ -1,35 +1,40 @@
-import settings
+from django.conf import settings
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
 from .parser import Row, Column, Grouped, GenericChainedValidator, GenericValidator
-
 from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
+from .models import Category
 
 
-def together(**cleaned_data):
+def together(context, **cleaned_data):
     return all(cleaned_data.values()) or not any([cleaned_data.values()])
 
 
-def old_price_gte_price(oldprice, price):
-    return price < oldprice
+def old_price_gte_price(old_price, price, context):
+    return bool(price and old_price and price < old_price)
 
 
-def duplicate_product_urls(value):
-    if value not in ProductRow.PRODUCT_URLS:
-        ProductRow.PRODUCT_URLS.add(value)
+def duplicate_product_urls(value, context):
+    if value is None:
+        return None
+    if value not in context.get('product_urls'):
+        context.get('product_urls').add(value)
         return True
     else:
         return False
 
 
-def validate_images(extra_images):
-    return all([s in image_url for s in ['http://', 'https://'] for image_url in extra_images])
+def clear_category(value, context):
+    if value is None:
+        return None
+    if value not in context['categories']:
+        return settings.DEFAULT_CATEGORY_NAME
+    return value
 
 
 class ProductRow(Row):
-    PRODUCT_URLS = set()
     _columns = (
         Column(
             'name', pipes=(str,),
@@ -41,7 +46,7 @@ class ProductRow(Row):
                     message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
             ],
             Column(
-                'oldprice', pipes=(float, int),
+                'old_price', pipes=(float, int),
                 validators=(IsNumeric(blank=True),)),
             Column(
                 'price', pipes=(float, int),
@@ -51,18 +56,18 @@ class ProductRow(Row):
             'discount', pipes=(float, int),
             validators=(IsNumeric(blank=True), MaxValue(rule=100, blank=True),)),
         Column(
-            'startprice', pipes=(float, int),
+            'start_price', pipes=(float, int),
             validators=(IsNumeric(blank=True),)),
         Column(
-            'currencyid', pipes=(str, str.lower),
-            validators=(Choices(rule=settings.CURRENCY_IDS, blank=True),)),
+            'currency', pipes=(str, str.lower),
+            validators=(Required(), Choices(rule=settings.CURRENCY_IDS, blank=True),)),
         Column(
-            'vendor', pipes=(str,),
+            'brand', pipes=(str,),
             validators=(Required(),)),
         Column(
-            'category', pipes=(str, str.lower), validators=(Required(is_warning=True),)),
+            'category', pipes=(str, str.lower, clear_category), validators=(Required(is_warning=True),)),
         Column(
-            'countryoforigin', pipes=(str, str.lower),
+            'country', pipes=(str, str.lower),
             validators=(Required(), Length(rule=255))),
         Column(
             'url', pipes=(str,),
@@ -70,14 +75,19 @@ class ProductRow(Row):
                 Required(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
-            'main_image', pipes=(str,),
+            'image', pipes=(str,),
             validators=(Required(), Substring(rule=('http://', 'https://')))),
     )
 
 
 class FeedParser:
-    def __init__(self, attach, *args, **kwargs):
+
+    def __init__(self, attach=None, *args, **kwargs):
         self.attach = attach
+        self.context = {
+            'product_urls': set(),
+            'categories': list(map(str.lower, Category.objects.values_list('name', flat=True)))
+        }
 
     def __iter__(self):
         reader = self.get_reader()
@@ -100,7 +110,6 @@ class FeedParser:
     def row_is_blank(self, row):
         return not any(row.values())
 
-    @classmethod
     def parse_feed(self, row):
         # TODO: clean empty strings with category from xlsx
-        return ProductRow(row).validate()
+        return ProductRow(row, context=self.context).validate()
