@@ -1,9 +1,12 @@
 .about-section
 	padding: 95px 0 140px
 
+	.container
+		position: relative
+
 	&__copter
 		position: absolute
-		top: -140px
+		top: -365px
 		left: -310px
 
 	&__title
@@ -11,6 +14,10 @@
 		font-weight: bold
 		font-size: 32px
 		margin-bottom: 20px
+
+		small
+			display: block
+			font-weight: normal
 
 	&__text
 		font-size: 18px
@@ -24,8 +31,6 @@
 
 	&__action-img
 		position: absolute
-		top: -105px
-		left: -300px
 		z-index: -1
 
 	&__action-title
@@ -40,3 +45,34 @@
 		font-size: 20px
 		padding-right: 27px
 		padding-left: 27px
+
+	&__carousel
+		{}
+
+	.bx-viewport
+		overflow: visible !important
+
+		img
+			max-width: none
+			display: inline-block
+
+	a.bx-prev
+	a.bx-next
+		height: 100%
+		width: 50px
+		margin-top: 0
+		position: absolute
+		top: 0
+		left: 50%
+		right: auto
+
+		&:after
+			display: none
+
+	a.bx-prev
+		transform: translateX(-550px)
+		background: url(/static/images/landing/about-section__carousel-prev.png) 50% 50% no-repeat
+
+	a.bx-next
+		transform: translateX(550px)
+		background: url(/static/images/landing/about-section__carousel-next.png) 50% 50% no-repeat

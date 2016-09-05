@@ -17,3 +17,10 @@ $('.bxslider-multi').bxSlider({
 	auto: true,
 	pager: false
 });
+
+$('.js-about-section__carousel').bxSlider({
+	minSlides: 1,
+	maxSlides: 1,
+	auto: true,
+	pager: false
+});
