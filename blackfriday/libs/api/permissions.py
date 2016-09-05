@@ -41,9 +41,6 @@ class IsAuthenticated(BaseComplexPermission):
 
 
 class IsOwner(BaseComplexPermission):
-    def has_permission(self, request, view):
-        return 'pk' in view.kwargs
-
     def has_object_permission(self, request, view, obj):
         return obj.owner_id == request.user.id
 
