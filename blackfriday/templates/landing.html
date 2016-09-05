@@ -64,9 +64,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <span class="site-header-info__text">
                 Официальный сайт распродажи "Черная пятница" 2016 в России
             </span>
-        </div>
+        </div>{% comment %}
 
-        <div class="site-header-info__rpt">
+        {% endcomment %}<div class="site-header-info__rpt">
             <span class="rpt">
                 <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
                 <span class="rpt__text">
@@ -75,6 +75,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </span>
         </div>
 
+        {% comment %}
         <div class="site-header-info__auth">
             <div class="header-auth">
                 <a class="header-auth__link" href="/admin/login/">
@@ -82,6 +83,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </a>
             </div>
         </div>
+        {% endcomment %}
     </div>
 </div><!-- site-header-info -->
 
