@@ -50,7 +50,10 @@ class FormRow extends React.Component {
 }
 FormRow.propTypes = {
 	label: React.PropTypes.string.isRequired,
-	value: React.PropTypes.string.isRequired,
+	value: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired,
 	placeholder: React.PropTypes.string,
 	options: React.PropTypes.oneOfType([
 		React.PropTypes.array,
