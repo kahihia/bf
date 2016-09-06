@@ -65,7 +65,6 @@ class ProductViewSet(
                         'merchant_id': self.merchant.id
                     }
                 )
-
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
