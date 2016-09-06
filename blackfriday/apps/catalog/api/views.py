@@ -1,10 +1,13 @@
 import json
 
 from rest_framework import viewsets, mixins
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import list_route
-from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 from djangorestframework_camel_case.util import underscoreize
+
+from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
+from libs.api.exceptions import BadResponse
 
 from apps.advertisers.models import Merchant
 
@@ -20,8 +23,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(
-        mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
-        mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+        mixins.RetrieveModelMixin, mixins.ListModelMixin,
+        mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Product.objects.all()
     permission_classes = [IsAuthenticated, IsAdvertiser & IsOwner | IsAdmin]
     serializer_class = ProductSerializer
@@ -32,12 +35,12 @@ class ProductViewSet(
 
     def delete(self, request, *args, **kwargs):
         self.queryset.filter(merchant_id=self.merchant.id).delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, *args, **kwargs):
         data = json.loads(request.body.decode())
         if not isinstance(data, list):
-            return Response({'message': 'list of objects required'}, 400)
+            raise BadResponse('list of objects required')
         result = []
         failed = False
         for row in data:
@@ -51,17 +54,22 @@ class ProductViewSet(
                 'warnings': warnings,
             })
         if failed:
-            return Response(result, 400)
-        options = []
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
         categories = {cat.name: cat.id for cat in Category.objects.all()}
-        for _row in result:
-            row = _row['data']
-            row['category_id'] = categories[row.pop('category')]
-            row['merchant_id'] = self.merchant.id
-            options.append(row)
-        qs = [Product(**row) for row in options]
+        qs = [
+            Product(
+                **dict(
+                    row['data'],
+                    **{
+                        'category_id': categories[row['data'].pop('category')],
+                        'merchant_id': self.merchant.id
+                    }
+                )
+
+            ) for row in result
+        ]
         Product.objects.bulk_create(qs)
-        return Response(ProductSerializer(qs, many=True).data, 201)
+        return Response(ProductSerializer(qs, many=True).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -75,7 +83,7 @@ class ProductViewSet(
             'warnings': warnings,
         }
         if errors:
-            return Response(result, 400)
+            return Response(result, status=status.HTTP_400_BAD_REQUEST)
         data['category'] = Category.objects.get(name=data.get('category'))
         serializer = self.get_serializer(instance, data=cleaned_data)
         serializer.is_valid(raise_exception=True)
@@ -86,7 +94,7 @@ class ProductViewSet(
     def parse(self, request):
         f = request.FILES.get('file')
         if f is None:
-            return Response({'message': 'file is required'}, 400)
+            raise BadResponse('file is required')
         result = []
         for counter, row in enumerate(FeedParser(f)):
             cleaned_data, errors, warnings = row
@@ -96,13 +104,13 @@ class ProductViewSet(
                 'warnings': warnings,
                 'errors': errors,
             })
-        return Response(result, 200)
+        return Response(result)
 
     @list_route(['POST'])
     def product_feed_verify(self, request):
         data = json.loads(request.body.decode())
         if not isinstance(data, list):
-            return Response({'message': 'list of objects required'}, 400)
+            raise BadResponse('list of objects required')
         result = []
         for row in data:
             # in this case we get data from frontend, it could be parsed data on client side,
@@ -114,4 +122,4 @@ class ProductViewSet(
                 'errors': errors,
                 'warnings': warnings,
             })
-        return Response(result, 200)
+        return Response(result)

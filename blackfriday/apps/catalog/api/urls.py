@@ -1,5 +1,4 @@
 from rest_framework import routers
-from django.conf.urls import url
 from libs.api.routers import ExtendedNestedRouter
 
 from apps.advertisers.api.urls import router as adv_router
