@@ -5,24 +5,37 @@ class ComplexPermissionMetaClass(type):
     def __or__(cls, other):
         class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
-                return (cls().has_permission(request, view) or
-                        other().has_permission(request, view))
+                a = cls().has_permission(request, view)
+                b = other().has_permission(request, view)
+                # print(cls.__name__, "OR", other.__name__, a, b)
+                return (a or
+                        b)
 
             def has_object_permission(self, request, view, obj):
-                return (cls().has_object_permission(request, view, obj) or
-                        other().has_object_permission(request, view, obj))
+                a = cls().has_object_permission(request, view, obj)
+                b = other().has_object_permission(request, view, obj)
+                print(cls.__name__, "OR", other.__name__, a, b)
+
+                return (a or
+                        b)
 
         return Permission
 
     def __and__(cls, other):
         class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
-                return (cls().has_permission(request, view) and
-                        other().has_permission(request, view))
+                a = cls().has_permission(request, view)
+                b = other().has_permission(request, view)
+                # print(cls.__name__, "AND", other.__name__, a, b)
+                return (a and
+                        b)
 
             def has_object_permission(self, request, view, obj):
-                return (cls().has_object_permission(request, view, obj) and
-                        other().has_object_permission(request, view, obj))
+                a = cls().has_object_permission(request, view, obj)
+                b = other().has_object_permission(request, view, obj)
+                print(cls.__name__, "AND", other.__name__, a, b)
+                return (a and
+                        b)
         return Permission
 
 
@@ -52,6 +65,10 @@ def role_permission(*role_list):
         class RoleBasedPermission(BaseComplexPermission):
             def has_permission(self, request, view):
                 return request.user.role in role_list
+
+            def has_object_permission(self, request, view, obj):
+                return request.user.role in role_list
+
         classes_cache[role_list] = RoleBasedPermission
     return classes_cache[role_list]
 
@@ -63,6 +80,10 @@ def action_permission(*action_list):
         class ActionBasedPermission(BaseComplexPermission):
             def has_permission(self, request, view):
                 return view.action in action_list
+
+            def has_object_permission(self, request, view, obj):
+                return view.action in action_list
+
         classes_cache[action_list] = ActionBasedPermission
     return classes_cache[action_list]
 
