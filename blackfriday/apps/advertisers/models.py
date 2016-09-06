@@ -99,12 +99,12 @@ class Merchant(models.Model):
     @property
     def payment_status(self):
         # ToDo: статус оплаты из счетов
-        return None
+        return 0
 
     @property
     def options_count(self):
         # ToDo: количество опций из счетов
-        return None
+        return 0
 
     @property
     def owner_id(self):

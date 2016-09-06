@@ -43,10 +43,6 @@ const UserList = React.createClass({
 
 		return (
 			<div className={b('user-list')}>
-				<h2>
-					{'Список существующих'}
-				</h2>
-
 				<table className={'table table-hover ' + b('user-list', 'table')}>
 					<thead>
 						<tr>
@@ -121,7 +117,7 @@ const UserListItem = React.createClass({
 		const {id, name, email, role, isActive} = this.props;
 
 		return (
-			<tr>
+			<tr className={b('user-list', 'table-tr', {role: role})}>
 				<td className={b('user-list', 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
