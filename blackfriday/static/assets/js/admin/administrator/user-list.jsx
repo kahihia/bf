@@ -43,10 +43,6 @@ const UserList = React.createClass({
 
 		return (
 			<div className={b('user-list')}>
-				<h2>
-					{'Список существующих'}
-				</h2>
-
 				<table className={'table table-hover ' + b('user-list', 'table')}>
 					<thead>
 						<tr>

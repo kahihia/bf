@@ -12,11 +12,12 @@ const DEFAULT_ROLE = 'advertiser';
 
 const AddUser = React.createClass({
 	propTypes: {
-		onAddUser: React.PropTypes.func
+		onSubmit: React.PropTypes.func
 	},
 
 	getInitialState() {
 		return {
+			isLoading: false,
 			fields: {
 				email: {
 					label: 'Email',
@@ -50,9 +51,11 @@ const AddUser = React.createClass({
 	},
 
 	requestAddUser() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
+
+		this.setState({isLoading: true});
 
 		const fields = this.state.fields;
 		const json = _.reduce(fields, (a, b, key) => {
@@ -68,14 +71,16 @@ const AddUser = React.createClass({
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (data) {
 				switch (resp.statusCode) {
 					case 201: {
 						toastr.success('Пользователь успешно добавлен');
 						this.resetForm();
 
-						if (this.props.onAddUser) {
-							this.props.onAddUser(data);
+						if (this.props.onSubmit) {
+							this.props.onSubmit(data);
 						}
 						break;
 					}
@@ -92,20 +97,22 @@ const AddUser = React.createClass({
 		});
 	},
 
-	validate() {
+	validate(warnings) {
 		let isValid = true;
 
 		_.forEach(this.state.fields, field => {
 			if (field.required && !field.value) {
 				isValid = false;
-				toastr.warning(`Заполните поле "${field.label}"`);
+				if (warnings) {
+					toastr.warning(`Заполните поле "${field.label}"`);
+				}
 				return false;
 			}
 		});
 
 		if (isValid) {
 			isValid = this.checkPassword();
-			if (!isValid) {
+			if (warnings && !isValid) {
 				toastr.warning('Неверный формат пароля');
 			}
 		}
@@ -156,31 +163,36 @@ const AddUser = React.createClass({
 	render() {
 		return (
 			<div className={b('add-user')}>
-				<h2>
-					{'Добавить нового'}
-				</h2>
+				<div className="modal-body">
+					<form
+						className="form-horizontal"
+						action=""
+						>
+						{this.buildRow('email')}
+						{this.buildRow('name')}
+						{this.buildRow('password')}
+						{this.buildRow('role')}
+					</form>
+				</div>
 
-				<form
-					className="form-horizontal"
-					action=""
-					>
-					{this.buildRow('email')}
-					{this.buildRow('name')}
-					{this.buildRow('password')}
-					{this.buildRow('role')}
+				<div className="modal-footer">
+					<button
+						className="btn btn-default"
+						data-dismiss="modal"
+						type="button"
+						>
+						{'Отмена'}
+					</button>
 
-					<div className="form-group">
-						<div className="col-sm-10 col-sm-offset-2">
-							<button
-								className="btn btn-primary"
-								onClick={this.handleClickSubmit}
-								type="submit"
-								>
-								{'Добавить'}
-							</button>
-						</div>
-					</div>
-				</form>
+					<button
+						className="btn btn-primary"
+						onClick={this.handleClickSubmit}
+						disabled={this.state.isLoading || !this.validate()}
+						type="submit"
+						>
+						{'Добавить'}
+					</button>
+				</div>
 			</div>
 		);
 	}
