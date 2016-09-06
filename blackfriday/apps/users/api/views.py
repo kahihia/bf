@@ -16,7 +16,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    permission_classes = [IsAuthenticated, IsAdmin]
+    # permission_classes = [IsAuthenticated, IsAdmin]
 
     def get_serializer_class(self):
         if 'update' in self.action:
@@ -35,7 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
         }
 
         try:
-            instance.send_verification(request, context=context)
+            instance.send_verification(context)
         except SMTPException:
             raise ServiceUnavailable('Ошибка отправки почты')
         return Response(self.get_serializer(instance).data)
