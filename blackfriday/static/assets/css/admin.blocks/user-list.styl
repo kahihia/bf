@@ -2,6 +2,19 @@
 	&__table
 		width: 100%
 
+	&__table-tr
+		&_role_advertiser
+			.user-list__table-td_name_role
+				color: $brand-info
+
+		&_role_manager
+			.user-list__table-td_name_role
+				color: $brand-warning
+
+		&_role_admin
+			.user-list__table-td_name_role
+				color: $brand-danger
+
 	&__table-th
 		&_name_id
 			width: 1%
@@ -28,7 +41,7 @@
 		vertical-align: middle !important
 
 		&_name_id
-			{}
+			color: $gray-light
 
 		&_name_email
 			{}
