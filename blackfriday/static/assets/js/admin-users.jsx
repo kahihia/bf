@@ -1,10 +1,10 @@
-/* global document toastr _ */
+/* global document toastr _ jQuery */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
-import AddUser from './admin/administrator/add-user.jsx';
+import AddUserForm from './admin/common/add-user-form.jsx';
 import UserList from './admin/administrator/user-list.jsx';
 
 (function () {
@@ -62,6 +62,21 @@ import UserList from './admin/administrator/user-list.jsx';
 			this.requestVerification(userId);
 		},
 
+		handleAddUserClick() {
+			jQuery('#addUserModal').modal('show');
+			const onSubmit = user => {
+				this.handleAddUser(user);
+				jQuery('#addUserModal').modal('hide');
+			};
+			ReactDOM.render(
+				<AddUserForm
+					onSubmit={onSubmit}
+					/>
+				,
+				document.getElementById('addUserForm')
+			);
+		},
+
 		handleAddUser(user) {
 			if (!user) {
 				return;
@@ -82,9 +97,13 @@ import UserList from './admin/administrator/user-list.jsx';
 		render() {
 			return (
 				<div>
-					<AddUser
-						onAddUser={this.handleAddUser}
-						/>
+					<button
+						className="btn btn-success"
+						onClick={this.handleAddUserClick}
+						type="button"
+						>
+						{'Добавить нового пользователя'}
+					</button>
 
 					<hr/>
 
