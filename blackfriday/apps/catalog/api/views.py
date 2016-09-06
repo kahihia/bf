@@ -38,7 +38,7 @@ class ProductViewSet(
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, *args, **kwargs):
-        data = json.loads(request.body.decode())
+        data = underscoreize(json.loads(request.body.decode()))
         if not isinstance(data, list):
             raise BadResponse('list of objects required')
         result = []
@@ -68,29 +68,38 @@ class ProductViewSet(
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
-        return Response(ProductSerializer(qs, many=True).data, status=status.HTTP_201_CREATED)
+        return Response(self.get_serializer(qs, many=True).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-
-        data = underscoreize(json.loads(request.body.decode()))
-        cleaned_data, errors, warnings = FeedParser().parse_feed(data)
+        request_data = underscoreize(json.loads(request.body.decode()))
+        cleaned_data, errors, warnings = FeedParser().parse_feed(request_data)
         result = {
             'id': instance.id,
             'data': cleaned_data,
             'errors': errors,
             'warnings': warnings,
         }
+
         if errors:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
-        data['category'] = Category.objects.get(name=data.get('category'))
-        serializer = self.get_serializer(instance, data=cleaned_data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        data = dict(
+            cleaned_data,
+            **{
+                'category': Category.objects.get(name=cleaned_data.get('category')),
+                'is_teaser': request_data.get('is_teaser', False),
+                'is_teaser_on_main': request_data.get('is_teaser_on_main', False),
+            }
+        )
+        for field, value in data.items():
+            setattr(instance, field, value)
+
+        instance.save()
+
+        return Response(self.get_serializer(instance).data)
 
     @list_route(['POST'])
-    def parse(self, request):
+    def parse(self, request, **kwargs):
         f = request.FILES.get('file')
         if f is None:
             raise BadResponse('file is required')
@@ -106,7 +115,7 @@ class ProductViewSet(
         return Response(result)
 
     @list_route(['POST'])
-    def product_feed_verify(self, request):
+    def verify(self, request, **kwargs):
         data = json.loads(request.body.decode())
         if not isinstance(data, list):
             raise BadResponse('list of objects required')
@@ -114,7 +123,7 @@ class ProductViewSet(
         for row in data:
             # in this case we get data from frontend, it could be parsed data on client side,
             # so we need save given identifiers
-            cleaned_data, errors, warnings = FeedParser.parse_feed(row)
+            cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             result.append({
                 '_id': row.get('_id'),
                 'data': cleaned_data,
