@@ -3,6 +3,7 @@
 .env
 .venv
 node_modules
+/_media/
 
 /blackfriday/settings/local.py
 /landing/

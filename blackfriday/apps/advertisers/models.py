@@ -64,6 +64,13 @@ class Merchant(models.Model):
                                             verbose_name='Статус модерации')
     is_active = models.BooleanField(default=False, verbose_name='Активен')
 
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
+
+    def __str__(self):
+        return self.name
+
     @property
     def banners(self):
         # ToDo: Когда будет релейтед нейм на banners.Banner, убрать

@@ -97,3 +97,7 @@ VERIFICATION = {
 VERIFICATION_TTL_HOURS = 24
 
 MANAGERS = []
+
+CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')
+DEFAULT_CATEGORY_SLUG = 'raznoe'
+DEFAULT_CATEGORY_NAME = 'Разное'

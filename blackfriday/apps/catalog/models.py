@@ -11,3 +11,29 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Product(models.Model):
+    merchant = models.ForeignKey('advertisers.Merchant')
+    category = models.ForeignKey(Category, verbose_name='Категория')
+    name = models.CharField(max_length=120, verbose_name='Название')
+
+    price = models.IntegerField(verbose_name='Цена', null=True)
+    old_price = models.IntegerField(verbose_name='Старая цена', null=True)
+    start_price = models.IntegerField(verbose_name='Цена от', null=True)
+    discount = models.IntegerField(verbose_name='Скидка', null=True)
+    country = models.CharField(verbose_name='Страна', max_length=255)
+    is_teaser = models.BooleanField(verbose_name='Товар является тизером', default=False)
+    is_teaser_on_main = models.BooleanField(verbose_name='Товар является тизером на главной', default=False)
+    brand = models.CharField(verbose_name='Брэнд', max_length=255)
+    url = models.CharField(verbose_name='Ссылка', max_length=255)
+    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    image = models.FileField(upload_to='products', verbose_name='Изображение')
+    currency = models.CharField(max_length=10)
+
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+
+    def __str__(self):
+        return self.name
