@@ -6,7 +6,7 @@ import xhr from 'xhr';
 import b from 'b_';
 import {processErrors} from '../utils.js';
 import {USER_ROLE, REGEXP, HELP_TEXT, TOKEN} from '../const.js';
-import FormHorizontalRow from '../components/form-horizontal-row.jsx';
+import FormRow from '../components/form-row.jsx';
 
 const DEFAULT_ROLE = 'advertiser';
 
@@ -35,6 +35,12 @@ const AddUser = React.createClass({
 					label: 'Пароль',
 					value: '',
 					help: HELP_TEXT.password,
+					type: 'password',
+					required: true
+				},
+				passwordConfirm: {
+					label: 'Повторите пароль',
+					value: '',
 					type: 'password',
 					required: true
 				},
@@ -111,17 +117,41 @@ const AddUser = React.createClass({
 		});
 
 		if (isValid) {
+			isValid = this.checkEmail();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат Email');
+			}
+		}
+
+		if (isValid) {
 			isValid = this.checkPassword();
 			if (warnings && !isValid) {
 				toastr.warning('Неверный формат пароля');
 			}
 		}
 
+		if (isValid) {
+			isValid = this.comparePasswords();
+			if (warnings && !isValid) {
+				toastr.warning('Пароли не совпадают');
+			}
+		}
+
 		return isValid;
+	},
+
+	checkEmail() {
+		return REGEXP.email.test(this.state.fields.email.value);
 	},
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
+	},
+
+	comparePasswords() {
+		const {password, passwordConfirm} = this.state.fields;
+
+		return password.value === passwordConfirm.value;
 	},
 
 	handleChange(e) {
@@ -146,7 +176,7 @@ const AddUser = React.createClass({
 		const field = this.state.fields[name];
 
 		return (
-			<FormHorizontalRow
+			<FormRow
 				onChange={this.handleChange}
 				{...{name}}
 				{...field}
@@ -164,13 +194,11 @@ const AddUser = React.createClass({
 		return (
 			<div className={b('add-user')}>
 				<div className="modal-body">
-					<form
-						className="form-horizontal"
-						action=""
-						>
+					<form action="">
 						{this.buildRow('email')}
 						{this.buildRow('name')}
 						{this.buildRow('password')}
+						{this.buildRow('passwordConfirm')}
 						{this.buildRow('role')}
 					</form>
 				</div>

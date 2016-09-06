@@ -346,7 +346,7 @@ const MerchantProfileForm = React.createClass({
 				{readOnly ? null : (
 					<div className="form-group">
 						<button
-							className="btn btn-primary btn-lg"
+							className="btn btn-primary"
 							onClick={this.handleClickSubmit}
 							disabled={isLoading || !this.validate()}
 							type="submit"
