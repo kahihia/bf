@@ -1,18 +1,16 @@
 /* global toastr _ */
+/* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
-import FormRow from '../components/form-row.jsx';
 import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
+import Form from '../components/form.jsx';
 
-const RegistrationForm = React.createClass({
-	propTypes: {
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class RegistrationForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			fields: {
 				email: {
@@ -24,7 +22,6 @@ const RegistrationForm = React.createClass({
 				name: {
 					label: 'Название',
 					value: '',
-					type: 'text',
 					required: false
 				},
 				password: {
@@ -42,19 +39,13 @@ const RegistrationForm = React.createClass({
 				}
 			}
 		};
-	},
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
 
 	componentWillReceiveProps() {
 		this.resetForm();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
-		});
-		this.forceUpdate();
-	},
+	}
 
 	requestRegisterUser() {
 		if (!this.validate()) {
@@ -97,7 +88,7 @@ const RegistrationForm = React.createClass({
 			this.setState({isLoading: false});
 			toastr.error('Не удалось зарегистрироваться');
 		});
-	},
+	}
 
 	requestVerification(userData) {
 		xhr({
@@ -122,53 +113,30 @@ const RegistrationForm = React.createClass({
 				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});
-	},
+	}
 
 	validate() {
 		return this.checkEmail() && this.checkPassword() && this.comparePasswords();
-	},
+	}
 
 	checkEmail() {
 		return REGEXP.email.test(this.state.fields.email.value);
-	},
+	}
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
-	},
+	}
 
 	comparePasswords() {
 		const {password, passwordConfirm} = this.state.fields;
 
 		return password.value === passwordConfirm.value;
-	},
-
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	}
 
 	handleSubmit(e) {
 		e.preventDefault();
 		this.requestRegisterUser();
-	},
-
-	updateData(name, value) {
-		const fields = this.state.fields;
-		fields[name].value = value;
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-		const {value, label, help, type, required} = field;
-
-		return (
-			<FormRow
-				onChange={this.handleChange}
-				{...{value, name, label, help, type, required}}
-				/>
-		);
-	},
+	}
 
 	render() {
 		return (
@@ -202,6 +170,10 @@ const RegistrationForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+RegistrationForm.propTypes = {
+};
+RegistrationForm.defaultProps = {
+};
 
 export default RegistrationForm;

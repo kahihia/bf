@@ -6,15 +6,12 @@ import xhr from 'xhr';
 import b from 'b_';
 import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
-import FormRow from '../components/form-row.jsx';
+import Form from '../components/form.jsx';
 
-const AddAdvertiserForm = React.createClass({
-	propTypes: {
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class AddAdvertiserForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			fields: {
 				email: {
@@ -26,7 +23,6 @@ const AddAdvertiserForm = React.createClass({
 				name: {
 					label: 'Название',
 					value: '',
-					type: 'text',
 					required: false
 				},
 				password: {
@@ -44,7 +40,9 @@ const AddAdvertiserForm = React.createClass({
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	requestAddAdvertiser() {
 		if (!this.validate(true)) {
@@ -67,20 +65,15 @@ const AddAdvertiserForm = React.createClass({
 			},
 			json
 		}, (err, resp, data) => {
-			this.setState({isLoading: false});
-
 			if (data) {
 				switch (resp.statusCode) {
 					case 201: {
 						toastr.success('Рекламодатель успешно добавлен');
-						this.resetForm();
-
-						if (this.props.onSubmit) {
-							this.props.onSubmit(data);
-						}
+						this.requestVerification(data);
 						break;
 					}
 					default: {
+						this.setState({isLoading: false});
 						processErrors(data);
 						break;
 					}
@@ -89,9 +82,35 @@ const AddAdvertiserForm = React.createClass({
 				return;
 			}
 
+			this.setState({isLoading: false});
 			toastr.error('Не удалось добавить рекламодателя');
 		});
-	},
+	}
+
+	requestVerification(userData) {
+		xhr({
+			url: `/api/users/${userData.id}/verification/`,
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			}
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			if (!err && resp.statusCode === 200) {
+				if (data) {
+					toastr.success('Письмо верификации успешно отправлено');
+					this.resetForm();
+
+					if (this.props.onSubmit) {
+						this.props.onSubmit(userData);
+					}
+				}
+			} else {
+				toastr.error('Не удалось отправить письмо верификации');
+			}
+		});
+	}
 
 	validate(warnings) {
 		let isValid = true;
@@ -128,57 +147,26 @@ const AddAdvertiserForm = React.createClass({
 		}
 
 		return isValid;
-	},
+	}
 
 	checkEmail() {
 		return REGEXP.email.test(this.state.fields.email.value);
-	},
+	}
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
-	},
+	}
 
 	comparePasswords() {
 		const {password, passwordConfirm} = this.state.fields;
 
 		return password.value === passwordConfirm.value;
-	},
-
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestAddAdvertiser();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
-		});
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-
-		return (
-			<FormRow
-				onChange={this.handleChange}
-				{...{name}}
-				{...field}
-				/>
-		);
-	},
-
-	updateData(name, value) {
-		const state = this.state;
-		state.fields[name].value = value;
-		this.forceUpdate();
-	},
+	}
 
 	render() {
 		return (
@@ -205,7 +193,7 @@ const AddAdvertiserForm = React.createClass({
 						className="btn btn-primary"
 						onClick={this.handleClickSubmit}
 						disabled={this.state.isLoading || !this.validate()}
-						type="submit"
+						type="button"
 						>
 						{'Продолжить'}
 					</button>
@@ -213,6 +201,10 @@ const AddAdvertiserForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+AddAdvertiserForm.propTypes = {
+};
+AddAdvertiserForm.defaultProps = {
+};
 
 export default AddAdvertiserForm;
