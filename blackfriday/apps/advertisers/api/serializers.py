@@ -1,3 +1,5 @@
+import collections
+
 from rest_framework import serializers
 
 from apps.users.models import User
@@ -18,7 +20,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
-        self.instance = parent.instance.profile
+        if not isinstance(parent.instance, collections.Iterable):
+            self.instance = parent.instance.profile
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
