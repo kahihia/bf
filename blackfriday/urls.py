@@ -1,14 +1,10 @@
 from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
-from django.views.generic.base import TemplateView
-from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
     url(r'^admin/', include([
-        url(r'^registration/$', TemplateView.as_view(template_name='users/registration.html')),
-        url(r'^login/$', auth_views.login, {'template_name': 'users/login.html'}),
         url(r'^', include('apps.users.urls', namespace='users')),
         url(r'^', include('apps.advertisers.urls', namespace='advertisers')),
         url(r'^', include('apps.leads.urls', namespace='leads')),
