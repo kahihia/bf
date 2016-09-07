@@ -81,7 +81,10 @@ class Token(models.Model):
 
     @classmethod
     def get_token(cls, token, type=None):
-        return cls.objects.get(token=token, **({'type': type} if type else {}))
+        try:
+            return cls.objects.get(token=token, **({'type': type} if type else {}))
+        except cls.DoesNotExist:
+            return None
 
 
 class User(AbstractBaseUser):
@@ -152,7 +155,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
 
+    def activate(self):
+        self.is_active = True
+        self.save()
+
     def send_verification(self, context=None):
+        Token.invalidate(self)
         token = Token.create(self, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL_HOURS)
 
         _context = {'user': self, 'token': token}

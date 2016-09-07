@@ -88,6 +88,11 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'apps.users.backends.ForceLoginBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 LOGIN_URL = '/admin/login/'
 
 VERIFICATION = {

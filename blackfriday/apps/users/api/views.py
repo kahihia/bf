@@ -1,6 +1,7 @@
 from smtplib import SMTPException
 
 from django.conf import settings
+from django.urls import reverse
 
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -28,6 +29,8 @@ class UserViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         context = {
             'host': request.get_host(),
+            'path': reverse('users:verification'),
+            'scheme': request.scheme,
             'hours': '{} час{}'.format(
                 settings.VERIFICATION_TTL_HOURS,
                 'а' if settings.VERIFICATION_TTL_HOURS % 10 == 1 else 'ов'
