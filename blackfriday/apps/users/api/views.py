@@ -35,7 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
         }
 
         try:
-            instance.send_verification(request, context=context)
+            instance.send_verification(context)
         except SMTPException:
             raise ServiceUnavailable('Ошибка отправки почты')
         return Response(self.get_serializer(instance).data)
