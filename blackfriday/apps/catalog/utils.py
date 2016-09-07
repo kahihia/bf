@@ -23,7 +23,7 @@ def csv_dict_reader(f):
     data = StringIO(f.read().decode('utf-8'))
     return (
         {
-            COLUMNS_MAPPING[key]: value for key, value in row.items()
+            COLUMNS_MAPPING[key]: value for key, value in row.items() if key in COLUMNS_MAPPING
         } for row in csv.DictReader(data, delimiter=';', quotechar='"')
     )
 
@@ -39,7 +39,7 @@ def xls_dict_reader(f, sheet_index=0):
     return (
         dict(
             (COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
-            for column in headers
+            for column in headers if headers[column] in COLUMNS_MAPPING
         ) for row in range(1, sheet.nrows)
     )
 
