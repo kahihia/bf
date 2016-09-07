@@ -153,7 +153,7 @@ class User(AbstractBaseUser):
         return self.is_admin
 
     def send_verification(self, context=None):
-        token = Token.create(self, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL)
+        token = Token.create(self, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL_HOURS)
 
         _context = {'user': self, 'token': token}
         if context:

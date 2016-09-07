@@ -1,3 +1,5 @@
+import collections
+
 from rest_framework import serializers
 
 from apps.users.models import User
@@ -5,6 +7,7 @@ from apps.users.models import User
 from apps.promo.models import Promo
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import empty
 
 from ..models import AdvertiserProfile, Merchant, ModerationStatus
 
@@ -14,6 +17,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis')
+        extra_kwargs = {
+            'head_name': {'allow_null': False},
+            'head_appointment': {'allow_null': False},
+            'head_basis': {'allow_null': False}
+        }
+
+    def bind(self, field_name, parent):
+        super().bind(field_name, parent)
+        if not isinstance(parent.instance, collections.Iterable):
+            self.instance = parent.instance.profile
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):

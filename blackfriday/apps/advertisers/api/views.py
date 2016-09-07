@@ -15,7 +15,8 @@ from .serializers import (User, AdvertiserSerializer,
 
 class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                         mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated, IsOwner | IsAdmin]
+    permission_classes = [IsAuthenticated,
+                          IsOwner & action_permission('retrieve', 'update', 'partial_update', 'current') | IsAdmin]
     queryset = User.objects.filter(profile__isnull=False, is_active=True)
     serializer_class = AdvertiserSerializer
     filter_class = AdvertiserFilter
@@ -39,7 +40,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         if self.action == 'list' and self.request.user.role == 'advertiser':
-            qs = qs.filter(advertiser=self.request.user.role)
+            qs = qs.filter(advertiser=self.request.user)
         return qs
 
     def get_serializer_class(self):
@@ -54,11 +55,17 @@ class MerchantViewSet(viewsets.ModelViewSet):
     def partners(self, request, *args, **kwargs):
         obj = self.get_object()
         if request.method.lower() in ('put', 'patch'):
-            partners = set(map(int, request.data))
+            try:
+                partners = set(map(int, request.data))
+            except (ValueError, TypeError):
+                raise ValidationError('Неверный формат данных')
+
             if Partner.objects.filter(id__in=partners).count() < len(partners):
                 raise ValidationError('Партнер не найден')
+
             obj.partners.clear()
             obj.partners.add(*partners)
+
         return Response(PartnerTinySerializer(obj.partners.all(), many=True).data)
 
     @detail_route(methods=['patch', 'put'])
