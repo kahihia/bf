@@ -5,37 +5,25 @@ class ComplexPermissionMetaClass(type):
     def __or__(cls, other):
         class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
-                a = cls().has_permission(request, view)
-                b = other().has_permission(request, view)
-                # print(cls.__name__, "OR", other.__name__, a, b)
-                return (a or
-                        b)
+                return (cls().has_permission(request, view) or
+                        other().has_permission(request, view))
 
             def has_object_permission(self, request, view, obj):
-                a = cls().has_object_permission(request, view, obj)
-                b = other().has_object_permission(request, view, obj)
-                print(cls.__name__, "OR", other.__name__, a, b)
-
-                return (a or
-                        b)
+                return (cls().has_object_permission(request, view, obj) or
+                        other().has_object_permission(request, view, obj))
 
         return Permission
 
     def __and__(cls, other):
         class Permission(BaseComplexPermission):
             def has_permission(self, request, view):
-                a = cls().has_permission(request, view)
-                b = other().has_permission(request, view)
-                # print(cls.__name__, "AND", other.__name__, a, b)
-                return (a and
-                        b)
+                return (cls().has_permission(request, view) and
+                        other().has_permission(request, view))
 
             def has_object_permission(self, request, view, obj):
-                a = cls().has_object_permission(request, view, obj)
-                b = other().has_object_permission(request, view, obj)
-                print(cls.__name__, "AND", other.__name__, a, b)
-                return (a and
-                        b)
+                return (cls().has_object_permission(request, view, obj) and
+                        other().has_object_permission(request, view, obj))
+
         return Permission
 
 
