@@ -112,6 +112,10 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merchant
+        extra_kwargs = {
+            'url': {'allow_null': False, 'allow_blank': False},
+            'name': {'allow_null': False, 'allow_blank': False},
+        }
 
     def get_default_field_names(self, declared_fields, model_info):
         fields = ['name', 'url']
