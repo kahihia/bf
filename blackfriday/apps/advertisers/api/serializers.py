@@ -17,6 +17,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis')
+        extra_kwargs = {
+            'head_name': {'allow_null': False},
+            'head_appointment': {'allow_null': False},
+            'head_basis': {'allow_null': False}
+        }
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -31,9 +36,6 @@ class AdvertiserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'name', 'email', 'profile')
         extra_kwargs = {'email': {'read_only': True}}
-
-    def __init__(self, instance=None, data=empty, **kwargs):
-        super().__init__(instance, data, **kwargs)
 
     def update(self, instance, validated_data):
         if 'profile' in validated_data:
