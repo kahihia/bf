@@ -1,6 +1,7 @@
 import codecs
 import csv
 import io
+import pytz
 
 from django.conf import settings
 from django.core.mail.message import EmailMessage
@@ -27,7 +28,7 @@ class Command(BaseCommand):
 
         message = EmailMessage(
             subject='Отчет по заявкам',
-            body='Сгенерирован {}'.format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')),
+            body='Сгенерирован {}'.format(datetime.now(pytz.timezone('Europe/Moscow')).strftime('%Y-%m-%d %H:%M:%S')),
             to=map(lambda x: '"{}" <{}>'.format(*x), settings.MANAGERS)
         )
         message.attach(filename='leads.csv', content=csv_file.getvalue(), mimetype='text/csv')
