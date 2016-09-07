@@ -17,7 +17,7 @@ class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                         mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated,
                           IsOwner & action_permission('retrieve', 'update', 'partial_update', 'current') | IsAdmin]
-    queryset = User.objects.filter(profile__isnull=False, is_active=True)
+    queryset = User.objects.filter(profile__isnull=False)
     serializer_class = AdvertiserSerializer
     filter_class = AdvertiserFilter
 
