@@ -20,8 +20,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
-        if not isinstance(parent.instance, collections.Iterable):
+        try:
             self.instance = parent.instance.profile
+        except AttributeError:
+            pass
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
@@ -29,8 +31,11 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'profile')
-        extra_kwargs = {'email': {'read_only': True}}
+        fields = ('id', 'name', 'email', 'profile', 'is_active')
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'is_active': {'read_only': True}
+        }
 
     def __init__(self, instance=None, data=empty, **kwargs):
         super().__init__(instance, data, **kwargs)
