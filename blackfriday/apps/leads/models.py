@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Subscriber(models.Model):
-    name = models.CharField(max_length=120, null=True, blank=True, verbose_name='Имя')
-    email = models.EmailField(verbose_name='E-mail')
+    name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Имя')
+    email = models.EmailField(max_length=255, verbose_name='E-mail')
 
     class Meta:
         verbose_name = 'Подписчик'
@@ -26,10 +26,10 @@ class AdvertiserRequest(models.Model):
         (AdvertiserRequestStatus.rejected, 'Отклонена')
     )
 
-    name = models.CharField(max_length=120, verbose_name='Имя')
-    organization_name = models.CharField(max_length=120, verbose_name='Название организации')
-    phone = models.CharField(max_length=20, verbose_name='Телефон')
-    email = models.EmailField(max_length=120, unique=True, verbose_name='E-mail')
+    name = models.CharField(max_length=255, verbose_name='Имя')
+    organization_name = models.CharField(max_length=255, verbose_name='Название организации')
+    phone = models.CharField(max_length=255, verbose_name='Телефон')
+    email = models.EmailField(max_length=255, unique=True, verbose_name='E-mail')
     comment = models.TextField(blank=True, null=True, verbose_name='Комментарии')
     status = models.IntegerField(default=AdvertiserRequestStatus.new, choices=REQUEST_STATUSES, verbose_name='Статус')
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
