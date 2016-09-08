@@ -89,15 +89,31 @@ class MerchantProfileForm extends Form {
 	}
 
 	componentDidMount() {
-		if (this.props.isNew) {
+		const props = this.props;
+
+		if (props.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = props.userName;
+				return previousState;
+			});
+		}
+
+		if (props.isNew) {
 			return;
 		}
 
 		this.requestProfileUser();
 	}
 
-	componentWillReceiveProps() {
-		if (this.props.isNew) {
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = nextProps.userName;
+				return previousState;
+			});
+		}
+
+		if (nextProps.isNew) {
 			return;
 		}
 
@@ -127,7 +143,8 @@ class MerchantProfileForm extends Form {
 
 					if (data.profile) {
 						Object.keys(state.fields).forEach(key => {
-							state.fields[key].value = data.profile[key] || '';
+							const field = state.fields[key];
+							field.value = data.profile[key] || field.defaultValue || '';
 						});
 					}
 
@@ -313,6 +330,7 @@ MerchantProfileForm.propTypes = {
 		React.PropTypes.string,
 		React.PropTypes.number
 	]).isRequired,
+	userName: React.PropTypes.string,
 	isNew: React.PropTypes.bool
 };
 MerchantProfileForm.defaultProps = {

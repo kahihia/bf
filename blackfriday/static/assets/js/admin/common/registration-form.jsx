@@ -68,15 +68,21 @@ class RegistrationForm extends Form {
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (data) {
 				switch (resp.statusCode) {
 					case 201: {
 						toastr.success('Вы успешно зарегистрированы');
-						this.requestVerification(data);
+						this.requestVerification(data.id);
+						this.resetForm();
+
+						if (this.props.onSubmit) {
+							this.props.onSubmit(data);
+						}
 						break;
 					}
 					default: {
-						this.setState({isLoading: false});
 						processErrors(data);
 						break;
 					}
@@ -85,31 +91,19 @@ class RegistrationForm extends Form {
 				return;
 			}
 
-			this.setState({isLoading: false});
 			toastr.error('Не удалось зарегистрироваться');
 		});
 	}
 
-	requestVerification(userData) {
+	requestVerification(userId) {
 		xhr({
-			url: `/api/users/${userData.id}/verification/`,
+			url: `/api/users/${userId}/verification/`,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			}
-		}, (err, resp, data) => {
-			this.setState({isLoading: false});
-
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					toastr.success('Письмо верификации успешно отправлено');
-					this.resetForm();
-
-					if (this.props.onSubmit) {
-						this.props.onSubmit(userData);
-					}
-				}
-			} else {
+		}, err => {
+			if (err) {
 				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});

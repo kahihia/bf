@@ -32,12 +32,12 @@ const MerchantList = React.createClass({
 			this.setState({isLoading: false});
 
 			if (!err && resp.statusCode === 200) {
-				this.setState({data});
+				this.setState({data: _.sortBy(data, 'id')});
 			}
 		});
 	},
 
-	handleClickItemEdit(advertiserId, isNew) {
+	handleClickItemEdit(advertiserId, isNew, advertiserName) {
 		jQuery('#merchant-profile-modal').modal('show');
 		const onSubmit = () => {
 			jQuery('#merchant-profile-modal').modal('hide');
@@ -45,6 +45,7 @@ const MerchantList = React.createClass({
 		ReactDOM.render(
 			<MerchantProfileForm
 				userId={advertiserId}
+				userName={advertiserName}
 				key={advertiserId}
 				{...{isNew, onSubmit}}
 				/>
@@ -57,8 +58,15 @@ const MerchantList = React.createClass({
 		const $modal = jQuery('#add-advertiser-modal');
 		$modal.modal('show');
 		const onSubmit = advertiser => {
+			if (advertiser) {
+				this.setState(previousState => {
+					previousState.data.push(advertiser);
+					return previousState;
+				});
+			}
+
 			$modal.one('hidden.bs.modal', () => {
-				this.handleClickItemEdit(advertiser.id, true);
+				this.handleClickItemEdit(advertiser.id, true, advertiser.name);
 			});
 			$modal.modal('hide');
 		};
@@ -207,8 +215,9 @@ const MerchantItem = React.createClass({
 	handleClickEdit(e) {
 		e.preventDefault();
 
-		if (this.props.onClickEdit) {
-			this.props.onClickEdit(this.props.id);
+		const props = this.props;
+		if (props.onClickEdit) {
+			props.onClickEdit(props.id);
 		}
 	},
 
