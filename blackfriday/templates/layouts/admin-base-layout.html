@@ -71,112 +71,24 @@
                     {% block navbar %}
                         {# Admin Menu #}
                         {% if user.role == 'admin' %}
-                            {% comment %}
-                            {% for m in models %}
-                                {% if models[m].in_admin %}
-                                    <li class="simple-menu__item">
-                                        <a class="simple-menu__link" href="/admin/{{m}}">{{models[m].names}}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {% endcomment %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant-list">Рекламодатели</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:list' %}">Рекламодатели</a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">Продавцы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/promo-list">Рекламные пакеты</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/promo-maker">Конструктор пакетов</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/invoice-list">Счета</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/feed-maker">Товары</a>
-                            </li>
-
-                            <li class="simple-menu__item">
-                                <span class="simple-menu__link" style="visibility: hidden;">&nbsp;</span>
-                            </li>
-
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/main">Главная</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/all-merchants">Все участники</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/actions">Акции</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/category">Категории</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/partner">Партнеры</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/text">Страницы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/russiangoods">Рашнгудз</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/user">Пользователи</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/landing">Лэндинг</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
                             </li>
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/moderate-list">
-                                    Модерация
-                                    {% comment %}
-                                    {% if request.moderation_count %}
-                                        <span>({{ request.moderation_count }})</span>
-                                    {% endif %}
-                                    {% endcomment %}
-                                </a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:list' %}">Рекламодатели</a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">Продавцы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant-list">Рекламодатели</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/invoice-list">Счета</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
                             </li>
 
                         {# Advertiser Menu #}
                         {% elif user.role == 'advertiser' %}
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">
-                                    Мои магазины
-                                    {% comment %}
-                                    <span>({{ request.merchant_count }})</span>
-                                    {% endcomment %}
-                                </a>
-                                <a class="site-nav__action" href="/admin/merchant/create">
-                                    <i class="icon icon_name_menu-add"></i> Добавить магазин
-                                </a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant/invoices">
-                                    Мои счета
-                                    {% comment %}
-                                    <span>({{ request.invoice_count }})</span>
-                                    {% endcomment %}
-                                </a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant/profile">Мои реквизиты</a>
-                            </li>
                         {% endif %}
                     {% endblock navbar %}
                 </ul>
