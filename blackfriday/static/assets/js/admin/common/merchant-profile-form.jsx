@@ -45,18 +45,21 @@ class MerchantProfileForm extends Form {
 				},
 				headAppointment: {
 					label: 'Должность руководителя',
-					value: ''
+					value: '',
+					required: true
 				},
 				headBasis: {
 					label: 'На основании чего действует руководитель',
 					value: DEFAULT_BASIS,
 					defaultValue: DEFAULT_BASIS,
 					options: HEAD_BASIS,
-					type: 'select'
+					type: 'select',
+					required: true
 				},
 				headName: {
 					label: 'ФИО руководителя',
-					value: ''
+					value: '',
+					required: true
 				},
 				inn: {
 					label: 'ИНН',
