@@ -102,6 +102,10 @@ const MerchantList = React.createClass({
 
 		let filteredMerchants = data;
 		function foo(a, b) {
+			if (!a || !b) {
+				return;
+			}
+
 			return a.toLowerCase().indexOf(b.toLowerCase()) > -1;
 		}
 		if (merchantFilter) {
