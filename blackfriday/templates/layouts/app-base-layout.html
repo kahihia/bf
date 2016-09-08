@@ -190,9 +190,9 @@ window.DATA = {
 {% block data %}{% endblock %}
 </script>
 
-{% block js %}
-    {% render_bundle 'app' 'js' %}
-{% endblock js %}
+{% block js %}{% endblock js %}
+
+{% render_bundle 'app' 'js' %}
 
 <script>
 (function () {
