@@ -133,7 +133,7 @@ const UserListItem = React.createClass({
 						name
 					) : (
 						<em className="text-muted">
-							{'имя не задано'}
+							{`${role === 'advertiser' ? 'название' : 'имя'} не задано`}
 						</em>
 					)}
 				</td>
