@@ -197,13 +197,13 @@ class MerchantProfileForm extends Form {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
-		}, (err, resp) => {
+		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
@@ -232,13 +232,13 @@ class MerchantProfileForm extends Form {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
-		}, (err, resp) => {
+		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
