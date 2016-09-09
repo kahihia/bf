@@ -6,3 +6,7 @@ from apps.users.mixins import ManagerOrAdminOnlyMixin
 
 class AdvertiserListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateView):
     template_name = 'advertisers/advertisers-list.html'
+
+
+class MerhcantsListView(LoginRequiredMixin, TemplateView):
+    template_name = 'advertisers/merchants-list.html'
