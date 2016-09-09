@@ -24,7 +24,7 @@ class FormRow extends React.Component {
 	}
 
 	render() {
-		const {label, readOnly, required, value, placeholder, options, type, name, mask, help} = this.props;
+		const {label, readOnly, required, value, valueType, placeholder, options, type, name, mask, help} = this.props;
 
 		return (
 			<label className="form-group">
@@ -36,7 +36,7 @@ class FormRow extends React.Component {
 				<Input
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
-					{...{value, placeholder, options, type, name, required, readOnly, mask}}
+					{...{value, valueType, placeholder, options, type, name, required, readOnly, mask}}
 					/>
 
 				{help ? (
@@ -54,6 +54,7 @@ FormRow.propTypes = {
 		React.PropTypes.string,
 		React.PropTypes.number
 	]).isRequired,
+	valueType: React.PropTypes.string,
 	placeholder: React.PropTypes.string,
 	options: React.PropTypes.oneOfType([
 		React.PropTypes.array,
@@ -85,6 +86,7 @@ export const Input = React.createClass({
 			React.PropTypes.string,
 			React.PropTypes.number
 		]).isRequired,
+		valueType: React.PropTypes.string,
 		placeholder: React.PropTypes.string,
 		options: React.PropTypes.oneOfType([
 			React.PropTypes.array,
@@ -130,14 +132,14 @@ export const Input = React.createClass({
 	},
 
 	render() {
-		const {value, placeholder, options, name, type, required, readOnly, mask} = this.props;
+		const {value, valueType, placeholder, options, name, type, required, readOnly, mask} = this.props;
 
 		if (type === 'select') {
 			return (
 				<Select
 					onChange={this.handleChange}
 					selected={value}
-					{...{options, name}}
+					{...{options, name, valueType}}
 					/>
 			);
 		}

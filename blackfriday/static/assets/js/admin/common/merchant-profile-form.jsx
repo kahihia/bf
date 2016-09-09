@@ -7,7 +7,7 @@ import {HEAD_BASIS, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
 const PHONE_MASK = '+7 (111) 111-11-11';
-const DEFAULT_BASIS = '0';
+const DEFAULT_BASIS = 0;
 
 class MerchantProfileForm extends Form {
 	constructor(props) {
@@ -52,6 +52,7 @@ class MerchantProfileForm extends Form {
 					label: 'На основании чего действует руководитель',
 					value: DEFAULT_BASIS,
 					defaultValue: DEFAULT_BASIS,
+					valueType: 'Number',
 					options: HEAD_BASIS,
 					type: 'select',
 					required: true
