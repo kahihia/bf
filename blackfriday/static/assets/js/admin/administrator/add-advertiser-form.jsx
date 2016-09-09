@@ -36,7 +36,8 @@ class AddAdvertiserForm extends Form {
 					label: 'Повторите пароль',
 					value: '',
 					type: 'password',
-					required: true
+					required: true,
+					excluded: true
 				}
 			}
 		};
@@ -51,11 +52,8 @@ class AddAdvertiserForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const fields = this.state.fields;
-		const json = _.reduce(fields, (a, b, key) => {
-			a[key] = b.value;
-			return a;
-		}, {role: 'advertiser'});
+		const json = this.serialize();
+		json.role = 'advertiser';
 
 		xhr({
 			url: '/api/users/',

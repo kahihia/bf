@@ -61,6 +61,19 @@ class Form extends React.Component {
 				/>
 		);
 	}
+
+	serialize() {
+		const fields = this.state.fields;
+		const json = _.reduce(fields, (a, b, key) => {
+			if (!b.excluded) {
+				a[key] = b.value;
+			}
+
+			return a;
+		}, {});
+
+		return json;
+	}
 }
 Form.propTypes = {
 	onSubmit: React.PropTypes.func,

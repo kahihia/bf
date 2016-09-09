@@ -61,11 +61,7 @@ class AddUser extends Form {
 
 		this.setState({isLoading: true});
 
-		const fields = this.state.fields;
-		const json = _.reduce(fields, (a, b, key) => {
-			a[key] = b.value;
-			return a;
-		}, {});
+		const json = this.serialize();
 
 		xhr({
 			url: '/api/users/',

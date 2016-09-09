@@ -84,7 +84,8 @@ class MerchantProfileForm extends Form {
 				name: {
 					label: 'Наименование юридического лица',
 					value: '',
-					required: true
+					required: true,
+					excluded: true
 				}
 			}
 		};
@@ -172,15 +173,10 @@ class MerchantProfileForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const data = this.state.fields;
+		const fields = this.state.fields;
 		const json = {
-			name: data.name.value,
-			profile: Object.keys(data).reduce((a, b) => {
-				if (b !== 'name') {
-					a[b] = data[b].value || '';
-				}
-				return a;
-			}, {})
+			name: fields.name.value,
+			profile: this.serialize()
 		};
 
 		xhr({
@@ -212,15 +208,10 @@ class MerchantProfileForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const data = this.state.fields;
+		const fields = this.state.fields;
 		const json = {
-			name: data.name.value,
-			profile: Object.keys(data).reduce((a, b) => {
-				if (b !== 'name') {
-					a[b] = data[b].value || '';
-				}
-				return a;
-			}, {})
+			name: fields.name.value,
+			profile: this.serialize()
 		};
 
 		xhr({
