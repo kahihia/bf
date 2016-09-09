@@ -19,7 +19,12 @@ class Form extends React.Component {
 	resetForm() {
 		const fields = this.state.fields;
 		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
+			let value = '';
+			if (!_.isUndefined(field.defaultValue)) {
+				value = field.defaultValue;
+			}
+
+			field.value = value;
 		});
 		this.forceUpdate();
 	}

@@ -149,7 +149,13 @@ class MerchantProfileForm extends Form {
 					if (data.profile) {
 						Object.keys(state.fields).forEach(key => {
 							const field = state.fields[key];
-							field.value = data.profile[key] || field.defaultValue || '';
+							let value = data.profile[key];
+							if (_.isUndefined(value) || _.isNull(value)) {
+								if (!_.isUndefined(field.defaultValue)) {
+									value = field.defaultValue;
+								}
+							}
+							field.value = value;
 						});
 					}
 
@@ -239,7 +245,7 @@ class MerchantProfileForm extends Form {
 		let isValid = true;
 
 		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
+			if (field.required && (_.isUndefined(field.value) || _.isNull(field.value))) {
 				isValid = false;
 				if (warnings) {
 					toastr.warning(`Заполните поле "${field.label}"`);
