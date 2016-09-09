@@ -2,12 +2,23 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView, RedirectView
+from django.core.urlresolvers import reverse
 
 from .models import Token, TokenType
 
 
 class UserListView(LoginRequiredMixin, TemplateView):
     template_name = 'users/users-list.html'
+
+
+class RedirectByRoleView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return {
+            'admin': reverse('users:list'),
+            'manager': reverse('advertisers:advertisers-list'),
+            'advertiser': reverse('advertisers:merchants-list')
+        }[self.request.user.role]
 
 
 class VerificationView(RedirectView):
