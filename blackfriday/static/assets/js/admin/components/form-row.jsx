@@ -24,7 +24,7 @@ class FormRow extends React.Component {
 	}
 
 	render() {
-		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+		const {label, readOnly, required, value, valueType, placeholder, options, type, name, mask, help} = this.props;
 
 		return (
 			<label className="form-group">
@@ -36,7 +36,7 @@ class FormRow extends React.Component {
 				<Input
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
-					{...{value, options, type, name, required, readOnly, mask}}
+					{...{value, valueType, placeholder, options, type, name, required, readOnly, mask}}
 					/>
 
 				{help ? (
@@ -50,7 +50,12 @@ class FormRow extends React.Component {
 }
 FormRow.propTypes = {
 	label: React.PropTypes.string.isRequired,
-	value: React.PropTypes.string.isRequired,
+	value: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired,
+	valueType: React.PropTypes.string,
+	placeholder: React.PropTypes.string,
 	options: React.PropTypes.oneOfType([
 		React.PropTypes.array,
 		React.PropTypes.object
@@ -77,7 +82,12 @@ export default FormRow;
 
 export const Input = React.createClass({
 	propTypes: {
-		value: React.PropTypes.string.isRequired,
+		value: React.PropTypes.oneOfType([
+			React.PropTypes.string,
+			React.PropTypes.number
+		]).isRequired,
+		valueType: React.PropTypes.string,
+		placeholder: React.PropTypes.string,
 		options: React.PropTypes.oneOfType([
 			React.PropTypes.array,
 			React.PropTypes.object
@@ -122,14 +132,14 @@ export const Input = React.createClass({
 	},
 
 	render() {
-		const {value, options, name, type, required, readOnly, mask} = this.props;
+		const {value, valueType, placeholder, options, name, type, required, readOnly, mask} = this.props;
 
 		if (type === 'select') {
 			return (
 				<Select
 					onChange={this.handleChange}
 					selected={value}
-					{...{options, name}}
+					{...{options, name, valueType}}
 					/>
 			);
 		}
@@ -148,7 +158,7 @@ export const Input = React.createClass({
 		return (
 			<input
 				className="form-control"
-				{...{value, name, type, required, readOnly}}
+				{...{value, placeholder, name, type, required, readOnly}}
 				onChange={this.handleChange}
 				onKeyUp={this.handleKeyUp}
 				/>

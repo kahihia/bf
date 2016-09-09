@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Киберпонедельник</title>
+    <title>Настоящая черная пятница</title>
     <meta name="description" content="">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
@@ -55,153 +55,40 @@
 </head>
 <body class="site">
 
-<header class="site-header">
-    <a href="/admin" class="logo site-header__logo">
-        <img src="{% static 'images/admin/logo.png' %}" alt="Киберпонедельник">
-    </a>
-
-    <nav class="header-nav site-header__header-nav">
-        <ul class="simple-menu">
-            {% if user.role is 'advertiser' %}
-                <li class="simple-menu__item">
-                    <button
-                        type="button"
-                        class="btn btn-default js-generate-page"
-                        data-url="/admin/generate/"
-                        title="Сгенерировать все страницы"
-                        >
-                        &nbsp;<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;
-                    </button>
-                </li>
-            {% endif %}
-
-            <li class="simple-menu__item">
-                <a class="simple-menu__link" href="#" data-toggle="modal" data-target="#feedbackModal">
-                    Служба поддержки
-                </a>
-            </li>
-
-            <li class="simple-menu__item">
-                <a class="simple-menu__link" href="/django-admin/logout">Выход</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
 <div class="site-main">
     <aside class="site-sidebar">
+        <div class="site-sidebar__header">
+            <header class="site-header">
+                <a href="/admin/" class="logo site-header__logo">
+                    <img src="{% static 'images/admin/logo.png' %}" alt="Настоящая черная пятница">
+                </a>
+            </header>
+        </div>
+
         <div class="site-sidebar__container">
             <nav class="site-nav js-navbar">
                 <ul class="simple-menu site-nav__simple-menu">
                     {% block navbar %}
                         {# Admin Menu #}
                         {% if user.role == 'admin' %}
-                            {% comment %}
-                            {% for m in models %}
-                                {% if models[m].in_admin %}
-                                    <li class="simple-menu__item">
-                                        <a class="simple-menu__link" href="/admin/{{m}}">{{models[m].names}}</a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {% endcomment %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant-list">Рекламодатели</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:list' %}">Рекламодатели</a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">Продавцы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/promo-list">Рекламные пакеты</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/promo-maker">Конструктор пакетов</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/invoice-list">Счета</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/feed-maker">Товары</a>
-                            </li>
-
-                            <li class="simple-menu__item">
-                                <span class="simple-menu__link" style="visibility: hidden;">&nbsp;</span>
-                            </li>
-
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/main">Главная</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/all-merchants">Все участники</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/actions">Акции</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/category">Категории</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/partner">Партнеры</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/text">Страницы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/russiangoods">Рашнгудз</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/user">Пользователи</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/landing">Лэндинг</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
                             </li>
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/moderate-list">
-                                    Модерация
-                                    {% comment %}
-                                    {% if request.moderation_count %}
-                                        <span>({{ request.moderation_count }})</span>
-                                    {% endif %}
-                                    {% endcomment %}
-                                </a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:list' %}">Рекламодатели</a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">Продавцы</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant-list">Рекламодатели</a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/invoice-list">Счета</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
                             </li>
 
                         {# Advertiser Menu #}
                         {% elif user.role == 'advertiser' %}
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant">
-                                    Мои магазины
-                                    {% comment %}
-                                    <span>({{ request.merchant_count }})</span>
-                                    {% endcomment %}
-                                </a>
-                                <a class="site-nav__action" href="/admin/merchant/create">
-                                    <i class="icon icon_name_menu-add"></i> Добавить магазин
-                                </a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant/invoices">
-                                    Мои счета
-                                    {% comment %}
-                                    <span>({{ request.invoice_count }})</span>
-                                    {% endcomment %}
-                                </a>
-                            </li>
-                            <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="/admin/merchant/profile">Мои реквизиты</a>
-                            </li>
                         {% endif %}
                     {% endblock navbar %}
                 </ul>
@@ -223,12 +110,16 @@
 
         <div class="site-sidebar__footer">
             <footer class="site-footer">
-                <a class="akit-copy" target="_blank" href="http://www.akit.ru/">
+                <a class="site-footer__feedback" href="#" data-toggle="modal" data-target="#feedbackModal">
+                    Служба поддержки
+                </a>
+
+                <a class="akit-copy" href="http://www.akit.ru/" target="_blank" rel="noopener noreferrer">
                     <img class="akit-copy__logo" src="{% static 'images/admin/akit-logo.png' %}" alt="retail hotline" title="" />Ассоциация компаний интернет-торговли
                 </a>
 
                 <div class="copyrights">
-                    © 2002 — 2016 «Киберпонедельник».
+                    © 2002 — 2016 «Настоящая черная пятница».
                 </div>
             </footer>
         </div>
@@ -248,7 +139,7 @@
 </div>
 
 {# Форма обратной связи #}
-{% include "includes/feedback_modal.html" %}
+{% include "includes/feedback-modal.html" %}
 
 <script>
 $(function () {
@@ -316,8 +207,9 @@ window.ENV = {
 </script>
 
 {# JS #}
-{% render_bundle 'admin' 'js' %}
 {% block js %}{% endblock js %}
+
+{% render_bundle 'admin' 'js' %}
 
 </body>
 </html>

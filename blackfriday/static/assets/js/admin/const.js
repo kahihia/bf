@@ -1,4 +1,8 @@
+/* global window */
+
 import Cookie from 'js-cookie';
+
+const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export const REGEXP = {
 	password: /^\S{8,}$/,
@@ -21,6 +25,6 @@ export const HELP_TEXT = {
 };
 
 export const TOKEN = {
-	recaptcha: '6LeECx8TAAAAAHBhJCluCug9AbZ7-z0cbXJZyNf9',
+	recaptcha: ENV.tokens && ENV.tokens.recaptcha,
 	csrftoken: Cookie.get('csrftoken')
 };

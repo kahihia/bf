@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView, RedirectView
 
 from .models import Token, TokenType
+from .mixins import AdminOnlyMixin
 
 
-class UserListView(LoginRequiredMixin, TemplateView):
+class UserListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
     template_name = 'users/users-list.html'
 
 

@@ -6,7 +6,7 @@ import FormRow, {Input} from './form-row.jsx';
 
 class FormCol extends FormRow {
 	render() {
-		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+		const {label, readOnly, required, value, placeholder, options, type, name, mask, help} = this.props;
 
 		return (
 			<label className={this.props.className}>
@@ -18,7 +18,7 @@ class FormCol extends FormRow {
 				<Input
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
-					{...{value, options, type, name, required, readOnly, mask}}
+					{...{value, placeholder, options, type, name, required, readOnly, mask}}
 					/>
 
 				{help ? (

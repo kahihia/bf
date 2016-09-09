@@ -49,7 +49,7 @@
         method="POST"
         >
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.GET.next|default:'/django-admin/'}}" />
+        <input type="hidden" name="next" value="{{ request.GET.next|default:'/admin/'}}" />
 
         <label class="form-group">
             {{ form.username.errors }}

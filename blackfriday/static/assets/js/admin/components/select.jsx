@@ -10,6 +10,7 @@ const Select = React.createClass({
 			React.PropTypes.string,
 			React.PropTypes.number
 		]),
+		valueType: React.PropTypes.string,
 		onChange: React.PropTypes.func,
 		disabled: React.PropTypes.bool
 	},
@@ -23,7 +24,14 @@ const Select = React.createClass({
 	},
 
 	handleChange(e) {
-		this.props.onChange(e.target.value);
+		const props = this.props;
+
+		let value = e.target.value;
+		if (props.valueType === 'Number') {
+			value = parseInt(value, 10);
+		}
+
+		props.onChange(value);
 	},
 
 	render() {
