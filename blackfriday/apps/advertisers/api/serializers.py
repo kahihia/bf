@@ -95,7 +95,7 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         extra_kwargs = {
-            'url': {'allow_null': False, 'allow_blank': False},
+            'url': {'allow_null': True, 'allow_blank': False},
             'name': {'allow_null': False, 'allow_blank': False},
         }
 
