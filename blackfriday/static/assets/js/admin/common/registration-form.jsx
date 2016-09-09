@@ -1,4 +1,4 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
