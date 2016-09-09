@@ -18,19 +18,23 @@ class MerchantProfileForm extends Form {
 			fields: {
 				account: {
 					label: 'Расчётный счёт',
-					value: ''
+					value: '',
+					required: true
 				},
 				address: {
 					label: 'Фактический адрес',
-					value: ''
+					value: '',
+					required: true
 				},
 				bank: {
 					label: 'Наименование банка',
-					value: ''
+					value: '',
+					required: true
 				},
 				bik: {
 					label: 'БИК',
-					value: ''
+					value: '',
+					required: true
 				},
 				contactName: {
 					label: 'ФИО ответственного лица',
@@ -69,7 +73,8 @@ class MerchantProfileForm extends Form {
 				},
 				korr: {
 					label: 'Корр. счёт',
-					value: ''
+					value: '',
+					required: true
 				},
 				kpp: {
 					label: 'КПП',
@@ -245,10 +250,11 @@ class MerchantProfileForm extends Form {
 		let isValid = true;
 
 		_.forEach(this.state.fields, field => {
-			if (field.required && (_.isUndefined(field.value) || _.isNull(field.value))) {
+			const {required, value, label} = field;
+			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
 				isValid = false;
 				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
+					toastr.warning(`Заполните поле "${label}"`);
 				}
 				return false;
 			}
