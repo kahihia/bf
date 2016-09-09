@@ -1,16 +1,12 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from apps.users.mixins import ManagerOrAdminOnlyMixin
 
-class SubscriberListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+
+class SubscriberListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateView):
     template_name = 'leads/subscriber-list.html'
 
-    def test_func(self):
-        return self.request.user.role in ('manager', 'admin')
 
-
-class AdvertiserRequestListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class AdvertiserRequestListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateView):
     template_name = 'leads/advertiser-request-list.html'
-
-    def test_func(self):
-        return self.request.user.role in ('manager', 'admin')
