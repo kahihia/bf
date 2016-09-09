@@ -5,7 +5,7 @@ import Cookie from 'js-cookie';
 const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export const REGEXP = {
-	password: /^\S{8,}$/,
+	password: /^[A-Za-z0-9]{8,}$/,
 	email: /\S@\S+\.\S{2,}/
 };
 

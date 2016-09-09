@@ -1,11 +1,13 @@
-/* global toastr */
+/* global toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
+/* eslint quote-props: ["error", "as-needed"] */
 
 import React from 'react';
 import xhr from 'xhr';
 import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
+import Recaptcha from '../components/recaptcha.jsx';
 
 class RegistrationForm extends Form {
 	constructor(props) {
@@ -21,8 +23,7 @@ class RegistrationForm extends Form {
 				},
 				name: {
 					label: 'Название',
-					value: '',
-					required: false
+					value: ''
 				},
 				password: {
 					label: 'Пароль',
@@ -37,11 +38,17 @@ class RegistrationForm extends Form {
 					type: 'password',
 					required: true,
 					excluded: true
+				},
+				'g-recaptcha-response': {
+					value: null,
+					required: true
 				}
 			}
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleRecaptchaVerify = this.handleRecaptchaVerify.bind(this);
+		this.handleRecaptchaExpire = this.handleRecaptchaExpire.bind(this);
 	}
 
 	componentWillReceiveProps() {
@@ -49,7 +56,7 @@ class RegistrationForm extends Form {
 	}
 
 	requestRegisterUser() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
@@ -59,7 +66,7 @@ class RegistrationForm extends Form {
 		json.role = 'advertiser';
 
 		xhr({
-			url: '/api/users/',
+			url: '/api/registration/',
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -107,8 +114,41 @@ class RegistrationForm extends Form {
 		});
 	}
 
-	validate() {
-		return this.checkEmail() && this.checkPassword() && this.comparePasswords();
+	validate(warnings) {
+		let isValid = true;
+
+		_.forEach(this.state.fields, field => {
+			if (field.required && !field.value) {
+				isValid = false;
+				if (warnings) {
+					toastr.warning(`Заполните поле "${field.label}"`);
+				}
+				return false;
+			}
+		});
+
+		if (isValid) {
+			isValid = this.checkEmail();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат Email');
+			}
+		}
+
+		if (isValid) {
+			isValid = this.checkPassword();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат пароля');
+			}
+		}
+
+		if (isValid) {
+			isValid = this.comparePasswords();
+			if (warnings && !isValid) {
+				toastr.warning('Пароли не совпадают');
+			}
+		}
+
+		return isValid;
 	}
 
 	checkEmail() {
@@ -130,6 +170,21 @@ class RegistrationForm extends Form {
 		this.requestRegisterUser();
 	}
 
+	handleRecaptchaVerify(response) {
+		this.updateRecaptchaField(response);
+	}
+
+	handleRecaptchaExpire() {
+		this.updateRecaptchaField();
+	}
+
+	updateRecaptchaField(response) {
+		this.setState(previousState => {
+			previousState.fields['g-recaptcha-response'].value = response || null;
+			return previousState;
+		});
+	}
+
 	render() {
 		return (
 			<div>
@@ -143,9 +198,11 @@ class RegistrationForm extends Form {
 					{this.buildRow('passwordConfirm')}
 
 					<div className="form-group">
-						<div
-							className="g-recaptcha"
-							data-sitekey={TOKEN.recaptcha}
+						<Recaptcha
+							elementId={'registration-recaptcha'}
+							sitekey={TOKEN.recaptcha}
+							onVerify={this.handleRecaptchaVerify}
+							onExpire={this.handleRecaptchaExpire}
 							/>
 					</div>
 
