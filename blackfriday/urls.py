@@ -8,6 +8,7 @@ urlpatterns = [
         url(r'^', include('apps.users.urls', namespace='users')),
         url(r'^', include('apps.advertisers.urls', namespace='advertisers')),
         url(r'^', include('apps.leads.urls', namespace='leads')),
+        url(r'^', include('apps.catalog.urls', namespace='catalog')),
     ])),
     url(r'^api/', include('api', namespace='api')),
     url(r'^django-admin/', include(admin.site.urls)),
