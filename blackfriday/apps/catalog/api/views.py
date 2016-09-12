@@ -31,6 +31,7 @@ class ProductViewSet(
 
     def dispatch(self, request, *args, **kwargs):
         self.merchant = Merchant.objects.get(id=kwargs.get('merchant_pk'))
+        self.feed_data = underscoreize(json.loads(request.body.decode()))
         return super().dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
@@ -38,12 +39,12 @@ class ProductViewSet(
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def create(self, request, *args, **kwargs):
-        data = underscoreize(json.loads(request.body.decode()))
-        if not isinstance(data, list):
+
+        if not isinstance(self.feed_data, list):
             raise BadResponse('list of objects required')
         result = []
         failed = False
-        for row in data:
+        for row in self.feed_data:
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             if errors and not failed:
                 failed = True
@@ -72,8 +73,7 @@ class ProductViewSet(
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        request_data = underscoreize(json.loads(request.body.decode()))
-        cleaned_data, errors, warnings = FeedParser().parse_feed(request_data)
+        cleaned_data, errors, warnings = FeedParser().parse_feed(self.feed_data)
         result = {
             'id': instance.id,
             'data': cleaned_data,
@@ -87,8 +87,8 @@ class ProductViewSet(
             cleaned_data,
             **{
                 'category': Category.objects.get(name=cleaned_data.get('category')),
-                'is_teaser': request_data.get('is_teaser', False),
-                'is_teaser_on_main': request_data.get('is_teaser_on_main', False),
+                'is_teaser': self.feed_data.get('is_teaser', False),
+                'is_teaser_on_main': self.feed_data.get('is_teaser_on_main', False),
             }
         )
         for field, value in data.items():
@@ -116,11 +116,10 @@ class ProductViewSet(
 
     @list_route(['POST'])
     def verify(self, request, **kwargs):
-        data = json.loads(request.body.decode())
-        if not isinstance(data, list):
+        if not isinstance(self.feed_data, list):
             raise BadResponse('list of objects required')
         result = []
-        for row in data:
+        for row in self.feed_data:
             # in this case we get data from frontend, it could be parsed data on client side,
             # so we need save given identifiers
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
