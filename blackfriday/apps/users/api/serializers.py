@@ -1,9 +1,12 @@
+from apps.users.models import TokenType
+from django.conf import settings
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 from libs.recaptcha import recaptcha
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from ..models import User
+from ..models import User, TokenType, Token
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,11 +33,14 @@ class UserUpdateSerializer(UserSerializer):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    captcha = serializers.CharField()
+    captcha = serializers.CharField(write_only=True)
+    password = serializers.RegexField(r'^\w{8,}$', write_only=True)
+    token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('name', 'email', 'password', 'captcha')
+        fields = ('id', 'name', 'email', 'password', 'captcha', 'role', 'is_active', 'token')
+        read_only_fields = ('role', 'is_active')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -53,7 +59,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('captcha', None)
         instance = super().create(validated_data)
         instance.role = 'advertiser'
+        instance.save()
         return instance
 
-    def to_representation(self, instance):
-        return UserSerializer().to_representation(instance)
+    def get_token(self, obj):
+        return Token.create(obj, ttl=settings.VERIFICATION_TTL_HOURS, type=TokenType.REGISTRATION)
