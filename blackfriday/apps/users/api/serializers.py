@@ -48,3 +48,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if not recaptcha.is_valid(request, value):
             raise ValidationError('Невалидная капча')
         return value
+
+    def create(self, validated_data):
+        validated_data.pop('captcha', None)
+        instance = super().create(validated_data)
+        instance.role = 'advertiser'
+        return instance
+
+    def to_representation(self, instance):
+        return UserSerializer().to_representation(instance)
