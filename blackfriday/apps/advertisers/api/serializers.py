@@ -37,17 +37,19 @@ class AdvertiserTinySerializer(serializers.ModelSerializer):
 
 class MerchantModerationSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Merchant.MODERATION_STATUSES, source='moderation_status')
-    comment = serializers.CharField(source='moderation_comment')
+    comment = serializers.CharField(source='moderation_comment', allow_null=True, allow_blank=True)
 
     class Meta:
         model = Merchant
+        fields = ['status', 'comment']
 
-    def get_default_field_names(self, declared_fields, model_info):
-        fields = ['status']
+    def get_extra_kwargs(self):
+        kwargs = super().get_extra_kwargs()
         request = self.context.get('request')
-        if not request or (request.user and request.user.is_authenticated and request.user.role == 'admin'):
-            fields += ['comment']
-        return fields
+        if request and request.user and request.user.is_authenticated and request.user.role == 'advertiser':
+            kwargs['comment'] = kwargs.get('comment') or {}
+            kwargs['comment']['read_only'] = True
+        return kwargs
 
     def validate_status(self, value):
         user = self.context['request'].user
@@ -56,6 +58,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 raise ValidationError('Неверный статус')
             # ToDo: проверка, все ли материлы заполнены
         return value
+
+    def validate(self, attrs):
+        if attrs['status'] < ModerationStatus.confirmed:
+            attrs.pop('comment', None)
+        return attrs
 
 
 class MerchantSerializer(serializers.ModelSerializer):
