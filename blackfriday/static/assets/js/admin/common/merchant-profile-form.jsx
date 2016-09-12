@@ -205,6 +205,8 @@ class MerchantProfileForm extends Form {
 				if (this.props.onSubmit) {
 					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
@@ -240,6 +242,8 @@ class MerchantProfileForm extends Form {
 				if (this.props.onSubmit) {
 					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
@@ -276,6 +280,7 @@ class MerchantProfileForm extends Form {
 	render() {
 		const {profileId, isLoading} = this.state;
 		const {userId, readOnly} = this.props;
+		const isValid = this.validate();
 
 		return (
 			<form
@@ -321,7 +326,7 @@ class MerchantProfileForm extends Form {
 						<button
 							className="btn btn-primary"
 							onClick={this.handleClickSubmit}
-							disabled={isLoading || !this.validate()}
+							disabled={isLoading || !isValid}
 							type="submit"
 							>
 							{'Сохранить'}

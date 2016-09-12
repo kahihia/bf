@@ -1,15 +1,30 @@
 /* eslint react/require-optimization: 0 */
+/* eslint quote-props: ["error", "as-needed"] */
 
 import React from 'react';
+import classNames from 'classnames';
 import ControlLabel from './control-label.jsx';
 import FormRow, {Input} from './form-row.jsx';
 
 class FormHorizontalRow extends FormRow {
 	render() {
-		const {label, readOnly, required, value, placeholder, options, type, name, mask, help} = this.props;
+		const {
+			hasError,
+			help,
+			helpError,
+			label,
+			mask,
+			name,
+			options,
+			placeholder,
+			readOnly,
+			required,
+			type,
+			value
+		} = this.props;
 
 		return (
-			<label className="form-group">
+			<label className={classNames('form-group', {'has-error': hasError})}>
 				<ControlLabel
 					name={label}
 					className="col-sm-2"
@@ -26,6 +41,12 @@ class FormHorizontalRow extends FormRow {
 					{help ? (
 						<span className="help-block">
 							{help}
+						</span>
+					) : null}
+
+					{helpError ? (
+						<span className="help-block">
+							{helpError}
 						</span>
 					) : null}
 				</div>

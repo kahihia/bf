@@ -4,10 +4,9 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
-import Recaptcha from '../components/recaptcha.jsx';
+import Recaptcha, {recaptchaReset} from '../components/recaptcha.jsx';
 
 class RegistrationForm extends Form {
 	constructor(props) {
@@ -74,6 +73,7 @@ class RegistrationForm extends Form {
 			json
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
+			recaptchaReset();
 
 			if (data) {
 				switch (resp.statusCode) {
@@ -87,8 +87,12 @@ class RegistrationForm extends Form {
 						}
 						break;
 					}
+					case 400: {
+						this.processErrors(data);
+						break;
+					}
 					default: {
-						processErrors(data);
+						toastr.error('Не удалось зарегистрироваться');
 						break;
 					}
 				}

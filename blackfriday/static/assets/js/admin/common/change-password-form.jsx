@@ -65,7 +65,7 @@ class ChangePasswordForm extends Form {
 					}
 				}
 			} else if (resp.statusCode === 400) {
-				toastr.warning('Неверный формат пароля');
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось изменить пароль');
 			}

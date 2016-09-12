@@ -42,3 +42,9 @@ Recaptcha.defaultProps = {
 };
 
 export default Recaptcha;
+
+export function recaptchaReset() {
+	if (window.grecaptcha) {
+		window.grecaptcha.reset();
+	}
+}

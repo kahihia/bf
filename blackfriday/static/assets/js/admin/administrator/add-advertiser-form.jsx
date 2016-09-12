@@ -4,7 +4,6 @@
 import React from 'react';
 import xhr from 'xhr';
 import b from 'b_';
-import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
@@ -78,8 +77,12 @@ class AddAdvertiserForm extends Form {
 
 						break;
 					}
+					case 400: {
+						this.processErrors(data);
+						break;
+					}
 					default: {
-						processErrors(data);
+						toastr.error('Не удалось добавить рекламодателя');
 						break;
 					}
 				}

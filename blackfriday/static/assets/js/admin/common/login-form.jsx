@@ -2,7 +2,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {processErrors} from '../utils.js';
 import {REGEXP, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
@@ -70,9 +69,12 @@ class LoginForm extends Form {
 						}
 						break;
 					}
+					case 400: {
+						this.processErrors(data);
+						break;
+					}
 					default: {
-						this.setState({isLoading: false});
-						processErrors(data);
+						toastr.error('Не удалось авторизоваться');
 						break;
 					}
 				}
