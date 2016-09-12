@@ -39,7 +39,8 @@ const MerchantList = React.createClass({
 
 	handleClickItemEdit(advertiserId, isNew, advertiserName) {
 		jQuery('#merchant-profile-modal').modal('show');
-		const onSubmit = () => {
+		const onSubmit = advertiserData => {
+			this.updateAdvertiser(advertiserData);
 			jQuery('#merchant-profile-modal').modal('hide');
 		};
 		ReactDOM.render(
@@ -81,6 +82,15 @@ const MerchantList = React.createClass({
 
 	handleFilterAdvertiser(e) {
 		this.setState({merchantFilter: e.target.value});
+	},
+
+	updateAdvertiser(advertiserData) {
+		this.setState(previousState => {
+			const advertiser = _.find(previousState.data, {id: advertiserData.id});
+			_.merge(advertiser, advertiserData);
+
+			return previousState;
+		});
 	},
 
 	render() {

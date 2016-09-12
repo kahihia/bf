@@ -158,14 +158,3 @@ class User(AbstractBaseUser):
     def activate(self):
         self.is_active = True
         self.save()
-
-    def send_verification(self, context=None):
-        Token.invalidate(self)
-        token = Token.create(self, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL_HOURS)
-
-        _context = {'user': self, 'token': token}
-        if context:
-            _context.update(context)
-
-        message = render_to_string('users/messages/verification.txt', context=_context)
-        send_mail(message=message, recipient_list=[self.email], **settings.VERIFICATION)
