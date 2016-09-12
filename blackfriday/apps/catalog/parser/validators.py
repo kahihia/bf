@@ -2,15 +2,19 @@ class BaseValidator:
     _message = None
     is_warning = False
 
-    def __init__(self, rule=None, blank=False, is_warning=False):
+    def __init__(self, rule=None, blank=False, is_warning=False, message=None):
         self.blank = blank
         self.rule = rule
         self.is_warning = is_warning
+        if message is not None:
+            self._message = message
 
-    def __call__(self, value, context, **kwargs):
-        return self.validate(value=value, context=context, **kwargs)
+    def __call__(self, value, context):
+        if not value:
+            return None
+        return self.validate(value=value, context=context)
 
-    def validate(self, value, context, **kwargs):
+    def validate(self, value, context):
         raise NotImplementedError
 
     @property
@@ -24,18 +28,5 @@ class BaseValidator:
 
 
 class GenericValidator(BaseValidator):
-    def __init__(self, message, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._message = message
-
-    def __call__(self, context, *values, **kwargs):
-        return self.rule(context=context, *values, **kwargs)
-
-
-class GenericChainedValidator(BaseValidator):
-    def __init__(self, message, *args, **kwargs):
-        self._message = message
-        super().__init__(*args, **kwargs)
-
-    def __call__(self, context, *values, **kwargs):
-        return self.rule(context=context, *values, **kwargs)
+    def __call__(self, context, **cleaned_data):
+        return self.rule(context=context, **cleaned_data)

@@ -3,7 +3,7 @@ from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
-from .parser import Row, Column, Grouped, GenericChainedValidator, GenericValidator
+from .parser import Row, Column, Grouped, GenericValidator
 from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from .models import Category
 
@@ -41,8 +41,8 @@ class ProductRow(Row):
             validators=(Required(), Length(rule=255))),
         Grouped(
             [
-                GenericChainedValidator(message='Оба поля должны быть валидны', rule=together),
-                GenericChainedValidator(
+                GenericValidator(message='Оба поля должны быть валидны', rule=together),
+                GenericValidator(
                     message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
             ],
             Column(
