@@ -1,7 +1,5 @@
-from apps.users.models import TokenType
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
-from django.utils import timezone
 from libs.recaptcha import recaptcha
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
