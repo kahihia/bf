@@ -48,7 +48,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'create': MerchantCreateSerializer,
             'list': MerchantListSerializer,
             'update': MerchantUpdateSerializer,
-            'partial_update': MerchantUpdateSerializer
+            'partial_update': MerchantUpdateSerializer,
+            'moderation': MerchantModerationSerializer
         }.get(self.action, MerchantSerializer)
 
     @detail_route(methods=['patch', 'put', 'get'])
@@ -71,7 +72,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['patch', 'put'])
     def moderation(self, request, *args, **kwargs):
         obj = self.get_object()
-        serializer = MerchantModerationSerializer(obj, data=request.data)
+        serializer = self.get_serializer(obj, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
