@@ -80,8 +80,6 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             return super().create(request, *args, **kwargs)
 
         token = Token.get_token(self.token, type=TokenType.REGISTRATION)
-
-        print(token, token.is_expired, token.user.role)
         if not token or token.is_expired or token.user.role != 'advertiser':
             raise PermissionDenied
 
