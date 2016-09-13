@@ -8,17 +8,20 @@ from django.urls import reverse
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from libs.api.exceptions import ServiceUnavailable
 from libs.api.permissions import IsAdmin, IsAuthenticated
+
+from apps.advertisers.api.serializers import AdvertiserSerializer
 
 from ..models import Token, TokenType
 from .serializers import User, UserSerializer, UserUpdateSerializer, RegistrationSerializer
 
 
 def send_verification(request, user):
-    Token.invalidate(user)
+    Token.invalidate(user, type=TokenType.VERIFICATION)
     token = Token.create(user, type=TokenType.VERIFICATION, ttl=settings.VERIFICATION_TTL_HOURS)
 
     message = render_to_string(
@@ -62,7 +65,32 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = RegistrationSerializer
+
+    def dispatch(self, request, *args, **kwargs):
+        self.token = request.GET.get('token')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.token is None:
+            return RegistrationSerializer
+        return AdvertiserSerializer
+
+    def create(self, request, *args, **kwargs):
+        if self.token is None:
+            return super().create(request, *args, **kwargs)
+
+        token = Token.get_token(self.token, type=TokenType.REGISTRATION)
+        if not token or token.is_expired or token.user.role != 'advertiser':
+            raise PermissionDenied
+
+        serializer = self.get_serializer(token.user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        Token.invalidate(instance, type=TokenType.REGISTRATION)
 
     def perform_create(self, serializer):
         instance = serializer.save()

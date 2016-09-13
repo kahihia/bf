@@ -29,7 +29,7 @@ class VerificationView(RedirectView):
         token = Token.get_token(self.request.GET.get('token'), type=TokenType.VERIFICATION)
         if token and not token.is_expired:
             token.user.activate()
-            Token.invalidate(token.user)
+            Token.invalidate(token.user, type=TokenType.VERIFICATION)
             user = authenticate(user=token.user)
             if user:
                 login(self.request, user)

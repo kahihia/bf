@@ -34,7 +34,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
         IsAdvertiser & IsOwner & action_permission(
             'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation'
-        ) | IsManager & ReadOnly | IsAdmin
+        ) |
+        IsManager & action_permission(
+            'list', 'retrieve', 'moderation'
+        ) |
+        IsAdmin
     ]
 
     def get_queryset(self):
