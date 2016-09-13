@@ -250,23 +250,6 @@ class MerchantProfileForm extends Form {
 		});
 	}
 
-	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			const {required, value, label} = field;
-			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${label}"`);
-				}
-				return false;
-			}
-		});
-
-		return isValid;
-	}
-
 	handleClickSubmit(e) {
 		e.preventDefault();
 

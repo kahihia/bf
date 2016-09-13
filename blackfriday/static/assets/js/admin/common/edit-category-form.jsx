@@ -98,22 +98,6 @@ class EditCategoryForm extends Form {
 		});
 	}
 
-	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
-				}
-				return false;
-			}
-		});
-
-		return isValid;
-	}
-
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestEdit();

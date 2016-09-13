@@ -1,4 +1,4 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
@@ -75,22 +75,6 @@ class AddCategoryForm extends Form {
 
 			toastr.error('Не удалось добавить категорию');
 		});
-	}
-
-	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
-				}
-				return false;
-			}
-		});
-
-		return isValid;
 	}
 
 	handleClickSubmit(e) {
