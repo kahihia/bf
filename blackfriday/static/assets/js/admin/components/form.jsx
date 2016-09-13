@@ -1,4 +1,4 @@
-/* global _ */
+/* global _ toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
@@ -17,16 +17,19 @@ class Form extends React.Component {
 	}
 
 	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			let value = '';
-			if (!_.isUndefined(field.defaultValue)) {
-				value = field.defaultValue;
-			}
+		this.setState(previousState => {
+			const fields = previousState.fields;
+			_.forEach(fields, field => {
+				let value = '';
+				if (!_.isUndefined(field.defaultValue)) {
+					value = field.defaultValue;
+				}
 
-			field.value = value;
+				field.value = value;
+			});
+
+			return previousState;
 		});
-		this.forceUpdate();
 	}
 
 	handleChange(e) {
@@ -35,9 +38,18 @@ class Form extends React.Component {
 	}
 
 	updateData(name, value) {
-		const fields = this.state.fields;
-		fields[name].value = value;
-		this.forceUpdate();
+		this.setState(previousState => {
+			const fields = previousState.fields;
+			const field = fields[name];
+			field.value = value;
+
+			if (field.hasError) {
+				field.hasError = false;
+				field.helpError = null;
+			}
+
+			return previousState;
+		});
 	}
 
 	buildRow(name) {
@@ -79,6 +91,21 @@ class Form extends React.Component {
 
 		return json;
 	}
+
+	processErrors(errors) {
+		const fields = this.state.fields;
+
+		processErrors(errors, (error, label) => {
+			const field = fields[label];
+			if (field) {
+				field.helpError = error;
+				field.hasError = true;
+				return;
+			}
+			toastr.warning(error);
+		});
+		this.forceUpdate();
+	}
 }
 Form.propTypes = {
 	onSubmit: React.PropTypes.func,
@@ -88,3 +115,33 @@ Form.defaultProps = {
 };
 
 export default Form;
+
+function processErrors(errors, cb) {
+	process(errors, null, cb);
+}
+
+function process(errors, label, cb) {
+	if (_.isArray(errors)) {
+		processArray(errors, label, cb);
+	} else if (_.isObject(errors)) {
+		processObject(errors, cb);
+	} else if (_.isString(errors)) {
+		processString(errors, label, cb);
+	}
+}
+
+function processObject(errors, cb) {
+	_.forEach(errors, (error, label) => {
+		process(error, label, cb);
+	});
+}
+
+function processArray(errors, label, cb) {
+	_.forEach(errors, error => {
+		process(error, label, cb);
+	});
+}
+
+function processString(error, label, cb) {
+	cb(error, label);
+}
