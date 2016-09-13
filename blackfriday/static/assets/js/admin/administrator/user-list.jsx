@@ -1,19 +1,21 @@
-/* global document jQuery */
+/* global document jQuery _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
+import {USER_ROLE} from '../const.js';
 import Glyphicon from '../components/glyphicon.jsx';
+import FormRow from '../components/form-row.jsx';
 import ChangePasswordForm from '../common/change-password-form.jsx';
 
-const USER_ROLES = {
-	admin: 'Администратор',
-	manager: 'Менеджер',
-	advertiser: 'Рекламодатель'
-};
-
 const UserList = React.createClass({
+	getInitialState() {
+		return {
+			userFilter: ''
+		};
+	},
+
 	propTypes: {
 		users: React.PropTypes.array,
 		onVerificationClick: React.PropTypes.func
@@ -43,14 +45,42 @@ const UserList = React.createClass({
 		);
 	},
 
+	handleFilterUser(e) {
+		this.setState({userFilter: e.target.value});
+	},
+
 	render() {
+		const {userFilter} = this.state;
 		const {users} = this.props;
+
+		let filteredUsers = users;
+		function foo(a, b) {
+			if (!a || !b) {
+				return;
+			}
+
+			return a.toLowerCase().indexOf(b.toLowerCase()) > -1;
+		}
+		if (userFilter) {
+			filteredUsers = _.filter(filteredUsers, user => {
+				const {email, name} = user;
+				if (!name && !email) {
+					return false;
+				}
+				return foo(name, userFilter) || foo(email, userFilter);
+			});
+		}
 
 		return (
 			<div className={b('user-list')}>
-				<h2>
-					{'Список существующих'}
-				</h2>
+				<div className="form">
+					<FormRow
+						label="Поиск пользователя"
+						placeholder="Email, Имя или Название"
+						value={userFilter}
+						onChange={this.handleFilterUser}
+						/>
+				</div>
 
 				<table className={'table table-hover ' + b('user-list', 'table')}>
 					<thead>
@@ -80,7 +110,7 @@ const UserList = React.createClass({
 					</thead>
 
 					<tbody>
-						{users.map(item => {
+						{filteredUsers.map(item => {
 							return (
 								<UserListItem
 									key={item.id}
@@ -126,7 +156,7 @@ const UserListItem = React.createClass({
 		const {id, name, email, role, isActive} = this.props;
 
 		return (
-			<tr>
+			<tr className={b('user-list', 'table-tr', {role: role})}>
 				<td className={b('user-list', 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
@@ -142,13 +172,13 @@ const UserListItem = React.createClass({
 						name
 					) : (
 						<em className="text-muted">
-							{'имя не задано'}
+							{`${role === 'advertiser' ? 'название' : 'имя'} не задано`}
 						</em>
 					)}
 				</td>
 
 				<td className={b('user-list', 'table-td', {name: 'role'})}>
-					{USER_ROLES[role]}
+					{USER_ROLE[role]}
 				</td>
 
 				<td className={b('user-list', 'table-td', {name: 'status'})}>

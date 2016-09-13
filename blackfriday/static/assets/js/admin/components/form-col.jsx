@@ -1,31 +1,26 @@
 /* eslint react/require-optimization: 0 */
+/* eslint quote-props: ["error", "as-needed"] */
 
 import React from 'react';
-import ControlLabel from './control-label.jsx';
-import FormRow, {Input} from './form-row.jsx';
+import classNames from 'classnames';
+import FormRow from './form-row.jsx';
 
 class FormCol extends FormRow {
 	render() {
-		const {label, readOnly, required, value, options, type, name, mask, help} = this.props;
+		const {
+			className,
+			hasError
+		} = this.props;
 
 		return (
-			<label className={this.props.className}>
-				<ControlLabel
-					name={label}
-					required={!readOnly && required}
-					/>
+			<label className={classNames('form-group', className, {'has-error': hasError})}>
+				{this.renderLabel()}
 
-				<Input
-					onChange={this.handleChange}
-					onKeyUp={this.handleKeyUp}
-					{...{value, options, type, name, required, readOnly, mask}}
-					/>
+				{this.renderInput()}
 
-				{help ? (
-					<span className="help-block">
-						{help}
-					</span>
-				) : null}
+				{this.renderHelp()}
+
+				{this.renderHelpError()}
 			</label>
 		);
 	}

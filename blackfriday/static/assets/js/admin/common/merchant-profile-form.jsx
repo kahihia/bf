@@ -1,46 +1,68 @@
-/* global toastr, FormData, _ */
+/* global toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
-import FormRow from '../components/form-row.jsx';
-import FormCol from '../components/form-col.jsx';
+import {HEAD_BASIS, TOKEN} from '../const.js';
+import Form from '../components/form.jsx';
 
 const PHONE_MASK = '+7 (111) 111-11-11';
+const DEFAULT_BASIS = 0;
 
-const MerchantProfileForm = React.createClass({
-	propTypes: {
-		userId: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.number
-		]).isRequired,
-		readOnly: React.PropTypes.bool,
-		onSubmit: React.PropTypes.func,
-		isNew: React.PropTypes.bool
-	},
-
-	getInitialState() {
-		return {
+class MerchantProfileForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isLoading: false,
 			profileId: '',
 			fields: {
 				account: {
 					label: 'Расчётный счёт',
-					value: ''
+					value: '',
+					required: true
 				},
-				addr: {
+				address: {
 					label: 'Фактический адрес',
-					value: ''
+					value: '',
+					required: true
 				},
 				bank: {
 					label: 'Наименование банка',
-					value: ''
+					value: '',
+					required: true
 				},
 				bik: {
 					label: 'БИК',
-					value: ''
+					value: '',
+					required: true
 				},
-				contact: {
+				contactName: {
 					label: 'ФИО ответственного лица',
+					value: '',
+					required: true
+				},
+				contactPhone: {
+					label: 'Сотовый тел. отв. лица',
+					value: '',
+					required: true,
+					mask: PHONE_MASK
+				},
+				headAppointment: {
+					label: 'Должность руководителя',
+					value: '',
+					required: true
+				},
+				headBasis: {
+					label: 'На основании чего действует руководитель',
+					value: DEFAULT_BASIS,
+					defaultValue: DEFAULT_BASIS,
+					valueType: 'Number',
+					options: HEAD_BASIS,
+					type: 'select',
+					required: true
+				},
+				headName: {
+					label: 'ФИО руководителя',
 					value: '',
 					required: true
 				},
@@ -49,71 +71,101 @@ const MerchantProfileForm = React.createClass({
 					value: '',
 					required: true
 				},
-				jur_addr: {
-					label: 'Юридический адрес',
-					value: '',
-					required: true
-				},
 				korr: {
 					label: 'Корр. счёт',
-					value: ''
+					value: '',
+					required: true
 				},
 				kpp: {
 					label: 'КПП',
 					value: '',
 					required: true
 				},
-				name: {
-					label: 'Наименование юридического лица',
+				legalAddress: {
+					label: 'Юридический адрес',
 					value: '',
 					required: true
 				},
-				phone: {
-					label: 'Сотовый тел. отв. лица',
+				name: {
+					label: 'Наименование юридического лица',
 					value: '',
-					required: true
+					required: true,
+					excluded: true
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	componentDidMount() {
-		if (this.props.isNew) {
+		const props = this.props;
+
+		if (props.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = props.userName;
+				return previousState;
+			});
+		}
+
+		if (props.isNew) {
 			return;
 		}
 
 		this.requestProfileUser();
-	},
+	}
 
-	componentWillReceiveProps() {
-		if (this.props.isNew) {
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = nextProps.userName;
+				return previousState;
+			});
+		}
+
+		if (nextProps.isNew) {
 			return;
 		}
 
 		this.requestProfileUser();
-	},
+	}
 
+	// Get profile info
 	requestProfileUser() {
+		this.setState({isLoading: true});
+
 		xhr({
-			url: `/profile/user/${this.props.userId}`,
+			url: `/api/advertisers/${this.props.userId}/`,
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
 			json: true
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				const state = this.state;
 
 				if (data) {
-					if (data.name) {
-						state.fields.name.value = data.name;
-					}
-
 					if (data.id) {
 						state.profileId = data.id;
 					}
 
-					if (data.adprofile) {
+					if (data.profile) {
 						Object.keys(state.fields).forEach(key => {
-							state.fields[key].value = data.adprofile[key] || '';
+							const field = state.fields[key];
+							let value = data.profile[key];
+							if (_.isUndefined(value) || _.isNull(value)) {
+								if (!_.isUndefined(field.defaultValue)) {
+									value = field.defaultValue;
+								}
+							}
+							field.value = value;
 						});
+					}
+
+					if (data.name) {
+						state.fields.name.value = data.name;
 					}
 				}
 
@@ -122,80 +174,98 @@ const MerchantProfileForm = React.createClass({
 				toastr.error('Не удалось получить реквизиты рекламодателя');
 			}
 		});
-	},
+	}
 
+	// Update profile info
 	requestProfileUserSave() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
-		const data = this.state.fields;
-		const requestData = {
-			name: data.name.value,
-			adprofile: Object.keys(data).reduce((a, b) => {
-				if (b !== 'name') {
-					a[b] = data[b].value || '';
-				}
-				return a;
-			}, {})
+		this.setState({isLoading: true});
+
+		const fields = this.state.fields;
+		const json = {
+			name: fields.name.value,
+			profile: this.serialize()
 		};
 
 		xhr({
-			url: `/profile/${this.state.profileId}`,
-			method: 'PUT',
-			json: requestData
-		}, (err, resp) => {
+			url: `/api/advertisers/${this.state.profileId}/`,
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
 		});
-	},
+	}
 
+	// Create profile info
 	requestProfileUserCreate() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
-		const formData = new FormData(this.form);
+		this.setState({isLoading: true});
+
+		const fields = this.state.fields;
+		const json = {
+			name: fields.name.value,
+			profile: this.serialize()
+		};
 
 		xhr({
-			url: '/admin/profile',
-			method: 'POST',
-			body: formData
-		}, (err, resp) => {
+			url: `/api/advertisers/${this.props.userId}/`,
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
 		});
-	},
+	}
 
-	validate() {
+	validate(warnings) {
 		let isValid = true;
 
 		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
+			const {required, value, label} = field;
+			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
 				isValid = false;
-				toastr.warning(`Заполните поле "${field.label}"`);
+				if (warnings) {
+					toastr.warning(`Заполните поле "${label}"`);
+				}
 				return false;
 			}
 		});
 
 		return isValid;
-	},
-
-	handleChange(e) {
-		this.updateData(e.target.name, e.target.value);
-	},
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
@@ -205,60 +275,21 @@ const MerchantProfileForm = React.createClass({
 		} else {
 			this.requestProfileUserSave();
 		}
-	},
-
-	updateData(name, value) {
-		const state = this.state;
-		state.fields[name].value = value;
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const {label, required} = this.state.fields[name];
-		let mask;
-
-		if (name === 'phone') {
-			mask = PHONE_MASK;
-		}
-
-		return (
-			<FormRow
-				value={this.state.fields[name].value}
-				onChange={this.handleChange}
-				readOnly={this.props.readOnly}
-				{...{name, label, required, mask}}
-				/>
-		);
-	},
-
-	buildCol(name) {
-		const {label, required} = this.state.fields[name];
-
-		return (
-			<FormCol
-				className="col-xs-6"
-				value={this.state.fields[name].value}
-				onChange={this.handleChange}
-				readOnly={this.props.readOnly}
-				{...{name, label, required}}
-				/>
-		);
-	},
+	}
 
 	render() {
-		const form = ref => {
-			this.form = ref;
-		};
+		const {profileId, isLoading} = this.state;
+		const {userId, readOnly} = this.props;
+		const isValid = this.validate();
 
 		return (
 			<form
-				ref={form}
-				action={`/profile/${this.state.profileId}`}
+				action={`/profile/${profileId}`}
 				method="POST"
 				>
 				<input
 					name="user_id"
-					value={this.props.userId}
+					value={userId}
 					type="hidden"
 					/>
 
@@ -266,40 +297,55 @@ const MerchantProfileForm = React.createClass({
 
 				<div className="form-group">
 					<div className="row">
+						{this.buildCol('bik')}
 						{this.buildCol('inn')}
-						{this.buildCol('kpp')}
 					</div>
 				</div>
-
-				{this.buildRow('jur_addr')}
-				{this.buildRow('addr')}
-				{this.buildRow('account')}
-				{this.buildRow('bank')}
-				{this.buildRow('korr')}
 
 				<div className="form-group">
 					<div className="row">
-						{this.buildCol('bik')}
-						{this.buildCol('contact')}
+						{this.buildCol('kpp')}
+						{this.buildCol('korr')}
 					</div>
 				</div>
 
-				{this.buildRow('phone')}
+				{this.buildRow('account')}
+				{this.buildRow('bank')}
 
-				{this.props.readOnly ? null : (
+				{this.buildRow('address')}
+				{this.buildRow('legalAddress')}
+				{this.buildRow('contactName')}
+				{this.buildRow('contactPhone')}
+
+				{this.buildRow('headName')}
+				{this.buildRow('headAppointment')}
+				{this.buildRow('headBasis')}
+
+				{readOnly ? null : (
 					<div className="form-group">
 						<button
 							className="btn btn-primary"
 							onClick={this.handleClickSubmit}
+							disabled={isLoading || !isValid}
 							type="submit"
 							>
-							Сохранить
+							{'Сохранить'}
 						</button>
 					</div>
 				)}
 			</form>
 		);
 	}
-});
+}
+MerchantProfileForm.propTypes = {
+	userId: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired,
+	userName: React.PropTypes.string,
+	isNew: React.PropTypes.bool
+};
+MerchantProfileForm.defaultProps = {
+};
 
 export default MerchantProfileForm;

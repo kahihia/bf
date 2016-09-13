@@ -1,3 +1,5 @@
+import collections
+
 from rest_framework import serializers
 
 from apps.users.models import User
@@ -5,6 +7,7 @@ from apps.users.models import User
 from apps.promo.models import Promo
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.fields import empty
 
 from ..models import AdvertiserProfile, Merchant, ModerationStatus
 
@@ -12,7 +15,20 @@ from ..models import AdvertiserProfile, Merchant, ModerationStatus
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdvertiserProfile
-        fields = ('account', 'inn', 'bik', 'kpp', 'okpo', 'address', 'legal_address', 'contact_name', 'contact_phone')
+        fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
+                  'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis')
+        extra_kwargs = {
+            'head_name': {'allow_null': False},
+            'head_appointment': {'allow_null': False},
+            'head_basis': {'allow_null': False}
+        }
+
+    def bind(self, field_name, parent):
+        super().bind(field_name, parent)
+        try:
+            self.instance = parent.instance.profile
+        except AttributeError:
+            pass
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
@@ -20,8 +36,11 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'profile')
-        extra_kwargs = {'email': {'read_only': True}}
+        fields = ('id', 'name', 'email', 'profile', 'is_active')
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'is_active': {'read_only': True}
+        }
 
     def update(self, instance, validated_data):
         if 'profile' in validated_data:
@@ -100,6 +119,10 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merchant
+        extra_kwargs = {
+            'url': {'allow_null': True, 'allow_blank': False},
+            'name': {'allow_null': False, 'allow_blank': False},
+        }
 
     def get_default_field_names(self, declared_fields, model_info):
         fields = ['name', 'url']

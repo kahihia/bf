@@ -1,0 +1,17 @@
+{% extends 'layouts/auth-layout.html' %}
+
+{% block content %}
+<div id="user-registration"></div>
+{% endblock %}
+
+{% block js %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<script>
+window.ENV = {
+    tokens: {
+        recaptcha: '{{ RECAPTCHA_SITE_KEY }}'
+    }
+};
+</script>
+{% endblock js %}

@@ -40,6 +40,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'libs.recaptcha.context_processors.captcha_keys',
             ],
         },
     },
@@ -75,20 +76,35 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'rest_framework',
-
+    'blackfriday',
     'apps.users',
     'apps.catalog',
     'apps.advertisers',
     'apps.banners',
     'apps.promo',
+    'apps.leads',
 
     'webpack_loader',
 ]
 
 AUTH_USER_MODEL = 'users.User'
-LOGIN_URL = '/django-admin/login/'
+AUTHENTICATION_BACKENDS = (
+    'apps.users.backends.ForceLoginBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/admin/login/'
 
 VERIFICATION = {
-    'subject': 'Verification',
-    'from_email': 'test@test.ru'
+    'subject': 'RealBlackFriday — активация учётной записи',
+    'from_email': 'test@test.ru',
 }
+
+VERIFICATION_TTL_HOURS = 24
+
+MANAGERS = []
+
+CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')
+DEFAULT_CATEGORY_SLUG = 'raznoe'
+DEFAULT_CATEGORY_NAME = 'Разное'
+LOGIN_REDIRECT_URL = '/admin/'

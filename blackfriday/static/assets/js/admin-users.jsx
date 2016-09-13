@@ -1,10 +1,10 @@
-/* global document toastr _ */
+/* global document toastr _ jQuery */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
-import AddUser from './admin/administrator/add-user.jsx';
+import {TOKEN} from './admin/const.js';
+import AddUserForm from './admin/common/add-user-form.jsx';
 import UserList from './admin/administrator/user-list.jsx';
 
 (function () {
@@ -42,7 +42,7 @@ import UserList from './admin/administrator/user-list.jsx';
 				url: `/api/users/${userId}/verification/`,
 				method: 'POST',
 				headers: {
-					'X-CSRFToken': Cookie.get('csrftoken')
+					'X-CSRFToken': TOKEN.csrftoken
 				}
 			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
@@ -60,6 +60,21 @@ import UserList from './admin/administrator/user-list.jsx';
 
 		handleVerificationClick(userId) {
 			this.requestVerification(userId);
+		},
+
+		handleAddUserClick() {
+			jQuery('#addUserModal').modal('show');
+			const onSubmit = user => {
+				this.handleAddUser(user);
+				jQuery('#addUserModal').modal('hide');
+			};
+			ReactDOM.render(
+				<AddUserForm
+					onSubmit={onSubmit}
+					/>
+				,
+				document.getElementById('addUserForm')
+			);
 		},
 
 		handleAddUser(user) {
@@ -82,9 +97,13 @@ import UserList from './admin/administrator/user-list.jsx';
 		render() {
 			return (
 				<div>
-					<AddUser
-						onAddUser={this.handleAddUser}
-						/>
+					<button
+						className="btn btn-success"
+						onClick={this.handleAddUserClick}
+						type="button"
+						>
+						{'Добавить'}
+					</button>
 
 					<hr/>
 

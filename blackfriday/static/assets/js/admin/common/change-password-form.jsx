@@ -1,29 +1,21 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
-import Cookie from 'js-cookie';
-import FormRow from '../components/form-row.jsx';
+import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
+import Form from '../components/form.jsx';
 
-const PASSWORD_REGEXP = /^\S{8,}$/;
-
-const ChangePasswordForm = React.createClass({
-	propTypes: {
-		userId: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.number
-		]).isRequired,
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class ChangePasswordForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isLoading: false,
 			fields: {
 				password: {
 					label: 'Введите новый пароль',
 					value: '',
-					help: 'Не менее 8 симв., латинские буквы или цифры.',
+					help: HELP_TEXT.password,
 					type: 'password',
 					required: true
 				},
@@ -35,24 +27,20 @@ const ChangePasswordForm = React.createClass({
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	componentWillReceiveProps() {
 		this.resetForm();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = '';
-		});
-		this.forceUpdate();
-	},
+	}
 
 	requestChangePassword() {
 		if (!this.validate()) {
 			return;
 		}
+
+		this.setState({isLoading: true});
 
 		const json = {
 			password: this.state.fields.password.value
@@ -62,10 +50,12 @@ const ChangePasswordForm = React.createClass({
 			url: `/api/users/${this.props.userId}/`,
 			method: 'PATCH',
 			headers: {
-				'X-CSRFToken': Cookie.get('csrftoken')
+				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				if (data) {
 					toastr.success('Пароль успешно изменен');
@@ -75,54 +65,31 @@ const ChangePasswordForm = React.createClass({
 					}
 				}
 			} else if (resp.statusCode === 400) {
-				toastr.warning('Неверный формат пароля');
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось изменить пароль');
 			}
 		});
-	},
+	}
 
 	validate() {
 		return this.checkPassword() && this.comparePasswords();
-	},
+	}
 
 	checkPassword() {
-		return PASSWORD_REGEXP.test(this.state.fields.password.value);
-	},
+		return REGEXP.password.test(this.state.fields.password.value);
+	}
 
 	comparePasswords() {
 		const {password, passwordConfirm} = this.state.fields;
 
 		return password.value === passwordConfirm.value;
-	},
-
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestChangePassword();
-	},
-
-	updateData(name, value) {
-		const fields = this.state.fields;
-		fields[name].value = value;
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-		const {value, label, help, type, required} = field;
-
-		return (
-			<FormRow
-				onChange={this.handleChange}
-				{...{value, name, label, help, type, required}}
-				/>
-		);
-	},
+	}
 
 	render() {
 		return (
@@ -146,7 +113,7 @@ const ChangePasswordForm = React.createClass({
 					<button
 						className="btn btn-primary"
 						onClick={this.handleClickSubmit}
-						disabled={!this.validate()}
+						disabled={this.state.isLoading || !this.validate()}
 						type="button"
 						>
 						{'Сохранить'}
@@ -155,6 +122,14 @@ const ChangePasswordForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+ChangePasswordForm.propTypes = {
+	userId: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired
+};
+ChangePasswordForm.defaultProps = {
+};
 
 export default ChangePasswordForm;

@@ -37,12 +37,14 @@ class UserManager(BaseUserManager):
 class TokenType:
     NONE = 0
     VERIFICATION = 1
+    REGISTRATION = 2
 
 
 class Token(models.Model):
     TYPE_CHOICES = (
         (TokenType.NONE, 'None'),
-        (TokenType.VERIFICATION, 'Verification')
+        (TokenType.VERIFICATION, 'Verification'),
+        (TokenType.REGISTRATION, 'Registration'),
     )
 
     expires = models.DateTimeField(verbose_name='Истекает')
@@ -75,13 +77,16 @@ class Token(models.Model):
         return user_token.token
 
     @classmethod
-    def invalidate(cls, user):
+    def invalidate(cls, user, type=None):
         now = timezone.now()
-        cls.objects.filter(user=user, expires__gte=now).update(expires=now)
+        cls.objects.filter(user=user, expires__gte=now, **({'type': type} if type else {})).update(expires=now)
 
     @classmethod
     def get_token(cls, token, type=None):
-        return cls.objects.get(token=token, **({'type': type} if type else {}))
+        try:
+            return cls.objects.get(token=token, **({'type': type} if type else {}))
+        except cls.DoesNotExist:
+            return None
 
 
 class User(AbstractBaseUser):
@@ -152,7 +157,6 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
 
-    def send_verification(self):
-        token = Token.create(self, type=TokenType.VERIFICATION)
-        message = render_to_string('users/messages/verification.txt', context={'user': self, 'token': token})
-        send_mail(message=message, recipient_list=[self.email], **settings.VERIFICATION)
+    def activate(self):
+        self.is_active = True
+        self.save()

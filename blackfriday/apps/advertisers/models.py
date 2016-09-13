@@ -8,9 +8,19 @@ class ModerationStatus:
     rejected = 3
 
 
+class HeadBasis:
+    charter = 0
+    proxy = 1
+
+
 class AdvertiserProfile(models.Model):
+    HEAD_BASISES = (
+        (HeadBasis.charter, 'На основании устава'),
+        (HeadBasis.proxy, 'На основании доверенности')
+    )
+
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
-    inn = models.CharField(max_length=12, null=True, blank=True, verbose_name='ИНН')
+    inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
     bik = models.CharField(max_length=9, null=True, blank=True, verbose_name='БИК')
     kpp = models.CharField(max_length=9, null=True, blank=True, verbose_name='КПП')
     korr = models.CharField(max_length=20, null=True, blank=True, verbose_name='Корр. счет')
@@ -19,6 +29,10 @@ class AdvertiserProfile(models.Model):
     legal_address = models.CharField(max_length=250, null=True, blank=True, verbose_name='Юридический адрес')
     contact_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Контактное лицо')
     contact_phone = models.CharField(max_length=32, null=True, blank=True, verbose_name='Телефон контактного лица')
+    head_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='ФИО руководителя')
+    head_appointment = models.CharField(max_length=250, null=True, blank=True, verbose_name='Должность руковолителя')
+    head_basis = models.IntegerField(null=True, blank=True, choices=HEAD_BASISES,
+                                     verbose_name='На основании чего действует руководитель')
 
     class Meta:
         verbose_name = 'Профиль рекламодателя'
@@ -36,8 +50,8 @@ class Merchant(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
-    url = models.URLField(null=True, blank=True, verbose_name='URL')
-    slug = models.SlugField(null=True, blank=True, verbose_name='Слаг')
+    url = models.URLField(null=True, blank=True, unique=True, verbose_name='URL')
+    slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
     image = models.ImageField(upload_to='merchants', verbose_name='Изображение')
@@ -49,6 +63,13 @@ class Merchant(models.Model):
     moderation_status = models.IntegerField(default=ModerationStatus.new, choices=MODERATION_STATUSES,
                                             verbose_name='Статус модерации')
     is_active = models.BooleanField(default=False, verbose_name='Активен')
+
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
+
+    def __str__(self):
+        return self.name
 
     @property
     def banners(self):

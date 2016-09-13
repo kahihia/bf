@@ -1,133 +1,206 @@
-/* global toastr, FormData */
+/* global toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
-import FormRow from '../components/form-row.jsx';
+import b from 'b_';
+import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
+import Form from '../components/form.jsx';
 
-const PASSWORD_REGEXP = /^\S{8,}$/;
-const EMAIL_REGEXP = /\S@\S+\.\S/;
-
-const AddAdvertiserForm = React.createClass({
-	propTypes: {
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
-			login: '',
-			password: '',
-			password2: ''
+class AddAdvertiserForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isLoading: false,
+			fields: {
+				email: {
+					label: 'Email',
+					value: '',
+					type: 'email',
+					required: true
+				},
+				name: {
+					label: 'Название',
+					value: '',
+					required: false
+				},
+				password: {
+					label: 'Пароль',
+					value: '',
+					help: HELP_TEXT.password,
+					type: 'password',
+					required: true
+				},
+				passwordConfirm: {
+					label: 'Повторите пароль',
+					value: '',
+					type: 'password',
+					required: true,
+					excluded: true
+				}
+			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	requestAddAdvertiser() {
-		const formData = new FormData(this.form);
+		if (!this.validate(true)) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		const json = this.serialize();
+		json.role = 'advertiser';
 
 		xhr({
-			url: '/admin/user',
+			url: '/api/users/',
 			method: 'POST',
-			body: formData
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				toastr.success('Новый рекламодатель успешно добавлен');
-				if (this.props.onSubmit) {
-					this.props.onSubmit(data);
+			this.setState({isLoading: false});
+
+			if (data) {
+				switch (resp.statusCode) {
+					case 201: {
+						toastr.success('Рекламодатель успешно добавлен');
+						this.requestVerification(data.id);
+						this.resetForm();
+
+						if (this.props.onSubmit) {
+							this.props.onSubmit(data);
+						}
+
+						break;
+					}
+					case 400: {
+						this.processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось добавить рекламодателя');
+						break;
+					}
 				}
-			} else {
-				if (resp.statusCode === 400) {
-					toastr.error(data);
-				}
-				toastr.error('Не удалось добавить нового рекламодателя');
+
+				return;
+			}
+
+			toastr.error('Не удалось добавить рекламодателя');
+		});
+	}
+
+	requestVerification(userId) {
+		xhr({
+			url: `/api/users/${userId}/verification/`,
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			}
+		}, err => {
+			if (err) {
+				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});
-	},
+	}
 
-	handleChange(e) {
-		this.updateData(e.target.name, e.target.value);
-	},
+	validate(warnings) {
+		let isValid = true;
 
-	handleClickNext(e) {
-		e.preventDefault();
-		this.requestAddAdvertiser();
-	},
+		_.forEach(this.state.fields, field => {
+			if (field.required && !field.value) {
+				isValid = false;
+				if (warnings) {
+					toastr.warning(`Заполните поле "${field.label}"`);
+				}
+				return false;
+			}
+		});
 
-	updateData(name, value) {
-		this.setState({[name]: value});
-	},
+		if (isValid) {
+			isValid = this.checkEmail();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат Email');
+			}
+		}
 
-	isValid() {
-		return this.checkEmail() && this.checkPassword();
-	},
+		if (isValid) {
+			isValid = this.checkPassword();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат пароля');
+			}
+		}
+
+		if (isValid) {
+			isValid = this.comparePasswords();
+			if (warnings && !isValid) {
+				toastr.warning('Пароли не совпадают');
+			}
+		}
+
+		return isValid;
+	}
 
 	checkEmail() {
-		return EMAIL_REGEXP.test(this.state.login);
-	},
+		return REGEXP.email.test(this.state.fields.email.value);
+	}
 
 	checkPassword() {
-		const {password, password2} = this.state;
-		return PASSWORD_REGEXP.test(password) && password === password2;
-	},
+		return REGEXP.password.test(this.state.fields.password.value);
+	}
+
+	comparePasswords() {
+		const {password, passwordConfirm} = this.state.fields;
+
+		return password.value === passwordConfirm.value;
+	}
+
+	handleClickSubmit(e) {
+		e.preventDefault();
+		this.requestAddAdvertiser();
+	}
 
 	render() {
-		const form = ref => {
-			this.form = ref;
-		};
-
 		return (
-			<form
-				ref={form}
-				action="/admin/user"
-				method="POST"
-				>
-				<input
-					name="role"
-					value="advertiser"
-					type="hidden"
-					/>
+			<div className={b('add-advertiser')}>
+				<div className="modal-body">
+					<form action="">
+						{this.buildRow('email')}
+						{this.buildRow('name')}
+						{this.buildRow('password')}
+						{this.buildRow('passwordConfirm')}
+					</form>
+				</div>
 
-				<FormRow
-					label="Email"
-					value={this.state.login}
-					name="login"
-					type="email"
-					onChange={this.handleChange}
-					required
-					/>
+				<div className="modal-footer">
+					<button
+						className="btn btn-default"
+						data-dismiss="modal"
+						type="button"
+						>
+						{'Отмена'}
+					</button>
 
-				<FormRow
-					label="Пароль"
-					value={this.state.password}
-					name="password"
-					type="password"
-					onChange={this.handleChange}
-					required
-					help="Не менее 8 симв., латинские буквы или цифры."
-					/>
-
-				<FormRow
-					label="Повторите пароль"
-					value={this.state.password2}
-					name="password2"
-					type="password"
-					onChange={this.handleChange}
-					required
-					/>
-
-				<div className="form-group">
 					<button
 						className="btn btn-primary"
-						onClick={this.handleClickNext}
-						type="submit"
-						disabled={!this.isValid()}
-						style={{marginRight: 10}}
+						onClick={this.handleClickSubmit}
+						disabled={this.state.isLoading || !this.validate()}
+						type="button"
 						>
-						Продолжить
+						{'Продолжить'}
 					</button>
 				</div>
-			</form>
+			</div>
 		);
 	}
-});
+}
+AddAdvertiserForm.propTypes = {
+};
+AddAdvertiserForm.defaultProps = {
+};
 
 export default AddAdvertiserForm;

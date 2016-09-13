@@ -2,13 +2,21 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from .views import StaticGeneratorView, LandingGeneratorView
+
 
 urlpatterns = [
-    url(r'^users/', include('apps.users.urls', namespace='users')),
-    url(r'^advertisers/', include('apps.advertisers.urls', namespace='advertisers')),
-
+    url(r'^admin/', include([
+        url(r'^', include('apps.users.urls', namespace='users')),
+        url(r'^', include('apps.advertisers.urls', namespace='advertisers')),
+        url(r'^', include('apps.leads.urls', namespace='leads')),
+        url(r'^', include('apps.catalog.urls', namespace='catalog')),
+        url(r'^', include('apps.promo.urls', namespace='promo')),
+        url(r'^', include('apps.orders.urls', namespace='orders')),
+        url(r'^landing/$', LandingGeneratorView.as_view(), name='landing'),
+        url(r'^static-generator/$', StaticGeneratorView.as_view(), name='static-generator'),
+    ])),
     url(r'^api/', include('api', namespace='api')),
-
     url(r'^django-admin/', include(admin.site.urls)),
 ]
 
