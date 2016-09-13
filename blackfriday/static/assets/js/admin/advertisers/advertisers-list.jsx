@@ -1,4 +1,4 @@
-/* global document, jQuery, _ */
+/* global document _ jQuery */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -10,7 +10,7 @@ import MerchantProfileForm from '../common/merchant-profile-form.jsx';
 import FormRow from '../components/form-row.jsx';
 import AddAdvertiserForm from './add-advertiser-form.jsx';
 
-const MerchantList = React.createClass({
+const AdvertisersList = React.createClass({
 	getInitialState() {
 		return {
 			data: [],
@@ -188,7 +188,7 @@ const MerchantList = React.createClass({
 						<tbody>
 							{filteredMerchants.map(item => {
 								return (
-									<MerchantItem
+									<AdvertisersListItem
 										key={item.id}
 										onClickEdit={this.handleClickItemEdit}
 										isAdmin={isAdmin}
@@ -206,9 +206,9 @@ const MerchantList = React.createClass({
 	}
 });
 
-export default MerchantList;
+export default AdvertisersList;
 
-const MerchantItem = React.createClass({
+const AdvertisersListItem = React.createClass({
 	propTypes: {
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,

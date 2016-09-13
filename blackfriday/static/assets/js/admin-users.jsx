@@ -4,8 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
-import AddUserForm from './admin/common/add-user-form.jsx';
-import UserList from './admin/administrator/user-list.jsx';
+import AddUserForm from './admin/users/add-user-form.jsx';
+import UsersList from './admin/users/users-list.jsx';
 
 (function () {
 	'use strict';
@@ -107,7 +107,7 @@ import UserList from './admin/administrator/user-list.jsx';
 
 					<hr/>
 
-					<UserList
+					<UsersList
 						users={this.state.users}
 						onVerificationClick={this.handleVerificationClick}
 						/>
@@ -116,6 +116,6 @@ import UserList from './admin/administrator/user-list.jsx';
 		}
 	});
 
-	const adminUsers = document.getElementById('admin-users');
-	ReactDOM.render(<AdminUsers/>, adminUsers);
+	const block = document.getElementById('admin-users');
+	ReactDOM.render(<AdminUsers/>, block);
 })();

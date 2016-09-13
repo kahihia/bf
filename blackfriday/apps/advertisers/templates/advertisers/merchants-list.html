@@ -1,1 +1,17 @@
-{% extends 'base.html' %}
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        Магазины
+    </h1>
+</div>
+
+<div id="admin-merchants"></div>
+{% endblock content %}
+
+{% block js %}
+    {% render_bundle 'admin-merchants' 'js' %}
+{% endblock js %}

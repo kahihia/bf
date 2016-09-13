@@ -3,8 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import AddCategoryForm from './admin/common/add-category-form.jsx';
-import CategoryList from './admin/administrator/category-list.jsx';
+import AddCategoryForm from './admin/catalog/add-category-form.jsx';
+import CategoryList from './admin/catalog/category-list.jsx';
 
 (function () {
 	'use strict';
@@ -100,6 +100,6 @@ import CategoryList from './admin/administrator/category-list.jsx';
 		}
 	});
 
-	const adminCategories = document.getElementById('admin-categories');
-	ReactDOM.render(<AdminCategories/>, adminCategories);
+	const block = document.getElementById('admin-categories');
+	ReactDOM.render(<AdminCategories/>, block);
 })();

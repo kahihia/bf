@@ -7,7 +7,7 @@ import b from 'b_';
 import {USER_ROLE} from '../const.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import FormRow from '../components/form-row.jsx';
-import ChangePasswordForm from '../common/change-password-form.jsx';
+import ChangePasswordForm from './change-password-form.jsx';
 
 const UserList = React.createClass({
 	getInitialState() {

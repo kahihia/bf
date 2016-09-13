@@ -5,7 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
 import {CATEGORIES_URL} from '../const.js';
-import EditCategoryForm from '../common/edit-category-form.jsx';
+import EditCategoryForm from './edit-category-form.jsx';
 
 const CategoryList = React.createClass({
 	propTypes: {

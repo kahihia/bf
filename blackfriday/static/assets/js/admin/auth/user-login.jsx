@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoginForm from '../common/login-form.jsx';
+import LoginForm from './login-form.jsx';
 
 const UserLogin = React.createClass({
 	getInitialState() {

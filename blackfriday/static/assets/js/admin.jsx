@@ -76,12 +76,6 @@ import ReactDOM from 'react-dom';
 		};
 	}
 
-	const merchantList = document.getElementById('merchant-list');
-	if (merchantList) {
-		let MerchantList = require('./admin/administrator/merchant-list');
-		ReactDOM.render(<MerchantList/>, merchantList);
-	}
-
 	const promoList = document.getElementById('promo-list');
 	if (promoList) {
 		let PromoList = require('./admin/administrator/promo-list').PromoList;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Glyphicon from '../components/glyphicon.jsx';
-import RegistrationForm from '../common/registration-form.jsx';
+import RegistrationForm from './registration-form.jsx';
 import MerchantProfileForm from '../common/merchant-profile-form.jsx';
 
 const UserRegistration = React.createClass({

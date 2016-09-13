@@ -72,6 +72,9 @@
                         {# Admin Menu #}
                         {% if user.role == 'admin' %}
                             <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">Магазины</a>
+                            </li>
+                            <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">Рекламодатели</a>
                             </li>
                             <li class="simple-menu__item">
@@ -83,6 +86,9 @@
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">Магазины</a>
+                            </li>
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">Рекламодатели</a>
                             </li>
@@ -179,10 +185,10 @@ $(function () {
     }
 
     function process(errors) {
-        if (_.isObject(errors)) {
-            processObject(errors);
-        } else if (_.isArray(errors)) {
+        if (_.isArray(errors)) {
             processArray(errors);
+        } else if (_.isObject(errors)) {
+            processObject(errors);
         } else if (_.isString(errors)) {
             processString(errors);
         }
