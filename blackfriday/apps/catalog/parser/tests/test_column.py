@@ -8,15 +8,25 @@ def test_clean_value_given_none_return_none():
 
 
 def test_clean_value_given_pipes_with_context_expect_called_with_context():
+    global called
+    called = False
+
     def func_with_context(value, context=None):
-        assert context is not None
+        global called
+        called = True
     Column('foo', pipes=(func_with_context, )).clean_value('foo', {})
+    assert called
 
 
 def test_clean_value_given_pipes_without_context_expect_pipe_called_no_context():
-    def func_no_context(value, context=None):
-        assert context is None
+    global called
+    called = False
+
+    def func_no_context(value):
+        global called
+        called = True
     Column('foo', pipes=(func_no_context, )).clean_value('foo', {})
+    assert called
 
 
 def test_clean_value_expect_lowercase_value():

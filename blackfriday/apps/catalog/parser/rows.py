@@ -19,6 +19,8 @@ class Column(object):
                     signature = inspect.signature(func)
                     if 'context' in signature.parameters:
                         value = func(value, context)
+                    else:
+                        value = func(value)
                 except ValueError:
                     value = func(value)
         except:

@@ -27,7 +27,28 @@ def test_message_expect_get_message_not_called():
         assert not fake_get_message.called
 
 
-def test_generic_validator_call_expect_validate_called():
-    fake_rule = MagicMock()
-    GenericValidator(fake_rule)({'context': 'context'}, foo='foo', bar='bar')
-    fake_rule.assert_called_with(context={'context': 'context'}, foo='foo', bar='bar')
+def test_generic_validator_call_given_func_no_context_expect_rule_called_without_context():
+    global called, call_args
+    called = False
+    call_args = ()
+
+    def fake_rule(foo, bar):
+        global called, call_args
+        called = True
+        call_args = (foo, bar)
+    GenericValidator(fake_rule)('context', foo='foo', bar='bar')
+    assert called
+    assert call_args == ('foo', 'bar')
+
+
+def test_generic_validator_call_given_func_with_context_expect_rule_called_with_context():
+    global called, call_args
+    called = False
+
+    def fake_rule(context, foo, bar):
+        global called, call_args
+        called = True
+        call_args = (context, foo, bar)
+    GenericValidator(fake_rule)('context', foo='foo', bar='bar')
+    assert called
+    assert call_args == ('context', 'foo', 'bar')

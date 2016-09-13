@@ -1,9 +1,11 @@
+import inspect
+
+
 class BaseValidator:
     _message = None
     is_warning = False
 
-    def __init__(self, rule=None, blank=False, is_warning=False, message=None):
-        self.blank = blank
+    def __init__(self, rule=None, is_warning=False, message=None):
         self.rule = rule
         self.is_warning = is_warning
         if message is not None:
@@ -14,7 +16,7 @@ class BaseValidator:
             return None
         return self.validate(value=value, context=context)
 
-    def validate(self, value, context):
+    def validate(self, value, context=None):
         raise NotImplementedError
 
     @property
@@ -29,4 +31,8 @@ class BaseValidator:
 
 class GenericValidator(BaseValidator):
     def __call__(self, context, **cleaned_data):
-        return self.rule(context=context, **cleaned_data)
+        signature = inspect.signature(self.rule)
+        if 'context' in signature.parameters:
+            return self.rule(context=context, **cleaned_data)
+        else:
+            return self.rule(**cleaned_data)

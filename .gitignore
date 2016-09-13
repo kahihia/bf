@@ -18,3 +18,4 @@ webpack-stats.json
 # Node.JS
 npm-debug.log
 test-reports/
+.cache/

@@ -43,7 +43,7 @@ class Substring(BaseValidator):
         return 'Строка должна содержать {}'.format(self.rule)
 
 
-class UtmRequired(Substring):
+class UtmRequired(BaseValidator):
     _message = 'Отсутствуют utm метки'
 
     def validate(self, value, **kwargs):
@@ -53,7 +53,7 @@ class UtmRequired(Substring):
 class Length(BaseValidator):
 
     def validate(self, value, **kwargs):
-        return len(value) < self.rule
+        return len(value) <= self.rule
 
     def get_message(self):
         return 'Длина строки не должна превышать {}'.format(self.rule)
