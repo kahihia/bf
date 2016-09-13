@@ -56,7 +56,7 @@ class AdvertiserTinySerializer(serializers.ModelSerializer):
 
 class MerchantModerationSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Merchant.MODERATION_STATUSES, source='moderation_status')
-    comment = serializers.CharField(source='moderation_comment', allow_null=True, allow_blank=True)
+    comment = serializers.CharField(source='moderation_comment', allow_null=True, allow_blank=True, required=False)
 
     class Meta:
         model = Merchant
@@ -79,8 +79,8 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        if attrs['status'] < ModerationStatus.confirmed:
-            attrs.pop('comment', None)
+        if attrs['moderation_status'] < ModerationStatus.confirmed:
+            attrs.pop('moderation_comment', None)
         return attrs
 
 
