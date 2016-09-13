@@ -6,3 +6,7 @@ from apps.users.mixins import AdminOnlyMixin
 
 class CategoryListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
     template_name = 'catalog/category-list.html'
+
+
+class FeedMakerView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
+    template_name = 'catalog/feed-maker.html'
