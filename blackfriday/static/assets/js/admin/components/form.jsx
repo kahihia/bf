@@ -32,6 +32,24 @@ class Form extends React.Component {
 		});
 	}
 
+	validate(warnings) {
+		let isValid = true;
+
+		const {fields} = this.state;
+		_.forEach(fields, field => {
+			const {required, value, label} = field;
+			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
+				isValid = false;
+				if (warnings) {
+					toastr.warning(`Заполните поле "${label}"`);
+				}
+				return false;
+			}
+		});
+
+		return isValid;
+	}
+
 	handleChange(e) {
 		const target = e.target;
 		this.updateData(target.name, target.value);

@@ -1,4 +1,4 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint quote-props: ["error", "as-needed"] */
 
@@ -119,17 +119,7 @@ class RegistrationForm extends Form {
 	}
 
 	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
-				}
-				return false;
-			}
-		});
+		let isValid = super.validate(warnings);
 
 		if (isValid) {
 			isValid = this.checkEmail();
