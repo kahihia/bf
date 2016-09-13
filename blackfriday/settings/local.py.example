@@ -8,6 +8,8 @@ DATABASES = {
     }
 }
 
+# SITE_URL = 'http://blackfriday.py.220-volt.us'
+
 # при DEBUG = False обязательно
 #ALLOWED_HOSTS = [
 #    'blackfriday.py.220-volt.us',

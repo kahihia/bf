@@ -12,5 +12,5 @@ class Command(BaseCommand):
         os.makedirs(path, exist_ok=True)
         with open(os.path.join(path, 'index.html'), 'w') as f:
             f.seek(0)
-            f.write(render_to_string('landing.html'))
+            f.write(render_to_string('landing.html', {'SITE_URL': settings.SITE_URL}))
             f.truncate()
