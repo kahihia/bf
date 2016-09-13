@@ -65,6 +65,7 @@ if (env === 'dev') {
 module.exports = {
 	entry: {
 		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
+		'admin-categories': path.resolve(PATH_SRC, 'js/admin-categories.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
 		app: path.resolve(PATH_SRC, 'js/app.jsx'),
 		auth: path.resolve(PATH_SRC, 'js/auth.jsx'),

@@ -28,3 +28,5 @@ export const TOKEN = {
 	recaptcha: ENV.tokens && ENV.tokens.recaptcha,
 	csrftoken: Cookie.get('csrftoken')
 };
+
+export const CATEGORIES_URL = 'https://realblackfriday.ru/categories';

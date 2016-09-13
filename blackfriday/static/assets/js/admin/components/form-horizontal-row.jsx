@@ -4,23 +4,15 @@
 import React from 'react';
 import classNames from 'classnames';
 import ControlLabel from './control-label.jsx';
-import FormRow, {Input} from './form-row.jsx';
+import FormRow from './form-row.jsx';
 
 class FormHorizontalRow extends FormRow {
 	render() {
 		const {
 			hasError,
-			help,
-			helpError,
 			label,
-			mask,
-			name,
-			options,
-			placeholder,
 			readOnly,
-			required,
-			type,
-			value
+			required
 		} = this.props;
 
 		return (
@@ -32,23 +24,11 @@ class FormHorizontalRow extends FormRow {
 					/>
 
 				<div className="col-sm-10">
-					<Input
-						onChange={this.handleChange}
-						onKeyUp={this.handleKeyUp}
-						{...{value, placeholder, options, type, name, required, readOnly, mask}}
-						/>
+					{this.renderInput()}
 
-					{help ? (
-						<span className="help-block">
-							{help}
-						</span>
-					) : null}
+					{this.renderHelp()}
 
-					{helpError ? (
-						<span className="help-block">
-							{helpError}
-						</span>
-					) : null}
+					{this.renderHelpError()}
 				</div>
 			</label>
 		);
