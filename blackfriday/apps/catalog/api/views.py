@@ -31,7 +31,7 @@ class ProductViewSet(
 
     def dispatch(self, request, *args, **kwargs):
         self.merchant = Merchant.objects.get(id=kwargs.get('merchant_pk'))
-        self.feed_data = underscoreize(json.loads(request.body.decode()))
+        self.feed_data = underscoreize(json.loads(request.body.decode() or '{}'))
         return super().dispatch(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
