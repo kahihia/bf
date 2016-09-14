@@ -2,6 +2,35 @@
 import pytest
 from unittest.mock import MagicMock
 from ..rows import Row
+from ..validators import BaseValidator
+
+
+@pytest.fixture
+def positive_validator():
+    class PositiveValidator(BaseValidator):
+        _message = 'message'
+        called = False
+        called_args = None
+
+        def validate(self, value, context):
+            self.called = True
+            self.called_args = (value, context)
+            return True
+    return PositiveValidator()
+
+
+@pytest.fixture
+def negative_validator():
+    class NegativeValidator(BaseValidator):
+        _message = 'message'
+        called = False
+        called_args = None
+
+        def validate(self, value, context):
+            self.called = True
+            self.called_args = (value, context)
+            return False
+    return NegativeValidator()
 
 
 @pytest.fixture
