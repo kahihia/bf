@@ -25,8 +25,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
-        if not isinstance(parent.instance, collections.Iterable):
+        try:
             self.instance = parent.instance.profile
+        except AttributeError:
+            pass
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
@@ -34,8 +36,11 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'email', 'profile')
-        extra_kwargs = {'email': {'read_only': True}}
+        fields = ('id', 'name', 'email', 'profile', 'is_active')
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'is_active': {'read_only': True}
+        }
 
     def update(self, instance, validated_data):
         if 'profile' in validated_data:
@@ -51,17 +56,19 @@ class AdvertiserTinySerializer(serializers.ModelSerializer):
 
 class MerchantModerationSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Merchant.MODERATION_STATUSES, source='moderation_status')
-    comment = serializers.CharField(source='moderation_comment')
+    comment = serializers.CharField(source='moderation_comment', allow_null=True, allow_blank=True, required=False)
 
     class Meta:
         model = Merchant
+        fields = ['status', 'comment']
 
-    def get_default_field_names(self, declared_fields, model_info):
-        fields = ['status']
+    def get_extra_kwargs(self):
+        kwargs = super().get_extra_kwargs()
         request = self.context.get('request')
-        if not request or (request.user and request.user.is_authenticated and request.user.role == 'admin'):
-            fields += ['comment']
-        return fields
+        if request and request.user and request.user.is_authenticated and request.user.role == 'advertiser':
+            kwargs['comment'] = kwargs.get('comment') or {}
+            kwargs['comment']['read_only'] = True
+        return kwargs
 
     def validate_status(self, value):
         user = self.context['request'].user
@@ -70,6 +77,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 raise ValidationError('Неверный статус')
             # ToDo: проверка, все ли материлы заполнены
         return value
+
+    def validate(self, attrs):
+        if attrs['moderation_status'] < ModerationStatus.confirmed:
+            attrs.pop('moderation_comment', None)
+        return attrs
 
 
 class MerchantSerializer(serializers.ModelSerializer):
@@ -107,6 +119,10 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merchant
+        extra_kwargs = {
+            'url': {'allow_null': True, 'allow_blank': False},
+            'name': {'allow_null': False, 'allow_blank': False},
+        }
 
     def get_default_field_names(self, declared_fields, model_info):
         fields = ['name', 'url']

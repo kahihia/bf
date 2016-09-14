@@ -15,8 +15,9 @@
     <meta name="format-detection" content="address=no">
     <meta name="google" value="notranslate">
 
-    <title>{% block title %}Киберпонедельник{% endblock title %}</title>
+    <title>{% block title %}Настоящая черная пятница 2016 в России - официальный сайт Real Black Friday{% endblock title %}</title>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.11.1/lodash.min.js"></script>
@@ -37,7 +38,7 @@
 
 <header class="site-header">
     <a href="/" class="logo">
-        <img src="{% static 'images/auth/logo.png' %}" alt="Киберпонедельник">
+        <img src="{% static 'images/auth/logo.png' %}" alt="Настоящая черная пятница">
     </a>
 </header>
 
@@ -63,8 +64,9 @@
 </footer>
 
 {# JS #}
-{% render_bundle 'auth' 'js' %}
 {% block js %}{% endblock js %}
+
+{% render_bundle 'auth' 'js' %}
 
 </body>
 </html>

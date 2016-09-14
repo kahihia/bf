@@ -1,18 +1,17 @@
-/* global toastr _ */
+/* global toastr */
+/* eslint camelcase: ["error", {properties: "never"}] */
+/* eslint quote-props: ["error", "as-needed"] */
 
 import React from 'react';
 import xhr from 'xhr';
-import FormRow from '../components/form-row.jsx';
-import {processErrors} from '../utils.js';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
+import Form from '../components/form.jsx';
+import Recaptcha, {recaptchaReset} from '../components/recaptcha.jsx';
 
-const RegistrationForm = React.createClass({
-	propTypes: {
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class RegistrationForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			fields: {
 				email: {
@@ -23,9 +22,7 @@ const RegistrationForm = React.createClass({
 				},
 				name: {
 					label: 'Название',
-					value: '',
-					type: 'text',
-					required: false
+					value: ''
 				},
 				password: {
 					label: 'Пароль',
@@ -38,55 +35,64 @@ const RegistrationForm = React.createClass({
 					label: 'Повторите пароль',
 					value: '',
 					type: 'password',
+					required: true,
+					excluded: true
+				},
+				'g-recaptcha-response': {
+					value: null,
 					required: true
 				}
 			}
 		};
-	},
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleRecaptchaVerify = this.handleRecaptchaVerify.bind(this);
+		this.handleRecaptchaExpire = this.handleRecaptchaExpire.bind(this);
+	}
 
 	componentWillReceiveProps() {
 		this.resetForm();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
-		});
-		this.forceUpdate();
-	},
+	}
 
 	requestRegisterUser() {
-		if (!this.validate()) {
+		if (!this.validate(true)) {
 			return;
 		}
 
 		this.setState({isLoading: true});
 
-		const fields = this.state.fields;
-		const json = _.reduce(fields, (a, b, key) => {
-			a[key] = b.value;
-			return a;
-		}, {role: 'advertiser'});
+		const json = this.serialize();
+		json.role = 'advertiser';
 
 		xhr({
-			url: '/api/users/',
+			url: '/api/registration/',
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+			recaptchaReset();
+
 			if (data) {
 				switch (resp.statusCode) {
 					case 201: {
 						toastr.success('Вы успешно зарегистрированы');
-						this.requestVerification(data);
+						this.requestVerification(data.id);
+						this.resetForm();
+
+						if (this.props.onSubmit) {
+							this.props.onSubmit(data);
+						}
+						break;
+					}
+					case 400: {
+						this.processErrors(data);
 						break;
 					}
 					default: {
-						this.setState({isLoading: false});
-						processErrors(data);
+						toastr.error('Не удалось зарегистрироваться');
 						break;
 					}
 				}
@@ -94,81 +100,84 @@ const RegistrationForm = React.createClass({
 				return;
 			}
 
-			this.setState({isLoading: false});
 			toastr.error('Не удалось зарегистрироваться');
 		});
-	},
+	}
 
-	requestVerification(userData) {
+	requestVerification(userId) {
 		xhr({
-			url: `/api/users/${userData.id}/verification/`,
+			url: `/api/users/${userId}/verification/`,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			}
-		}, (err, resp, data) => {
-			this.setState({isLoading: false});
-
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					toastr.success('Письмо верификации успешно отправлено');
-					this.resetForm();
-
-					if (this.props.onSubmit) {
-						this.props.onSubmit(userData);
-					}
-				}
-			} else {
+		}, err => {
+			if (err) {
 				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});
-	},
+	}
 
-	validate() {
-		return this.checkEmail() && this.checkPassword() && this.comparePasswords();
-	},
+	validate(warnings) {
+		let isValid = super.validate(warnings);
+
+		if (isValid) {
+			isValid = this.checkEmail();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат Email');
+			}
+		}
+
+		if (isValid) {
+			isValid = this.checkPassword();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат пароля');
+			}
+		}
+
+		if (isValid) {
+			isValid = this.comparePasswords();
+			if (warnings && !isValid) {
+				toastr.warning('Пароли не совпадают');
+			}
+		}
+
+		return isValid;
+	}
 
 	checkEmail() {
 		return REGEXP.email.test(this.state.fields.email.value);
-	},
+	}
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
-	},
+	}
 
 	comparePasswords() {
 		const {password, passwordConfirm} = this.state.fields;
 
 		return password.value === passwordConfirm.value;
-	},
-
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	}
 
 	handleSubmit(e) {
 		e.preventDefault();
 		this.requestRegisterUser();
-	},
+	}
 
-	updateData(name, value) {
-		const fields = this.state.fields;
-		fields[name].value = value;
-		this.forceUpdate();
-	},
+	handleRecaptchaVerify(response) {
+		this.updateRecaptchaField(response);
+	}
 
-	buildRow(name) {
-		const field = this.state.fields[name];
-		const {value, label, help, type, required} = field;
+	handleRecaptchaExpire() {
+		this.updateRecaptchaField();
+	}
 
-		return (
-			<FormRow
-				onChange={this.handleChange}
-				{...{value, name, label, help, type, required}}
-				/>
-		);
-	},
+	updateRecaptchaField(response) {
+		this.setState(previousState => {
+			previousState.fields['g-recaptcha-response'].value = response || null;
+			return previousState;
+		});
+	}
 
 	render() {
 		return (
@@ -183,15 +192,17 @@ const RegistrationForm = React.createClass({
 					{this.buildRow('passwordConfirm')}
 
 					<div className="form-group">
-						<div
-							className="g-recaptcha"
-							data-sitekey={TOKEN.recaptcha}
+						<Recaptcha
+							elementId={'registration-recaptcha'}
+							sitekey={TOKEN.recaptcha}
+							onVerify={this.handleRecaptchaVerify}
+							onExpire={this.handleRecaptchaExpire}
 							/>
 					</div>
 
 					<div className="form-group">
 						<button
-							className="btn btn-primary btn-lg"
+							className="btn btn-primary"
 							disabled={this.state.isLoading || !this.validate()}
 							type="submit"
 							>
@@ -202,6 +213,10 @@ const RegistrationForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+RegistrationForm.propTypes = {
+};
+RegistrationForm.defaultProps = {
+};
 
 export default RegistrationForm;

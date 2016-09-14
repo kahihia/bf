@@ -10,24 +10,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% endcomment %}
 
-    <title>Черная пятница 2016 в России - официальный сайт Real Black Friday</title>
-    <meta name="description" content="Черная пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов">
+    <title>Настоящая черная пятница 2016 в России - официальный сайт Real Black Friday</title>
+    <meta name="description" content="Настоящая черная пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов">
     <meta name="keywords" content="">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="http://www.realblackfriday.ru/">
-    <meta property="og:title" content="Черная пятница 2016 в России - официальный сайт Real Black Friday">
-    <meta property="og:description" content="Черная пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов">
-    <meta property="og:image" content="http://www.realblackfriday.ru/images/logo-share.png">
+    <meta property="og:url" content="{{ SITE_URL }}" />
+    <meta property="og:title" content="Настоящая черная пятница 2016 - официальный сайт">
+    <meta property="og:description" content="Успейте получить скидку 90% от крупнейших интернет-магазинов раньше всех">
+    <meta property="og:image" content="{{ SITE_URL }}{% static 'images/landing/share-image.jpg' %}">
+
+    <meta name="yandex-verification" content="099e2d7cd5eb297c">
+    <meta name="google-site-verification" content="9Cn9QjQ2oLkwa1YkuO0_8B9EAuCXteDr8c7RkYszvlY">
+
+    <meta name="referrer" content="always">
 
 
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32">
     <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16">
     <link rel="manifest" href="{% static 'manifest.json' %}">
-    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#060606">
-    <meta name="theme-color" content="#060606">
+    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#000000">
+    <meta name="theme-color" content="#000000">
 
     <link href="{% static 'css/landing/jquery.fancybox.css' %}" rel="stylesheet">
     <link href="{% static 'css/landing/jquery.countdown.css' %}" rel="stylesheet">
@@ -64,7 +69,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="container">
         <div class="site-header-info__about">
             <span class="site-header-info__text">
-                Официальный сайт распродажи "Черная пятница" 2016 в России
+                Официальный сайт распродажи "Настоящая черная пятница" 2016 в России
             </span>
         </div>{% comment %}
 
@@ -97,15 +102,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <div class="header-section__logo">
                     <img src="{% static 'images/landing/header-section__logo.png' %}" alt="">
                 </div>
-
-                <p class="header-section__slogan">
-                    On-line распродажа года
-                </p>
             </div>
 
             <div class="col-xs-6">
                 <h1 class="header-section__title">
-                    <strong>«Черная пятница»</strong>
+                    <strong>«Настоящая черная пятница»</strong>
                     24 и 25 ноября 2016
                 </h1>
 
@@ -167,6 +168,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 placeholder="Оставьте ваш e-mail"
                                 name="email"
                                 type="email"
+                                maxlength="255"
                                 required
                                 >
 
@@ -219,13 +221,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="about-section__slide">
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-5">
+                    <div class="col-xs-6">
                         <div class="about-section__title">
                             Что это такое?
                         </div>
 
                         <div class="about-section__text">
-                            Черная пятница — это масштабная<br>
+                            Настоящая черная пятница — это масштабная<br>
                             онлайн-распродажа в ведущих<br>
                             интернет-магазинах и онлайн-сервисах<br>
                             России, Белоруссии и Казахстана.<br>
@@ -260,7 +262,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
                     </div>
 
-                    <div class="col-xs-4 col-xs-offset-3">
+                    <div class="col-xs-4 col-xs-offset-2">
                         <div class="about-section__action">
                             <div class="about-section__action-title">
                                 Получи<br>
@@ -979,9 +981,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-partners"></a>
 
     <div class="container">
-        <div class="partners-section__title">
+        <h2 class="partners-section__title">
             Наши партнеры
-        </div>
+        </h2>
 
         <div class="partners-section__carousel">
             <div class="bxslider-multi">
@@ -1124,143 +1126,143 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-shops"></a>
 
     <div class="container">
-        <div class="shops-section__title">
-            Магазины-участники «Черной пятницы − 2016»
-        </div>
+        <h2 class="shops-section__title">
+            Магазины-участники «Настоящей черной пятницы − 2016»
+        </h2>
 
         <ul class="shops-section__list">
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.220-volt.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.220-volt.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ybjd5nc1.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.sc-store.ru/?utm_source=cmonday&amp;utm_medium=other " target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.sc-store.ru/?utm_source=cmonday&amp;utm_medium=other " target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_9c9knyey.jpg' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://mir-kubikov.ru/?utm_source=cmonday&amp;utm_medium=other " target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://mir-kubikov.ru/?utm_source=cmonday&amp;utm_medium=other " target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_fldf_ewc.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.mvideo.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.mvideo.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_sd0s73x7.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.quelle.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.quelle.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_a4596ohy.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.detmir.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.detmir.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_q0kjd_ab.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.elc-russia.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.elc-russia.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_tgytc7m4.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.vasilisa-shop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.vasilisa-shop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_pu2188f4.jpg' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.mediamarkt.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.mediamarkt.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_br2wp1mi.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.003.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.003.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_x9xywc0a.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.sportmaster.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.sportmaster.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2p1y873r.jpg' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.kupivip.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.kupivip.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_y_gtrtog.jpg' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.holodilnik.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.holodilnik.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_3rc3kwsj.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.enter.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.enter.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_5ym041w8.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ulmart.ru/?from=cmonday2016&amp;utm_source=cpm&amp;utm_medium=cmonday&amp;utm_campaign=main" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ulmart.ru/?from=cmonday2016&amp;utm_source=cpm&amp;utm_medium=cmonday&amp;utm_campaign=main" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_kspm_8d2.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.lamoda.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.lamoda.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_86l2nwxb.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.svyaznoy.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.svyaznoy.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_kh8q8im4.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.eldorado.ru/promo/kiberponedelnik/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.eldorado.ru/promo/kiberponedelnik/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_z82shr6x.png' %}" alt="">
                 </a>
             </li>
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ozon.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ozon.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_lhyut04i.png' %}" alt="">
                 </a>
             </li>
             {% endcomment %}
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.citilink.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.citilink.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_qr885iu2.png' %}" alt="">
                 </a>
             </li>
 
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.bronnitsy.com" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.bronnitsy.com" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_80bch96p.png' %}" alt="">
                 </a>
             </li>
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.delivery-club.ru/entities/food/?utm_source=cmonday&amp;utm_medium=cmonday&amp;utm_campaign=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.delivery-club.ru/entities/food/?utm_source=cmonday&amp;utm_medium=cmonday&amp;utm_campaign=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_l_tblfh0.png' %}" alt="">
                 </a>
             </li>
@@ -1268,7 +1270,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://qiwi.com/register/form.action?utm_source=cmonday&amp;utm_medium=cmonday&amp;utm_campaign=cmonday&amp;ref=cmonday " target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://qiwi.com/register/form.action?utm_source=cmonday&amp;utm_medium=cmonday&amp;utm_campaign=cmonday&amp;ref=cmonday " target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_0_0ubwds.png' %}" alt="">
                 </a>
             </li>
@@ -1276,7 +1278,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://mitsubishisale.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=2016may30" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://mitsubishisale.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=2016may30" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_5390vy6z.png' %}" alt="">
                 </a>
             </li>
@@ -1284,7 +1286,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.vw-stat.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.vw-stat.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_a6e7femz.png' %}" alt="">
                 </a>
             </li>
@@ -1292,7 +1294,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.avtopoint-mazda.ru/offers/?slug=avtopoint-1-den&amp;utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=%D0%9A%D0%B8%D0%B1%D0%B5%D1%80%D0%BF%D0%BE%D0%BD%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.avtopoint-mazda.ru/offers/?slug=avtopoint-1-den&amp;utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=%D0%9A%D0%B8%D0%B1%D0%B5%D1%80%D0%BF%D0%BE%D0%BD%D0%B5%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_syqu8b9f.png' %}" alt="">
                 </a>
             </li>
@@ -1300,7 +1302,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://avtoslavia.ru/?utm_source=google__yandex&amp;utm_medium=banner__email&amp;utm_term=avtomobili&amp;utm_content=spc&amp;utm_campaign=avtomobili" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://avtoslavia.ru/?utm_source=google__yandex&amp;utm_medium=banner__email&amp;utm_term=avtomobili&amp;utm_content=spc&amp;utm_campaign=avtomobili" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_use2v8j7.png' %}" alt="">
                 </a>
             </li>
@@ -1308,7 +1310,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://vw-stat.ru/finance/specials/18442/?utm_source=http%3A%2F%2Fcmonday.ru%2F&amp;utm_medium=cpc&amp;utm_campaign=CM" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://vw-stat.ru/finance/specials/18442/?utm_source=http%3A%2F%2Fcmonday.ru%2F&amp;utm_medium=cpc&amp;utm_campaign=CM" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xd9y1q_t.png' %}" alt="">
                 </a>
             </li>
@@ -1316,7 +1318,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://hyundai-vostokavto.ru/?utm_source=https___www_cmonday_ru&amp;utm_medium=banner&amp;utm_campaign=cm" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://hyundai-vostokavto.ru/?utm_source=https___www_cmonday_ru&amp;utm_medium=banner&amp;utm_campaign=cm" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_y6qe2lzo.png' %}" alt="">
                 </a>
             </li>
@@ -1324,7 +1326,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.audi-petrogradsky.ru/ru_partner/p_00472/ru.html?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=audisale" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.audi-petrogradsky.ru/ru_partner/p_00472/ru.html?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=audisale" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_1ylgxpqg.png' %}" alt="">
                 </a>
             </li>
@@ -1332,7 +1334,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www1.dpd.ru/lp/eparcel-2016?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=eparcel-2016-common" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www1.dpd.ru/lp/eparcel-2016?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=eparcel-2016-common" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_5wu9vpg4.png' %}" alt="">
                 </a>
             </li>
@@ -1340,7 +1342,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.obi.ru/decom/home.html?wt_mc=seag.display.kiperponedelnik.30.05" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.obi.ru/decom/home.html?wt_mc=seag.display.kiperponedelnik.30.05" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_qu0is0te.png' %}" alt="">
                 </a>
             </li>
@@ -1348,7 +1350,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.kredito24.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.kredito24.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_lndr6wei.png' %}" alt="">
                 </a>
             </li>
@@ -1356,7 +1358,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ad.admitad.com/g/b2f204e91ea5912b6a7bda0f3ff6fc/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ad.admitad.com/g/b2f204e91ea5912b6a7bda0f3ff6fc/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2xzudelj.png' %}" alt="">
                 </a>
             </li>
@@ -1364,7 +1366,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.kupongid.ru/?partner_page=cyberday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.kupongid.ru/?partner_page=cyberday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xk79eo2o.png' %}" alt="">
                 </a>
             </li>
@@ -1372,7 +1374,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://price.ru/?utm_campaign=cmonday&amp;utm_medium=cpm&amp;utm_content=logo&amp;utm_source=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://price.ru/?utm_campaign=cmonday&amp;utm_medium=cpm&amp;utm_content=logo&amp;utm_source=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_o3apzk0o.png' %}" alt="">
                 </a>
             </li>
@@ -1380,7 +1382,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.gold585.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.gold585.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_pid3epur.png' %}" alt="">
                 </a>
             </li>
@@ -1388,7 +1390,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.tinkoffinsurance.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.tinkoffinsurance.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_gjwkbrec.png' %}" alt="">
                 </a>
             </li>
@@ -1396,7 +1398,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.pleer.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.pleer.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_l6p90ogq.png' %}" alt="">
                 </a>
             </li>
@@ -1404,7 +1406,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://posudacenter.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://posudacenter.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_m0m0642r.png' %}" alt="">
                 </a>
             </li>
@@ -1412,7 +1414,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://onlinetrade.ru?utm_source=cmondey&amp;utm_medium=cmondey&amp;utm_campaign=cmondey" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://onlinetrade.ru?utm_source=cmondey&amp;utm_medium=cmondey&amp;utm_campaign=cmondey" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_wur58jm3.jpg' %}" alt="">
                 </a>
             </li>
@@ -1420,7 +1422,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ad.admitad.com/g/8a8fed1abea5912b6a7bb07a9a5248/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ad.admitad.com/g/8a8fed1abea5912b6a7bb07a9a5248/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_lddhw1nn.png' %}" alt="">
                 </a>
             </li>
@@ -1428,7 +1430,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://qlean.ru/?promocode=cybermonday&amp;utm_source=cybermonday&amp;utm_medium=mln&amp;utm_content=banner&amp;utm_campaign=test30" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://qlean.ru/?promocode=cybermonday&amp;utm_source=cybermonday&amp;utm_medium=mln&amp;utm_content=banner&amp;utm_campaign=test30" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_43v53e6h.png' %}" alt="">
                 </a>
             </li>
@@ -1436,7 +1438,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.setstroika.ru" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.setstroika.ru" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_g7krc70z.png' %}" alt="">
                 </a>
             </li>
@@ -1444,7 +1446,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.finn-flare.ru/?utm_source=cmonday&amp;utm_medium=cpa&amp;utm_campaign=finskaya-odezhda" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.finn-flare.ru/?utm_source=cmonday&amp;utm_medium=cpa&amp;utm_campaign=finskaya-odezhda" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_b0fo9845.png' %}" alt="">
                 </a>
             </li>
@@ -1452,7 +1454,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.laredoute.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.laredoute.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_wpyitqe9.png' %}" alt="">
                 </a>
             </li>
@@ -1460,7 +1462,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.mts.ru/?utm_source=cybermonday&amp;utm_medium=cpa&amp;utm_campaign=gde_cpa" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.mts.ru/?utm_source=cybermonday&amp;utm_medium=cpa&amp;utm_campaign=gde_cpa" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_f8sp89jt.png' %}" alt="">
                 </a>
             </li>
@@ -1468,7 +1470,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ostin.com/ru/ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=gold" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ostin.com/ru/ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=gold" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_y2gh0oz7.png' %}" alt="">
                 </a>
             </li>
@@ -1476,7 +1478,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://unizoo.ru/?utm_source=cmondayru&amp;utm_campaign=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://unizoo.ru/?utm_source=cmondayru&amp;utm_campaign=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xlyhdxz1.png' %}" alt="">
                 </a>
             </li>
@@ -1484,7 +1486,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://stroylandiya.ru/?utm_source=sale&amp;utm_medium=cmonday&amp;utm_campaign=logo&amp;utm_term=strolandiya" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://stroylandiya.ru/?utm_source=sale&amp;utm_medium=cmonday&amp;utm_campaign=logo&amp;utm_term=strolandiya" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_3tfzcp8k.png' %}" alt="">
                 </a>
             </li>
@@ -1492,7 +1494,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.askona.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.askona.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_z1cywam3.png' %}" alt="">
                 </a>
             </li>
@@ -1500,7 +1502,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://mebelvia.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://mebelvia.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_8hfs027j.png' %}" alt="">
                 </a>
             </li>
@@ -1508,7 +1510,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.conceptclub.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.conceptclub.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_utpffpxe.jpg' %}" alt="">
                 </a>
             </li>
@@ -1516,7 +1518,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.komus.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.komus.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_x6tr38z4.jpg' %}" alt="">
                 </a>
             </li>
@@ -1524,7 +1526,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.velodrive.ru/?utm_source=www.cmonday.ru&amp;utm_medium=cpc&amp;utm_campaign=CM_may2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.velodrive.ru/?utm_source=www.cmonday.ru&amp;utm_medium=cpc&amp;utm_campaign=CM_may2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_t938mq56.jpg' %}" alt="">
                 </a>
             </li>
@@ -1532,7 +1534,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.gretta.ru/?utm_source=cmonday&amp;utm_medium=pr&amp;utm_campaign=cmonday2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.gretta.ru/?utm_source=cmonday&amp;utm_medium=pr&amp;utm_campaign=cmonday2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_7lv7zsp8.png' %}" alt="">
                 </a>
             </li>
@@ -1540,7 +1542,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.mladenec-shop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.mladenec-shop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_blal8tw6.png' %}" alt="">
                 </a>
             </li>
@@ -1548,7 +1550,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.xcom-shop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.xcom-shop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_nd4vvn52.jpg' %}" alt="">
                 </a>
             </li>
@@ -1556,7 +1558,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.maxidom.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.maxidom.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_a_g660m3.png' %}" alt="">
                 </a>
             </li>
@@ -1564,7 +1566,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://timberland.ru/?utm_source=cpc&amp;utm_medium=cmonday&amp;utm_campaign=cpc_cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://timberland.ru/?utm_source=cpc&amp;utm_medium=cmonday&amp;utm_campaign=cpc_cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_jmdl33xt.png' %}" alt="">
                 </a>
             </li>
@@ -1572,7 +1574,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://newbalance.ru/?utm_source=cpc&amp;utm_medium=cmonday&amp;utm_campaign=cpc_cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://newbalance.ru/?utm_source=cpc&amp;utm_medium=cmonday&amp;utm_campaign=cpc_cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_13eoxo71.png' %}" alt="">
                 </a>
             </li>
@@ -1580,7 +1582,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://dg-home.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://dg-home.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_6ake6qds.png' %}" alt="">
                 </a>
             </li>
@@ -1588,7 +1590,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.technopark.ru/?utm_source=cmonday_may&amp;utm_medium=cmonday&amp;utm_campaign=cybermonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.technopark.ru/?utm_source=cmonday_may&amp;utm_medium=cmonday&amp;utm_campaign=cybermonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_kjsfz8bt.jpg' %}" alt="">
                 </a>
             </li>
@@ -1596,7 +1598,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.adamas.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.adamas.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_qbs8oxb0.png' %}" alt="">
                 </a>
             </li>
@@ -1604,7 +1606,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.crocs.ru" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.crocs.ru" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ts7jilfx.png' %}" alt="">
                 </a>
             </li>
@@ -1612,7 +1614,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.kubaninstrument.ru/?utm_source=cmonday&amp;utm_medium=email&amp;utm_campaign=cmonday&amp;utm_content=pilim_ceni&amp;utm_term=kiberponedelnik" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.kubaninstrument.ru/?utm_source=cmonday&amp;utm_medium=email&amp;utm_campaign=cmonday&amp;utm_content=pilim_ceni&amp;utm_term=kiberponedelnik" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_86q96kho.png' %}" alt="">
                 </a>
             </li>
@@ -1620,7 +1622,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://theoutlet.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://theoutlet.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_rlim8381.png' %}" alt="">
                 </a>
             </li>
@@ -1628,7 +1630,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.consul.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.consul.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_a87d3v15.jpg' %}" alt="">
                 </a>
             </li>
@@ -1636,7 +1638,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.megafon.ru/?utm_source=cmonday&amp;utm_medium=ag-perfo_partner_main_logo_all-pack&amp;utm_campaign=fed_flight_shop_cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.megafon.ru/?utm_source=cmonday&amp;utm_medium=ag-perfo_partner_main_logo_all-pack&amp;utm_campaign=fed_flight_shop_cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_vqpn49o_.jpg' %}" alt="">
                 </a>
             </li>
@@ -1644,7 +1646,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.1platforma.ru/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.1platforma.ru/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_frx_1hug.jpg' %}" alt="">
                 </a>
             </li>
@@ -1652,7 +1654,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.123.ru/sale/?utm_source=cmonday&amp;utm_medium=cpa&amp;utm_campaign=cybermonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.123.ru/sale/?utm_source=cmonday&amp;utm_medium=cpa&amp;utm_campaign=cybermonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_0aw681oc.jpg' %}" alt="">
                 </a>
             </li>
@@ -1660,7 +1662,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.bestwatch.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.bestwatch.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_cvy1ske7.png' %}" alt="">
                 </a>
             </li>
@@ -1668,7 +1670,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ekonika.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffe" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ekonika.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffe" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_tn92nwdy.jpg' %}" alt="">
                 </a>
             </li>
@@ -1676,7 +1678,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.votonia.ru/?utm_source=cmonday&amp;utm_medium=cpm&amp;utm_campaign=bnc" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.votonia.ru/?utm_source=cmonday&amp;utm_medium=cpm&amp;utm_campaign=bnc" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_3a2wkz0n.png' %}" alt="">
                 </a>
             </li>
@@ -1684,7 +1686,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.charuel.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_content=LOGO&amp;utm_campaign=kb2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.charuel.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_content=LOGO&amp;utm_campaign=kb2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_oh88ryqv.png' %}" alt="">
                 </a>
             </li>
@@ -1692,7 +1694,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.audiovideocentre.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.audiovideocentre.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2iyus3xj.jpg' %}" alt="">
                 </a>
             </li>
@@ -1700,7 +1702,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://gyro-skutery.ru/?utm_source=cmonday&amp;utm_medium=cmonday.ru&amp;utm_campaign=cmgyro-skutery.ru" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://gyro-skutery.ru/?utm_source=cmonday&amp;utm_medium=cmonday.ru&amp;utm_campaign=cmgyro-skutery.ru" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_flfpfxqc.png' %}" alt="">
                 </a>
             </li>
@@ -1708,7 +1710,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://redmond.company/ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://redmond.company/ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_7y_ni9_u.jpg' %}" alt="">
                 </a>
             </li>
@@ -1716,7 +1718,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.wildorchid.ru/?utm_source=cmonday.ru&amp;utm_medium=baner&amp;utm_campaign=2016&amp;utm_content=baner" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.wildorchid.ru/?utm_source=cmonday.ru&amp;utm_medium=baner&amp;utm_campaign=2016&amp;utm_content=baner" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_miyv7be5.png' %}" alt="">
                 </a>
             </li>
@@ -1724,7 +1726,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://likemyhome.ru/catalog/sale?r1=cmonday&amp;utm_source=cmonday&amp;utm_medium=cmondaysite" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://likemyhome.ru/catalog/sale?r1=cmonday&amp;utm_source=cmonday&amp;utm_medium=cmondaysite" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_3exai70d.png' %}" alt="">
                 </a>
             </li>
@@ -1732,7 +1734,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ww.stolplit.ru/?sourcefirm=1&amp;utm_source=cpamit&amp;utm_medium=partprogram&amp;utm_campaign=cpamit&amp;source=context&amp;cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ww.stolplit.ru/?sourcefirm=1&amp;utm_source=cpamit&amp;utm_medium=partprogram&amp;utm_campaign=cpamit&amp;source=context&amp;cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_0zkpd735.png' %}" alt="">
                 </a>
             </li>
@@ -1740,7 +1742,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://carcam.ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://carcam.ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_irfrk0pr.png' %}" alt="">
                 </a>
             </li>
@@ -1748,7 +1750,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ru.ivideon.com/shop/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ru.ivideon.com/shop/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_eyb72b_7.png' %}" alt="">
                 </a>
             </li>
@@ -1756,7 +1758,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ru.tomtop.com/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;web=314811&amp;aid=Adm" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ru.tomtop.com/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;web=314811&amp;aid=Adm" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_k6ucxb22.png' %}" alt="">
                 </a>
             </li>
@@ -1764,7 +1766,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.angstrem-mebel.ru/?cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;wmid=314811&amp;utm_source=AdmitAd&amp;utm_medium=cpa&amp;utm_campaign=c_7.375&amp;utm_content=314811&amp;utm_term=397519" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.angstrem-mebel.ru/?cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;wmid=314811&amp;utm_source=AdmitAd&amp;utm_medium=cpa&amp;utm_campaign=c_7.375&amp;utm_content=314811&amp;utm_term=397519" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_5ltamvuo.png' %}" alt="">
                 </a>
             </li>
@@ -1772,7 +1774,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://baon.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://baon.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_bhni7jjk.jpg' %}" alt="">
                 </a>
             </li>
@@ -1780,7 +1782,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.shop.philips.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.shop.philips.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_vczguw09.png' %}" alt="">
                 </a>
             </li>
@@ -1788,7 +1790,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ad.admitad.com/g/c57ea7e5e8a5912b6a7bcdc819b1e0/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ad.admitad.com/g/c57ea7e5e8a5912b6a7bcdc819b1e0/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ftu9l7zg.png' %}" alt="">
                 </a>
             </li>
@@ -1796,7 +1798,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.lensmaster.ru/sale/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=top-banner" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.lensmaster.ru/sale/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=top-banner" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_egxn4cki.png' %}" alt="">
                 </a>
             </li>
@@ -1804,7 +1806,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.sammydress.com/ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.sammydress.com/ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_m_ynx7pn.png' %}" alt="">
                 </a>
             </li>
@@ -1812,7 +1814,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://paper-shop.ru/?scrid=admitad&amp;utm_source=cpamit_cpo&amp;utm_medium=partner_ban&amp;utm_campaign=partner_ban&amp;utm_content=banner&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://paper-shop.ru/?scrid=admitad&amp;utm_source=cpamit_cpo&amp;utm_medium=partner_ban&amp;utm_campaign=partner_ban&amp;utm_content=banner&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_aa1b24j5.jpg' %}" alt="">
                 </a>
             </li>
@@ -1820,7 +1822,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://kupimebel.ru/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=site" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://kupimebel.ru/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=site" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_9vyfqi28.png' %}" alt="">
                 </a>
             </li>
@@ -1828,7 +1830,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.petshop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.petshop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xitzgm4t.jpg' %}" alt="">
                 </a>
             </li>
@@ -1836,7 +1838,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.rekamshop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.rekamshop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_vxafh936.png' %}" alt="">
                 </a>
             </li>
@@ -1844,7 +1846,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://acoolakids.ru/?utm_source=cyber&amp;utm_medium=referral&amp;utm_campaign=special" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://acoolakids.ru/?utm_source=cyber&amp;utm_medium=referral&amp;utm_campaign=special" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_8z6bist1.png' %}" alt="">
                 </a>
             </li>
@@ -1852,7 +1854,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.finam.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.finam.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_734kgesz.png' %}" alt="">
                 </a>
             </li>
@@ -1860,7 +1862,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.letu.ru/?uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.letu.ru/?uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_cslgu3t9.png' %}" alt="">
                 </a>
             </li>
@@ -1868,7 +1870,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.dns-shop.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_term=smartfon&amp;utm_campaign=kibermonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.dns-shop.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_term=smartfon&amp;utm_campaign=kibermonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_u49u5z2c.png' %}" alt="">
                 </a>
             </li>
@@ -1876,7 +1878,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://outlet.pult.ru/?utm_source=cybermonday&amp;utm_medium=cpm&amp;utm_campaign=cybermonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://outlet.pult.ru/?utm_source=cybermonday&amp;utm_medium=cpm&amp;utm_campaign=cybermonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_emls31_m.jpg' %}" alt="">
                 </a>
             </li>
@@ -1884,7 +1886,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.babadu.ru" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.babadu.ru" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_27y2f0ua.png' %}" alt="">
                 </a>
             </li>
@@ -1892,7 +1894,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.samsonite.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.samsonite.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4ybkn_lm.png' %}" alt="">
                 </a>
             </li>
@@ -1900,7 +1902,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://snowqueen.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://snowqueen.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_gx3qvpkx.png' %}" alt="">
                 </a>
             </li>
@@ -1908,7 +1910,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://respect-shoes.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://respect-shoes.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_rduky4vh.png' %}" alt="">
                 </a>
             </li>
@@ -1916,7 +1918,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.olant-shop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.olant-shop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_9bocys3_.jpg' %}" alt="">
                 </a>
             </li>
@@ -1924,7 +1926,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://uberchef.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://uberchef.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2q5gylh_.png' %}" alt="">
                 </a>
             </li>
@@ -1932,7 +1934,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://edelweiss-service.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://edelweiss-service.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_nnhz0e1a.png' %}" alt="">
                 </a>
             </li>
@@ -1940,7 +1942,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.sela.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=beforethestart" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.sela.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=beforethestart" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_3hnuggws.png' %}" alt="">
                 </a>
             </li>
@@ -1948,7 +1950,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://familon.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://familon.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_9zqcu0jj.png' %}" alt="">
                 </a>
             </li>
@@ -1956,7 +1958,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.tefal.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.tefal.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_tihpyyys.png' %}" alt="">
                 </a>
             </li>
@@ -1964,7 +1966,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://shop.olympus.com.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://shop.olympus.com.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_r6l9w_o7.png' %}" alt="">
                 </a>
             </li>
@@ -1972,7 +1974,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.rowenta.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.rowenta.ru/?utm_source=cpamit&amp;utm_medium=cpo&amp;utm_campaign=cpo-adm&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_wveg23sm.png' %}" alt="">
                 </a>
             </li>
@@ -1980,7 +1982,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://garda-opt.ru/?utm_source=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://garda-opt.ru/?utm_source=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_1tk3ve3c.png' %}" alt="">
                 </a>
             </li>
@@ -1988,7 +1990,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.techport.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.techport.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_p52aops8.png' %}" alt="">
                 </a>
             </li>
@@ -1996,7 +1998,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.mrdom.ru/?utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_content=314811&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.mrdom.ru/?utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_content=314811&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_kohdyqs7.png' %}" alt="">
                 </a>
             </li>
@@ -2004,7 +2006,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://kideria.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://kideria.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_sqxd8zq8.png' %}" alt="">
                 </a>
             </li>
@@ -2012,7 +2014,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://kupinatao.com/?cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://kupinatao.com/?cpamit_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_8vihagtu.jpg' %}" alt="">
                 </a>
             </li>
@@ -2020,7 +2022,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://intraceuticals.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://intraceuticals.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4gijh9t2.png' %}" alt="">
                 </a>
             </li>
@@ -2028,7 +2030,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://corsocomo.com/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://corsocomo.com/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ld_o0cly.jpg' %}" alt="">
                 </a>
             </li>
@@ -2036,7 +2038,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://tvoydom.ru/promo/cybermonday?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://tvoydom.ru/promo/cybermonday?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_lhqqp0ds.png' %}" alt="">
                 </a>
             </li>
@@ -2044,7 +2046,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.pompa.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_content=logo&amp;utm_campaign=cyber" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.pompa.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_content=logo&amp;utm_campaign=cyber" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_v3zg4own.png' %}" alt="">
                 </a>
             </li>
@@ -2052,7 +2054,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.krups.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.krups.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2r8q04o8.png' %}" alt="">
                 </a>
             </li>
@@ -2060,7 +2062,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://shop.moulinex.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://shop.moulinex.ru/?utm_source=cmonday&amp;utm_medium=cmonday052016&amp;utm_campaign=cybermonday052016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xprqgmq5.png' %}" alt="">
                 </a>
             </li>
@@ -2068,7 +2070,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.oursson.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.oursson.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_1qlq9zln.png' %}" alt="">
                 </a>
             </li>
@@ -2076,7 +2078,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.rigla.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.rigla.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_fwa9lpur.png' %}" alt="">
                 </a>
             </li>
@@ -2084,7 +2086,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://fundayshop.com/ru/ru/?utm_source=cmonday&amp;utm_medium=banner_main&amp;utm_campaign=silver" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://fundayshop.com/ru/ru/?utm_source=cmonday&amp;utm_medium=banner_main&amp;utm_campaign=silver" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_yv1b1jug.png' %}" alt="">
                 </a>
             </li>
@@ -2092,7 +2094,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://helptomama.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://helptomama.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ne92s7vk.png' %}" alt="">
                 </a>
             </li>
@@ -2100,7 +2102,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.infinitylingerie.com/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.infinitylingerie.com/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_5ubic8ve.jpg' %}" alt="">
                 </a>
             </li>
@@ -2108,7 +2110,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://moneyman.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://moneyman.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_gvrz46kr.png' %}" alt="">
                 </a>
             </li>
@@ -2116,7 +2118,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.mirbeer.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.mirbeer.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_rgjtc8il.png' %}" alt="">
                 </a>
             </li>
@@ -2124,7 +2126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ibody.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ibody.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_do9fihua.jpg' %}" alt="">
                 </a>
             </li>
@@ -2132,7 +2134,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ralf.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffer" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ralf.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffer" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_883nrf0o.png' %}" alt="">
                 </a>
             </li>
@@ -2140,7 +2142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://azimuthotels.com/?utm_source=www.cmonday.ru&amp;utm_medium=banner&amp;utm_campaign=cybermonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://azimuthotels.com/?utm_source=www.cmonday.ru&amp;utm_medium=banner&amp;utm_campaign=cybermonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_igt7eu40.jpg' %}" alt="">
                 </a>
             </li>
@@ -2148,7 +2150,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.kawaiifactory.ru/?utm_source=cmonday&amp;utm_medium=newsletter&amp;utm_campaign=kawaiifactory www.kawaiifactor" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.kawaiifactory.ru/?utm_source=cmonday&amp;utm_medium=newsletter&amp;utm_campaign=kawaiifactory www.kawaiifactor" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xjtmjnul.png' %}" alt="">
                 </a>
             </li>
@@ -2156,7 +2158,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ardi.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffer" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ardi.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=30mayoffer" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ggv9vw_g.png' %}" alt="">
                 </a>
             </li>
@@ -2164,7 +2166,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://enjoyme.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://enjoyme.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_fr64m18l.png' %}" alt="">
                 </a>
             </li>
@@ -2172,7 +2174,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.hermitageshop.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.hermitageshop.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ty0eh_22.png' %}" alt="">
                 </a>
             </li>
@@ -2180,7 +2182,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.vegas-matras.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.vegas-matras.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_8veid82h.png' %}" alt="">
                 </a>
             </li>
@@ -2188,7 +2190,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://doctorwool.com/?utm_source=cmonday.ru&amp;utm_medium=cmonday&amp;utm_campaign=cmonday2016" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://doctorwool.com/?utm_source=cmonday.ru&amp;utm_medium=cmonday&amp;utm_campaign=cmonday2016" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_7c8wsikf.png' %}" alt="">
                 </a>
             </li>
@@ -2196,7 +2198,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://lexand.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://lexand.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_r_j6sulo.png' %}" alt="">
                 </a>
             </li>
@@ -2204,7 +2206,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ad.admitad.com/g/d83ff14ff6a5912b6a7ba58c949569/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ad.admitad.com/g/d83ff14ff6a5912b6a7ba58c949569/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_qxsddzp9.png' %}" alt="">
                 </a>
             </li>
@@ -2212,7 +2214,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.isolux.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.isolux.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_2k0bs7ly.png' %}" alt="">
                 </a>
             </li>
@@ -2220,7 +2222,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.watches.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.watches.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_vwmds0np.png' %}" alt="">
                 </a>
             </li>
@@ -2228,7 +2230,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.my-karnaval.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.my-karnaval.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_fdhmikqe.png' %}" alt="">
                 </a>
             </li>
@@ -2236,7 +2238,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.vamsvet.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.vamsvet.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_xiplmsu2.png' %}" alt="">
                 </a>
             </li>
@@ -2244,7 +2246,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://kscom.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://kscom.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4cgg9maw.png' %}" alt="">
                 </a>
             </li>
@@ -2252,7 +2254,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.botavikos.club/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.botavikos.club/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_irpysr3k.png' %}" alt="">
                 </a>
             </li>
@@ -2260,7 +2262,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://www.bitrix24.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://www.bitrix24.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4luz76tj.png' %}" alt="">
                 </a>
             </li>
@@ -2268,7 +2270,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://amberholl.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=logo" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://amberholl.ru/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=logo" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_sp658isg.png' %}" alt="">
                 </a>
             </li>
@@ -2276,7 +2278,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.okfit.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.okfit.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4r8jrglx.png' %}" alt="">
                 </a>
             </li>
@@ -2284,7 +2286,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ecovita.ru/promo/cybermonday/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ecovita.ru/promo/cybermonday/?utm_source=cmonday&amp;utm_medium=banner&amp;utm_campaign=cmonday" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_88sm_4nh.png' %}" alt="">
                 </a>
             </li>
@@ -2292,7 +2294,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://youthstore.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://youthstore.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ggf510o8.png' %}" alt="">
                 </a>
             </li>
@@ -2300,7 +2302,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.yarkiy.ru/?utm_source=kiber_&amp;utm_medium=logo_&amp;utm_campaign=kiber_" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.yarkiy.ru/?utm_source=kiber_&amp;utm_medium=logo_&amp;utm_campaign=kiber_" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_ugqjc2e1.png' %}" alt="">
                 </a>
             </li>
@@ -2308,7 +2310,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.dommalera.ru/?utm_source=www_cmonday_ru&amp;utm_medium=kiberponedelnik&amp;utm_campaign=skidki" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.dommalera.ru/?utm_source=www_cmonday_ru&amp;utm_medium=kiberponedelnik&amp;utm_campaign=skidki" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_al2kcbv1.png' %}" alt="">
                 </a>
             </li>
@@ -2316,7 +2318,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.svetex.ru/?utm_source=admitad&amp;utm_medium=cpa&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_campaign=314811" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.svetex.ru/?utm_source=admitad&amp;utm_medium=cpa&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_campaign=314811" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_35izy04s.png' %}" alt="">
                 </a>
             </li>
@@ -2324,7 +2326,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://spim.ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://spim.ru/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_8y8_f0pb.png' %}" alt="">
                 </a>
             </li>
@@ -2332,7 +2334,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.ps-box.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.ps-box.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_vf8lbdza.png' %}" alt="">
                 </a>
             </li>
@@ -2340,7 +2342,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.yoox.com/ru/%D0%B4%D0%BB%D1%8F%20%D0%B6%D0%B5%D0%BD%D1%89%D0%B8%D0%BD?tp=214486&amp;utm_source=admitad_ru&amp;utm_medium=affiliazione_ru&amp;utm_campaign=cyber_monday&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.yoox.com/ru/%D0%B4%D0%BB%D1%8F%20%D0%B6%D0%B5%D0%BD%D1%89%D0%B8%D0%BD?tp=214486&amp;utm_source=admitad_ru&amp;utm_medium=affiliazione_ru&amp;utm_campaign=cyber_monday&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_dzktjhaq.png' %}" alt="">
                 </a>
             </li>
@@ -2348,7 +2350,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://tom-tailor-online.ru/?adm_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_source=cpamit_cpo&amp;utm_medium=partner_ban&amp;utm_campaign=cpamit_gentt&amp;utm_content=bannertt" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://tom-tailor-online.ru/?adm_uid=8eee3e46c2cc34a2b9e13429377922ce&amp;utm_source=cpamit_cpo&amp;utm_medium=partner_ban&amp;utm_campaign=cpamit_gentt&amp;utm_content=bannertt" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img__0bohgyr.jpg' %}" alt="">
                 </a>
             </li>
@@ -2356,7 +2358,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.bebakids.ru/?new_basket=y2&amp;utm_expid=26815732-156.ykZxYb3FSsiQjM8pMGJs6w.2&amp;utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=admitad&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.bebakids.ru/?new_basket=y2&amp;utm_expid=26815732-156.ykZxYb3FSsiQjM8pMGJs6w.2&amp;utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=admitad&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_st3rl0_5.png' %}" alt="">
                 </a>
             </li>
@@ -2364,7 +2366,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.gearbest.com/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.gearbest.com/?admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_q6s89z_p.png' %}" alt="">
                 </a>
             </li>
@@ -2372,7 +2374,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="https://ad.admitad.com/g/096074f47ba5912b6a7b1ffe6b23a4/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="https://ad.admitad.com/g/096074f47ba5912b6a7b1ffe6b23a4/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_4xtu7dgn.png' %}" alt="">
                 </a>
             </li>
@@ -2380,7 +2382,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.inksystem.biz/?utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=admitad_cpa&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.inksystem.biz/?utm_source=admitad&amp;utm_medium=cpa&amp;utm_campaign=admitad_cpa&amp;admitad_uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_txwt7qzu.png' %}" alt="">
                 </a>
             </li>
@@ -2388,7 +2390,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://podiumluxe.ru/" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://podiumluxe.ru/" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_wumvhvj_.png' %}" alt="">
                 </a>
             </li>
@@ -2396,7 +2398,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.mytoys.ru/?mc=ru_admitad&amp;utm_source=admitad&amp;utm_medium=affiliate&amp;utm_campaign=314811&amp;utm_content=&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.mytoys.ru/?mc=ru_admitad&amp;utm_source=admitad&amp;utm_medium=affiliate&amp;utm_campaign=314811&amp;utm_content=&amp;uid=8eee3e46c2cc34a2b9e13429377922ce" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_uud3eg3o.png' %}" alt="">
                 </a>
             </li>
@@ -2404,7 +2406,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://www.wildorchid.ru/ " target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://www.wildorchid.ru/ " target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_w9hrqwm4.jpg' %}" alt="">
                 </a>
             </li>
@@ -2412,7 +2414,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             {% comment %}
             <li class="shops-section__item">
-                <a class="shops-section__link" href="http://ormatek.com/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=logo" target="_blank" rel="noopener noreferrer">
+                <a class="shops-section__link" href="http://ormatek.com/?utm_source=cmonday&amp;utm_medium=cpc&amp;utm_campaign=logo" target="_blank">
                     <img class="shops-section__logo" src="{% static 'images/landing/p/img_elfsqx4y.png' %}" alt="">
                 </a>
             </li>
@@ -2432,12 +2434,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <div class="subscribe-section">
     <div class="container">
-        <div class="subscribe-section__title">
+        <h2 class="subscribe-section__title">
             Как узнать о лучших предложениях?
-        </div>
+        </h2>
 
         <p class="subscribe-section__text">
-            Подпишитесь на акции и получите приглашение на Черную пятницу, заходите на сайт<br>
+            Подпишитесь на акции и получите приглашение на Настоящую черную пятницу, заходите на сайт<br>
             24 ноября и покупайте со скидкой до 90%!
         </p>
 
@@ -2460,6 +2462,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             placeholder="Ваше имя"
                             name="name"
                             type="text"
+                            maxlength="255"
                             >
 
                         <input
@@ -2467,6 +2470,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             placeholder="E-mail"
                             name="email"
                             type="email"
+                            maxlength="255"
                             required
                             >
                     </div>
@@ -2494,10 +2498,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-buyer"></a>
 
     <div class="container">
-        <div class="discount-section__title">
+        <h2 class="discount-section__title">
             Как получить 90% скидки
             <small>на лучшие товары рунета?</small>
-        </div>
+        </h2>
 
         <ul class="discount-section__steps row">
             <li class="discount-section__step col-xs-4">
@@ -2584,7 +2588,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 <p class="party-section__text">
                     Если вы хотите стать партнером акции <br>
-                    и предложить свои скидки в «Черной пятнице»,<br>
+                    и предложить свои скидки в «Настоящей черной пятнице»,<br>
                     заполните заявку. Наши менеджеры свяжутся<br>
                     с вами в кратчайшее время.
                 </p>
@@ -2604,6 +2608,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     placeholder="Ваше имя"
                                     name="name"
                                     type="text"
+                                    maxlength="255"
                                     required
                                     >
                             </div>
@@ -2614,6 +2619,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     placeholder="Название организации"
                                     name="organizationName"
                                     type="text"
+                                    maxlength="255"
                                     required
                                     >
                             </div>
@@ -2624,6 +2630,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     placeholder="Контактный телефон"
                                     name="phone"
                                     type="text"
+                                    maxlength="255"
                                     required
                                     >
                             </div>
@@ -2634,6 +2641,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     placeholder="E-mail"
                                     name="email"
                                     type="email"
+                                    maxlength="255"
                                     required
                                     >
                             </div>
@@ -2672,11 +2680,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <footer class="site-footer">
     <div class="container">
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-xs-3">
                 <ul class="simple-menu">
                     <li class="simple-menu__item">
-                        <a class="simple-menu__link" href="#anchor-about" data-offset="60">
-                            О «Черной пятнице»
+                        <a class="simple-menu__link" href="#anchor-about" data-offset="0">
+                            О «Настоящей черной пятнице»
                         </a>
                     </li>
                     <li class="simple-menu__item">
@@ -2687,10 +2695,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </ul>
             </div>
 
-            <div class="col-xs-4">
+            <div class="col-xs-3">
                 <ul class="simple-menu">
                     <li class="simple-menu__item">
-                        <a class="simple-menu__link" href="#anchor-shops" data-offset="60">
+                        <a class="simple-menu__link" href="#anchor-shops" data-offset="30">
                             Участники
                         </a>
                     </li>
@@ -2712,12 +2720,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </span>
                     <ul class="footer-social__list">
                         <li class="footer-social__item">
-                            <a class="footer-social__link" href="https://vk.com/realblackfriday" target="_blank" rel="noopener noreferrer">
+                            <a class="footer-social__link" href="https://vk.com/realblackfriday" target="_blank">
                                 <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_vk.png' %}" alt="vkontakte">
                             </a>
                         </li>
                         <li class="footer-social__item">
-                            <a class="footer-social__link" href="https://www.facebook.com/Real-Black-Friday-1598467580447815/" target="_blank" rel="noopener noreferrer">
+                            <a class="footer-social__link" href="https://www.facebook.com/Real-Black-Friday-1598467580447815/" target="_blank">
                                 <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_fb.png' %}" alt="facebook">
                             </a>
                         </li>
@@ -2726,7 +2734,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <div class="col-xs-3">
-                <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
+                <a class="akit-copy" href="http://www.akit.ru" target="_blank">
                     <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
                 </a>
             </div>
@@ -2772,6 +2780,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             placeholder="Ваше имя"
                             name="name"
                             type="text"
+                            maxlength="255"
                             required
                             >
                     </div>
@@ -2782,6 +2791,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             placeholder="E-mail"
                             name="email"
                             type="email"
+                            maxlength="255"
                             required
                             >
                     </div>

@@ -102,7 +102,7 @@ import UserList from './admin/administrator/user-list.jsx';
 						onClick={this.handleAddUserClick}
 						type="button"
 						>
-						{'Добавить нового пользователя'}
+						{'Добавить'}
 					</button>
 
 					<hr/>

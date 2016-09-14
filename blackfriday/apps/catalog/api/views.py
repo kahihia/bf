@@ -1,10 +1,9 @@
-import json
-
 from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import list_route
-from djangorestframework_camel_case.util import underscoreize
+from rest_framework.exceptions import ValidationError
+from jsonschema import validate, ValidationError as JsonSchemaValidationError
 
 from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 from libs.api.exceptions import BadResponse
@@ -37,13 +36,38 @@ class ProductViewSet(
         self.queryset.filter(merchant_id=self.merchant.id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def validate_schema(self, data):
+        schema = {
+            'type': 'array',
+            'items': {
+                'type': 'object',
+                'properties': {
+                    'category': {'type': 'string'},
+                    'name': {'type': 'string'},
+                    'image': {'type': 'string'},
+                    'price': {'type': 'number'},
+                    'start_price': {'type': 'number'},
+                    'old_price': {'type': 'number'},
+                    'discount': {'type': 'number'},
+                    'country': {'type': 'string'},
+                    'brand': {'type': 'string'},
+                    'url': {'type': 'string'},
+                    'currency': {'type': 'string'},
+                    'is_teaser': {'type': 'boolean'},
+                    'is_teaser_on_main': {'type': 'boolean'},
+                }
+            }
+        }
+        try:
+            validate(data, schema)
+        except JsonSchemaValidationError:
+            raise ValidationError('invalid schema')
+
     def create(self, request, *args, **kwargs):
-        data = underscoreize(json.loads(request.body.decode()))
-        if not isinstance(data, list):
-            raise BadResponse('list of objects required')
+        self.validate_schema(request.data)
         result = []
         failed = False
-        for row in data:
+        for row in request.data:
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             if errors and not failed:
                 failed = True
@@ -71,9 +95,9 @@ class ProductViewSet(
         return Response(self.get_serializer(qs, many=True).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
+        self.validate_schema(request.data)
         instance = self.get_object()
-        request_data = underscoreize(json.loads(request.body.decode()))
-        cleaned_data, errors, warnings = FeedParser().parse_feed(request_data)
+        cleaned_data, errors, warnings = FeedParser().parse_feed(request.data)
         result = {
             'id': instance.id,
             'data': cleaned_data,
@@ -87,8 +111,8 @@ class ProductViewSet(
             cleaned_data,
             **{
                 'category': Category.objects.get(name=cleaned_data.get('category')),
-                'is_teaser': request_data.get('is_teaser', False),
-                'is_teaser_on_main': request_data.get('is_teaser_on_main', False),
+                'is_teaser': request.data.get('is_teaser', False),
+                'is_teaser_on_main': request.data.get('is_teaser_on_main', False),
             }
         )
         for field, value in data.items():
@@ -116,11 +140,11 @@ class ProductViewSet(
 
     @list_route(['POST'])
     def verify(self, request, **kwargs):
-        data = json.loads(request.body.decode())
-        if not isinstance(data, list):
+        self.validate_schema(request.data)
+        if not isinstance(request.data, list):
             raise BadResponse('list of objects required')
         result = []
-        for row in data:
+        for row in request.data:
             # in this case we get data from frontend, it could be parsed data on client side,
             # so we need save given identifiers
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)

@@ -1,7 +1,11 @@
+/* global window */
+
 import Cookie from 'js-cookie';
 
+const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
+
 export const REGEXP = {
-	password: /^\S{8,}$/,
+	password: /^[A-Za-z0-9]{8,}$/,
 	email: /\S@\S+\.\S{2,}/
 };
 
@@ -21,6 +25,8 @@ export const HELP_TEXT = {
 };
 
 export const TOKEN = {
-	recaptcha: '6LeECx8TAAAAAHBhJCluCug9AbZ7-z0cbXJZyNf9',
+	recaptcha: ENV.tokens && ENV.tokens.recaptcha,
 	csrftoken: Cookie.get('csrftoken')
 };
+
+export const CATEGORIES_URL = 'https://realblackfriday.ru/categories';

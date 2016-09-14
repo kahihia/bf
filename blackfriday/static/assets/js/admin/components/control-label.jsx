@@ -1,34 +1,39 @@
+/* eslint react/require-optimization: 0 */
+
 import React from 'react';
+import classNames from 'classnames';
 
-const ControlLabel = React.createClass({
-	propTypes: {
-		name: React.PropTypes.string.isRequired,
-		className: React.PropTypes.string,
-		required: React.PropTypes.bool
-	},
-
-	getDefaultProps() {
-		return {
-			required: false
-		};
-	},
+class ControlLabel extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+	}
 
 	render() {
-		let className = 'control-label';
-		if (this.props.className) {
-			className += ` ${this.props.className}`;
-		}
+		const {className, name, required} = this.props;
 
 		return (
-			<span className={className}>
-				{this.props.name}
-				{this.props.required ? (
-					<span>*</span>
+			<span className={classNames('control-label', className)}>
+				{name}
+
+				{required ? (
+					<span>
+						{'*'}
+					</span>
 				) : null}
+
 				{':'}
 			</span>
 		);
 	}
-});
+}
+ControlLabel.propTypes = {
+	className: React.PropTypes.string,
+	name: React.PropTypes.string.isRequired,
+	required: React.PropTypes.bool
+};
+ControlLabel.defaultProps = {
+	required: false
+};
 
 export default ControlLabel;

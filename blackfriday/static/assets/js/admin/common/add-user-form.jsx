@@ -1,22 +1,18 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
 import b from 'b_';
-import {processErrors} from '../utils.js';
 import {USER_ROLE, REGEXP, HELP_TEXT, TOKEN} from '../const.js';
-import FormHorizontalRow from '../components/form-horizontal-row.jsx';
+import Form from '../components/form.jsx';
 
 const DEFAULT_ROLE = 'advertiser';
 
-const AddUser = React.createClass({
-	propTypes: {
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class AddUser extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			fields: {
 				email: {
@@ -28,13 +24,18 @@ const AddUser = React.createClass({
 				name: {
 					label: 'Имя/Название',
 					value: '',
-					type: 'text',
 					required: false
 				},
 				password: {
 					label: 'Пароль',
 					value: '',
 					help: HELP_TEXT.password,
+					type: 'password',
+					required: true
+				},
+				passwordConfirm: {
+					label: 'Повторите пароль',
+					value: '',
 					type: 'password',
 					required: true
 				},
@@ -48,7 +49,9 @@ const AddUser = React.createClass({
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	requestAddUser() {
 		if (!this.validate(true)) {
@@ -57,11 +60,7 @@ const AddUser = React.createClass({
 
 		this.setState({isLoading: true});
 
-		const fields = this.state.fields;
-		const json = _.reduce(fields, (a, b, key) => {
-			a[key] = b.value;
-			return a;
-		}, {});
+		const json = this.serialize();
 
 		xhr({
 			url: '/api/users/',
@@ -77,15 +76,21 @@ const AddUser = React.createClass({
 				switch (resp.statusCode) {
 					case 201: {
 						toastr.success('Пользователь успешно добавлен');
+						this.requestVerification(data.id);
 						this.resetForm();
 
 						if (this.props.onSubmit) {
 							this.props.onSubmit(data);
 						}
+
+						break;
+					}
+					case 400: {
+						this.processErrors(data);
 						break;
 					}
 					default: {
-						processErrors(data);
+						toastr.error('Не удалось добавить пользователя');
 						break;
 					}
 				}
@@ -95,20 +100,31 @@ const AddUser = React.createClass({
 
 			toastr.error('Не удалось добавить пользователя');
 		});
-	},
+	}
 
-	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
-				}
-				return false;
+	requestVerification(userId) {
+		xhr({
+			url: `/api/users/${userId}/verification/`,
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			}
+		}, err => {
+			if (err) {
+				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});
+	}
+
+	validate(warnings) {
+		let isValid = super.validate(warnings);
+
+		if (isValid) {
+			isValid = this.checkEmail();
+			if (warnings && !isValid) {
+				toastr.warning('Неверный формат Email');
+			}
+		}
 
 		if (isValid) {
 			isValid = this.checkPassword();
@@ -117,60 +133,44 @@ const AddUser = React.createClass({
 			}
 		}
 
+		if (isValid) {
+			isValid = this.comparePasswords();
+			if (warnings && !isValid) {
+				toastr.warning('Пароли не совпадают');
+			}
+		}
+
 		return isValid;
-	},
+	}
+
+	checkEmail() {
+		return REGEXP.email.test(this.state.fields.email.value);
+	}
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
-	},
+	}
 
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	comparePasswords() {
+		const {password, passwordConfirm} = this.state.fields;
+
+		return password.value === passwordConfirm.value;
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestAddUser();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
-		});
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-
-		return (
-			<FormHorizontalRow
-				onChange={this.handleChange}
-				{...{name}}
-				{...field}
-				/>
-		);
-	},
-
-	updateData(name, value) {
-		const state = this.state;
-		state.fields[name].value = value;
-		this.forceUpdate();
-	},
+	}
 
 	render() {
 		return (
 			<div className={b('add-user')}>
 				<div className="modal-body">
-					<form
-						className="form-horizontal"
-						action=""
-						>
+					<form action="">
 						{this.buildRow('email')}
 						{this.buildRow('name')}
 						{this.buildRow('password')}
+						{this.buildRow('passwordConfirm')}
 						{this.buildRow('role')}
 					</form>
 				</div>
@@ -188,7 +188,7 @@ const AddUser = React.createClass({
 						className="btn btn-primary"
 						onClick={this.handleClickSubmit}
 						disabled={this.state.isLoading || !this.validate()}
-						type="submit"
+						type="button"
 						>
 						{'Добавить'}
 					</button>
@@ -196,6 +196,10 @@ const AddUser = React.createClass({
 			</div>
 		);
 	}
-});
+}
+AddUser.propTypes = {
+};
+AddUser.defaultProps = {
+};
 
 export default AddUser;

@@ -4,43 +4,37 @@
 import React from 'react';
 import xhr from 'xhr';
 import {HEAD_BASIS, TOKEN} from '../const.js';
-import FormRow from '../components/form-row.jsx';
-import FormCol from '../components/form-col.jsx';
+import Form from '../components/form.jsx';
 
 const PHONE_MASK = '+7 (111) 111-11-11';
-const DEFAULT_BASIS = '0';
+const DEFAULT_BASIS = 0;
 
-const MerchantProfileForm = React.createClass({
-	propTypes: {
-		userId: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.number
-		]).isRequired,
-		readOnly: React.PropTypes.bool,
-		onSubmit: React.PropTypes.func,
-		isNew: React.PropTypes.bool
-	},
-
-	getInitialState() {
-		return {
+class MerchantProfileForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			profileId: '',
 			fields: {
 				account: {
 					label: 'Расчётный счёт',
-					value: ''
+					value: '',
+					required: true
 				},
 				address: {
 					label: 'Фактический адрес',
-					value: ''
+					value: '',
+					required: true
 				},
 				bank: {
 					label: 'Наименование банка',
-					value: ''
+					value: '',
+					required: true
 				},
 				bik: {
 					label: 'БИК',
-					value: ''
+					value: '',
+					required: true
 				},
 				contactName: {
 					label: 'ФИО ответственного лица',
@@ -50,22 +44,27 @@ const MerchantProfileForm = React.createClass({
 				contactPhone: {
 					label: 'Сотовый тел. отв. лица',
 					value: '',
-					required: true
+					required: true,
+					mask: PHONE_MASK
 				},
 				headAppointment: {
 					label: 'Должность руководителя',
-					value: ''
+					value: '',
+					required: true
 				},
 				headBasis: {
 					label: 'На основании чего действует руководитель',
 					value: DEFAULT_BASIS,
 					defaultValue: DEFAULT_BASIS,
+					valueType: 'Number',
 					options: HEAD_BASIS,
-					type: 'select'
+					type: 'select',
+					required: true
 				},
 				headName: {
 					label: 'ФИО руководителя',
-					value: ''
+					value: '',
+					required: true
 				},
 				inn: {
 					label: 'ИНН',
@@ -74,7 +73,8 @@ const MerchantProfileForm = React.createClass({
 				},
 				korr: {
 					label: 'Корр. счёт',
-					value: ''
+					value: '',
+					required: true
 				},
 				kpp: {
 					label: 'КПП',
@@ -89,27 +89,46 @@ const MerchantProfileForm = React.createClass({
 				name: {
 					label: 'Наименование юридического лица',
 					value: '',
-					required: true
+					required: true,
+					excluded: true
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	componentDidMount() {
-		if (this.props.isNew) {
+		const props = this.props;
+
+		if (props.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = props.userName;
+				return previousState;
+			});
+		}
+
+		if (props.isNew) {
 			return;
 		}
 
 		this.requestProfileUser();
-	},
+	}
 
-	componentWillReceiveProps() {
-		if (this.props.isNew) {
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.userName) {
+			this.setState(previousState => {
+				previousState.fields.name.value = nextProps.userName;
+				return previousState;
+			});
+		}
+
+		if (nextProps.isNew) {
 			return;
 		}
 
 		this.requestProfileUser();
-	},
+	}
 
 	// Get profile info
 	requestProfileUser() {
@@ -134,7 +153,14 @@ const MerchantProfileForm = React.createClass({
 
 					if (data.profile) {
 						Object.keys(state.fields).forEach(key => {
-							state.fields[key].value = data.profile[key] || '';
+							const field = state.fields[key];
+							let value = data.profile[key];
+							if (_.isUndefined(value) || _.isNull(value)) {
+								if (!_.isUndefined(field.defaultValue)) {
+									value = field.defaultValue;
+								}
+							}
+							field.value = value;
 						});
 					}
 
@@ -148,7 +174,7 @@ const MerchantProfileForm = React.createClass({
 				toastr.error('Не удалось получить реквизиты рекламодателя');
 			}
 		});
-	},
+	}
 
 	// Update profile info
 	requestProfileUserSave() {
@@ -158,15 +184,10 @@ const MerchantProfileForm = React.createClass({
 
 		this.setState({isLoading: true});
 
-		const data = this.state.fields;
+		const fields = this.state.fields;
 		const json = {
-			name: data.name.value,
-			profile: Object.keys(data).reduce((a, b) => {
-				if (b !== 'name') {
-					a[b] = data[b].value || '';
-				}
-				return a;
-			}, {})
+			name: fields.name.value,
+			profile: this.serialize()
 		};
 
 		xhr({
@@ -176,19 +197,21 @@ const MerchantProfileForm = React.createClass({
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
-		}, (err, resp) => {
+		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
 		});
-	},
+	}
 
 	// Create profile info
 	requestProfileUserCreate() {
@@ -198,15 +221,10 @@ const MerchantProfileForm = React.createClass({
 
 		this.setState({isLoading: true});
 
-		const data = this.state.fields;
+		const fields = this.state.fields;
 		const json = {
-			name: data.name.value,
-			profile: Object.keys(data).reduce((a, b) => {
-				if (b !== 'name') {
-					a[b] = data[b].value || '';
-				}
-				return a;
-			}, {})
+			name: fields.name.value,
+			profile: this.serialize()
 		};
 
 		xhr({
@@ -216,39 +234,21 @@ const MerchantProfileForm = React.createClass({
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
-		}, (err, resp) => {
+		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Реквизиты рекламодателя успешно обновлены');
 				if (this.props.onSubmit) {
-					this.props.onSubmit();
+					this.props.onSubmit(data);
 				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось обновить реквизиты рекламодателя');
 			}
 		});
-	},
-
-	validate(warnings) {
-		let isValid = true;
-
-		_.forEach(this.state.fields, field => {
-			if (field.required && !field.value) {
-				isValid = false;
-				if (warnings) {
-					toastr.warning(`Заполните поле "${field.label}"`);
-				}
-				return false;
-			}
-		});
-
-		return isValid;
-	},
-
-	handleChange(e) {
-		this.updateData(e.target.name, e.target.value);
-	},
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
@@ -258,51 +258,12 @@ const MerchantProfileForm = React.createClass({
 		} else {
 			this.requestProfileUserSave();
 		}
-	},
-
-	updateData(name, value) {
-		const state = this.state;
-		state.fields[name].value = value;
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-		let mask;
-
-		if (name === 'contactPhone') {
-			mask = PHONE_MASK;
-		}
-
-		return (
-			<FormRow
-				value={this.state.fields[name].value}
-				onChange={this.handleChange}
-				readOnly={this.props.readOnly}
-				{...{name, mask}}
-				{...field}
-				/>
-		);
-	},
-
-	buildCol(name) {
-		const field = this.state.fields[name];
-
-		return (
-			<FormCol
-				className="col-xs-6"
-				value={this.state.fields[name].value}
-				onChange={this.handleChange}
-				readOnly={this.props.readOnly}
-				{...{name}}
-				{...field}
-				/>
-		);
-	},
+	}
 
 	render() {
 		const {profileId, isLoading} = this.state;
 		const {userId, readOnly} = this.props;
+		const isValid = this.validate();
 
 		return (
 			<form
@@ -346,9 +307,9 @@ const MerchantProfileForm = React.createClass({
 				{readOnly ? null : (
 					<div className="form-group">
 						<button
-							className="btn btn-primary btn-lg"
+							className="btn btn-primary"
 							onClick={this.handleClickSubmit}
-							disabled={isLoading || !this.validate()}
+							disabled={isLoading || !isValid}
 							type="submit"
 							>
 							{'Сохранить'}
@@ -358,6 +319,16 @@ const MerchantProfileForm = React.createClass({
 			</form>
 		);
 	}
-});
+}
+MerchantProfileForm.propTypes = {
+	userId: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired,
+	userName: React.PropTypes.string,
+	isNew: React.PropTypes.bool
+};
+MerchantProfileForm.defaultProps = {
+};
 
 export default MerchantProfileForm;

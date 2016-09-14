@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 import csv
 from io import StringIO
 
+from rest_framework.exceptions import ValidationError
+
 
 COLUMNS_MAPPING = {
     'name': 'name',
@@ -20,28 +22,32 @@ COLUMNS_MAPPING = {
 
 
 def csv_dict_reader(f):
-    data = StringIO(f.read().decode('utf-8'))
-    return (
-        {
-            COLUMNS_MAPPING[key]: value for key, value in row.items() if key in COLUMNS_MAPPING
-        } for row in csv.DictReader(data, delimiter=';', quotechar='"')
-    )
+    try:
+        data = StringIO(f.read().decode('utf-8'))
+        return (
+            {
+                COLUMNS_MAPPING[key]: value for key, value in row.items() if key in COLUMNS_MAPPING
+            } for row in csv.DictReader(data, delimiter=';', quotechar='"')
+        )
+    except (csv.Error, UnicodeDecodeError):
+        raise ValidationError('некорректный формат данных')
 
 
 def xls_dict_reader(f, sheet_index=0):
-
-    book = xlrd.open_workbook(file_contents=f.read())
-    sheet = book.sheet_by_index(sheet_index)
-    headers = dict(
-        (i, sheet.cell_value(0, i)) for i in range(sheet.ncols)
-    )
-
-    return (
-        dict(
-            (COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
-            for column in headers if headers[column] in COLUMNS_MAPPING
-        ) for row in range(1, sheet.nrows)
-    )
+    try:
+        book = xlrd.open_workbook(file_contents=f.read())
+        sheet = book.sheet_by_index(sheet_index)
+        headers = dict(
+            (i, sheet.cell_value(0, i)) for i in range(sheet.ncols)
+        )
+        return (
+            dict(
+                (COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
+                for column in headers if headers[column] in COLUMNS_MAPPING
+            ) for row in range(1, sheet.nrows)
+        )
+    except (xlrd.XLRDError, UnicodeDecodeError):
+        raise ValidationError('некорректный формат данных')
 
 
 def yml_dict_reader(f):

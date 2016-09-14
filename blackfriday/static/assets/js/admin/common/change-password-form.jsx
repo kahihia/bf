@@ -1,22 +1,15 @@
-/* global toastr _ */
+/* global toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
-import FormRow from '../components/form-row.jsx';
+import Form from '../components/form.jsx';
 
-const ChangePasswordForm = React.createClass({
-	propTypes: {
-		userId: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.number
-		]).isRequired,
-		onSubmit: React.PropTypes.func
-	},
-
-	getInitialState() {
-		return {
+class ChangePasswordForm extends Form {
+	constructor(props) {
+		super(props);
+		this.state = {
 			isLoading: false,
 			fields: {
 				password: {
@@ -34,19 +27,13 @@ const ChangePasswordForm = React.createClass({
 				}
 			}
 		};
-	},
+
+		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
 
 	componentWillReceiveProps() {
 		this.resetForm();
-	},
-
-	resetForm() {
-		const fields = this.state.fields;
-		_.forEach(fields, field => {
-			field.value = field.defaultValue || '';
-		});
-		this.forceUpdate();
-	},
+	}
 
 	requestChangePassword() {
 		if (!this.validate()) {
@@ -78,54 +65,31 @@ const ChangePasswordForm = React.createClass({
 					}
 				}
 			} else if (resp.statusCode === 400) {
-				toastr.warning('Неверный формат пароля');
+				this.processErrors(data);
 			} else {
 				toastr.error('Не удалось изменить пароль');
 			}
 		});
-	},
+	}
 
 	validate() {
 		return this.checkPassword() && this.comparePasswords();
-	},
+	}
 
 	checkPassword() {
 		return REGEXP.password.test(this.state.fields.password.value);
-	},
+	}
 
 	comparePasswords() {
 		const {password, passwordConfirm} = this.state.fields;
 
 		return password.value === passwordConfirm.value;
-	},
-
-	handleChange(e) {
-		const target = e.target;
-		this.updateData(target.name, target.value);
-	},
+	}
 
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestChangePassword();
-	},
-
-	updateData(name, value) {
-		const fields = this.state.fields;
-		fields[name].value = value;
-		this.forceUpdate();
-	},
-
-	buildRow(name) {
-		const field = this.state.fields[name];
-		const {value, label, help, type, required} = field;
-
-		return (
-			<FormRow
-				onChange={this.handleChange}
-				{...{value, name, label, help, type, required}}
-				/>
-		);
-	},
+	}
 
 	render() {
 		return (
@@ -158,6 +122,14 @@ const ChangePasswordForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+ChangePasswordForm.propTypes = {
+	userId: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired
+};
+ChangePasswordForm.defaultProps = {
+};
 
 export default ChangePasswordForm;

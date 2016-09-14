@@ -88,6 +88,11 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = (
+    'apps.users.backends.ForceLoginBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 LOGIN_URL = '/admin/login/'
 
 VERIFICATION = {
@@ -102,4 +107,8 @@ MANAGERS = []
 CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')
 DEFAULT_CATEGORY_SLUG = 'raznoe'
 DEFAULT_CATEGORY_NAME = 'Разное'
+
 TEST_RUNNER = 'libs.testing.runner.PytestTestRunner'
+LOGIN_REDIRECT_URL = '/admin/'
+
+SITE_URL = 'https://realblackfriday.ru'

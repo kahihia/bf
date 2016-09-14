@@ -17,7 +17,7 @@ class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                         mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated,
                           IsOwner & action_permission('retrieve', 'update', 'partial_update', 'current') | IsAdmin]
-    queryset = User.objects.filter(profile__isnull=False, is_active=True)
+    queryset = User.objects.filter(profile__isnull=False)
     serializer_class = AdvertiserSerializer
     filter_class = AdvertiserFilter
 
@@ -34,7 +34,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
         IsAdvertiser & IsOwner & action_permission(
             'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation'
-        ) | IsManager & ReadOnly | IsAdmin
+        ) |
+        IsManager & action_permission(
+            'list', 'retrieve', 'moderation'
+        ) |
+        IsAdmin
     ]
 
     def get_queryset(self):
@@ -48,7 +52,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'create': MerchantCreateSerializer,
             'list': MerchantListSerializer,
             'update': MerchantUpdateSerializer,
-            'partial_update': MerchantUpdateSerializer
+            'partial_update': MerchantUpdateSerializer,
+            'moderation': MerchantModerationSerializer
         }.get(self.action, MerchantSerializer)
 
     @detail_route(methods=['patch', 'put', 'get'])
@@ -71,7 +76,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['patch', 'put'])
     def moderation(self, request, *args, **kwargs):
         obj = self.get_object()
-        serializer = MerchantModerationSerializer(obj, data=request.data)
+        serializer = self.get_serializer(obj, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
