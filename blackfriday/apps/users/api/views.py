@@ -113,7 +113,7 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         send_verification(self.request, instance)
 
 
-class SupportRequewestViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class SupportRequestViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdvertiser]
     serializer_class = SupportRequestSerializer
 
