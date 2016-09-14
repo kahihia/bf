@@ -49,3 +49,4 @@ DATABASES = {
 # ReCaptcha
 #RECAPTCHA_SITE_KEY = '...'
 #RECAPTCHA_SECRET_KEY = '...'
+#SUPPORT_EMAIL = 'help@realblackfriday.com'
