@@ -11,12 +11,6 @@ import ReactDOM from 'react-dom';
 
 	const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
-	const merchantShopList = document.getElementById('merchant-shop-list');
-	if (merchantShopList) {
-		let MerchantShopList = require('./admin/advertiser/merchant-shop-list');
-		ReactDOM.render(<MerchantShopList/>, merchantShopList);
-	}
-
 	const pageAddShop = document.getElementById('page-add-shop');
 	if (pageAddShop) {
 		let PageAddShop = require('./admin/advertiser/page-add-shop');

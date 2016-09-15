@@ -5,10 +5,16 @@
 	border: 1px solid #eaecee
 	padding: pad 10px pad (pad + logoWidth + logoMarginRight)
 
-	&__logo
+	&__logo-placeholder
+		display: inline-block
 		width: logoWidth
+		min-height: 90px
 		float: left
 		margin-left: -(logoWidth + logoMarginRight)
+		background-color: #eaecee
+
+	&__logo
+		width: 100%
 		height: auto
 
 	&__name
@@ -19,32 +25,6 @@
 		white-space: nowrap
 		overflow: hidden
 		width: 100%
-
-	&__props
-		font-size: 14px
-
-		.props__item
-			text-overflow: ellipsis
-			white-space: nowrap
-			overflow: hidden
-			width: 100%
-
-			+ .props__item
-				margin-top: 3px
-
-		.props__label
-			color: #949494
-			margin-right: 5px
-
-		.props__value
-			color: #545454
-			font-weight: bold
-
-			.text-danger
-				margin-right: 3px
-
-		a.props__value
-			color: #0089ff
 
 	&__action-list
 		margin-top: 12px

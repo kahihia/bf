@@ -20,6 +20,19 @@ export const HEAD_BASIS = {
 	1: 'На основании доверенности'
 };
 
+export const PAYMENT_STATUS = {
+	0: 'Не оплачен',
+	1: 'Оплачен',
+	2: 'Отменён'
+};
+
+export const MODERATION_STATUS = {
+	0: 'Не модерировался',
+	1: 'Ожидает модерации',
+	2: 'Подтверждён',
+	3: 'Отклонён'
+};
+
 export const HELP_TEXT = {
 	password: 'Не менее 8 симв., латинские буквы или цифры.'
 };

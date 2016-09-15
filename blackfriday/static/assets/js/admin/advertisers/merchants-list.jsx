@@ -1,277 +1,226 @@
-/* global window, toastr, FormData, _ */
-/* eslint-disable no-alert */
-/* eslint camelcase: ["error", {properties: "never"}] */
-
 import React from 'react';
-import xhr from 'xhr';
+import b from 'b_';
 import {hasRole} from '../utils.js';
-import Icon from '../components/icon.jsx';
-import FormRow from '../components/form-row.jsx';
-import Radio from '../components/radio.jsx';
-import Select from '../components/select.jsx';
-import SimpleShopCard from '../advertiser/simple-shop-card.jsx';
+import Glyphicon from '../components/glyphicon.jsx';
+import MerchantProps from './merchant-props.jsx';
 
-function MerchantAddShop() {
-	return (
-		<a
-			className="merchant-add-shop"
-			href="/admin/merchant/create"
-			>
-			<Icon name="merchant-add-shop"/>
-			<span className="merchant-add-shop__text">
-				{'Добавить магазин'}
-			</span>
-		</a>
-	);
-}
+class MerchantsList extends React.Component {
+	constructor(props) {
+		super(props);
 
-const MerchantsList = React.createClass({
-	getInitialState() {
-		return {
-			data: [],
-			availablePromo: [],
-			filterByName: '',
-			filterByStatus: '',
-			filterByDate: 'ASC',
-			filterByPromo: ''
-		};
-	},
+		this.handleClickMerchantDelete = this.handleClickMerchantDelete.bind(this);
+		this.handleClickMerchantEdit = this.handleClickMerchantEdit.bind(this);
+		this.handleClickMerchantHide = this.handleClickMerchantHide.bind(this);
+	}
 
-	componentDidMount() {
-		xhr({
-			url: '/admin/merchants',
-			json: true
-		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				let availablePromo = [];
-				if (hasRole('admin') || hasRole('manager')) {
-					availablePromo = this.collectAvailablePromo(data);
-				}
-				this.setState({data, availablePromo});
-			} else {
-				toastr.error('Не удалось получить список продавцов');
-			}
-		});
-	},
+	handleClickMerchantDelete(merchantId) {
+		this.props.onClickMerchantDelete(merchantId);
+	}
 
-	collectAvailablePromo(data) {
-		return data.reduce((a, b) => {
-			const promo = b.promo_name;
-			if (promo && a.indexOf(promo) === -1) {
-				a.push(promo);
-			}
+	handleClickMerchantEdit(merchantId) {
+		this.props.onClickMerchantEdit(merchantId);
+	}
 
-			return a;
-		}, ['']).map(a => {
-			return {
-				name: a,
-				id: a
-			};
-		});
-	},
-
-	handleClickHideMerchantContent(merchantId, isActive) {
-		if (window.confirm(isActive ? 'Показывать контент продавца?' : 'Скрыть контент продавца?')) {
-			this.requestHideMerchantContent(merchantId, isActive);
-		}
-	},
-
-	requestHideMerchantContent(merchantId, isActive) {
-		const formData = new FormData();
-		formData.append('id', merchantId);
-		formData.append('active', isActive);
-
-		xhr({
-			url: '/admin/merchant/save',
-			method: 'POST',
-			body: formData
-		}, (err, resp) => {
-			if (!err && resp.statusCode === 200) {
-				toastr.success('Настройки сохранены');
-				const merchant = this.getMerchantById(merchantId);
-				merchant.merchant_active = isActive;
-				this.forceUpdate();
-			} else {
-				toastr.error('Не удалось обновить настройки');
-			}
-		});
-	},
-
-	getMerchantById(id) {
-		return _.find(this.state.data, {id});
-	},
-
-	handleChangeFilterByName(e) {
-		this.setState({filterByName: e.target.value});
-	},
-
-	handleChangeFilterByStatus(value) {
-		this.setState({filterByStatus: value});
-	},
-
-	handleChangeFilterByDate(value) {
-		this.setState({filterByDate: value});
-	},
-
-	handleChangeFilterByPromo(value) {
-		this.setState({filterByPromo: value});
-	},
-
-	filterByName(data) {
-		const {filterByName} = this.state;
-		if (!filterByName) {
-			return data;
-		}
-
-		return _.filter(data, item => {
-			const name = item.merchant_name;
-			if (!name) {
-				return false;
-			}
-			return name.toLowerCase().indexOf(filterByName.toLowerCase()) > -1;
-		});
-	},
-
-	filterByStatus(data) {
-		const {filterByStatus} = this.state;
-		if (!filterByStatus) {
-			return data;
-		}
-
-		return _.filter(data, item => {
-			return item.invoice_status === filterByStatus;
-		});
-	},
-
-	filterByDate(data) {
-		const {filterByDate} = this.state;
-		if (!filterByDate) {
-			return data;
-		}
-
-		if (filterByDate === 'DESC') {
-			return _.clone(data).reverse();
-		}
-		return data;
-	},
-
-	filterByPromo(data) {
-		const {filterByPromo} = this.state;
-		if (!filterByPromo) {
-			return data;
-		}
-
-		return _.filter(data, item => {
-			return item.promo_name === filterByPromo;
-		});
-	},
+	handleClickMerchantHide(merchantId, isActive) {
+		this.props.onClickMerchantHide(merchantId, isActive);
+	}
 
 	render() {
-		const {data} = this.state;
-
-		let filteredData = data;
-		filteredData = this.filterByName(filteredData);
-		filteredData = this.filterByStatus(filteredData);
-		filteredData = this.filterByDate(filteredData);
-		filteredData = this.filterByPromo(filteredData);
+		const {merchants} = this.props;
 
 		return (
-			<div className="">
-				{hasRole('admin') || hasRole('manager') ? (
-					<div className="form">
-						<div className="row">
-							<div className="col-sm-3">
-								<FormRow
-									label="Название"
-									value={this.state.filterByName}
-									onChange={this.handleChangeFilterByName}
+			<div className={b('merchants-list')}>
+				<table className={'table table-hover ' + b('merchants-list', 'table')}>
+					<thead>
+						<tr>
+							<th className={b('merchants-list', 'table-th', {name: 'logo'})}>
+								{'Логотип'}
+							</th>
+
+							<th className={b('merchants-list', 'table-th', {name: 'name'})}>
+								{'Название'}
+							</th>
+
+							<th className={b('merchants-list', 'table-th', {name: 'advertiser'})}>
+								{'Рекламодатель'}
+							</th>
+
+							<th className={b('merchants-list', 'table-th', {name: 'data'})}>
+								{'Данные'}
+							</th>
+
+							<th className={b('merchants-list', 'table-th', {name: 'action'})}/>
+						</tr>
+					</thead>
+
+					<tbody>
+						{merchants.map(item => {
+							return (
+								<MerchantsListItem
+									key={item.id}
+									onClickMerchantDelete={this.handleClickMerchantDelete}
+									onClickMerchantEdit={this.handleClickMerchantEdit}
+									onClickMerchantHide={this.handleClickMerchantHide}
+									{...item}
 									/>
-							</div>
-
-							<div className="col-sm-3">
-								<div className="form-group">
-									<div className="control-label">
-										Дата создания
-									</div>
-									<Radio
-										name="Сначала новые"
-										value="ASC"
-										isChecked={this.state.filterByDate === 'ASC'}
-										onChange={this.handleChangeFilterByDate}
-										/>
-									<Radio
-										name="Сначала старые"
-										value="DESC"
-										isChecked={this.state.filterByDate === 'DESC'}
-										onChange={this.handleChangeFilterByDate}
-										/>
-								</div>
-							</div>
-
-							<div className="col-sm-3">
-								<div className="form-group">
-									<div className="control-label">
-										Статус оплаты
-									</div>
-									<Radio
-										name="Все"
-										value=""
-										isChecked={this.state.filterByStatus === ''}
-										onChange={this.handleChangeFilterByStatus}
-										/>
-									<Radio
-										name="Оплачен"
-										value="paid"
-										isChecked={this.state.filterByStatus === 'paid'}
-										onChange={this.handleChangeFilterByStatus}
-										/>
-									<Radio
-										name="Не оплачен"
-										value="waiting"
-										isChecked={this.state.filterByStatus === 'waiting'}
-										onChange={this.handleChangeFilterByStatus}
-										/>
-								</div>
-							</div>
-
-							<div className="col-sm-3">
-								<div className="form-group">
-									<div className="control-label">
-										Тариф
-									</div>
-									<Select
-										options={this.state.availablePromo}
-										selected={this.state.filterByPromo}
-										onChange={this.handleChangeFilterByPromo}
-										/>
-								</div>
-							</div>
-						</div>
-					</div>
-				) : null}
-
-				<div className="merchant-shop-card-list">
-					<div className="merchant-shop-card-list__item">
-						<MerchantAddShop/>
-					</div>
-
-					{filteredData.map(model => {
-						return (
-							<div
-								key={model.id}
-								className="merchant-shop-card-list__item"
-								>
-								<SimpleShopCard
-									data={model}
-									onClickHideContent={this.handleClickHideMerchantContent}
-									/>
-							</div>
-						);
-					})}
-				</div>
+							);
+						})}
+					</tbody>
+				</table>
 			</div>
 		);
 	}
-});
+}
+MerchantsList.propTypes = {
+	merchants: React.PropTypes.array,
+	onClickMerchantDelete: React.PropTypes.func,
+	onClickMerchantEdit: React.PropTypes.func,
+	onClickMerchantHide: React.PropTypes.func
+};
+MerchantsList.defaultProps = {
+};
 
 export default MerchantsList;
+
+const MerchantsListItem = React.createClass({
+	propTypes: {
+		id: React.PropTypes.number,
+		image: React.PropTypes.string,
+		isActive: React.PropTypes.bool,
+		isEditable: React.PropTypes.bool,
+		isPreviewable: React.PropTypes.bool,
+		link: React.PropTypes.string,
+		moderation: React.PropTypes.object,
+		moderationStatus: React.PropTypes.number,
+		name: React.PropTypes.string,
+		onClickMerchantDelete: React.PropTypes.func,
+		onClickMerchantEdit: React.PropTypes.func,
+		onClickMerchantHide: React.PropTypes.func,
+		optionsCount: React.PropTypes.number,
+		paymentStatus: React.PropTypes.number,
+		previewUrl: React.PropTypes.string,
+		promo: React.PropTypes.string
+	},
+
+	getDefaultProps() {
+		return {};
+	},
+
+	handleClickMerchantDelete() {
+		this.props.onClickMerchantDelete(this.props.id);
+	},
+
+	handleClickMerchantEdit() {
+		this.props.onClickMerchantEdit(this.props.id);
+	},
+
+	handleClickMerchantHide() {
+		this.props.onClickMerchantHide(this.props.id, !this.props.isActive);
+	},
+
+	render() {
+		const {
+			id,
+			image,
+			isActive,
+			isEditable,
+			isPreviewable,
+			link,
+			moderationStatus,
+			name,
+			optionsCount,
+			paymentStatus,
+			previewUrl,
+			promo
+		} = this.props;
+
+		return (
+			<tr>
+				<td className={b('merchants-list', 'table-td', {name: 'logo'})}>
+					<a href={link}>
+						<span className={b('merchants-list', 'logo-placeholder')}>
+							{image ? (
+								<img
+									src={image}
+									alt=""
+									/>
+							) : null}
+						</span>
+					</a>
+				</td>
+
+				<td className={b('merchants-list', 'table-td', {name: 'name'})}>
+					{name}
+				</td>
+
+				<td className={b('merchants-list', 'table-td', {name: 'advertiser'})}>
+					{'advertiser'}
+				</td>
+
+				<td className={b('merchants-list', 'table-td', {name: 'data'})}>
+					<MerchantProps
+						{...{
+							id,
+							isEditable,
+							moderationStatus,
+							optionsCount,
+							paymentStatus,
+							promo
+						}}
+						/>
+				</td>
+
+				<td className={b('merchants-list', 'table-td', {name: 'action'})}>
+					{isEditable ? (
+						<button
+							className="btn btn-sm"
+							onClick={this.handleClickMerchantEdit}
+							title="Редактирование"
+							type="button"
+							>
+							<Glyphicon name="pencil"/>
+						</button>
+					) : null}
+
+					{isPreviewable && previewUrl ? (
+						<a
+							className="btn btn-sm"
+							href={previewUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							title="Предпросмотр"
+							>
+							<Glyphicon name="eye-open"/>
+						</a>
+					) : null}
+
+					{hasRole('admin') ? (
+						<button
+							className="btn btn-sm"
+							onClick={this.handleClickMerchantHide}
+							title={isActive ? 'Скрыть загруженный контент' : 'Показывать загруженный контент'}
+							type="button"
+							>
+							<Glyphicon
+								name="eye-close"
+								className={isActive ? 'text-muted' : 'text-danger'}
+								/>
+						</button>
+					) : null}
+
+					<button
+						className="btn btn-sm"
+						onClick={this.handleClickMerchantDelete}
+						title="Удалить магазин"
+						type="button"
+						>
+						<Glyphicon
+							name="remove"
+							className="text-danger"
+							/>
+					</button>
+				</td>
+			</tr>
+		);
+	}
+});
