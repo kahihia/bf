@@ -72,35 +72,56 @@
                         {# Admin Menu #}
                         {% if user.role == 'admin' %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">Магазины</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">
+                                    Магазины
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">Рекламодатели</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">
+                                    Рекламодатели
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">
+                                    Пользователи
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'catalog:categories-list' %}">Категории</a>
+                                <a class="simple-menu__link" href="{% url 'catalog:categories-list' %}">
+                                    Категории
+                                </a>
                             </li>
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">Магазины</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">
+                                    Магазины
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">Рекламодатели</a>
+                                <a class="simple-menu__link" href="{% url 'advertisers:advertisers-list' %}">
+                                    Рекламодатели
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'users:list' %}">Пользователи</a>
+                                <a class="simple-menu__link" href="{% url 'users:list' %}">
+                                    Пользователи
+                                </a>
                             </li>
                             <li class="simple-menu__item">
-                                <a class="simple-menu__link" href="{% url 'catalog:categories-list' %}">Категории</a>
+                                <a class="simple-menu__link" href="{% url 'catalog:categories-list' %}">
+                                    Категории
+                                </a>
                             </li>
 
                         {# Advertiser Menu #}
                         {% elif user.role == 'advertiser' %}
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'advertisers:merchants-list' %}">
+                                    Магазины
+                                </a>
+                            </li>
                         {% endif %}
                     {% endblock navbar %}
                 </ul>
@@ -122,9 +143,16 @@
 
         <div class="site-sidebar__footer">
             <footer class="site-footer">
-                <a class="site-footer__feedback" href="#" data-toggle="modal" data-target="#feedbackModal">
+                {% if user.role == 'advertiser' %}
+                <a
+                    class="site-footer__feedback"
+                    href="#"
+                    data-toggle="modal"
+                    data-target="#feedback-modal"
+                    >
                     Служба поддержки
                 </a>
+                {% endif %}
 
                 <a class="akit-copy" href="http://www.akit.ru/" target="_blank" rel="noopener noreferrer">
                     <img class="akit-copy__logo" src="{% static 'images/admin/akit-logo.png' %}" alt="retail hotline" title="" />Ассоциация компаний интернет-торговли
@@ -144,8 +172,10 @@
     </main>
 </div>
 
-{# Форма обратной связи #}
-{% include "includes/feedback-modal.html" %}
+{% if user.role == 'advertiser' %}
+    {# Форма обратной связи #}
+    {% include "includes/feedback-modal.html" %}
+{% endif %}
 
 <script>
 $(function () {

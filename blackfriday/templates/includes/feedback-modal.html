@@ -1,15 +1,15 @@
 <div
     class="modal fade"
-    id="feedbackModal"
+    id="feedback-modal"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="feedbackModalLabel"
+    aria-labelledby="feedback-modalLabel"
     >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="feedbackModalLabel">
+                <h4 class="modal-title" id="feedback-modal-label">
                     Служба поддержки
                 </h4>
             </div>
@@ -17,10 +17,11 @@
             <div class="modal-body">
                 <form
                     class=""
-                    id="feedbackForm"
-                    action="/admin/help_request"
+                    id="feedback-form"
+                    action="/api/support/"
                     method="POST"
                     >
+                    {% csrf_token %}
                     <label class="form-group">
                         <span class="control-label">
                             ФИО<span class="">*</span>
@@ -53,7 +54,7 @@
                             Сообщение<span class="">*</span>
                         </span>
                         <div class="">
-                            <textarea class="form-control" name="text" rows="7" required></textarea>
+                            <textarea class="form-control" name="message" rows="7" required></textarea>
                         </div>
                     </label>
                 </form>
@@ -63,7 +64,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     Отмена
                 </button>
-                <button type="button" class="btn btn-primary" id="feedbackSubmit">
+                <button type="button" class="btn btn-primary" id="feedback-submit">
                     Отправить
                 </button>
             </div>
@@ -73,8 +74,8 @@
 
 <script>
 $(function () {
-    var $form = $('#feedbackForm');
-    $('#feedbackSubmit').on('click', function () {
+    var $form = $('#feedback-form');
+    $('#feedback-submit').on('click', function () {
         $form.submit();
     });
 
@@ -96,7 +97,7 @@ $(function () {
         },
         success: function () {
             toastr.success('Ваш запрос принят. В ближайшее время наши менеджеры свяжутся с Вами');
-            $('#feedbackModal').modal('hide');
+            $('#feedback-modal').modal('hide');
         },
         error: function (jqXHR) {
             if (jqXHR.responseText && jqXHR.status < 500) {

@@ -11,27 +11,33 @@ import Form from '../components/form.jsx';
 class AddMerchantForm extends Form {
 	constructor(props) {
 		super(props);
+
+		const fields = {
+			name: {
+				label: 'Название',
+				value: '',
+				required: true
+			},
+			url: {
+				label: 'Ссылка',
+				value: null,
+				defaultValue: null,
+				required: false
+			}
+		};
+
+		if (!hasRole('advertiser')) {
+			fields.advertiserId = {
+				label: 'ID',
+				value: '',
+				valueType: 'Number',
+				required: true
+			};
+		}
+
 		this.state = {
 			isLoading: false,
-			fields: {
-				name: {
-					label: 'Название',
-					value: '',
-					required: true
-				},
-				advertiserId: {
-					label: 'ID',
-					value: '',
-					valueType: 'Number',
-					required: true
-				},
-				url: {
-					label: 'Ссылка',
-					value: null,
-					defaultValue: null,
-					required: false
-				}
-			}
+			fields
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
@@ -45,10 +51,6 @@ class AddMerchantForm extends Form {
 		this.setState({isLoading: true});
 
 		const json = this.serialize();
-
-		if (hasRole('advertiser')) {
-			delete json.advertiserId;
-		}
 
 		xhr({
 			url: '/api/merchants/',
@@ -99,7 +101,11 @@ class AddMerchantForm extends Form {
 				<div className="modal-body">
 					<form action="">
 						{this.buildRow('name')}
-						{this.buildRow('advertiserId')}
+
+						{hasRole('advertiser') ? null : (
+							this.buildRow('advertiserId')
+						)}
+
 						{this.buildRow('url')}
 					</form>
 				</div>
