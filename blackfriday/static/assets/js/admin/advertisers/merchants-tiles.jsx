@@ -10,7 +10,6 @@ class MerchantsList extends React.Component {
 
 		this.handleClickAdd = this.handleClickAdd.bind(this);
 		this.handleClickMerchantDelete = this.handleClickMerchantDelete.bind(this);
-		this.handleClickMerchantEdit = this.handleClickMerchantEdit.bind(this);
 		this.handleClickMerchantHide = this.handleClickMerchantHide.bind(this);
 	}
 
@@ -21,10 +20,6 @@ class MerchantsList extends React.Component {
 
 	handleClickMerchantDelete(merchantId) {
 		this.props.onClickMerchantDelete(merchantId);
-	}
-
-	handleClickMerchantEdit(merchantId) {
-		this.props.onClickMerchantEdit(merchantId);
 	}
 
 	handleClickMerchantHide(merchantId, isActive) {
@@ -64,7 +59,6 @@ class MerchantsList extends React.Component {
 							<SimpleShopCard
 								data={merchant}
 								onClickMerchantDelete={this.handleClickMerchantDelete}
-								onClickMerchantEdit={this.handleClickMerchantEdit}
 								onClickMerchantHide={this.handleClickMerchantHide}
 								/>
 						</div>
@@ -78,7 +72,6 @@ MerchantsList.propTypes = {
 	merchants: React.PropTypes.array,
 	onClickAdd: React.PropTypes.func,
 	onClickMerchantDelete: React.PropTypes.func,
-	onClickMerchantEdit: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };
 MerchantsList.defaultProps = {

@@ -9,16 +9,11 @@ const SimpleShopCard = React.createClass({
 	propTypes: {
 		data: React.PropTypes.object.isRequired,
 		onClickMerchantDelete: React.PropTypes.func,
-		onClickMerchantEdit: React.PropTypes.func,
 		onClickMerchantHide: React.PropTypes.func
 	},
 
 	handleClickMerchantDelete() {
 		this.props.onClickMerchantDelete(this.props.data.id);
-	},
-
-	handleClickMerchantEdit() {
-		this.props.onClickMerchantEdit(this.props.data.id);
 	},
 
 	handleClickMerchantHide() {
@@ -91,13 +86,13 @@ const SimpleShopCard = React.createClass({
 				<div className={b('simple-shop-card', 'action-list')}>
 					<div className={b('action-list')}>
 						{isEditable ? (
-							<span
+							<a
 								className={b('action-list', 'item')}
+								href={`/admin/merchants/${id}/`}
 								title="Редактирование"
-								onClick={this.handleClickMerchantEdit}
 								>
 								<Icon name="shop-edit"/>
-							</span>
+							</a>
 						) : null}
 
 						{item.isPreviewable && item.previewUrl ? (

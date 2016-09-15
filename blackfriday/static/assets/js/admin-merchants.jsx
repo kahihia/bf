@@ -255,10 +255,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 			}
 		},
 
-		handleClickMerchantEdit(id) {
-			console.log(id);
-		},
-
 		handleClickMerchantHide(id, isActive) {
 			if (window.confirm(isActive ? 'Показывать контент продавца?' : 'Скрыть контент продавца?')) {
 				this.requestMerchantHide(id, isActive);
@@ -329,7 +325,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 						<MerchantsList
 							merchants={filteredMerchants}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
-							onClickMerchantEdit={this.handleClickMerchantEdit}
 							onClickMerchantHide={this.handleClickMerchantHide}
 							/>
 					) : (
@@ -337,7 +332,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 							merchants={filteredMerchants}
 							onClickAdd={this.handleClickAdd}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
-							onClickMerchantEdit={this.handleClickMerchantEdit}
 							onClickMerchantHide={this.handleClickMerchantHide}
 							/>
 					)}
