@@ -3,4 +3,7 @@ from django.views.generic.base import TemplateView
 
 
 class InvoiceListView(LoginRequiredMixin, TemplateView):
-    template_name = 'orders/invoice-list.html'
+    def get_template_names(self):
+        if self.request.user.role == 'advertiser':
+            return ['orders/advertiser-invoice-list.html']
+        return ['orders/invoice-list.html']
