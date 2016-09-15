@@ -18,18 +18,18 @@ const UserList = React.createClass({
 
 	propTypes: {
 		users: React.PropTypes.array,
-		onVerificationClick: React.PropTypes.func
+		onClickVerification: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
 	},
 
-	handleVerificationClick(userId) {
-		this.props.onVerificationClick(userId);
+	handleClickVerification(userId) {
+		this.props.onClickVerification(userId);
 	},
 
-	handleChangePasswordClick(userId) {
+	handleClickPasswordChange(userId) {
 		jQuery('#changePasswordModal').modal('show');
 		const onSubmit = () => {
 			jQuery('#changePasswordModal').modal('hide');
@@ -114,8 +114,8 @@ const UserList = React.createClass({
 							return (
 								<UserListItem
 									key={item.id}
-									onChangePasswordClick={this.handleChangePasswordClick}
-									onVerificationClick={this.handleVerificationClick}
+									onClickPasswordChange={this.handleClickPasswordChange}
+									onClickVerification={this.handleClickVerification}
 									{...item}
 									/>
 							);
@@ -136,20 +136,20 @@ const UserListItem = React.createClass({
 		email: React.PropTypes.string,
 		role: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
-		onChangePasswordClick: React.PropTypes.func,
-		onVerificationClick: React.PropTypes.func
+		onClickPasswordChange: React.PropTypes.func,
+		onClickVerification: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
 	},
 
-	handleChangePasswordClick() {
-		this.props.onChangePasswordClick(this.props.id);
+	handleClickPasswordChange() {
+		this.props.onClickPasswordChange(this.props.id);
 	},
 
-	handleVerificationClick() {
-		this.props.onVerificationClick(this.props.id);
+	handleClickVerification() {
+		this.props.onClickVerification(this.props.id);
 	},
 
 	render() {
@@ -198,7 +198,7 @@ const UserListItem = React.createClass({
 				<td className={b('user-list', 'table-td', {name: 'change-password'})}>
 					<button
 						className="btn btn-sm btn-default"
-						onClick={this.handleChangePasswordClick}
+						onClick={this.handleClickPasswordChange}
 						type="button"
 						>
 						{'Сменить пароль'}
@@ -209,7 +209,7 @@ const UserListItem = React.createClass({
 					{isActive ? null : (
 						<button
 							className="btn btn-sm btn-default"
-							onClick={this.handleVerificationClick}
+							onClick={this.handleClickVerification}
 							type="button"
 							>
 							{'Выслать проверочный код'}

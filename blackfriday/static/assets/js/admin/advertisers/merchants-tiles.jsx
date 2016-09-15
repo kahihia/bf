@@ -8,14 +8,14 @@ class MerchantsList extends React.Component {
 	constructor(props) {
 		super(props);
 
-		this.handleClickAdd = this.handleClickAdd.bind(this);
+		this.handleClickMerchantAdd = this.handleClickMerchantAdd.bind(this);
 		this.handleClickMerchantDelete = this.handleClickMerchantDelete.bind(this);
 		this.handleClickMerchantHide = this.handleClickMerchantHide.bind(this);
 	}
 
-	handleClickAdd(e) {
+	handleClickMerchantAdd(e) {
 		e.preventDefault();
-		this.props.onClickAdd();
+		this.props.onClickMerchantAdd();
 	}
 
 	handleClickMerchantDelete(merchantId) {
@@ -38,7 +38,7 @@ class MerchantsList extends React.Component {
 					<div className={b('merchant-shop-card-list', 'item')}>
 						<button
 							className={b('merchant-add-shop')}
-							onClick={this.handleClickAdd}
+							onClick={this.handleClickMerchantAdd}
 							type="button"
 							>
 							<Icon name="merchant-add-shop"/>
@@ -70,7 +70,7 @@ class MerchantsList extends React.Component {
 }
 MerchantsList.propTypes = {
 	merchants: React.PropTypes.array,
-	onClickAdd: React.PropTypes.func,
+	onClickMerchantAdd: React.PropTypes.func,
 	onClickMerchantDelete: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };

@@ -226,7 +226,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 			});
 		},
 
-		handleClickAdd() {
+		handleClickMerchantAdd() {
 			const $modal = jQuery('#add-merchant-modal');
 			$modal.modal('show');
 			const onSubmit = merchant => {
@@ -288,7 +288,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 						<div>
 							<button
 								className="btn btn-success"
-								onClick={this.handleClickAdd}
+								onClick={this.handleClickMerchantAdd}
 								type="button"
 								>
 								{'Добавить'}
@@ -330,7 +330,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 					) : (
 						<MerchantsTiles
 							merchants={filteredMerchants}
-							onClickAdd={this.handleClickAdd}
+							onClickMerchantAdd={this.handleClickMerchantAdd}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
 							onClickMerchantHide={this.handleClickMerchantHide}
 							/>

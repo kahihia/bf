@@ -55,7 +55,7 @@ const AdvertisersList = React.createClass({
 		);
 	},
 
-	handleClickAddAdvertiser() {
+	handleClickAdvertiserAdd() {
 		const $modal = jQuery('#add-advertiser-modal');
 		$modal.modal('show');
 		const onSubmit = advertiser => {
@@ -142,7 +142,7 @@ const AdvertisersList = React.createClass({
 					<div>
 						<button
 							className="btn btn-success"
-							onClick={this.handleClickAddAdvertiser}
+							onClick={this.handleClickAdvertiserAdd}
 							type="button"
 							>
 							{'Добавить'}
