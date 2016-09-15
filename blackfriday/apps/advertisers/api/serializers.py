@@ -165,3 +165,9 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
             # ToDo: create invoice
             promo = validated_data.pop('promo')
         return super().update(instance, validated_data)
+
+
+class MerchantTinySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Merchant
+        fields = ('id', 'name')

@@ -50,4 +50,4 @@ class PromoSerializer(serializers.ModelSerializer):
 class PromoTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Promo
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'price')

@@ -20,7 +20,7 @@ class Invoice(models.Model):
     sum = models.IntegerField(default=0, verbose_name='Сумма')
     discount = models.IntegerField(default=0, verbose_name='Скидка')
 
-    advertiser = models.ForeignKey('users.User', related_name='invoices', verbose_name='Рекламодатель')
+    merchant = models.ForeignKey('advertisers.Merchant', related_name='invoices', verbose_name='Магазин')
     promo = models.ForeignKey('promo.Promo', null=True, blank=True, verbose_name='Промо')
 
     class Meta:
