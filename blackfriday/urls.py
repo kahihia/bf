@@ -13,6 +13,8 @@ urlpatterns = [
         url(r'^', include('apps.catalog.urls', namespace='catalog')),
         url(r'^', include('apps.promo.urls', namespace='promo')),
         url(r'^', include('apps.orders.urls', namespace='orders')),
+        url(r'^', include('apps.banners.urls', namespace='banners')),
+
         url(r'^landing/$', LandingGeneratorView.as_view(), name='landing'),
         url(r'^static-generator/$', StaticGeneratorView.as_view(), name='static-generator'),
     ])),
