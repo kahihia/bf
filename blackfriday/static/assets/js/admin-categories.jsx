@@ -36,10 +36,10 @@ import CategoryList from './admin/catalog/category-list.jsx';
 			});
 		},
 
-		handleAddCategoryClick() {
+		handleClickCategoryAdd() {
 			jQuery('#add-category-modal').modal('show');
 			const onSubmit = category => {
-				this.handleAddCategory(category);
+				this.handleCategoryAdd(category);
 				jQuery('#add-category-modal').modal('hide');
 			};
 			ReactDOM.render(
@@ -51,7 +51,7 @@ import CategoryList from './admin/catalog/category-list.jsx';
 			);
 		},
 
-		handleAddCategory(category) {
+		handleCategoryAdd(category) {
 			if (!category) {
 				return;
 			}
@@ -62,7 +62,7 @@ import CategoryList from './admin/catalog/category-list.jsx';
 			});
 		},
 
-		handleEditSubmit(data) {
+		handleSubmitEdit(data) {
 			if (!data) {
 				return;
 			}
@@ -83,7 +83,7 @@ import CategoryList from './admin/catalog/category-list.jsx';
 				<div>
 					<button
 						className="btn btn-success"
-						onClick={this.handleAddCategoryClick}
+						onClick={this.handleClickCategoryAdd}
 						type="button"
 						>
 						{'Добавить'}
@@ -93,7 +93,7 @@ import CategoryList from './admin/catalog/category-list.jsx';
 
 					<CategoryList
 						categories={this.state.categories}
-						onEditSubmit={this.handleEditSubmit}
+						onSubmitEdit={this.handleSubmitEdit}
 						/>
 				</div>
 			);

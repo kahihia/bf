@@ -58,14 +58,14 @@ import UsersList from './admin/users/users-list.jsx';
 			});
 		},
 
-		handleVerificationClick(userId) {
+		handleClickVerification(userId) {
 			this.requestVerification(userId);
 		},
 
-		handleAddUserClick() {
+		handleClickUserAdd() {
 			jQuery('#addUserModal').modal('show');
 			const onSubmit = user => {
-				this.handleAddUser(user);
+				this.handleUserAdd(user);
 				jQuery('#addUserModal').modal('hide');
 			};
 			ReactDOM.render(
@@ -77,7 +77,7 @@ import UsersList from './admin/users/users-list.jsx';
 			);
 		},
 
-		handleAddUser(user) {
+		handleUserAdd(user) {
 			if (!user) {
 				return;
 			}
@@ -99,7 +99,7 @@ import UsersList from './admin/users/users-list.jsx';
 				<div>
 					<button
 						className="btn btn-success"
-						onClick={this.handleAddUserClick}
+						onClick={this.handleClickUserAdd}
 						type="button"
 						>
 						{'Добавить'}
@@ -109,7 +109,7 @@ import UsersList from './admin/users/users-list.jsx';
 
 					<UsersList
 						users={this.state.users}
-						onVerificationClick={this.handleVerificationClick}
+						onClickVerification={this.handleClickVerification}
 						/>
 				</div>
 			);

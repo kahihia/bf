@@ -10,19 +10,19 @@ import EditCategoryForm from './edit-category-form.jsx';
 const CategoryList = React.createClass({
 	propTypes: {
 		categories: React.PropTypes.array,
-		onEditSubmit: React.PropTypes.func
+		onSubmitEdit: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
 	},
 
-	handleEditClick(categoryId) {
+	handleClickEdit(categoryId) {
 		jQuery('#edit-category-modal').modal('show');
 		const onSubmit = data => {
 			jQuery('#edit-category-modal').modal('hide');
-			if (this.props.onEditSubmit) {
-				this.props.onEditSubmit(data);
+			if (this.props.onSubmitEdit) {
+				this.props.onSubmitEdit(data);
 			}
 		};
 		ReactDOM.render(
@@ -63,7 +63,7 @@ const CategoryList = React.createClass({
 							return (
 								<CategoryListItem
 									key={item.id}
-									onEditClick={this.handleEditClick}
+									onClickEdit={this.handleClickEdit}
 									{...item}
 									/>
 							);
@@ -82,15 +82,15 @@ const CategoryListItem = React.createClass({
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
 		slug: React.PropTypes.string,
-		onEditClick: React.PropTypes.func
+		onClickEdit: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
 	},
 
-	handleEditClick() {
-		this.props.onEditClick(this.props.id);
+	handleClickEdit() {
+		this.props.onClickEdit(this.props.id);
 	},
 
 	render() {
@@ -116,7 +116,7 @@ const CategoryListItem = React.createClass({
 				<td className={b('category-list', 'table-td', {name: 'edit'})}>
 					<button
 						className="btn btn-sm btn-default"
-						onClick={this.handleEditClick}
+						onClick={this.handleClickEdit}
 						type="button"
 						>
 						{'Редактировать'}
