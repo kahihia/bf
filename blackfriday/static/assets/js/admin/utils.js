@@ -28,6 +28,10 @@ export function formatPrice(price) {
 	});
 }
 
+export function getUrl(url) {
+	return ENV.urls[url];
+}
+
 export function processErrors(errors) {
 	process(errors);
 }

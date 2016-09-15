@@ -9,16 +9,11 @@ class MerchantsList extends React.Component {
 		super(props);
 
 		this.handleClickMerchantDelete = this.handleClickMerchantDelete.bind(this);
-		this.handleClickMerchantEdit = this.handleClickMerchantEdit.bind(this);
 		this.handleClickMerchantHide = this.handleClickMerchantHide.bind(this);
 	}
 
 	handleClickMerchantDelete(merchantId) {
 		this.props.onClickMerchantDelete(merchantId);
-	}
-
-	handleClickMerchantEdit(merchantId) {
-		this.props.onClickMerchantEdit(merchantId);
 	}
 
 	handleClickMerchantHide(merchantId, isActive) {
@@ -59,7 +54,6 @@ class MerchantsList extends React.Component {
 								<MerchantsListItem
 									key={item.id}
 									onClickMerchantDelete={this.handleClickMerchantDelete}
-									onClickMerchantEdit={this.handleClickMerchantEdit}
 									onClickMerchantHide={this.handleClickMerchantHide}
 									{...item}
 									/>
@@ -74,7 +68,6 @@ class MerchantsList extends React.Component {
 MerchantsList.propTypes = {
 	merchants: React.PropTypes.array,
 	onClickMerchantDelete: React.PropTypes.func,
-	onClickMerchantEdit: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };
 MerchantsList.defaultProps = {
@@ -94,7 +87,6 @@ const MerchantsListItem = React.createClass({
 		moderationStatus: React.PropTypes.number,
 		name: React.PropTypes.string,
 		onClickMerchantDelete: React.PropTypes.func,
-		onClickMerchantEdit: React.PropTypes.func,
 		onClickMerchantHide: React.PropTypes.func,
 		optionsCount: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number,
@@ -108,10 +100,6 @@ const MerchantsListItem = React.createClass({
 
 	handleClickMerchantDelete() {
 		this.props.onClickMerchantDelete(this.props.id);
-	},
-
-	handleClickMerchantEdit() {
-		this.props.onClickMerchantEdit(this.props.id);
 	},
 
 	handleClickMerchantHide() {
@@ -172,14 +160,13 @@ const MerchantsListItem = React.createClass({
 
 				<td className={b('merchants-list', 'table-td', {name: 'action'})}>
 					{isEditable ? (
-						<button
-							className="btn btn-sm"
-							onClick={this.handleClickMerchantEdit}
+						<a
+							className="btn btn-default btn-sm"
+							href={`/admin/merchants/${id}/`}
 							title="Редактирование"
-							type="button"
 							>
 							<Glyphicon name="pencil"/>
-						</button>
+						</a>
 					) : null}
 
 					{isPreviewable && previewUrl ? (
@@ -209,15 +196,12 @@ const MerchantsListItem = React.createClass({
 					) : null}
 
 					<button
-						className="btn btn-sm"
+						className="btn btn-danger btn-sm"
 						onClick={this.handleClickMerchantDelete}
 						title="Удалить магазин"
 						type="button"
 						>
-						<Glyphicon
-							name="remove"
-							className="text-danger"
-							/>
+						<Glyphicon name="remove"/>
 					</button>
 				</td>
 			</tr>

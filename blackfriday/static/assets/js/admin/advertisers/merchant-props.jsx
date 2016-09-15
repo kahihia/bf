@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {MODERATION_STATUS, PAYMENT_STATUS} from '../const.js';
-import {hasRole} from '../utils.js';
+import {getUrl, hasRole} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';
 
@@ -43,7 +43,7 @@ class MerchantProps extends React.Component {
 						title={planName}
 						>
 						{isAdmin || isEditable || isCanceled || isAllowPlanSelect ? (
-							<a href={`/admin/merchant/${id}#plan`}>
+							<a href={`${getUrl('merchants')}${id}/#plan`}>
 								{planName}
 							</a>
 						) : planName}
@@ -56,7 +56,7 @@ class MerchantProps extends React.Component {
 					</span>
 
 					<span className="props__value">
-						<a href={`/admin/merchant/invoices#invoice${id}`}>
+						<a href={`${getUrl('invoices')}#invoice${id}`}>
 							{PAYMENT_STATUS[paymentStatus]}
 						</a>
 					</span>
@@ -92,7 +92,7 @@ class MerchantProps extends React.Component {
 
 						<span className="props__value">
 							{isEditable || isCanceled ? (
-								<a href={`/admin/merchant/${id}#plan`}>
+								<a href={`${getUrl('merchants')}${id}/#plan`}>
 									{optionsCount}
 								</a>
 							) : optionsCount}
