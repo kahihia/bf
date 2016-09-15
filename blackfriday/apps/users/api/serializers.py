@@ -65,3 +65,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def get_token(self, obj):
         return Token.create(obj, ttl=settings.VERIFICATION_TTL_HOURS, type=TokenType.REGISTRATION)
+
+
+class SupportRequestSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    phone = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    message = serializers.CharField(required=True)

@@ -12,12 +12,12 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from libs.api.exceptions import ServiceUnavailable
-from libs.api.permissions import IsAdmin, IsAuthenticated
+from libs.api.permissions import IsAdmin, IsAuthenticated, IsAdvertiser
 
 from apps.advertisers.api.serializers import AdvertiserSerializer
 
 from ..models import Token, TokenType
-from .serializers import User, UserSerializer, UserUpdateSerializer, RegistrationSerializer
+from .serializers import User, UserSerializer, UserUpdateSerializer, RegistrationSerializer, SupportRequestSerializer
 
 
 def send_verification(request, user):
@@ -43,6 +43,22 @@ def send_verification(request, user):
         send_mail(message=message, recipient_list=[user.email], **settings.VERIFICATION)
     except SMTPException:
         raise ServiceUnavailable('Ошибка отправки почты')
+
+
+def send_support_request(request, data):
+    send_mail(
+        subject='Просьба о помощи от рекламодателя',
+        recipient_list=[settings.SUPPORT_EMAIL],
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        message=render_to_string(
+            'users/messages/support.txt',
+            {
+                'advertiser': request.user.profile,
+                'advertiser_email': request.user.email,
+                **data
+            }
+        ),
+    )
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -95,3 +111,11 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         send_verification(self.request, instance)
+
+
+class SupportRequestViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdvertiser]
+    serializer_class = SupportRequestSerializer
+
+    def perform_create(self, serializer):
+        send_support_request(self.request, serializer.data)

@@ -94,10 +94,11 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/admin/login/'
+DEFAULT_FROM_EMAIL = 'noreply@realblackfriday.com'
 
 VERIFICATION = {
     'subject': 'RealBlackFriday — активация учётной записи',
-    'from_email': 'test@test.ru',
+    'from_email': DEFAULT_FROM_EMAIL,
 }
 
 VERIFICATION_TTL_HOURS = 24
@@ -108,3 +109,5 @@ CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')
 DEFAULT_CATEGORY_SLUG = 'raznoe'
 DEFAULT_CATEGORY_NAME = 'Разное'
 LOGIN_REDIRECT_URL = '/admin/'
+
+SITE_URL = 'https://realblackfriday.ru'

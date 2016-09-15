@@ -8,6 +8,8 @@ DATABASES = {
     }
 }
 
+# SITE_URL = 'http://blackfriday.py.220-volt.us'
+
 # при DEBUG = False обязательно
 #ALLOWED_HOSTS = [
 #    'blackfriday.py.220-volt.us',
@@ -49,3 +51,5 @@ DATABASES = {
 # ReCaptcha
 #RECAPTCHA_SITE_KEY = '...'
 #RECAPTCHA_SECRET_KEY = '...'
+
+#SUPPORT_EMAIL = 'help@realblackfriday.com'
