@@ -9,20 +9,23 @@ from .mixins import AdminOnlyMixin
 
 
 class UserListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
-    template_name = 'users/users-list.html'
+    template_name = 'users/user-list.html'
 
 
-class RedirectByRoleView(LoginRequiredMixin, RedirectView):
-
+class RedirectByRoleMixin:
     def get_redirect_url(self, *args, **kwargs):
         return {
             'admin': reverse('users:list'),
-            'manager': reverse('advertisers:advertisers-list'),
-            'advertiser': reverse('advertisers:merchants-list')
+            'manager': reverse('advertisers:advertiser-list'),
+            'advertiser': reverse('advertisers:merchant-list')
         }[self.request.user.role]
 
 
-class VerificationView(RedirectView):
+class RedirectByRoleView(RedirectByRoleMixin, LoginRequiredMixin, RedirectView):
+    pass
+
+
+class VerificationView(RedirectByRoleMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -33,9 +36,5 @@ class VerificationView(RedirectView):
             user = authenticate(user=token.user)
             if user:
                 login(self.request, user)
-                if user.role == 'admin':
-                    return '/admin/users/'
-                if user.role == 'advertiser':
-                    return '/admin/merchants/'
-                return '/admin/advertisers/'
+                return super().get_redirect_url(*args, **kwargs)
         return settings.LOGIN_URL

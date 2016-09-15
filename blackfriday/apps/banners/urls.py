@@ -4,5 +4,5 @@ from .views import PartnerListView
 
 
 urlpatterns = [
-    url(r'^partners/$', PartnerListView.as_view(), name='partners-list'),
+    url(r'^partners/$', PartnerListView.as_view(), name='partner-list'),
 ]

@@ -5,4 +5,4 @@ from apps.users.mixins import AdminOnlyMixin
 
 
 class PartnerListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
-    template_name = 'banners/partners-list.html'
+    template_name = 'banners/partner-list.html'

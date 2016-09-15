@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'apps.banners',
     'apps.promo',
     'apps.leads',
+    'apps.orders',
 
     'webpack_loader',
 ]

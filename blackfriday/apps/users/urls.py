@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^login/$', auth_views.login, {'template_name': 'users/login.html', 'redirect_authenticated_user': True}),
     url(r'^verification/$', VerificationView.as_view(), name='verification'),
 
-    url(r'^users/$', UserListView.as_view(), name='list'),
+    url(r'^users/$', UserListView.as_view(), name='user-list'),
 ]

@@ -7,17 +7,17 @@ from .models import Merchant
 
 
 class AdvertiserListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateView):
-    template_name = 'advertisers/advertisers-list.html'
+    template_name = 'advertisers/advertiser-list.html'
 
 
 class MerchantListView(LoginRequiredMixin, TemplateView):
-    template_name = 'advertisers/merchants-list.html'
+    template_name = 'advertisers/merchant-list.html'
 
 
 class MerchantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     queryset = Merchant.objects.all()
 
-    template_name = 'advertisers/merchants-details.html'
+    template_name = 'advertisers/merchant-details.html'
     context_object_name = 'merchant'
 
     raise_exception = True
