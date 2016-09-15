@@ -15,5 +15,12 @@
 {% endblock content %}
 
 {% block js %}
+    <script>
+    window.ENV.urls = {
+        invoices: '{% url "orders:invoices-list" %}',
+        merchants: '{% url "advertisers:merchants-list" %}'
+    };
+    </script>
+
     {% render_bundle 'admin-merchants' 'js' %}
 {% endblock js %}
