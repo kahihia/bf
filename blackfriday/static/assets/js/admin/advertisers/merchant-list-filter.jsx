@@ -5,7 +5,7 @@ import FormRow from '../components/form-row.jsx';
 import Radio from '../components/radio.jsx';
 import Select from '../components/select.jsx';
 
-class MerchantsListFilter extends React.Component {
+class MerchantListFilter extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -120,7 +120,7 @@ class MerchantsListFilter extends React.Component {
 		);
 	}
 }
-MerchantsListFilter.propTypes = {
+MerchantListFilter.propTypes = {
 	availablePromo: React.PropTypes.array,
 	filterByDate: React.PropTypes.oneOf(['ASC', 'DESC']),
 	filterByName: React.PropTypes.string,
@@ -134,7 +134,7 @@ MerchantsListFilter.propTypes = {
 	onFilterByPromo: React.PropTypes.func,
 	onFilterByStatus: React.PropTypes.func
 };
-MerchantsListFilter.defaultProps = {
+MerchantListFilter.defaultProps = {
 	availablePromo: [],
 	filterByDate: 'ASC',
 	filterByName: '',
@@ -142,4 +142,4 @@ MerchantsListFilter.defaultProps = {
 	filterByStatus: ''
 };
 
-export default MerchantsListFilter;
+export default MerchantListFilter;

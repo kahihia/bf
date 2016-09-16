@@ -3,35 +3,43 @@
 		width: 100%
 
 	&__table-th
-		&_name_id
+		&_name_logo
 			width: 1%
-
-		&_name_email
-			{}
 
 		&_name_name
 			{}
 
-		&_name_status
-			width: 1%
+		&_name_advertiser
+			{}
 
-		&_name_edit
+		&_name_data
+			{}
+
+		&_name_action
 			width: 1%
 
 	&__table-td
 		vertical-align: middle !important
 
-		&_name_id
-			color: $gray-light
+		&_name_logo
+			.merchant-list__logo-placeholder
+				display: inline-block
+				width: 100px
+				min-height: 60px
+				background-color: #eaecee
 
-		&_name_email
-			word-break: break-word
+			img
+				width: 100%
+				height: auto
 
 		&_name_name
 			word-break: break-word
 
-		&_name_status
-			text-align: center
+		&_name_advertiser
+			word-break: break-word
 
-		&_name_edit
+		&_name_data
 			{}
+
+		&_name_action
+			white-space: nowrap

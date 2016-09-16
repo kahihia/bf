@@ -4,7 +4,7 @@ import {hasRole} from '../utils.js';
 import Icon from '../components/icon.jsx';
 import SimpleShopCard from './simple-shop-card.jsx';
 
-class MerchantsList extends React.Component {
+class MerchantList extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -68,13 +68,13 @@ class MerchantsList extends React.Component {
 		);
 	}
 }
-MerchantsList.propTypes = {
+MerchantList.propTypes = {
 	merchants: React.PropTypes.array,
 	onClickMerchantAdd: React.PropTypes.func,
 	onClickMerchantDelete: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };
-MerchantsList.defaultProps = {
+MerchantList.defaultProps = {
 };
 
-export default MerchantsList;
+export default MerchantList;

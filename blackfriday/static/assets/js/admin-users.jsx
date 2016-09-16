@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
 import AddUserForm from './admin/users/add-user-form.jsx';
-import UsersList from './admin/users/users-list.jsx';
+import UserList from './admin/users/user-list.jsx';
 
 (function () {
 	'use strict';
@@ -107,7 +107,7 @@ import UsersList from './admin/users/users-list.jsx';
 
 					<hr/>
 
-					<UsersList
+					<UserList
 						users={this.state.users}
 						onClickVerification={this.handleClickVerification}
 						/>

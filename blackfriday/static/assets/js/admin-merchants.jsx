@@ -7,13 +7,13 @@ import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
 import {hasRole} from './admin/utils.js';
-import MerchantsListFilter from './admin/advertisers/merchants-list-filter.jsx';
+import MerchantListFilter from './admin/advertisers/merchant-list-filter.jsx';
 import ViewSwitcher from './admin/advertisers/view-switcher.jsx';
-import MerchantsTiles from './admin/advertisers/merchants-tiles.jsx';
-import MerchantsList from './admin/advertisers/merchants-list.jsx';
+import MerchantTiles from './admin/advertisers/merchant-tiles.jsx';
+import MerchantList from './admin/advertisers/merchant-list.jsx';
 import AddMerchantForm from './admin/advertisers/add-merchant-form.jsx';
 
-const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid';
+const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid';
 
 (function () {
 	'use strict';
@@ -245,7 +245,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 
 		handleClickViewSwitcher(view) {
 			this.setState({view}, () => {
-				window.localStorage.setItem('merchants-list-view', view);
+				window.localStorage.setItem('merchant-list-view', view);
 			});
 		},
 
@@ -299,7 +299,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 					) : null}
 
 					{isAdmin || isManager ? (
-						<MerchantsListFilter
+						<MerchantListFilter
 							onFilterByDate={this.handleFilterByDate}
 							onFilterByName={this.handleFilterByName}
 							onFilterByPromo={this.handleFilterByPromo}
@@ -322,13 +322,13 @@ const CURRENT_VIEW = window.localStorage.getItem('merchants-list-view') || 'grid
 					</p>
 
 					{view === 'list' ? (
-						<MerchantsList
+						<MerchantList
 							merchants={filteredMerchants}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
 							onClickMerchantHide={this.handleClickMerchantHide}
 							/>
 					) : (
-						<MerchantsTiles
+						<MerchantTiles
 							merchants={filteredMerchants}
 							onClickMerchantAdd={this.handleClickMerchantAdd}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
