@@ -53,8 +53,7 @@ def send_support_request(request, data):
         message=render_to_string(
             'users/messages/support.txt',
             {
-                'advertiser': request.user.profile,
-                'advertiser_email': request.user.email,
+                'advertiser': request.user,
                 **data
             }
         ),
