@@ -16,5 +16,11 @@
 {% endblock content %}
 
 {% block js %}
+    <script>
+    window.ENV.urls = {
+        categories: '/categories/'
+    };
+    </script>
+
     {% render_bundle 'admin-categories' 'js' %}
 {% endblock js %}
