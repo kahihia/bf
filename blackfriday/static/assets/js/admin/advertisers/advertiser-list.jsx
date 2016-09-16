@@ -10,7 +10,7 @@ import MerchantProfileForm from '../common/merchant-profile-form.jsx';
 import FormRow from '../components/form-row.jsx';
 import AddAdvertiserForm from './add-advertiser-form.jsx';
 
-const AdvertisersList = React.createClass({
+const AdvertiserList = React.createClass({
 	getInitialState() {
 		return {
 			data: [],
@@ -161,26 +161,26 @@ const AdvertisersList = React.createClass({
 						/>
 				</div>
 
-				<div className={b('merchant-list')}>
-					<table className={'table table-hover ' + b('merchant-list', 'table')}>
+				<div className={b('advertiser-list')}>
+					<table className={'table table-hover ' + b('advertiser-list', 'table')}>
 						<thead>
 							<tr>
-								<th className={b('merchant-list', 'table-th', {name: 'id'})}/>
+								<th className={b('advertiser-list', 'table-th', {name: 'id'})}/>
 
-								<th className={b('merchant-list', 'table-th', {name: 'email'})}>
+								<th className={b('advertiser-list', 'table-th', {name: 'email'})}>
 									{'Email'}
 								</th>
 
-								<th className={b('merchant-list', 'table-th', {name: 'name'})}>
+								<th className={b('advertiser-list', 'table-th', {name: 'name'})}>
 									{'Название'}
 								</th>
 
-								<th className={b('merchant-list', 'table-th', {name: 'status'})}>
+								<th className={b('advertiser-list', 'table-th', {name: 'status'})}>
 									{'Подтверждён'}
 								</th>
 
 								{isAdmin ? (
-									<th className={b('merchant-list', 'table-th', {name: 'edit'})}/>
+									<th className={b('advertiser-list', 'table-th', {name: 'edit'})}/>
 								) : null}
 							</tr>
 						</thead>
@@ -188,7 +188,7 @@ const AdvertisersList = React.createClass({
 						<tbody>
 							{filteredMerchants.map(item => {
 								return (
-									<AdvertisersListItem
+									<AdvertiserListItem
 										key={item.id}
 										onClickEdit={this.handleClickItemEdit}
 										isAdmin={isAdmin}
@@ -206,9 +206,9 @@ const AdvertisersList = React.createClass({
 	}
 });
 
-export default AdvertisersList;
+export default AdvertiserList;
 
-const AdvertisersListItem = React.createClass({
+const AdvertiserListItem = React.createClass({
 	propTypes: {
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
@@ -236,17 +236,17 @@ const AdvertisersListItem = React.createClass({
 
 		return (
 			<tr>
-				<td className={b('merchant-list', 'table-td', {name: 'id'})}>
+				<td className={b('advertiser-list', 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'email'})}>
+				<td className={b('advertiser-list', 'table-td', {name: 'email'})}>
 					<a href={`mailto:${email}`}>
 						{email}
 					</a>
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'name'})}>
+				<td className={b('advertiser-list', 'table-td', {name: 'name'})}>
 					{name ? (
 						name
 					) : (
@@ -256,7 +256,7 @@ const AdvertisersListItem = React.createClass({
 					)}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'status'})}>
+				<td className={b('advertiser-list', 'table-td', {name: 'status'})}>
 					{isActive ? (
 						<Glyphicon
 							name="ok"
@@ -271,7 +271,7 @@ const AdvertisersListItem = React.createClass({
 				</td>
 
 				{this.props.isAdmin ? (
-					<td className={b('merchant-list', 'table-td', {name: 'edit'})}>
+					<td className={b('advertiser-list', 'table-td', {name: 'edit'})}>
 						<button
 							className="btn btn-sm btn-default"
 							onClick={this.handleClickEdit}

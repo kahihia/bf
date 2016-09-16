@@ -4,7 +4,7 @@ import {hasRole} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import MerchantProps from './merchant-props.jsx';
 
-class MerchantsList extends React.Component {
+class MerchantList extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -24,34 +24,34 @@ class MerchantsList extends React.Component {
 		const {merchants} = this.props;
 
 		return (
-			<div className={b('merchants-list')}>
-				<table className={'table table-hover ' + b('merchants-list', 'table')}>
+			<div className={b('merchant-list')}>
+				<table className={'table table-hover ' + b('merchant-list', 'table')}>
 					<thead>
 						<tr>
-							<th className={b('merchants-list', 'table-th', {name: 'logo'})}>
+							<th className={b('merchant-list', 'table-th', {name: 'logo'})}>
 								{'Логотип'}
 							</th>
 
-							<th className={b('merchants-list', 'table-th', {name: 'name'})}>
+							<th className={b('merchant-list', 'table-th', {name: 'name'})}>
 								{'Название'}
 							</th>
 
-							<th className={b('merchants-list', 'table-th', {name: 'advertiser'})}>
+							<th className={b('merchant-list', 'table-th', {name: 'advertiser'})}>
 								{'Рекламодатель'}
 							</th>
 
-							<th className={b('merchants-list', 'table-th', {name: 'data'})}>
+							<th className={b('merchant-list', 'table-th', {name: 'data'})}>
 								{'Данные'}
 							</th>
 
-							<th className={b('merchants-list', 'table-th', {name: 'action'})}/>
+							<th className={b('merchant-list', 'table-th', {name: 'action'})}/>
 						</tr>
 					</thead>
 
 					<tbody>
 						{merchants.map(item => {
 							return (
-								<MerchantsListItem
+								<MerchantListItem
 									key={item.id}
 									onClickMerchantDelete={this.handleClickMerchantDelete}
 									onClickMerchantHide={this.handleClickMerchantHide}
@@ -65,17 +65,17 @@ class MerchantsList extends React.Component {
 		);
 	}
 }
-MerchantsList.propTypes = {
+MerchantList.propTypes = {
 	merchants: React.PropTypes.array,
 	onClickMerchantDelete: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };
-MerchantsList.defaultProps = {
+MerchantList.defaultProps = {
 };
 
-export default MerchantsList;
+export default MerchantList;
 
-const MerchantsListItem = React.createClass({
+const MerchantListItem = React.createClass({
 	propTypes: {
 		id: React.PropTypes.number,
 		image: React.PropTypes.string,
@@ -124,9 +124,9 @@ const MerchantsListItem = React.createClass({
 
 		return (
 			<tr>
-				<td className={b('merchants-list', 'table-td', {name: 'logo'})}>
+				<td className={b('merchant-list', 'table-td', {name: 'logo'})}>
 					<a href={link}>
-						<span className={b('merchants-list', 'logo-placeholder')}>
+						<span className={b('merchant-list', 'logo-placeholder')}>
 							{image ? (
 								<img
 									src={image}
@@ -137,15 +137,15 @@ const MerchantsListItem = React.createClass({
 					</a>
 				</td>
 
-				<td className={b('merchants-list', 'table-td', {name: 'name'})}>
+				<td className={b('merchant-list', 'table-td', {name: 'name'})}>
 					{name}
 				</td>
 
-				<td className={b('merchants-list', 'table-td', {name: 'advertiser'})}>
+				<td className={b('merchant-list', 'table-td', {name: 'advertiser'})}>
 					{'advertiser'}
 				</td>
 
-				<td className={b('merchants-list', 'table-td', {name: 'data'})}>
+				<td className={b('merchant-list', 'table-td', {name: 'data'})}>
 					<MerchantProps
 						{...{
 							id,
@@ -158,7 +158,7 @@ const MerchantsListItem = React.createClass({
 						/>
 				</td>
 
-				<td className={b('merchants-list', 'table-td', {name: 'action'})}>
+				<td className={b('merchant-list', 'table-td', {name: 'action'})}>
 					{isEditable ? (
 						<a
 							className="btn btn-default btn-sm"
