@@ -35,3 +35,12 @@ class ModerationListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def test_func(self):
         return self.request.user.role == 'manager'
+
+
+class ProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = 'advertisers/profile.html'
+
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user.role == 'advertiser'
