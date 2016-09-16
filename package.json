@@ -25,11 +25,11 @@
     "bootstrap-styl": "5.0.7",
     "classnames": "2.2.5",
     "css-loader": "0.25.0",
-    "eslint": "3.4.0",
+    "eslint": "3.5.0",
     "eslint-config-xo": "0.15.4",
     "eslint-config-xo-react": "0.9.0",
     "eslint-loader": "1.5.0",
-    "eslint-plugin-react": "6.2.0",
+    "eslint-plugin-react": "6.2.2",
     "eslint-plugin-xo": "0.5.1",
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.9.0",
@@ -54,7 +54,7 @@
     "tiny-emitter": "1.1.0",
     "webpack": "1.13.2",
     "webpack-bundle-tracker": "0.0.93",
-    "webpack-dev-server": "1.15.1",
+    "webpack-dev-server": "1.15.2",
     "webpack-spritesmith": "0.2.6",
     "xhr": "2.2.2"
   }
