@@ -64,11 +64,12 @@ if (env === 'dev') {
 
 module.exports = {
 	entry: {
-		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
 		'admin-advertisers': path.resolve(PATH_SRC, 'js/admin-advertisers.jsx'),
 		'admin-categories': path.resolve(PATH_SRC, 'js/admin-categories.jsx'),
 		'admin-merchants': path.resolve(PATH_SRC, 'js/admin-merchants.jsx'),
+		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
+		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
 		app: path.resolve(PATH_SRC, 'js/app.jsx'),
 		auth: path.resolve(PATH_SRC, 'js/auth.jsx'),
 		landing: path.resolve(PATH_SRC, 'js/landing.jsx')
