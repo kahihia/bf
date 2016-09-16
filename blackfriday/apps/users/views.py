@@ -15,7 +15,7 @@ class UserListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
 class RedirectByRoleMixin:
     def get_redirect_url(self, *args, **kwargs):
         return {
-            'admin': reverse('users:list'),
+            'admin': reverse('users:user-list'),
             'manager': reverse('advertisers:advertiser-list'),
             'advertiser': reverse('advertisers:merchant-list')
         }[self.request.user.role]
