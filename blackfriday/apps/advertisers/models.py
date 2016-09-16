@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models import Min
+
+from apps.orders.models import InvoiceStatus
+from apps.promo.models import Option
 
 
 class ModerationStatus:
@@ -71,6 +75,12 @@ class Merchant(models.Model):
     def __str__(self):
         return self.name
 
+    def get_promo(self, *statuses):
+        qs = self.invoices.all()
+        if statuses:
+            qs = qs.filter(status__in=statuses)
+        return qs.order_by('-id').first()
+
     @property
     def banners(self):
         # ToDo: Когда будет релейтед нейм на banners.Banner, убрать
@@ -78,18 +88,15 @@ class Merchant(models.Model):
 
     @property
     def promo(self):
-        # ToDo: Последний оплаченный пакет
-        return None
+        return self.get_promo(InvoiceStatus.paid)
 
     @property
     def is_editable(self):
-        # ToDo: Хотя бы один оплаченный счёт
-        return True
+        return self.invoices.filter(status=InvoiceStatus.paid).exists()
 
     @property
     def is_previewable(self):
-        # ToDo: Хотя бы один оплаченный счёт
-        return True
+        return self.invoices.filter(status=InvoiceStatus.paid).exists()
 
     @property
     def preview_url(self):
@@ -98,13 +105,12 @@ class Merchant(models.Model):
 
     @property
     def payment_status(self):
-        # ToDo: статус оплаты из счетов
-        return 0
+        status = self.invoices.all().aggregate(status=Min('status'))['status']
+        return InvoiceStatus.paid if status == InvoiceStatus.paid else InvoiceStatus.cancelled
 
     @property
     def options_count(self):
-        # ToDo: количество опций из счетов
-        return 0
+        return Option.objects.filter(in_invoices__invoice__status=InvoiceStatus.paid).distinct().count()
 
     @property
     def owner_id(self):

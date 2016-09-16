@@ -1,5 +1,3 @@
-from math import ceil
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -46,17 +44,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
                   'advertiser', 'merchant', 'merchant_id', 'promo', 'promo_id', 'options')
         read_only_fields = ('id', 'status', 'sum')
 
-    @staticmethod
-    def _get_total(merchant, promo, options, discount=None, **kwargs):
-        total = sum(item['value'] * item['price'] for item in options)
-        if promo:
-            total += promo.price
-        if discount:
-            total *= (1 - discount / 100)
-        if merchant.promo:
-            total -= merchant.promo.price
-        return ceil(total)
-
     def get_extra_kwargs(self):
         kwargs = super().get_extra_kwargs()
         user = self.context['request'].user
@@ -72,7 +59,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if not (promo or attrs.get('options')):
             raise ValidationError('Нет ни пакета, ни опций')
 
-        if merchant.promo and merchant.promo.price > promo.price:
+        if merchant.promo and promo and merchant.promo.price > promo.price:
             raise ValidationError('Нельзя назначить более дешёвый пакет')
 
         attrs['sum'] = self._get_total(**attrs)
@@ -82,6 +69,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         options = validated_data.pop('options')
         invoice = super().create(validated_data)
         InvoiceOption.objects.bulk_create(InvoiceOption(invoice=invoice, **option) for option in options)
+        invoice.calculate_total()
         return invoice
 
 
@@ -96,9 +84,13 @@ class InvoiceStatusSerializer(serializers.ModelSerializer):
         return InvoiceSerializer().to_representation(instance)
 
 
-class InvoiceStatusBulkSerializer(serializers.Serializer):
+class InvoiceStatusBulkSerializer(serializers.ModelSerializer):
     ids = serializers.ListField(child=serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all()))
     status = serializers.ChoiceField(choices=Invoice.STATUSES)
+
+    class Meta:
+        model = Invoice
+        fields = ('ids', 'status')
 
     def validate(self, attrs):
         attrs['invoices'] = attrs.pop('ids', [])
@@ -106,7 +98,7 @@ class InvoiceStatusBulkSerializer(serializers.Serializer):
 
     def bulk_update(self, validated_data):
         invoices = validated_data.pop('invoices', [])
-        Invoice.objects.filter(id__in=[invoice.id for invoice in invoices]).update(**validated_data)
+        self.Meta.model.objects.filter(id__in=[invoice.id for invoice in invoices]).update(**validated_data)
         return invoices
 
     def update(self, instance, validated_data):

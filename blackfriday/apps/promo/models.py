@@ -1,4 +1,6 @@
+from apps.orders.models import InvoiceStatus
 from django.db import models
+from django.db.models import Sum
 
 
 class Promo(models.Model):
@@ -27,9 +29,14 @@ class Option(models.Model):
     image = models.ImageField(upload_to='promo', verbose_name='Изображение')
 
     @property
+    def count_available(self):
+        qs = self.in_invoices.exclude(invoice__status=InvoiceStatus.cancelled)
+        ordered = qs.aggregate(Sum('value')).get('value__sum', 0)
+        return self.max_count - ordered
+
+    @property
     def is_available(self):
-        # TODO: Implement it after `apps.invoices` realization
-        return True
+        return self.count_available > 0
 
     class Meta:
         verbose_name = 'Тарифная опция'
