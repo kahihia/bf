@@ -109,10 +109,12 @@ class MerchantSerializer(serializers.ModelSerializer):
 
 
 class MerchantListSerializer(serializers.ModelSerializer):
+    advertiser = AdvertiserTinySerializer()
+
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'image', 'payment_status', 'moderation_status', 'promo',
-                  'is_active', 'is_editable', 'is_previewable', 'preview_url')
+                  'is_active', 'is_editable', 'is_previewable', 'preview_url', 'advertiser')
 
 
 class MerchantCreateSerializer(serializers.ModelSerializer):
