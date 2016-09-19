@@ -1,35 +1,26 @@
 import xlrd
 import xml.etree.ElementTree as ET
-import csv
 from io import StringIO
+from csv import DictReader, Error as CSVError
+from django.conf import settings
 
 from rest_framework.exceptions import ValidationError
 
 
-COLUMNS_MAPPING = {
-    'name': 'name',
-    'oldprice': 'old_price',
-    'price': 'price',
-    'discount': 'discount',
-    'startprice': 'start_price',
-    'currencyid': 'currency',
-    'vendor': 'brand',
-    'category': 'category',
-    'countryoforigin': 'country',
-    'url': 'url',
-    'image': 'image',
-}
+def dict_reader_lowercaser(iterator):
+    for row in iterator:
+        yield {str.lower(str(key)): value for key, value in row.items()}
 
 
 def csv_dict_reader(f):
     try:
-        data = StringIO(f.read().decode('utf-8'))
         return (
             {
-                COLUMNS_MAPPING[key]: value for key, value in row.items() if key in COLUMNS_MAPPING
-            } for row in csv.DictReader(data, delimiter=';', quotechar='"')
+                _key: row.get(key) for key, _key in settings.PRODUCT_FILE_COLUMNS_MAPPING.items()
+            } for row in dict_reader_lowercaser(
+                DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"'))
         )
-    except (csv.Error, UnicodeDecodeError):
+    except (CSVError, UnicodeDecodeError):
         raise ValidationError('некорректный формат данных')
 
 
@@ -38,12 +29,14 @@ def xls_dict_reader(f, sheet_index=0):
         book = xlrd.open_workbook(file_contents=f.read())
         sheet = book.sheet_by_index(sheet_index)
         headers = dict(
-            (i, sheet.cell_value(0, i)) for i in range(sheet.ncols)
+            (i, str.lower(sheet.cell_value(0, i))) for i in range(sheet.ncols)
         )
+        if set(headers.values()) != set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()):
+            raise ValidationError('некорректный формат данных')
         return (
             dict(
-                (COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
-                for column in headers if headers[column] in COLUMNS_MAPPING
+                (settings.PRODUCT_FILE_COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
+                for column in headers
             ) for row in range(1, sheet.nrows)
         )
     except (xlrd.XLRDError, UnicodeDecodeError):

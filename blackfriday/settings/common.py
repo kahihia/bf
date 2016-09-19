@@ -110,6 +110,22 @@ MANAGERS = []
 CURRENCY_IDS = ('rur', 'usd', 'uah', 'kzt')
 DEFAULT_CATEGORY_SLUG = 'raznoe'
 DEFAULT_CATEGORY_NAME = 'Разное'
+
+TEST_RUNNER = 'libs.testing.runner.PytestTestRunner'
 LOGIN_REDIRECT_URL = '/admin/'
 
 SITE_URL = 'https://realblackfriday.ru'
+
+PRODUCT_FILE_COLUMNS_MAPPING = {
+    'name': 'name',
+    'oldprice': 'old_price',
+    'price': 'price',
+    'discount': 'discount',
+    'startprice': 'start_price',
+    'currencyid': 'currency',
+    'vendor': 'brand',
+    'category': 'category',
+    'countryoforigin': 'country',
+    'url': 'url',
+    'image': 'image',
+}
