@@ -1,0 +1,20 @@
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        Партнёры
+    </h1>
+</div>
+
+<div id="admin-partners"></div>
+
+{% include "banners/includes/add-partner-modal.html"  %}
+{% include "banners/includes/edit-partner-modal.html"  %}
+{% endblock content %}
+
+{% block js %}
+    {% render_bundle 'admin-partners' 'js' %}
+{% endblock js %}
