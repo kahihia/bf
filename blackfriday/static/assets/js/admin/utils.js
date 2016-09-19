@@ -32,6 +32,10 @@ export function getUrl(url) {
 	return ENV.urls[url];
 }
 
+export function getFullUrl(url) {
+	return `${ENV.siteUrl}${ENV.urls[url]}`;
+}
+
 export function processErrors(errors) {
 	process(errors);
 }

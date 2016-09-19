@@ -41,6 +41,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'libs.recaptcha.context_processors.captcha_keys',
+                'libs.templates.context_processors.site_url',
             ],
         },
     },
