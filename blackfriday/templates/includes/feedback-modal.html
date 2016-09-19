@@ -82,14 +82,21 @@ $(function () {
     $form.ajaxForm({
         beforeSubmit: function (arr, $form, options) {
             var isValid = true;
+            var isMessage = false;
 
             _.forEach(arr, function (item) {
+                if (item.name === 'email' && !/\S@\S+\.\S{2,}/.test(item.value)) {
+                    isValid = false;
+                    isMessage = true;
+                    toastr.warning('Неверный формат Email');
+                }
+
                 if (item.required && !item.value.trim()) {
                     isValid = false;
                 }
             });
 
-            if (!isValid) {
+            if (!isValid && !isMessage) {
                 toastr.warning('Заполните обязательные поля');
             }
 
@@ -100,7 +107,9 @@ $(function () {
             $('#feedback-modal').modal('hide');
         },
         error: function (jqXHR) {
-            if (jqXHR.responseText && jqXHR.status < 500) {
+            if (jqXHR.status < 500 && jqXHR.responseJSON) {
+                window.processErrors(jqXHR.responseJSON);
+            } else if (jqXHR.status < 500 && jqXHR.responseJSON) {
                 toastr.warning(jqXHR.responseText);
             } else {
                 toastr.error('Не удалось отправить сообщение');
