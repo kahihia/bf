@@ -3,7 +3,8 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {CATEGORIES_URL, TOKEN} from '../const.js';
+import {TOKEN} from '../const.js';
+import {getFullUrl} from '../utils.js';
 import Form from '../components/form.jsx';
 
 class EditCategoryForm extends Form {
@@ -18,7 +19,7 @@ class EditCategoryForm extends Form {
 					required: true
 				},
 				slug: {
-					addon: `${CATEGORIES_URL}/`,
+					addon: `${getFullUrl('categories')}`,
 					label: 'Ссылка',
 					value: '',
 					required: true
