@@ -4,15 +4,17 @@ import inspect
 class BaseValidator:
     _message = None
     is_warning = False
+    required = False
 
-    def __init__(self, rule=None, is_warning=False, message=None):
+    def __init__(self, rule=None, is_warning=False, message=None, required=False):
         self.rule = rule
         self.is_warning = is_warning
+        self.required = self.required or required
         if message is not None:
             self._message = message
 
     def __call__(self, value, context):
-        if not value:
+        if not value and not self.required:
             return None
         return self.validate(value=value, context=context)
 

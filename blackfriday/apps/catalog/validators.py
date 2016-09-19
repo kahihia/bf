@@ -61,6 +61,8 @@ class Length(BaseValidator):
 
 class Required(BaseValidator):
     _message = 'Обязательное поле'
+    required = True
 
     def validate(self, value, **kwargs):
+
         return bool(value)

@@ -36,28 +36,26 @@ class ProductViewSet(
         self.queryset.filter(merchant_id=self.merchant.id).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def validate_schema(self, data):
-        schema = {
-            'type': 'array',
-            'items': {
-                'type': 'object',
-                'properties': {
-                    'category': {'type': 'string'},
-                    'name': {'type': 'string'},
-                    'image': {'type': 'string'},
-                    'price': {'type': 'number'},
-                    'start_price': {'type': 'number'},
-                    'old_price': {'type': 'number'},
-                    'discount': {'type': 'number'},
-                    'country': {'type': 'string'},
-                    'brand': {'type': 'string'},
-                    'url': {'type': 'string'},
-                    'currency': {'type': 'string'},
-                    'is_teaser': {'type': 'boolean'},
-                    'is_teaser_on_main': {'type': 'boolean'},
-                }
+    def validate_schema(self, data, in_list=True):
+        item = {
+            'type': 'object',
+            'properties': {
+                'category': {'type': ['string', 'null']},
+                'name': {'type': ['string', 'null']},
+                'image': {'type': ['string', 'null']},
+                'price': {'type': ['number', 'string', 'null']},
+                'start_price': {'type': ['number', 'string', 'null']},
+                'old_price': {'type': ['number', 'string', 'null']},
+                'discount': {'type': ['number', 'string', 'null']},
+                'country': {'type': ['string', 'null']},
+                'brand': {'type': ['string', 'null']},
+                'url': {'type': ['string', 'null']},
+                'currency': {'type': ['string', 'null']},
+                'is_teaser': {'type': 'boolean'},
+                'is_teaser_on_main': {'type': 'boolean'},
             }
         }
+        schema = {'type': 'array', 'items': item} if in_list else item
         try:
             validate(data, schema)
         except JsonSchemaValidationError:
@@ -95,7 +93,7 @@ class ProductViewSet(
         return Response(self.get_serializer(qs, many=True).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        self.validate_schema(request.data)
+        self.validate_schema(request.data, in_list=False)
         instance = self.get_object()
         cleaned_data, errors, warnings = FeedParser().parse_feed(request.data)
         result = {
@@ -141,8 +139,6 @@ class ProductViewSet(
     @list_route(['POST'])
     def verify(self, request, **kwargs):
         self.validate_schema(request.data)
-        if not isinstance(request.data, list):
-            raise BadResponse('list of objects required')
         result = []
         for row in request.data:
             # in this case we get data from frontend, it could be parsed data on client side,

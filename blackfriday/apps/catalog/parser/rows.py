@@ -37,6 +37,7 @@ class Column(object):
             kwargs = {'value' if 'value' in parameters else self.field: value}
             if 'context' in parameters:
                 kwargs['context'] = context
+
             if validator(**kwargs) is False:
                 result = {
                     'field': self.field,

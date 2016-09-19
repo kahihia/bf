@@ -13,3 +13,11 @@ PRODUCT_FILE_COLUMNS_MAPPING = {
     'url': 'url',
     'image': 'image',
 }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'libs.api.pagination.BlackFridayPagination',
+}
