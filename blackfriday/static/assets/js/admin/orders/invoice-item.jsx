@@ -31,15 +31,11 @@ export default class InvoiceItem extends React.Component {
 	}
 
 	onAllSelected() {
-		this.setState({
-			selected: true
-		});
+		this.setState({selected: true});
 	}
 
 	onAllUnselected() {
-		this.setState({
-			selected: false
-		});
+		this.setState({selected: false});
 	}
 
 	onStatusChanged(invoiceIds, newStatus) {
@@ -55,7 +51,7 @@ export default class InvoiceItem extends React.Component {
 	handleSelect() {
 		this.setState({
 			selected: !this.state.selected
-		}, function () {
+		}, () => {
 			if (this.state.selected) {
 				invoiceActions.itemSelected(this.state.data.id);
 			} else {
@@ -74,40 +70,44 @@ export default class InvoiceItem extends React.Component {
 	}
 
 	render() {
+		const {selected, data, isEditingExpireDate} = this.state;
+
 		return (
-			<tr className={this.state.selected ? 'active' : ''}>
+			<tr className={selected ? 'active' : ''}>
 				<td>
-					<input type="checkbox" checked={this.state.selected} onChange={this.handleSelect}/>
+					<input type="checkbox" checked={selected} onChange={this.handleSelect}/>
 				</td>
 				<td>
-					{moment(this.state.data.created_at).format('DD.MM.YYYY')}
+					{moment(data.created_at).format('DD.MM.YYYY')}
 				</td>
 				<td>
-					{this.state.data.advertiser_name || ''}
+					{data.advertiser_name || ''}
 				</td>
 				<td>
-					{this.state.data.merchant_name || ''}
+					{data.merchant_name || ''}
 				</td>
 				<td>
-					{this.state.data.invoice || ''}
+					{data.invoice || ''}
 				</td>
 				<td>
-					{this.state.data.promo_name || ''}
+					{data.promo_name || ''}
 				</td>
 				<td>
 					<ul>
-						{this.state.data.options.map((option, index) => {
+						{data.options.map((option, index) => {
 							return (
-								<li key={index}>{option.name}</li>
+								<li key={index}>
+									{option.name}
+								</li>
 							);
 						})}
 					</ul>
 				</td>
 				<td>
-					<Price cost={formatPrice(this.state.data.sum)} currency={'₽'}/>
+					<Price cost={formatPrice(data.sum)} currency={'₽'}/>
 				</td>
 				<td className="text-nowrap">
-					{this.state.data.status === 'waiting' ? (
+					{data.status === 'waiting' ? (
 						<a
 							href="#"
 							onClick={this.handleClickEditExpireDate}
@@ -117,16 +117,16 @@ export default class InvoiceItem extends React.Component {
 						</a>
 					) : null}
 
-					<InvoiceStatus code={this.state.data.status}/>
+					<InvoiceStatus code={data.status}/>
 
-					{this.state.isEditingExpireDate ? (
+					{isEditingExpireDate ? (
 						<DatePicker
 							className="form-control datepicker-input-sm"
 							style={{fontSize: 14}}
 							dateFormat="DD/MM"
-							selected={moment(this.state.data.expired)}
-							maxDate={moment(this.state.data.expired).add(7, 'd')}
-							minDate={moment(this.state.data.expired)}
+							selected={moment(data.expired)}
+							maxDate={moment(data.expired).add(7, 'd')}
+							minDate={moment(data.expired)}
 							locale="ru-ru"
 							todayButton="Сегодня"
 							onChange={this.handleChangeExpireDate}
@@ -137,7 +137,6 @@ export default class InvoiceItem extends React.Component {
 		);
 	}
 }
-
 InvoiceItem.propTypes = {
 	data: React.PropTypes.object,
 	selected: React.PropTypes.bool

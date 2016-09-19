@@ -1,11 +1,10 @@
-/* global moment, toastr, saveAs, Blob */
+/* global moment toastr saveAs Blob */
 
 import React from 'react';
 import Price from 'react-price';
 import xhr from 'xhr';
 import Scroll from 'react-scroll';
-import classNames from 'classnames';
-
+import b from 'b_';
 import {formatPrice} from '../utils.js';
 
 const Invoice = React.createClass({
@@ -32,10 +31,6 @@ const Invoice = React.createClass({
 		return {
 			promo: {}
 		};
-	},
-
-	getInitialState() {
-		return {};
 	},
 
 	handleCancel(e) {
@@ -68,70 +63,94 @@ const Invoice = React.createClass({
 	},
 
 	render() {
-		const d = moment(this.props.createdAt).format('D MMMM YYYY');
+		const {
+			active,
+			createdAt,
+			expired,
+			id,
+			name,
+			options,
+			promo,
+			status,
+			statusName,
+			sum
+		} = this.props;
+
+		const d = moment(createdAt).format('D MMMM YYYY');
+		const className = 'invoice-card';
 
 		return (
-			<div className={classNames('invoice-card', {'invoice-card_active': this.props.active})}>
-				<Scroll.Element name={`anchor-invoice-${this.props.id}`}/>
-				<div className="invoice-card__header">
-					<span className="invoice-card__name">
-						{`Счёт №${this.props.id} от ${d}`}
+			<div className={b(className, {active: active})}>
+				<Scroll.Element name={`anchor-invoice-${id}`}/>
+
+				<div className={b(className, 'header')}>
+					<span className={b(className, 'name')}>
+						{`Счёт №${id} от ${d}`}
 					</span>
-					{this.props.statusName ? (
-						<span className="invoice-card__status">
-							{`(${this.props.statusName})`}
+
+					{statusName ? (
+						<span className={b(className, 'status')}>
+							{`(${statusName})`}
 						</span>
 					) : null}
-					{this.props.status === 'waiting' ? (
+
+					{status === 'waiting' ? (
 						<a
-							className="invoice-card__cancel"
+							className={b(className, 'cancel')}
 							href="#"
 							onClick={this.handleCancel}
 							>
 							{'Аннулировать'}
 						</a>
 					) : null}
-					{this.props.status === 'waiting' ? (
+
+					{status === 'waiting' ? (
 						<button
 							className="close"
 							onClick={this.handleCancel}
 							type="button"
 							title="Аннулировать"
 							>
-							<span>×</span>
+							<span>
+								{'×'}
+							</span>
 						</button>
 					) : null}
 				</div>
 
-				<div className="invoice-card__content">
+				<div className={b(className, 'content')}>
 					<ul className="props">
 						<li className="props__item">
 							<span className="props__label">
 								{'Магазин:'}
 							</span>
+
 							<span className="props__value">
-								{this.props.name}
+								{name}
 							</span>
 						</li>
-						{this.props.promo ? (
+
+						{promo ? (
 							<li className="props__item">
 								<span className="props__label">
 									{'Тарифный план:'}
 								</span>
+
 								<span className="props__value">
-									{this.props.promo.name}
+									{promo.name}
 								</span>
+
 								<Price
-									cost={formatPrice(this.props.promo.price)}
+									cost={formatPrice(promo.price)}
 									currency={'₽'}
 									/>
 							</li>
 						) : null}
 					</ul>
 
-					{this.props.options.length ? (
+					{options.length ? (
 						<ul className="option-list invoice-card__option-list">
-							{this.props.options.map((option, key) => {
+							{options.map((option, key) => {
 								return (
 									<li
 										key={key}
@@ -140,6 +159,7 @@ const Invoice = React.createClass({
 										<span className="option-list__name">
 											{option.name}
 										</span>
+
 										<Price
 											cost={formatPrice(option.price)}
 											currency={'₽'}
@@ -151,28 +171,29 @@ const Invoice = React.createClass({
 					) : null}
 				</div>
 
-				<div className="invoice-card__footer">
-					{this.props.status === 'waiting' ? (
-						<div className="invoice-card__help">
+				<div className={b(className, 'footer')}>
+					{status === 'waiting' ? (
+						<div className={b(className, 'help')}>
 							{'Ваш пакет и доп. опции забронированны.'}
 							<br/>
 							<strong>
-								{`Бронь действует до ${moment(this.props.expired).format('D MMMM YYYY')}. `}
+								{`Бронь действует до ${moment(expired).format('D MMMM YYYY')}. `}
 							</strong>
 							{'В случае не поступления средств по счёту бронь снимается и позиции возвращаются в продажу.'}
 						</div>
 					) : null}
 
-					<div className="invoice-card__calc">
-						<div className="invoice-card__sum">
+					<div className={b(className, 'calc')}>
+						<div className={b(className, 'sum')}>
 							{'Итого: '}
 							<Price
-								cost={formatPrice(this.props.sum)}
+								cost={formatPrice(sum)}
 								currency={'₽'}
 								/>
 						</div>
-						{this.props.status === 'waiting' ? (
-							<div className="invoice-card__process">
+
+						{status === 'waiting' ? (
+							<div className={b(className, 'process')}>
 								<button
 									className="btn btn-success"
 									type="button"
@@ -180,6 +201,7 @@ const Invoice = React.createClass({
 									>
 									{'Получить счёт'}
 								</button>
+
 								<button
 									className="btn btn-primary"
 									type="button"

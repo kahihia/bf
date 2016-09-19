@@ -1,4 +1,4 @@
-/* global window, toastr, moment, _ */
+/* global window toastr moment _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -7,7 +7,7 @@ import xhr from 'xhr';
 import Scroll from 'react-scroll';
 import Invoice from './invoice.jsx';
 
-const PageMerchantInvoices = React.createClass({
+const AdvertiserInvoiceList = React.createClass({
 	propTypes: {
 	},
 
@@ -20,7 +20,8 @@ const PageMerchantInvoices = React.createClass({
 
 	componentDidMount() {
 		xhr({
-			url: '/admin/invoices',
+			url: '/api/invoices/',
+			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
@@ -28,8 +29,6 @@ const PageMerchantInvoices = React.createClass({
 					this.setState({invoices: sortByDate(data)});
 					this.scrollToActiveInvoice();
 				}
-			// } else {
-			//	 console.log('Undefined page')
 			}
 		});
 	},
@@ -49,23 +48,22 @@ const PageMerchantInvoices = React.createClass({
 		}
 	},
 
-	handleInvoiceCancel(invoiceId) {
+	handleInvoiceCancel(id) {
 		if (window.confirm('Аннулировать счёт?')) {
-			this.requestCancel(invoiceId);
+			this.requestCancel(id);
 		}
 	},
 
-	requestCancel(invoiceId) {
+	requestCancel(id) {
 		xhr({
-			url: '/admin/invoices',
-			method: 'PUT',
-			json: [{
-				id: invoiceId,
-				status: 'canceled'
-			}]
+			url: `/api/invoices/${id}/`,
+			method: 'PATCH',
+			json: {
+				status: 2
+			}
 		}, (err, resp) => {
 			if (!err && resp.statusCode === 200) {
-				const invoice = this.getInvoiceById(invoiceId);
+				const invoice = this.getInvoiceById(id);
 				invoice.status = 'canceled';
 				invoice.status_name = 'Отменен';
 				this.forceUpdate();
@@ -76,13 +74,13 @@ const PageMerchantInvoices = React.createClass({
 		});
 	},
 
-	handleClickPay(invoiceId, invoicePrice) {
+	handleClickPay(id, price) {
 		xhr({
 			url: '/payment/create',
 			method: 'POST',
 			json: {
-				order_id: invoiceId,
-				total_price: invoicePrice
+				order_id: id,
+				total_price: price
 			}
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
@@ -95,8 +93,8 @@ const PageMerchantInvoices = React.createClass({
 		});
 	},
 
-	getInvoiceById(invoiceId) {
-		return _.find(this.state.invoices, {id: invoiceId});
+	getInvoiceById(id) {
+		return _.find(this.state.invoices, {id});
 	},
 
 	render() {
@@ -127,7 +125,7 @@ const PageMerchantInvoices = React.createClass({
 	}
 });
 
-export default PageMerchantInvoices;
+export default AdvertiserInvoiceList;
 
 function sortByDate(data) {
 	return _.sortBy(data, item => moment(item.created_at).valueOf()).reverse();

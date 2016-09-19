@@ -15,33 +15,33 @@ export class InvoiceList extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			data: [],
-			selectedItems: [],
 			allSelected: false,
+			data: [],
 			filters: {},
-			newStatus: 'paid',
 			isLoading: true,
-			ordering: null
+			newStatus: 'paid',
+			ordering: null,
+			selectedItems: []
 		};
 
+		this.handleChangeDateFilter = this.handleChangeDateFilter.bind(this);
+		this.handleChangeInvoiceFilter = this.handleChangeInvoiceFilter.bind(this);
+		this.handleChangeNameFilter = this.handleChangeNameFilter.bind(this);
+		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
+		this.handleChangeStatusFilter = this.handleChangeStatusFilter.bind(this);
+		this.handleChangeSumStartFilter = this.handleChangeSumStartFilter.bind(this);
+		this.handleChangeSumStopFilter = this.handleChangeSumStopFilter.bind(this);
+		this.handleFilter = this.handleFilter.bind(this);
+		this.handleFiltersReset = this.handleFiltersReset.bind(this);
+		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
+		this.handleOrderingBySum = this.handleOrderingBySum.bind(this);
+		this.handleSelectAll = this.handleSelectAll.bind(this);
+		this.makeFilterUrl = this.makeFilterUrl.bind(this);
+		this.onItemExpireDateChanged = this.onItemExpireDateChanged.bind(this);
 		this.onItemSelected = this.onItemSelected.bind(this);
 		this.onItemUnselected = this.onItemUnselected.bind(this);
 		this.selectAll = this.selectAll.bind(this);
 		this.unselectAll = this.unselectAll.bind(this);
-		this.handleSelectAll = this.handleSelectAll.bind(this);
-		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
-		this.handleChangeDateFilter = this.handleChangeDateFilter.bind(this);
-		this.handleChangeNameFilter = this.handleChangeNameFilter.bind(this);
-		this.handleChangeInvoiceFilter = this.handleChangeInvoiceFilter.bind(this);
-		this.handleChangeSumStartFilter = this.handleChangeSumStartFilter.bind(this);
-		this.handleChangeSumStopFilter = this.handleChangeSumStopFilter.bind(this);
-		this.handleChangeStatusFilter = this.handleChangeStatusFilter.bind(this);
-		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
-		this.handleOrderingBySum = this.handleOrderingBySum.bind(this);
-		this.makeFilterUrl = this.makeFilterUrl.bind(this);
-		this.handleFilter = this.handleFilter.bind(this);
-		this.handleFiltersReset = this.handleFiltersReset.bind(this);
-		this.onItemExpireDateChanged = this.onItemExpireDateChanged.bind(this);
 
 		invoiceActions.onItemSelected(actionData => {
 			this.onItemSelected(actionData.id);
@@ -78,11 +78,12 @@ export class InvoiceList extends React.Component {
 	onItemUnselected(itemId) {
 		let selectedItems = this.state.selectedItems.slice();
 
-		for (var i = 0; i < selectedItems.length; i++) {
+		for (let i = 0; i < selectedItems.length; i++) {
 			if (selectedItems[i].id === itemId) {
 				selectedItems.splice(i, 1);
 			}
 		}
+
 		this.setState({
 			allSelected: false,
 			selectedItems: selectedItems
@@ -95,7 +96,7 @@ export class InvoiceList extends React.Component {
 		this.setState({
 			allSelected: true,
 			selectedItems: this.state.data
-		}, function () {
+		}, () => {
 			if (!stop) {
 				invoiceActions.allSelected(true /* stop */);
 			}
@@ -108,7 +109,7 @@ export class InvoiceList extends React.Component {
 		this.setState({
 			allSelected: false,
 			selectedItems: []
-		}, function () {
+		}, () => {
 			if (!stop) {
 				invoiceActions.allUnselected(true /* stop */);
 			}
@@ -130,6 +131,7 @@ export class InvoiceList extends React.Component {
 				const invoice = _.find(this.state.data, {id: options.invoiceId});
 				invoice.expired = expired;
 			}
+
 			this.setState({
 				isLoading: false
 			});
@@ -152,42 +154,27 @@ export class InvoiceList extends React.Component {
 
 	handleChangeDateFilter(date) {
 		const filters = Object.assign({}, this.state.filters, {date: date});
-
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleChangeNameFilter(event) {
 		const filters = Object.assign({}, this.state.filters, {name: event.target.value});
-
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleChangeInvoiceFilter(event) {
 		const filters = Object.assign({}, this.state.filters, {invoice: event.target.value});
-
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleChangeSumStartFilter(event) {
 		const filters = Object.assign({}, this.state.filters, {sumStart: event.target.value});
-
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleChangeSumStopFilter(event) {
 		const filters = Object.assign({}, this.state.filters, {sumStop: event.target.value});
-
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleChangeStatusFilter(event) {
@@ -195,9 +182,7 @@ export class InvoiceList extends React.Component {
 			status: (event.target.value === 'any') ? null : event.target.value
 		});
 
-		this.setState({
-			filters: filters
-		});
+		this.setState({filters});
 	}
 
 	handleOrderingByDate() {
@@ -245,28 +230,29 @@ export class InvoiceList extends React.Component {
 	}
 
 	makeFilterUrl() {
+		const {filters, ordering} = this.state;
 		let params = {};
 
-		if (this.state.filters.date) {
-			params.created_at = this.state.filters.date.format('YYYY-MM-DD');
+		if (filters.date) {
+			params.created_at = filters.date.format('YYYY-MM-DD');
 		}
-		if (this.state.filters.name) {
-			params.name = this.state.filters.name;
+		if (filters.name) {
+			params.name = filters.name;
 		}
-		if (this.state.filters.invoice) {
-			params.invoice = this.state.filters.invoice;
+		if (filters.invoice) {
+			params.invoice = filters.invoice;
 		}
-		if (this.state.filters.sumStart) {
-			params.sum_start = this.state.filters.sumStart;
+		if (filters.sumStart) {
+			params.sum_start = filters.sumStart;
 		}
-		if (this.state.filters.sumStop) {
-			params.sum_stop = this.state.filters.sumStop;
+		if (filters.sumStop) {
+			params.sum_stop = filters.sumStop;
 		}
-		if (this.state.filters.status && (this.state.filters.status !== 'any')) {
-			params.status = this.state.filters.status;
+		if (filters.status && (filters.status !== 'any')) {
+			params.status = filters.status;
 		}
-		if (this.state.ordering) {
-			params.order_by = this.state.ordering;
+		if (ordering) {
+			params.order_by = ordering;
 		}
 
 		let result = '/admin/invoices?' + Object.keys(params).reduce((memo, key) => {
@@ -281,52 +267,63 @@ export class InvoiceList extends React.Component {
 
 		this.setState({
 			isLoading: true
-		}, function () {
-			xhr.get(url, {json: true}, (err, resp, data) => {
+		}, () => {
+			xhr({
+				url,
+				method: 'GET',
+				json: true
+			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
-					this.setState({
-						data: data
-					});
+					this.setState({data});
 				}
-				this.setState({
-					isLoading: false
-				});
+
+				this.setState({isLoading: false});
 			});
 		});
 	}
 
-	handleFiltersReset(callback) {
+	handleFiltersReset() {
 		this.setState({
 			filters: {
 				status: 'any'
 			}
-		}, callback);
+		}, this.handleFilter);
 	}
 
 	componentDidMount() {
-		xhr.get('/admin/invoices', {json: true}, (err, resp, data) => {
+		xhr({
+			url: '/api/invoices/',
+			method: 'GET',
+			json: true
+		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
-				this.setState({
-					data: data
-				});
+				this.setState({data});
 			}
-			this.setState({
-				isLoading: false
-			});
+
+			this.setState({isLoading: false});
 		});
 	}
 
 	render() {
-		const self = this;
-		const selectedItemsIds = this.state.selectedItems.map(invoiceItem => {
+		const {
+			allSelected,
+			data,
+			filters,
+			isLoading,
+			newStatus,
+			ordering,
+			selectedItems
+		} = this.state;
+
+		const selectedItemsIds = selectedItems.map(invoiceItem => {
 			return invoiceItem.id;
 		});
-		const noSelectedItems = (this.state.selectedItems.length === 0);
+		const noSelectedItems = (selectedItems.length === 0);
 
 		let orderByDateIconCssClass;
 		let orderBySumIconCssClass;
 
-		switch (self.state.ordering) {
+		switch (ordering) {
 			case 'created_at':
 				orderByDateIconCssClass = 'glyphicon glyphicon-sort-by-attributes';
 				orderBySumIconCssClass = 'glyphicon glyphicon-sort';
@@ -362,12 +359,12 @@ export class InvoiceList extends React.Component {
 									className="form-control datepicker-input-sm"
 									style={{fontSize: 14}}
 									dateFormat="YYYY-MM-DD"
-									selected={self.state.filters.date || null}
+									selected={filters.date || null}
 									maxDate={moment()}
 									locale="ru-ru"
 									todayButton="Сегодня"
-									disabled={self.state.isLoading}
-									onChange={self.handleChangeDateFilter}
+									disabled={isLoading}
+									onChange={this.handleChangeDateFilter}
 									/>
 							</div>
 							<div className="form-group col-sm-2">
@@ -378,9 +375,9 @@ export class InvoiceList extends React.Component {
 									type="text"
 									className="form-control"
 									style={{fontSize: 14}}
-									value={self.state.filters.name}
-									disabled={self.state.isLoading}
-									onChange={self.handleChangeNameFilter}
+									value={filters.name}
+									disabled={isLoading}
+									onChange={this.handleChangeNameFilter}
 									/>
 							</div>
 							<div className="form-group col-sm-2">
@@ -391,9 +388,9 @@ export class InvoiceList extends React.Component {
 									type="text"
 									className="form-control"
 									style={{fontSize: 14}}
-									value={self.state.filters.invoice}
-									disabled={self.state.isLoading}
-									onChange={self.handleChangeInvoiceFilter}
+									value={filters.invoice}
+									disabled={isLoading}
+									onChange={this.handleChangeInvoiceFilter}
 									/>
 							</div>
 							<div className="form-group col-sm-4">
@@ -409,9 +406,9 @@ export class InvoiceList extends React.Component {
 											type="text"
 											className="form-control"
 											style={{fontSize: 14}}
-											value={self.state.filters.sumStart}
-											disabled={self.state.isLoading}
-											onChange={self.handleChangeSumStartFilter}
+											value={filters.sumStart}
+											disabled={isLoading}
+											onChange={this.handleChangeSumStartFilter}
 											/>
 									</div>
 									<div className="col-sm-2">
@@ -422,9 +419,9 @@ export class InvoiceList extends React.Component {
 											type="text"
 											className="form-control"
 											style={{fontSize: 14}}
-											value={self.state.filters.sumStop}
-											disabled={self.state.isLoading}
-											onChange={self.handleChangeSumStopFilter}
+											value={filters.sumStop}
+											disabled={isLoading}
+											onChange={this.handleChangeSumStopFilter}
 											/>
 									</div>
 								</div>
@@ -436,10 +433,10 @@ export class InvoiceList extends React.Component {
 								<select
 									className="form-control"
 									style={{fontSize: 14}}
-									value={self.state.filters.status}
-									defaultValue={self.state.filters.status === 'any'}
-									disabled={self.state.isLoading}
-									onChange={self.handleChangeStatusFilter}
+									value={filters.status}
+									defaultValue={filters.status === 'any'}
+									disabled={isLoading}
+									onChange={this.handleChangeStatusFilter}
 									>
 									<option value="any">Все</option>
 									<option value="paid">{invoiceStatuses.paid}</option>
@@ -451,10 +448,8 @@ export class InvoiceList extends React.Component {
 								<button
 									type="button"
 									className="btn btn-link"
-									disabled={self.state.isLoading}
-									onClick={function () {
-										self.handleFiltersReset(self.handleFilter);
-									}}
+									disabled={isLoading}
+									onClick={this.handleFiltersReset}
 									>
 									Очистить фильтры
 								</button>
@@ -463,8 +458,8 @@ export class InvoiceList extends React.Component {
 								<button
 									type="button"
 									className="btn btn-default"
-									disabled={self.state.isLoading}
-									onClick={self.handleFilter}
+									disabled={isLoading}
+									onClick={this.handleFilter}
 									>
 									Фильтровать
 								</button>
@@ -480,9 +475,9 @@ export class InvoiceList extends React.Component {
 					<div className="col-sm-4">
 						<select
 							className="form-control"
-							value={self.state.newStatus}
-							disabled={noSelectedItems || self.state.isLoading}
-							onChange={self.handleChangeNewStatus}
+							value={newStatus}
+							disabled={noSelectedItems || isLoading}
+							onChange={this.handleChangeNewStatus}
 							>
 							<option value="paid">Изменить статус на &laquo;Оплачен&raquo;</option>
 							<option value="waiting">Изменить статус на &laquo;Не оплачен&raquo;</option>
@@ -492,12 +487,12 @@ export class InvoiceList extends React.Component {
 					<div className="col-sm-2">
 						<ChangeManyInvoiceStatusesBtn
 							invoiceIds={selectedItemsIds}
-							disabled={noSelectedItems || self.state.isLoading}
-							newStatus={self.state.newStatus}
+							disabled={noSelectedItems || isLoading}
+							newStatus={newStatus}
 							/>
 					</div>
 					<div className="col-sm-4 text-right">
-						{self.state.isLoading ?
+						{isLoading ?
 							(<div className="form-control-static text-muted">Загрузка...</div>) :
 							null
 						}
@@ -507,12 +502,12 @@ export class InvoiceList extends React.Component {
 					<thead>
 						<tr>
 							<th>
-								<input type="checkbox" checked={self.state.allSelected} onChange={self.handleSelectAll}/>
+								<input type="checkbox" checked={allSelected} onChange={this.handleSelectAll}/>
 							</th>
 							<th>
 								<span
 									style={{borderBottom: '1px dotted', cursor: 'pointer'}}
-									onClick={self.handleOrderingByDate}
+									onClick={this.handleOrderingByDate}
 									>
 									Дата&nbsp;<i className={orderByDateIconCssClass}/>
 								</span>
@@ -525,7 +520,7 @@ export class InvoiceList extends React.Component {
 							<th>
 								<span
 									style={{borderBottom: '1px dotted', cursor: 'pointer'}}
-									onClick={self.handleOrderingBySum}
+									onClick={this.handleOrderingBySum}
 									>
 									Сумма&nbsp;<i className={orderBySumIconCssClass}/>
 								</span>
@@ -534,8 +529,8 @@ export class InvoiceList extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-						{self.state.data.map(function (invoiceItem) {
-							const itemIsSelected = (self.state.selectedItems.indexOf(invoiceItem.id) >= 0);
+						{data.map(function (invoiceItem) {
+							const itemIsSelected = (selectedItems.indexOf(invoiceItem.id) >= 0);
 
 							return (
 								<InvoiceItem
@@ -554,9 +549,9 @@ export class InvoiceList extends React.Component {
 					<div className="col-sm-4">
 						<select
 							className="form-control"
-							value={self.state.newStatus}
-							disabled={noSelectedItems || self.state.isLoading}
-							onChange={self.handleChangeNewStatus}
+							value={newStatus}
+							disabled={noSelectedItems || isLoading}
+							onChange={this.handleChangeNewStatus}
 							>
 							<option value="paid">Изменить статус на &laquo;Оплачен&raquo;</option>
 							<option value="waiting">Изменить статус на &laquo;Не оплачен&raquo;</option>
@@ -566,12 +561,12 @@ export class InvoiceList extends React.Component {
 					<div className="col-sm-2">
 						<ChangeManyInvoiceStatusesBtn
 							invoiceIds={selectedItemsIds}
-							disabled={noSelectedItems || self.state.isLoading}
-							newStatus={self.state.newStatus}
+							disabled={noSelectedItems || isLoading}
+							newStatus={newStatus}
 							/>
 					</div>
 					<div className="col-sm-4 text-right">
-						{self.state.isLoading ?
+						{isLoading ?
 							(<div className="form-control-static text-muted">Загрузка...</div>) :
 							null
 						}
