@@ -146,34 +146,15 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
 
 
 class MerchantUpdateSerializer(serializers.ModelSerializer):
-    promo_id = serializers.PrimaryKeyRelatedField(queryset=Promo.objects.all(), source='promo')
-
     class Meta:
         model = Merchant
 
     def get_default_field_names(self, declared_fields, model_info):
-        fields = ['name', 'url', 'description', 'promocode', 'image', 'promo_id']
+        fields = ['name', 'url', 'description', 'promocode', 'image']
         user = self.context['request'].user
         if user and user.is_authenticated and user.is_admin:
             fields += ['is_active', 'slug']
         return fields
-
-    def validate_promo_id(self, value):
-        if (
-            self.instance and
-            self.instance.promo and
-            self.instance.promo.price < value.price and
-            not value.is_custom
-        ):
-            raise ValidationError('Неверный promo_id')
-        return value
-
-    def update(self, instance, validated_data):
-        if 'promo' in validated_data:
-            promo = validated_data.pop('promo')
-            invoice = instance.invoices.create(promo=promo)
-            invoice.calculate_total()
-        return super().update(instance, validated_data)
 
 
 class MerchantTinySerializer(serializers.ModelSerializer):
