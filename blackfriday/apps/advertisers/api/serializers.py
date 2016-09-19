@@ -170,8 +170,9 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if 'promo' in validated_data:
-            # ToDo: create invoice
             promo = validated_data.pop('promo')
+            invoice = instance.invoices.create(promo=promo)
+            invoice.calculate_total()
         return super().update(instance, validated_data)
 
 
