@@ -42,4 +42,4 @@ export const TOKEN = {
 	csrftoken: Cookie.get('csrftoken')
 };
 
-export const CATEGORIES_URL = 'https://realblackfriday.ru/categories';
+export const SITE_URL = ENV.siteUrl;

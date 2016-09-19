@@ -4,7 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
-import {CATEGORIES_URL} from '../const.js';
+import {getFullUrl} from '../utils.js';
 import EditCategoryForm from './edit-category-form.jsx';
 
 const CategoryList = React.createClass({
@@ -95,7 +95,7 @@ const CategoryListItem = React.createClass({
 
 	render() {
 		const {id, name, slug} = this.props;
-		const link = `${CATEGORIES_URL}/${slug}/`;
+		const link = `${getFullUrl('categories')}${slug}/`;
 
 		return (
 			<tr>
