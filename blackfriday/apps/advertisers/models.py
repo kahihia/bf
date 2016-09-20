@@ -79,7 +79,9 @@ class Merchant(models.Model):
         qs = self.invoices.filter(promo__isnull=False)
         if statuses:
             qs = qs.filter(status__in=statuses)
-        return qs.order_by('-id').first().promo
+        invoice = qs.order_by('-id').first()
+        if invoice:
+            return invoice.promo
 
     @property
     def banners(self):
