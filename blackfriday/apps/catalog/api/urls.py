@@ -9,7 +9,7 @@ from .views import CategoryViewSet, ProductViewSet
 router = routers.SimpleRouter()
 router.register(r'categories', CategoryViewSet)
 merchant_router = ExtendedNestedRouter(adv_router, r'merchants', lookup='merchant')
-merchant_router.register(r'products', ProductViewSet)
+merchant_router.register(r'products', ProductViewSet, base_name='products')
 
 
 urlpatterns = router.urls

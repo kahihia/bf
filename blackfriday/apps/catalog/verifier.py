@@ -3,35 +3,35 @@ from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
-from .parser import Row, Column, Grouped, GenericChainedValidator, GenericValidator
+from .parser import Row, Column, Grouped, GenericValidator
 from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from .models import Category
 
 
-def together(context, **cleaned_data):
-    return all(cleaned_data.values()) or not any([cleaned_data.values()])
+def together(**cleaned_data):
+    return all(cleaned_data.values()) or not any(cleaned_data.values())
 
 
-def old_price_gte_price(old_price, price, context):
+def old_price_gte_price(old_price, price):
     return bool(price and old_price and price < old_price)
 
 
-def duplicate_product_urls(value, context):
-    if value is None:
+def duplicate_product_urls(url, context):
+    if url is None:
         return None
-    if value not in context.get('product_urls'):
-        context.get('product_urls').add(value)
+    if url not in context.get('product_urls'):
+        context.get('product_urls').add(url)
         return True
     else:
         return False
 
 
-def clear_category(value, context):
-    if value is None:
+def clear_category(category, context):
+    if category is None:
         return None
-    if value not in context['categories']:
+    if category not in context['categories']:
         return settings.DEFAULT_CATEGORY_NAME
-    return value
+    return category
 
 
 class ProductRow(Row):
@@ -41,26 +41,26 @@ class ProductRow(Row):
             validators=(Required(), Length(rule=255))),
         Grouped(
             [
-                GenericChainedValidator(message='Оба поля должны быть валидны', rule=together),
-                GenericChainedValidator(
+                GenericValidator(message='Оба поля должны быть валидны', rule=together),
+                GenericValidator(
                     message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
             ],
             Column(
                 'old_price', pipes=(float, int),
-                validators=(IsNumeric(blank=True),)),
+                validators=(IsNumeric(),)),
             Column(
                 'price', pipes=(float, int),
-                validators=(IsNumeric(blank=True),)),
+                validators=(IsNumeric(),)),
         ),
         Column(
             'discount', pipes=(float, int),
-            validators=(IsNumeric(blank=True), MaxValue(rule=100, blank=True),)),
+            validators=(IsNumeric(), MaxValue(rule=100),)),
         Column(
             'start_price', pipes=(float, int),
-            validators=(IsNumeric(blank=True),)),
+            validators=(IsNumeric(),)),
         Column(
             'currency', pipes=(str, str.lower),
-            validators=(Required(), Choices(rule=settings.CURRENCY_IDS, blank=True),)),
+            validators=(Required(), Choices(rule=settings.CURRENCY_IDS,),)),
         Column(
             'brand', pipes=(str,),
             validators=(Required(),)),

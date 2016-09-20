@@ -5,9 +5,6 @@ class IsNumeric(BaseValidator):
     _message = 'Отсутствует числовое значение'
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
-
         try:
             float(value)
         except:
@@ -18,8 +15,6 @@ class IsNumeric(BaseValidator):
 class MaxValue(BaseValidator):
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
         if isinstance(value, str):
             return None
         return self.rule >= value
@@ -31,8 +26,6 @@ class MaxValue(BaseValidator):
 class Choices(BaseValidator):
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
         return value in self.rule
 
     def get_message(self):
@@ -42,8 +35,6 @@ class Choices(BaseValidator):
 class Substring(BaseValidator):
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
         if isinstance(self.rule, str):
             return self.rule in value
         return any(map(lambda r: r in value, self.rule))
@@ -52,21 +43,17 @@ class Substring(BaseValidator):
         return 'Строка должна содержать {}'.format(self.rule)
 
 
-class UtmRequired(Substring):
+class UtmRequired(BaseValidator):
     _message = 'Отсутствуют utm метки'
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
         return all([utm in value for utm in ['utm_source', 'utm_medium', 'utm_campaign']])
 
 
 class Length(BaseValidator):
 
     def validate(self, value, **kwargs):
-        if not value:
-            return None
-        return len(value) < self.rule
+        return len(value) <= self.rule
 
     def get_message(self):
         return 'Длина строки не должна превышать {}'.format(self.rule)
@@ -74,6 +61,8 @@ class Length(BaseValidator):
 
 class Required(BaseValidator):
     _message = 'Обязательное поле'
+    required = True
 
     def validate(self, value, **kwargs):
+
         return bool(value)

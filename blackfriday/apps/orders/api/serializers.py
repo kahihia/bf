@@ -62,7 +62,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if merchant.promo and promo and merchant.promo.price > promo.price:
             raise ValidationError('Нельзя назначить более дешёвый пакет')
 
-        attrs['sum'] = self._get_total(**attrs)
         return attrs
 
     def create(self, validated_data):

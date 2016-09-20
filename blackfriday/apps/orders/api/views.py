@@ -29,7 +29,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         qs = super().get_queryset()
         user = self.request.user
         if self.action == 'list' and user.role == 'advertiser':
-            qs = qs.filter(advertiser=user)
+            qs = qs.filter(merchant__advertiser=user)
         return qs
 
     @list_route(methods=['patch', 'put'])
