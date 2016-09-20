@@ -46,7 +46,9 @@ class AddMerchantForm extends Form {
 	}
 
 	componentDidMount() {
-		this.requestAdvertisers();
+		if (!hasRole('advertiser')) {
+			this.requestAdvertisers();
+		}
 	}
 
 	requestAdvertisers() {
