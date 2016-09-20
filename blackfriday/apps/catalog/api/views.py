@@ -25,7 +25,7 @@ class ProductViewSet(
         mixins.RetrieveModelMixin, mixins.ListModelMixin,
         mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = Product.objects.all()
-    # permission_classes = [IsAuthenticated, IsAdvertiser & IsOwner | IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdvertiser & IsOwner | IsAdmin]
     serializer_class = ProductSerializer
 
     def dispatch(self, request, *args, **kwargs):
