@@ -122,6 +122,8 @@ const MerchantListItem = React.createClass({
 			promo
 		} = this.props;
 
+		const isAdmin = hasRole('admin');
+
 		return (
 			<tr>
 				<td className={b('merchant-list', 'table-td', {name: 'logo'})}>
@@ -181,7 +183,7 @@ const MerchantListItem = React.createClass({
 						</a>
 					) : null}
 
-					{hasRole('admin') ? (
+					{isAdmin ? (
 						<button
 							className="btn btn-sm"
 							onClick={this.handleClickMerchantHide}
@@ -205,14 +207,16 @@ const MerchantListItem = React.createClass({
 						</span>
 					)}
 
-					<button
-						className="btn btn-danger btn-sm"
-						onClick={this.handleClickMerchantDelete}
-						title="Удалить магазин"
-						type="button"
-						>
-						<Glyphicon name="remove"/>
-					</button>
+					{isAdmin ? (
+						<button
+							className="btn btn-danger btn-sm"
+							onClick={this.handleClickMerchantDelete}
+							title="Удалить магазин"
+							type="button"
+							>
+							<Glyphicon name="remove"/>
+						</button>
+					) : null}
 				</td>
 			</tr>
 		);

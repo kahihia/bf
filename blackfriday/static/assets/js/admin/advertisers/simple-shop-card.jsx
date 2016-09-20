@@ -30,7 +30,9 @@ const SimpleShopCard = React.createClass({
 			paymentStatus,
 			promo
 		} = item;
-		const isEditable = item.editable || hasRole('admin');
+
+		const isAdmin = hasRole('admin');
+		const isEditable = item.editable || isAdmin;
 
 		return (
 			<div className={b('simple-shop-card')}>
@@ -107,7 +109,7 @@ const SimpleShopCard = React.createClass({
 							</a>
 						) : null}
 
-						{hasRole('admin') ? (
+						{isAdmin ? (
 							<span
 								className={b('action-list', 'item')}
 								title={item.isActive ? 'Скрыть загруженный контент' : 'Показывать загруженный контент'}
@@ -130,16 +132,18 @@ const SimpleShopCard = React.createClass({
 							</span>
 						)}
 
-						<span
-							className={b('action-list', 'item')}
-							onClick={this.handleClickMerchantDelete}
-							title="Удалить магазин"
-							>
-							<Glyphicon
-								name="remove"
-								className="text-danger"
-								/>
-						</span>
+						{isAdmin ? (
+							<span
+								className={b('action-list', 'item')}
+								onClick={this.handleClickMerchantDelete}
+								title="Удалить магазин"
+								>
+								<Glyphicon
+									name="remove"
+									className="text-danger"
+									/>
+							</span>
+						) : null}
 					</div>
 				</div>
 			</div>
