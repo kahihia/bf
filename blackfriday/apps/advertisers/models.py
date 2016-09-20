@@ -76,10 +76,10 @@ class Merchant(models.Model):
         return self.name
 
     def get_promo(self, *statuses):
-        qs = self.invoices.all()
+        qs = self.invoices.filter(promo__isnull=False)
         if statuses:
             qs = qs.filter(status__in=statuses)
-        return qs.order_by('-id').first()
+        return qs.order_by('-id').first().promo
 
     @property
     def banners(self):
