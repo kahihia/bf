@@ -9,6 +9,9 @@ from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
 
+from apps.mediafiles.models import Image
+from apps.mediafiles.api.serializers import ImageSerializer
+
 from ..models import AdvertiserProfile, Merchant, ModerationStatus
 
 
@@ -88,6 +91,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
 class MerchantSerializer(serializers.ModelSerializer):
     moderation = serializers.SerializerMethodField()
     promo = serializers.SerializerMethodField()
+    image = ImageSerializer()
 
     advertiser = AdvertiserTinySerializer()
     # ToDo: импортировать apps.banners.api.serializers.BannerSerializer
@@ -110,8 +114,8 @@ class MerchantSerializer(serializers.ModelSerializer):
 
 class MerchantListSerializer(serializers.ModelSerializer):
     promo = PromoTinySerializer()
-
     advertiser = AdvertiserTinySerializer()
+    image = ImageSerializer()
 
     class Meta:
         model = Merchant
@@ -150,6 +154,10 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
 
 
 class MerchantUpdateSerializer(serializers.ModelSerializer):
+    image = serializers.PrimaryKeyRelatedField(
+        queryset=Image.objects.all(), required=False, allow_null=True, error_messages={
+            'does_not_exist': 'does_not_exist'})
+
     class Meta:
         model = Merchant
 
@@ -159,6 +167,9 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated and user.is_admin:
             fields += ['is_active', 'slug']
         return fields
+
+    def to_representation(self, instance):
+        return MerchantSerializer().to_representation(instance)
 
 
 class MerchantTinySerializer(serializers.ModelSerializer):
