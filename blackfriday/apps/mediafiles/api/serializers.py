@@ -14,8 +14,15 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = ('image', 'id')
 
     def validate_image(self, value):
-        expected_width = int(self.context['request'].query_params.get('exact_width', 0))
-        expected_height = int(self.context['request'].query_params.get('exact_height', 0))
+        try:
+            expected_width = int(self.context['request'].query_params.get('exact_width', 0))
+        except ValueError:
+            expected_width = 0
+        try:
+            expected_height = int(self.context['request'].query_params.get('exact_height', 0))
+        except ValueError:
+            expected_height = 0
+
         if expected_height or expected_width:
             errors = []
             if expected_width and expected_width != value.image.width:
