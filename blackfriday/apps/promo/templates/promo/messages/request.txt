@@ -1,0 +1,6 @@
+Рекламодатель: {% if user.name %}{{ user.name }}{% else %}"аноним ({{ user.email }})"{% endif %}
+
+Тел.номер: {{ message.phone }}
+
+Текст сообщения:
+{{ message.message }}
