@@ -4,12 +4,20 @@ from rest_framework.exceptions import ValidationError
 from ..models import Option, Promo, PromoOption
 
 
+class PromoTinySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Promo
+        fields = ('id', 'name', 'price')
+
+
 class OptionSerializer(serializers.ModelSerializer):
     max_value = serializers.IntegerField(source='max_count')
+    promos_available_for = PromoTinySerializer(source='available_in_promos', many=True)
 
     class Meta:
         model = Option
-        fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value')
+        fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value',
+                  'promos_available_for')
 
 
 class PromoOptionSerializer(serializers.ModelSerializer):
@@ -45,12 +53,6 @@ class PromoSerializer(serializers.ModelSerializer):
         promo = super().create(validated_data)
         PromoOption.objects.bulk_create(PromoOption(promo=promo, **kw) for kw in promo_options)
         return promo
-
-
-class PromoTinySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Promo
-        fields = ('id', 'name', 'price')
 
 
 class CustomPromoRequestSerializer(serializers.Serializer):
