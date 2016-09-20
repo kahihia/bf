@@ -1,10 +1,19 @@
-from rest_framework import viewsets, mixins
+import smtplib
 
-from libs.api.permissions import ReadOnly, IsAuthenticated, IsAdmin
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
+from rest_framework import viewsets, mixins
+from rest_framework.response import Response
+
+from libs.api.permissions import ReadOnly, IsAuthenticated, IsAdmin, IsAdvertiser
+from libs.api.exceptions import ServiceUnavailable
+
+from ..models import Option, Promo
 
 from .filters import OptionFilter, PromoFilter
-from .serializers import (Option, OptionSerializer,
-                          Promo, PromoSerializer)
+from .serializers import OptionSerializer, PromoSerializer, CustomPromoRequestSerializer
 
 
 class OptionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -18,3 +27,26 @@ class PromoViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Promo.objects.all()
     serializer_class = PromoSerializer
     filter_class = PromoFilter
+
+
+class CustomPromoRequestsViewSet(viewsets.GenericViewSet):
+    serializer_class = CustomPromoRequestSerializer
+    permission_classes = [IsAuthenticated, IsAdvertiser]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        message = EmailMessage(
+            subject='Заявка на особый рекламный пакет',
+            body=render_to_string('promo/messages/request.txt', {'user': request.user, 'message': serializer.data}),
+            to=map(lambda x: '"{}" <{}>'.format(*x), settings.PROMO_MANAGERS)
+        )
+
+        try:
+            message.send()
+        except smtplib.SMTPException:
+            raise ServiceUnavailable
+
+        return Response()
+

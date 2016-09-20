@@ -57,13 +57,15 @@ const SimpleShopCard = React.createClass({
 					</a>
 				) : (
 					<div>
-						{item.image ? (
-							<img
-								className={b('simple-shop-card', 'logo')}
-								src={item.image}
-								alt=""
-								/>
-						) : null}
+						<span className={b('simple-shop-card', 'logo-placeholder')}>
+							{item.image ? (
+								<img
+									className={b('simple-shop-card', 'logo')}
+									src={item.image}
+									alt=""
+									/>
+							) : null}
+						</span>
 
 						<div
 							className={b('simple-shop-card', 'name')}
