@@ -1,6 +1,6 @@
 import React from 'react';
 import b from 'b_';
-import {resolveImgPath, hasRole} from '../utils.js';
+import {hasRole} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import Icon from '../components/icon.jsx';
 import MerchantProps from './merchant-props.jsx';
@@ -42,7 +42,7 @@ const SimpleShopCard = React.createClass({
 							{item.image ? (
 								<img
 									className={b('simple-shop-card', 'logo')}
-									src={resolveImgPath(item.image)}
+									src={item.image}
 									alt=""
 									/>
 							) : null}
@@ -60,7 +60,7 @@ const SimpleShopCard = React.createClass({
 						{item.image ? (
 							<img
 								className={b('simple-shop-card', 'logo')}
-								src={resolveImgPath(item.image)}
+								src={item.image}
 								alt=""
 								/>
 						) : null}
