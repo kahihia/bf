@@ -22,11 +22,10 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 		getInitialState() {
 			return {
 				merchants: [],
-				availablePromo: [],
 				filterByName: '',
 				filterByStatus: '',
 				filterByDate: 'ASC',
-				filterByPromo: '',
+				filterByPromo: 0,
 				view: CURRENT_VIEW
 			};
 		},
@@ -43,14 +42,8 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
 					if (data) {
-						let availablePromo = [];
-						if (hasRole('admin') || hasRole('manager')) {
-							availablePromo = this.collectAvailablePromo(data);
-						}
-						this.setState({
-							merchants: _.sortBy(data, 'id'),
-							availablePromo
-						});
+						const merchants = _.sortBy(data, 'id');
+						this.setState({merchants});
 					}
 				} else {
 					toastr.error('Не удалось получить список магазинов');
@@ -115,22 +108,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 						break;
 					}
 				}
-			});
-		},
-
-		collectAvailablePromo(data) {
-			return data.reduce((a, b) => {
-				const promo = b.promo_name;
-				if (promo && a.indexOf(promo) === -1) {
-					a.push(promo);
-				}
-
-				return a;
-			}, ['']).map(a => {
-				return {
-					name: a,
-					id: a
-				};
 			});
 		},
 
@@ -222,7 +199,17 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			}
 
 			return _.filter(merchants, item => {
-				return item.promo_name === filterByPromo;
+				if (item.promo) {
+					if (item.promo.id === filterByPromo) {
+						return true;
+					}
+				} else {
+					if (filterByPromo === 9999) {
+						return true;
+					}
+
+					return false;
+				}
 			});
 		},
 
@@ -263,7 +250,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 
 		render() {
 			const {
-				availablePromo,
 				filterByDate,
 				filterByName,
 				filterByPromo,
@@ -305,7 +291,6 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							onFilterByPromo={this.handleFilterByPromo}
 							onFilterByStatus={this.handleFilterByStatus}
 							{...{
-								availablePromo,
 								filterByDate,
 								filterByName,
 								filterByPromo,
