@@ -1,4 +1,4 @@
-/* global moment toastr saveAs Blob */
+/* global moment saveAs Blob */
 
 import React from 'react';
 import Price from 'react-price';
@@ -6,7 +6,7 @@ import xhr from 'xhr';
 import Scroll from 'react-scroll';
 import b from 'b_';
 import {PAYMENT_STATUS} from '../const.js';
-import {formatPrice} from '../utils.js';
+import {formatPrice, processErrors} from '../utils.js';
 
 const Invoice = React.createClass({
 	propTypes: {
@@ -34,7 +34,8 @@ const Invoice = React.createClass({
 
 	requestDownloadPayment() {
 		xhr({
-			url: `/admin/invoice/${this.props.id}/payment`,
+			url: `/api/invoices/${this.props.id}/receipt/`,
+			method: 'GET',
 			responseType: 'arraybuffer'
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
@@ -42,7 +43,7 @@ const Invoice = React.createClass({
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Счёт №${this.props.id} на оплату от ${d}.pdf`);
 			} else {
-				toastr.error(data);
+				processErrors(data);
 			}
 		});
 	},
