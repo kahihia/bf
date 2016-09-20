@@ -77,6 +77,7 @@ export default MerchantList;
 
 const MerchantListItem = React.createClass({
 	propTypes: {
+		advertiser: React.PropTypes.object,
 		id: React.PropTypes.number,
 		image: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
@@ -91,7 +92,7 @@ const MerchantListItem = React.createClass({
 		optionsCount: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number,
 		previewUrl: React.PropTypes.string,
-		promo: React.PropTypes.string
+		promo: React.PropTypes.object
 	},
 
 	getDefaultProps() {
@@ -108,6 +109,7 @@ const MerchantListItem = React.createClass({
 
 	render() {
 		const {
+			advertiser,
 			id,
 			image,
 			isActive,
@@ -144,7 +146,7 @@ const MerchantListItem = React.createClass({
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'advertiser'})}>
-					{'advertiser'}
+					{advertiser.name}
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'data'})}>

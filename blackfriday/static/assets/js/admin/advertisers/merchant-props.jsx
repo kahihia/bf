@@ -145,7 +145,7 @@ MerchantProps.propTypes = {
 	moderationStatus: React.PropTypes.number,
 	optionsCount: React.PropTypes.number,
 	paymentStatus: React.PropTypes.number,
-	promo: React.PropTypes.string
+	promo: React.PropTypes.object
 };
 MerchantProps.defaultProps = {
 };
