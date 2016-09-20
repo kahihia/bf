@@ -8,6 +8,9 @@ class Promo(models.Model):
     price = models.IntegerField(verbose_name='Цена')
     is_custom = models.BooleanField(default=True, verbose_name='Кастомный пакет')
 
+    available_options = models.ManyToManyField('promo.Option', related_name='available_in_promos',
+                                               verbose_name='Доступные опции')
+
     class Meta:
         verbose_name = 'Рекламный пакет'
         verbose_name_plural = 'Рекламные пакеты'
