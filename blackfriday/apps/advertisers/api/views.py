@@ -3,7 +3,7 @@ from apps.banners.models import Partner
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
 
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, ReadOnly, IsManager
+from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 

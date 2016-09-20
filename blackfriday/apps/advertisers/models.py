@@ -58,7 +58,7 @@ class Merchant(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
-    image = models.ImageField(upload_to='merchants', verbose_name='Изображение')
+    image = models.ForeignKey('mediafiles.Image', verbose_name='Изображение', null=True)
 
     partners = models.ManyToManyField('banners.Partner', related_name='merchants', verbose_name='Партнеры')
     advertiser = models.ForeignKey('users.User', related_name='merchants', verbose_name='Рекламодатель')
