@@ -53,3 +53,5 @@ DATABASES = {
 #RECAPTCHA_SECRET_KEY = '...'
 
 #SUPPORT_EMAIL = 'help@realblackfriday.com'
+
+#PROMO_MANAGERS = []

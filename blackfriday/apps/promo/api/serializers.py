@@ -51,3 +51,9 @@ class PromoTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Promo
         fields = ('id', 'name', 'price')
+
+
+class CustomPromoRequestSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    phone = serializers.CharField()
+    message = serializers.CharField()
