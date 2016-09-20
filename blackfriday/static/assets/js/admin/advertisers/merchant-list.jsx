@@ -193,7 +193,17 @@ const MerchantListItem = React.createClass({
 								className={isActive ? 'text-muted' : 'text-danger'}
 								/>
 						</button>
-					) : null}
+					) : (
+						<span
+							className="btn btn-sm"
+							title={isActive ? 'Активен' : 'Не активен'}
+							>
+							<Glyphicon
+								name="eye-close"
+								className={isActive ? 'text-muted' : 'text-danger'}
+								/>
+						</span>
+					)}
 
 					<button
 						className="btn btn-danger btn-sm"

@@ -118,7 +118,17 @@ const SimpleShopCard = React.createClass({
 									className={item.isActive ? 'text-muted' : 'text-danger'}
 									/>
 							</span>
-						) : null}
+						) : (
+							<span
+								className={b('action-list', 'item')}
+								title={item.isActive ? 'Активен' : 'Не активен'}
+								>
+								<Glyphicon
+									name="eye-close"
+									className={item.isActive ? 'text-muted' : 'text-danger'}
+									/>
+							</span>
+						)}
 
 						<span
 							className={b('action-list', 'item')}
