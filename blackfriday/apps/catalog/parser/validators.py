@@ -1,16 +1,24 @@
+import inspect
+
+
 class BaseValidator:
     _message = None
     is_warning = False
+    required = False
 
-    def __init__(self, rule=None, blank=False, is_warning=False):
-        self.blank = blank
+    def __init__(self, rule=None, is_warning=False, message=None, required=False):
         self.rule = rule
         self.is_warning = is_warning
+        self.required = self.required or required
+        if message is not None:
+            self._message = message
 
-    def __call__(self, value, context, **kwargs):
-        return self.validate(value=value, context=context, **kwargs)
+    def __call__(self, value, context):
+        if not value and not self.required:
+            return None
+        return self.validate(value=value, context=context)
 
-    def validate(self, value, context, **kwargs):
+    def validate(self, value, context=None):
         raise NotImplementedError
 
     @property
@@ -24,18 +32,9 @@ class BaseValidator:
 
 
 class GenericValidator(BaseValidator):
-    def __init__(self, message, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._message = message
-
-    def __call__(self, context, *values, **kwargs):
-        return self.rule(context=context, *values, **kwargs)
-
-
-class GenericChainedValidator(BaseValidator):
-    def __init__(self, message, *args, **kwargs):
-        self._message = message
-        super().__init__(*args, **kwargs)
-
-    def __call__(self, context, *values, **kwargs):
-        return self.rule(context=context, *values, **kwargs)
+    def __call__(self, context, **cleaned_data):
+        signature = inspect.signature(self.rule)
+        if 'context' in signature.parameters:
+            return self.rule(context=context, **cleaned_data)
+        else:
+            return self.rule(**cleaned_data)

@@ -3,7 +3,7 @@
 import React from 'react';
 import FormRow from '../components/form-row.jsx';
 import Radio from '../components/radio.jsx';
-import Select from '../components/select.jsx';
+import PromoSelect from './promo-select.jsx';
 
 class MerchantListFilter extends React.Component {
 	constructor(props) {
@@ -33,7 +33,6 @@ class MerchantListFilter extends React.Component {
 
 	render() {
 		const {
-			availablePromo,
 			filterByDate,
 			filterByName,
 			filterByPromo,
@@ -108,9 +107,8 @@ class MerchantListFilter extends React.Component {
 								{'Рекламный пакет'}
 							</div>
 
-							<Select
-								options={availablePromo}
-								selected={filterByPromo}
+							<PromoSelect
+								value={filterByPromo}
 								onChange={this.handleFilterByPromo}
 								/>
 						</div>
@@ -121,10 +119,9 @@ class MerchantListFilter extends React.Component {
 	}
 }
 MerchantListFilter.propTypes = {
-	availablePromo: React.PropTypes.array,
 	filterByDate: React.PropTypes.oneOf(['ASC', 'DESC']),
 	filterByName: React.PropTypes.string,
-	filterByPromo: React.PropTypes.string,
+	filterByPromo: React.PropTypes.number,
 	filterByStatus: React.PropTypes.oneOfType([
 		React.PropTypes.string,
 		React.PropTypes.number
@@ -135,7 +132,6 @@ MerchantListFilter.propTypes = {
 	onFilterByStatus: React.PropTypes.func
 };
 MerchantListFilter.defaultProps = {
-	availablePromo: [],
 	filterByDate: 'ASC',
 	filterByName: '',
 	filterByPromo: '',

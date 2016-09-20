@@ -77,6 +77,7 @@ export default MerchantList;
 
 const MerchantListItem = React.createClass({
 	propTypes: {
+		advertiser: React.PropTypes.object,
 		id: React.PropTypes.number,
 		image: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
@@ -91,7 +92,7 @@ const MerchantListItem = React.createClass({
 		optionsCount: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number,
 		previewUrl: React.PropTypes.string,
-		promo: React.PropTypes.string
+		promo: React.PropTypes.object
 	},
 
 	getDefaultProps() {
@@ -108,6 +109,7 @@ const MerchantListItem = React.createClass({
 
 	render() {
 		const {
+			advertiser,
 			id,
 			image,
 			isActive,
@@ -121,6 +123,8 @@ const MerchantListItem = React.createClass({
 			previewUrl,
 			promo
 		} = this.props;
+
+		const isAdmin = hasRole('admin');
 
 		return (
 			<tr>
@@ -142,7 +146,7 @@ const MerchantListItem = React.createClass({
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'advertiser'})}>
-					{'advertiser'}
+					{advertiser.name}
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'data'})}>
@@ -181,7 +185,7 @@ const MerchantListItem = React.createClass({
 						</a>
 					) : null}
 
-					{hasRole('admin') ? (
+					{isAdmin ? (
 						<button
 							className="btn btn-sm"
 							onClick={this.handleClickMerchantHide}
@@ -193,16 +197,28 @@ const MerchantListItem = React.createClass({
 								className={isActive ? 'text-muted' : 'text-danger'}
 								/>
 						</button>
-					) : null}
+					) : (
+						<span
+							className="btn btn-sm"
+							title={isActive ? 'Активен' : 'Не активен'}
+							>
+							<Glyphicon
+								name="eye-close"
+								className={isActive ? 'text-muted' : 'text-danger'}
+								/>
+						</span>
+					)}
 
-					<button
-						className="btn btn-danger btn-sm"
-						onClick={this.handleClickMerchantDelete}
-						title="Удалить магазин"
-						type="button"
-						>
-						<Glyphicon name="remove"/>
-					</button>
+					{isAdmin ? (
+						<button
+							className="btn btn-danger btn-sm"
+							onClick={this.handleClickMerchantDelete}
+							title="Удалить магазин"
+							type="button"
+							>
+							<Glyphicon name="remove"/>
+						</button>
+					) : null}
 				</td>
 			</tr>
 		);

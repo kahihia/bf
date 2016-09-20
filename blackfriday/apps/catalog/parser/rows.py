@@ -19,6 +19,8 @@ class Column(object):
                     signature = inspect.signature(func)
                     if 'context' in signature.parameters:
                         value = func(value, context)
+                    else:
+                        value = func(value)
                 except ValueError:
                     value = func(value)
         except:
@@ -31,7 +33,12 @@ class Column(object):
         errors = []
         warnings = []
         for validator in self.validators:
-            if validator(value=value, context=context) is False:
+            parameters = inspect.signature(validator).parameters
+            kwargs = {'value' if 'value' in parameters else self.field: value}
+            if 'context' in parameters:
+                kwargs['context'] = context
+
+            if validator(**kwargs) is False:
                 result = {
                     'field': self.field,
                     'message': validator.message

@@ -87,3 +87,15 @@ pip install -r requirements.txt --upgrade
 ./manage.py migrate
 npm install
 ```
+
+
+### Testing
+
+Для написания и запуска юнит-тестов используется pytest. Запускать тесты рекомендуется следующей командой
+```
+py.test
+```
+Однако есть возможность запустить тесты через django management command:
+```
+./manage.py test --settings=blackfriday.settings.testing
+```

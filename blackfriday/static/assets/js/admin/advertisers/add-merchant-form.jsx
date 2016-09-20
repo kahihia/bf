@@ -1,4 +1,4 @@
-/* global toastr */
+/* global _ toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
@@ -28,9 +28,11 @@ class AddMerchantForm extends Form {
 
 		if (!hasRole('advertiser')) {
 			fields.advertiserId = {
-				label: 'ID',
+				label: 'Рекламодатель',
 				value: '',
 				valueType: 'Number',
+				options: [],
+				type: 'select',
 				required: true
 			};
 		}
@@ -41,6 +43,37 @@ class AddMerchantForm extends Form {
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
+
+	componentDidMount() {
+		this.requestAdvertisers();
+	}
+
+	requestAdvertisers() {
+		this.setState({isLoading: true});
+
+		xhr({
+			url: '/api/advertisers/',
+			method: 'GET',
+			json: true
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			if (!err && resp.statusCode === 200) {
+				let advertisers = data.reduce((a, b) => {
+					a.push({
+						id: b.id,
+						name: `${b.name} (${b.email})`
+					});
+					return a;
+				}, []);
+				advertisers = _.sortBy(advertisers, 'id');
+				this.setState(previousState => {
+					previousState.fields.advertiserId.options = advertisers;
+					return previousState;
+				});
+			}
+		});
 	}
 
 	requestAdd() {

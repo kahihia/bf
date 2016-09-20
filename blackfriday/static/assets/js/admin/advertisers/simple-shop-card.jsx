@@ -1,6 +1,6 @@
 import React from 'react';
 import b from 'b_';
-import {resolveImgPath, hasRole} from '../utils.js';
+import {hasRole} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import Icon from '../components/icon.jsx';
 import MerchantProps from './merchant-props.jsx';
@@ -30,7 +30,9 @@ const SimpleShopCard = React.createClass({
 			paymentStatus,
 			promo
 		} = item;
-		const isEditable = item.editable || hasRole('admin');
+
+		const isAdmin = hasRole('admin');
+		const isEditable = item.editable || isAdmin;
 
 		return (
 			<div className={b('simple-shop-card')}>
@@ -40,7 +42,7 @@ const SimpleShopCard = React.createClass({
 							{item.image ? (
 								<img
 									className={b('simple-shop-card', 'logo')}
-									src={resolveImgPath(item.image)}
+									src={item.image}
 									alt=""
 									/>
 							) : null}
@@ -58,7 +60,7 @@ const SimpleShopCard = React.createClass({
 						{item.image ? (
 							<img
 								className={b('simple-shop-card', 'logo')}
-								src={resolveImgPath(item.image)}
+								src={item.image}
 								alt=""
 								/>
 						) : null}
@@ -107,7 +109,7 @@ const SimpleShopCard = React.createClass({
 							</a>
 						) : null}
 
-						{hasRole('admin') ? (
+						{isAdmin ? (
 							<span
 								className={b('action-list', 'item')}
 								title={item.isActive ? 'Скрыть загруженный контент' : 'Показывать загруженный контент'}
@@ -118,18 +120,30 @@ const SimpleShopCard = React.createClass({
 									className={item.isActive ? 'text-muted' : 'text-danger'}
 									/>
 							</span>
-						) : null}
+						) : (
+							<span
+								className={b('action-list', 'item')}
+								title={item.isActive ? 'Активен' : 'Не активен'}
+								>
+								<Glyphicon
+									name="eye-close"
+									className={item.isActive ? 'text-muted' : 'text-danger'}
+									/>
+							</span>
+						)}
 
-						<span
-							className={b('action-list', 'item')}
-							onClick={this.handleClickMerchantDelete}
-							title="Удалить магазин"
-							>
-							<Glyphicon
-								name="remove"
-								className="text-danger"
-								/>
-						</span>
+						{isAdmin ? (
+							<span
+								className={b('action-list', 'item')}
+								onClick={this.handleClickMerchantDelete}
+								title="Удалить магазин"
+								>
+								<Glyphicon
+									name="remove"
+									className="text-danger"
+									/>
+							</span>
+						) : null}
 					</div>
 				</div>
 			</div>
