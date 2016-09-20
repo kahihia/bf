@@ -2,9 +2,10 @@ from rest_framework import viewsets
 from rest_framework import mixins
 from libs.api.permissions import IsAuthenticated
 
+from libs.api.parsers import CamelCaseFormParser, CamelCaseMultiPartParser
+
 from .serializers import ImageSerializer
 from ..models import Image
-from libs.api.parsers import CamelCaseFormParser, CamelCaseMultiPartParser
 
 
 class ImageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
