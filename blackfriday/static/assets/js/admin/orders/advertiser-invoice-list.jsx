@@ -79,25 +79,6 @@ const AdvertiserInvoiceList = React.createClass({
 		});
 	},
 
-	handleClickPay(id, price) {
-		xhr({
-			url: '/payment/create',
-			method: 'POST',
-			json: {
-				order_id: id,
-				total_price: price
-			}
-		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				if (data.formUrl) {
-					window.location = data.formUrl;
-				}
-			} else if (resp.statusCode === 400) {
-				processErrors(data);
-			}
-		});
-	},
-
 	getInvoiceById(id) {
 		return _.find(this.state.invoices, {id});
 	},
@@ -119,7 +100,6 @@ const AdvertiserInvoiceList = React.createClass({
 							onCancel={this.handleInvoiceCancel}
 							active={String(invoice.id) === this.state.activeInvoiceId}
 							expired={invoice.expired}
-							onClickPay={this.handleClickPay}
 							/>
 					);
 				})}

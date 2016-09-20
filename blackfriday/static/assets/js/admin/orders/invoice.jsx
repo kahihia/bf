@@ -19,17 +19,12 @@ const Invoice = React.createClass({
 		status: React.PropTypes.number,
 		sum: React.PropTypes.number,
 		onCancel: React.PropTypes.func,
-		onClickPay: React.PropTypes.func,
 		active: React.PropTypes.bool
 	},
 
 	handleCancel(e) {
 		e.preventDefault();
 		this.props.onCancel(this.props.id);
-	},
-
-	handleClickPay() {
-		this.props.onClickPay(this.props.id, this.props.sum);
 	},
 
 	handleClickDownloadPayment(e) {
@@ -219,14 +214,6 @@ const Invoice = React.createClass({
 									onClick={this.handleClickDownloadPayment}
 									>
 									{'Получить счёт'}
-								</button>
-
-								<button
-									className="btn btn-primary"
-									type="button"
-									onClick={this.handleClickPay}
-									>
-									{'Оплатить картой'}
 								</button>
 							</div>
 						) : null}
