@@ -1,7 +1,7 @@
 import xlrd
 import xml.etree.ElementTree as ET
 from io import StringIO
-from csv import DictReader, Error as CSVError
+from csv import DictReader, Error
 from django.conf import settings
 
 from rest_framework.exceptions import ValidationError
@@ -14,13 +14,13 @@ def dict_reader_lowercaser(iterator):
 
 def csv_dict_reader(f):
     try:
-        return (
+        return [
             {
                 _key: row.get(key) for key, _key in settings.PRODUCT_FILE_COLUMNS_MAPPING.items()
             } for row in dict_reader_lowercaser(
                 DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"'))
-        )
-    except (CSVError, UnicodeDecodeError):
+        ]
+    except (Error, UnicodeDecodeError):
         raise ValidationError('некорректный формат данных')
 
 
@@ -29,16 +29,17 @@ def xls_dict_reader(f, sheet_index=0):
         book = xlrd.open_workbook(file_contents=f.read())
         sheet = book.sheet_by_index(sheet_index)
         headers = dict(
-            (i, str.lower(sheet.cell_value(0, i))) for i in range(sheet.ncols)
+            (i, str.lower(sheet.cell_value(0, i))) for i in range(sheet.ncols) if sheet.cell_value(0, i)
         )
+
         if set(headers.values()) != set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()):
             raise ValidationError('некорректный формат данных')
-        return (
+        return [
             dict(
                 (settings.PRODUCT_FILE_COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
                 for column in headers
             ) for row in range(1, sheet.nrows)
-        )
+        ]
     except (xlrd.XLRDError, UnicodeDecodeError):
         raise ValidationError('некорректный формат данных')
 
