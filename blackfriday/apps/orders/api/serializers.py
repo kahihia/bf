@@ -7,7 +7,7 @@ from apps.advertisers.api.serializers import AdvertiserTinySerializer, MerchantT
 from apps.promo.models import Option, Promo
 from apps.promo.api.serializers import PromoTinySerializer
 
-from ..models import Invoice, InvoiceOption
+from ..models import Invoice, InvoiceOption, InvoiceStatus
 
 
 class InvoiceOptionSerializer(serializers.ModelSerializer):
@@ -78,6 +78,12 @@ class InvoiceStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ('status',)
+
+    def validate_status(self, value):
+        user = self.context['request'].user
+        if user.role == 'advertiser' and value != InvoiceStatus.cancelled:
+            raise ValidationError('Вы можете только отменить свой счет')
+        return value
 
     def to_representation(self, instance):
         return InvoiceSerializer().to_representation(instance)
