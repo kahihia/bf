@@ -99,7 +99,7 @@ const AdvertiserInvoiceList = React.createClass({
 							sum={invoice.sum}
 							onCancel={this.handleInvoiceCancel}
 							active={String(invoice.id) === this.state.activeInvoiceId}
-							expired={invoice.expired}
+							expiredDatetime={invoice.expiredDatetime}
 							/>
 					);
 				})}
