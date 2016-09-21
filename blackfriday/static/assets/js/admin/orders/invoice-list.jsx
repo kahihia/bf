@@ -397,7 +397,7 @@ export class InvoiceList extends React.Component {
 							<div className="form-group col-sm-2">
 								<div>
 									<label>
-										{'Юр. лицо'}
+										{'Рекламодатель'}
 									</label>
 								</div>
 								<AdvertiserSelect
@@ -552,7 +552,7 @@ export class InvoiceList extends React.Component {
 								</span>
 							</th>
 							<th>
-								{'Юр. лицо'}
+								{'Рекламодатель'}
 							</th>
 							<th>
 								{'Магазин'}
