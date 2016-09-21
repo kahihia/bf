@@ -8,8 +8,8 @@ import DatePicker from 'react-datepicker';
 import InvoiceActions from './invoice-actions.js';
 import InvoiceItem from './invoice-item.jsx';
 import {PAYMENT_STATUS} from '../const.js';
+import Input from '../components/input.jsx';
 import ChangeManyInvoiceStatusesBtn from './change-many-invoice-statuses-btn.jsx';
-import AdvertiserSelect from './advertiser-select.jsx';
 
 export const invoiceActions = new InvoiceActions();
 
@@ -19,26 +19,32 @@ export class InvoiceList extends React.Component {
 		this.state = {
 			allSelected: false,
 			data: [],
-			filters: {},
+			filters: {
+				date: null,
+				name: null,
+				id: null,
+				minSum: null,
+				maxSum: null,
+				status: null
+			},
 			isLoading: true,
 			newStatus: 1,
 			ordering: null,
 			selectedItems: []
 		};
 
-		this.handleChangeDateFilter = this.handleChangeDateFilter.bind(this);
-		this.handleChangeInvoiceFilter = this.handleChangeInvoiceFilter.bind(this);
-		this.handleChangeAdvertiserFilter = this.handleChangeAdvertiserFilter.bind(this);
+		this.handleFilterByDate = this.handleFilterByDate.bind(this);
+		this.handleFilterByName = this.handleFilterByName.bind(this);
+		this.handleFilterById = this.handleFilterById.bind(this);
+		this.handleFilterByMinSum = this.handleFilterByMinSum.bind(this);
+		this.handleFilterByMaxSum = this.handleFilterByMaxSum.bind(this);
+		this.handleFilterByStatus = this.handleFilterByStatus.bind(this);
+
 		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
-		this.handleChangeStatusFilter = this.handleChangeStatusFilter.bind(this);
-		this.handleChangeMinSumFilter = this.handleChangeMinSumFilter.bind(this);
-		this.handleChangeMaxSumFilter = this.handleChangeMaxSumFilter.bind(this);
-		this.handleFilter = this.handleFilter.bind(this);
 		this.handleFiltersReset = this.handleFiltersReset.bind(this);
 		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
 		this.handleOrderingBySum = this.handleOrderingBySum.bind(this);
 		this.handleSelectAll = this.handleSelectAll.bind(this);
-		this.makeFilterUrl = this.makeFilterUrl.bind(this);
 		this.onItemExpireDateChanged = this.onItemExpireDateChanged.bind(this);
 		this.onItemSelected = this.onItemSelected.bind(this);
 		this.onItemUnselected = this.onItemUnselected.bind(this);
@@ -169,36 +175,49 @@ export class InvoiceList extends React.Component {
 		this.setState({newStatus: parseInt(event.target.value, 10)});
 	}
 
-	handleChangeDateFilter(date) {
+	handleFilterByDate(date) {
 		const filters = Object.assign({}, this.state.filters, {date});
 		this.setState({filters});
 	}
 
-	handleChangeAdvertiserFilter(value) {
-		const filters = Object.assign({}, this.state.filters, {advertiser: value});
+	handleFilterByName(e) {
+		const filters = Object.assign({}, this.state.filters, {name: e.target.value});
 		this.setState({filters});
 	}
 
-	handleChangeInvoiceFilter(event) {
-		const filters = Object.assign({}, this.state.filters, {invoice: event.target.value});
+	handleFilterById(e) {
+		let id = e.target.value;
+		if (id !== '') {
+			id = parseInt(id, 10);
+		}
+
+		const filters = Object.assign({}, this.state.filters, {id});
 		this.setState({filters});
 	}
 
-	handleChangeMinSumFilter(event) {
-		const value = event.target.value;
-		const {filters} = this.state;
-		filters.minSum = value;
-		this.forceUpdate();
-	}
+	handleFilterByMinSum(e) {
+		let minSum = e.target.value;
+		if (minSum !== '') {
+			minSum = parseInt(minSum, 10);
+		}
 
-	handleChangeMaxSumFilter(event) {
-		const filters = Object.assign({}, this.state.filters, {maxSum: event.target.value});
+		const filters = Object.assign({}, this.state.filters, {minSum});
 		this.setState({filters});
 	}
 
-	handleChangeStatusFilter(event) {
+	handleFilterByMaxSum(e) {
+		let maxSum = e.target.value;
+		if (maxSum !== '') {
+			maxSum = parseInt(maxSum, 10);
+		}
+
+		const filters = Object.assign({}, this.state.filters, {maxSum});
+		this.setState({filters});
+	}
+
+	handleFilterByStatus(event) {
 		const filters = Object.assign({}, this.state.filters, {
-			status: (event.target.value === '') ? null : event.target.value
+			status: (event.target.value === '') ? null : parseInt(event.target.value, 10)
 		});
 
 		this.setState({filters});
@@ -244,67 +263,21 @@ export class InvoiceList extends React.Component {
 		}
 	}
 
-	makeFilterUrl() {
-		const {filters} = this.state;
-		const params = {};
-
-		if (filters.date) {
-			params.date = filters.date.format('YYYY-MM-DD');
-		}
-		if (filters.advertiser) {
-			params.advertiser = filters.advertiser;
-		}
-		if (filters.invoice) {
-			params.id = filters.invoice;
-		}
-		if (filters.minSum) {
-			params.min_sum = filters.minSum;
-		}
-		if (filters.maxSum) {
-			params.max_sum = filters.maxSum;
-		}
-		if (filters.status && (filters.status !== '')) {
-			params.status = filters.status;
-		}
-
-		const result = '/api/invoices/?' + Object.keys(params).reduce((memo, key) => {
-			return memo + (key + '=' + encodeURIComponent(params[key]) + '&');
-		}, '');
-
-		return result.slice(0, -1);
-	}
-
-	handleFilter() {
-		const url = this.makeFilterUrl();
-
-		this.setState({
-			isLoading: true
-		}, () => {
-			xhr({
-				url,
-				method: 'GET',
-				json: true
-			}, (err, resp, data) => {
-				if (!err && resp.statusCode === 200) {
-					data = _.sortBy(data, 'id').reverse();
-					this.setState({data});
-				}
-
-				this.setState({isLoading: false});
-			});
-		});
-	}
-
 	handleFiltersReset() {
 		this.setState({
 			filters: {
-				status: ''
+				date: null,
+				name: null,
+				id: null,
+				minSum: null,
+				maxSum: null,
+				status: null
 			}
-		}, this.handleFilter);
+		});
 	}
 
-	getSortedData() {
-		const {data, ordering} = this.state;
+	getSortedData(data) {
+		const {ordering} = this.state;
 		let sortedData = _.clone(data);
 
 		switch (ordering) {
@@ -328,9 +301,100 @@ export class InvoiceList extends React.Component {
 		return sortedData;
 	}
 
+	filterByDate(data) {
+		const {date} = this.state.filters;
+		if (!date) {
+			return data;
+		}
+
+		return _.filter(data, item => {
+			return moment(item.createdDatetime).format('YYYY-MM-DD') === date.format('YYYY-MM-DD');
+		});
+	}
+
+	filterByName(data) {
+		const {name} = this.state.filters;
+		if (!name) {
+			return data;
+		}
+
+		return _.filter(data, item => {
+			const {advertiser, merchant} = item;
+
+			if (!advertiser.name && !merchant.name) {
+				return false;
+			}
+
+			if (
+				contains(name, advertiser.name) ||
+				contains(name, merchant.name)
+			) {
+				return true;
+			}
+
+			return false;
+		});
+	}
+
+	filterById(data) {
+		const {id} = this.state.filters;
+		if (!id) {
+			return data;
+		}
+
+		return _.filter(data, {id});
+	}
+
+	filterByMinSum(data) {
+		const {minSum} = this.state.filters;
+		if (!minSum) {
+			return data;
+		}
+
+		return _.filter(data, item => {
+			return item.sum >= minSum;
+		});
+	}
+
+	filterByMaxSum(data) {
+		const {maxSum} = this.state.filters;
+		if (!maxSum) {
+			return data;
+		}
+
+		return _.filter(data, item => {
+			return item.sum <= maxSum;
+		});
+	}
+
+	filterByStatus(data) {
+		const {status} = this.state.filters;
+		if (status === null) {
+			return data;
+		}
+
+		return _.filter(data, item => {
+			return item.status === status;
+		});
+	}
+
+	filterData(data) {
+		let filteredData = data;
+
+		filteredData = this.filterByDate(filteredData);
+		filteredData = this.filterByName(filteredData);
+		filteredData = this.filterById(filteredData);
+		filteredData = this.filterByMinSum(filteredData);
+		filteredData = this.filterByMaxSum(filteredData);
+		filteredData = this.filterByStatus(filteredData);
+
+		return filteredData;
+	}
+
 	render() {
 		const {
 			allSelected,
+			data,
 			filters,
 			isLoading,
 			newStatus,
@@ -338,7 +402,8 @@ export class InvoiceList extends React.Component {
 			selectedItems
 		} = this.state;
 
-		const sortedData = this.getSortedData();
+		let filteredData = this.filterData(data);
+		const sortedData = this.getSortedData(filteredData);
 		const selectedItemsIds = selectedItems.map(invoiceItem => {
 			return invoiceItem.id;
 		});
@@ -390,7 +455,7 @@ export class InvoiceList extends React.Component {
 									locale="ru-ru"
 									todayButton="Сегодня"
 									disabled={isLoading}
-									onChange={this.handleChangeDateFilter}
+									onChange={this.handleFilterByDate}
 									/>
 							</div>
 
@@ -400,9 +465,9 @@ export class InvoiceList extends React.Component {
 										{'Рекламодатель'}
 									</label>
 								</div>
-								<AdvertiserSelect
-									value={filters.advertiser || 0}
-									onChange={this.handleChangeAdvertiserFilter}
+								<Input
+									value={filters.name || ''}
+									onChange={this.handleFilterByName}
 									disabled={isLoading}
 									/>
 							</div>
@@ -413,13 +478,10 @@ export class InvoiceList extends React.Component {
 										{'№ счёта'}
 									</label>
 								</div>
-								<input
-									type="text"
-									className="form-control"
-									style={{fontSize: 14}}
-									value={filters.invoice || ''}
+								<Input
+									value={filters.id || ''}
+									onChange={this.handleFilterById}
 									disabled={isLoading}
-									onChange={this.handleChangeInvoiceFilter}
 									/>
 							</div>
 
@@ -437,13 +499,10 @@ export class InvoiceList extends React.Component {
 										</div>
 									</div>
 									<div className="col-sm-4">
-										<input
-											type="text"
-											className="form-control"
-											style={{fontSize: 14}}
+										<Input
 											value={filters.minSum || ''}
+											onChange={this.handleFilterByMinSum}
 											disabled={isLoading}
-											onChange={this.handleChangeMinSumFilter}
 											/>
 									</div>
 
@@ -453,13 +512,10 @@ export class InvoiceList extends React.Component {
 										</div>
 									</div>
 									<div className="col-sm-4">
-										<input
-											type="text"
-											className="form-control"
-											style={{fontSize: 14}}
+										<Input
 											value={filters.maxSum || ''}
+											onChange={this.handleFilterByMaxSum}
 											disabled={isLoading}
-											onChange={this.handleChangeMaxSumFilter}
 											/>
 									</div>
 								</div>
@@ -474,10 +530,9 @@ export class InvoiceList extends React.Component {
 								<select
 									className="form-control"
 									style={{fontSize: 14}}
-									value={filters.status}
-									defaultValue={filters.status === ''}
+									value={filters.status || ''}
 									disabled={isLoading}
-									onChange={this.handleChangeStatusFilter}
+									onChange={this.handleFilterByStatus}
 									>
 									<option value="">
 										{'Все'}
@@ -502,17 +557,6 @@ export class InvoiceList extends React.Component {
 									type="button"
 									>
 									{'Очистить фильтры'}
-								</button>
-							</div>
-
-							<div className="col-sm-6 text-right">
-								<button
-									className="btn btn-default"
-									onClick={this.handleFilter}
-									disabled={isLoading}
-									type="button"
-									>
-									{'Фильтровать'}
 								</button>
 							</div>
 						</div>
@@ -684,3 +728,10 @@ InvoiceListSelectedAction.propTypes = {
 };
 InvoiceListSelectedAction.defaultProps = {
 };
+
+function contains(what, where) {
+	if (where.toLowerCase().indexOf(what.toLowerCase()) > -1) {
+		return true;
+	}
+	return false;
+}
