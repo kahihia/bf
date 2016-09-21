@@ -41,7 +41,7 @@ const ShopEditPlanSelect = React.createClass({
 					this.requestCurrentPlan({plans, options});
 				}
 			} else {
-				toastr.error('Не удалось получить список тарифов');
+				toastr.error('Не удалось получить список пакетов');
 			}
 		});
 	},
@@ -54,7 +54,7 @@ const ShopEditPlanSelect = React.createClass({
 			if (!err && resp.statusCode === 200) {
 				this.processData({plans, options, data});
 			} else {
-				toastr.error('Не удалось получить данные тарифного плана');
+				toastr.error('Не удалось получить данные рекламного пакета');
 			}
 		});
 	},

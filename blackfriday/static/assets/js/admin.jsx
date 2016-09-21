@@ -47,7 +47,7 @@ import ReactDOM from 'react-dom';
 		ReactDOM.render(<CustomBackground merchantId={merchantId}/>, customBackground);
 	}
 
-	// Рендер блока изменения выбора тарифа
+	// Рендер блока изменения рекламного пакета
 	const shopEditPlanSelect = document.getElementById('shop-edit-plan-select');
 	if (shopEditPlanSelect) {
 		let ShopEditPlanSelect = require('./admin/advertiser/shop-edit-plan-select');

@@ -29,7 +29,7 @@ class MerchantProps extends React.Component {
 
 		const promoName = promo && promo.name;
 		const isAllowPlanSelect = !promoName;
-		const planName = isAllowPlanSelect ? 'Выберите тариф' : promoName;
+		const planName = isAllowPlanSelect ? 'Выберите пакет' : promoName;
 
 		return (
 			<ul className="props merchant-props">
