@@ -6,5 +6,5 @@ class ServiceUnavailable(APIException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
 
-class BadResponse(APIException):
+class BadRequest(APIException):
     status_code = status.HTTP_400_BAD_REQUEST

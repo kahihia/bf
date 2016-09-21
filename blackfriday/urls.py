@@ -2,8 +2,6 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from .views import StaticGeneratorView, LandingGeneratorView
-
 
 urlpatterns = [
     url(r'^admin/', include([
@@ -14,9 +12,7 @@ urlpatterns = [
         url(r'^', include('apps.promo.urls', namespace='promo')),
         url(r'^', include('apps.orders.urls', namespace='orders')),
         url(r'^', include('apps.banners.urls', namespace='banners')),
-
-        url(r'^landing/$', LandingGeneratorView.as_view(), name='landing'),
-        url(r'^static-generator/$', StaticGeneratorView.as_view(), name='static-generator'),
+        url(r'^', include('apps.landing.urls', namespace='landing')),
     ])),
     url(r'^api/', include('api', namespace='api')),
     url(r'^django-admin/', include(admin.site.urls)),

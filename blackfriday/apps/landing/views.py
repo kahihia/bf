@@ -4,8 +4,8 @@ from django.views.generic.base import TemplateView
 
 
 class StaticGeneratorView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
-    template_name = 'static-generator.html'
+    template_name = 'landing/static-generator.html'
 
 
 class LandingGeneratorView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
-    template_name = 'landing-generator.html'
+    template_name = 'landing/landing-generator.html'
