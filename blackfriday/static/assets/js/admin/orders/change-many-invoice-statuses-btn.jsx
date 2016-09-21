@@ -2,6 +2,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
+import {TOKEN} from '../const.js';
 import {invoiceActions} from './invoice-list.jsx';
 
 export default class ChangeManyInvoiceStatusesBtn extends React.Component {
@@ -27,30 +28,30 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 		const {newStatus} = this.props;
 
 		if (!disabled) {
-			const json = invoiceIds.map(invoiceId => {
-				return {
-					id: invoiceId,
-					status: newStatus
-				};
-			});
+			const json = {
+				ids: invoiceIds,
+				status: newStatus
+			};
 
 			this.setState({
 				disabled: true
 			}, () => {
 				xhr({
-					url: '/admin/invoices',
-					method: 'PUT',
+					url: '/api/invoices/statuses/',
+					method: 'PATCH',
+					headers: {
+						'X-CSRFToken': TOKEN.csrftoken
+					},
 					json
 				}, (err, resp) => {
 					this.setState({
 						disabled: false
 					}, () => {
 						if (!err && (resp.statusCode === 200)) {
-							toastr.success('Статусы счетов изменены.');
 							invoiceActions.allUnselected(true /* stop */);
 							invoiceActions.statusChanged(invoiceIds, newStatus);
 						} else {
-							toastr.error('Не удалось изменить статусы счетов.');
+							toastr.error('Не удалось изменить статусы счетов');
 						}
 					});
 				});

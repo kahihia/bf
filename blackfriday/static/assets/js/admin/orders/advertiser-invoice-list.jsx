@@ -1,4 +1,4 @@
-/* global window moment _ */
+/* global window _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -28,7 +28,7 @@ const AdvertiserInvoiceList = React.createClass({
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
 				if (data && Array.isArray(data)) {
-					const invoices = sortByDate(data);
+					const invoices = _.sortBy(data, 'id').reverse();
 					this.setState({invoices});
 					this.scrollToActiveInvoice();
 				}
@@ -109,7 +109,3 @@ const AdvertiserInvoiceList = React.createClass({
 });
 
 export default AdvertiserInvoiceList;
-
-function sortByDate(data) {
-	return _.sortBy(data, item => moment(item.created_at).valueOf()).reverse();
-}

@@ -34,7 +34,7 @@ export default class InvoiceActions extends Emitter {
 	}
 
 	statusChanged(invoiceIds, newStatus) {
-		this.emit('invoices:statusChanged', {invoiceIds: invoiceIds, newStatus: newStatus});
+		this.emit('invoices:statusChanged', {invoiceIds, newStatus});
 	}
 
 	onStatusChanged(callback) {

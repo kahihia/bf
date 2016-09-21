@@ -61,6 +61,25 @@ export class InvoiceList extends React.Component {
 		});
 	}
 
+	componentDidMount() {
+		this.requestInvoices();
+	}
+
+	requestInvoices() {
+		xhr({
+			url: '/api/invoices/',
+			method: 'GET',
+			json: true
+		}, (err, resp, data) => {
+			if (!err && resp.statusCode === 200) {
+				data = _.sortBy(data, 'id').reverse();
+				this.setState({data});
+			}
+
+			this.setState({isLoading: false});
+		});
+	}
+
 	onItemSelected(itemId) {
 		const selectedItems = this.state.selectedItems.slice();
 
@@ -146,7 +165,7 @@ export class InvoiceList extends React.Component {
 	}
 
 	handleChangeNewStatus(event) {
-		this.setState({newStatus: event.target.value});
+		this.setState({newStatus: parseInt(event.target.value, 10)});
 	}
 
 	handleChangeDateFilter(date) {
@@ -176,7 +195,7 @@ export class InvoiceList extends React.Component {
 
 	handleChangeStatusFilter(event) {
 		const filters = Object.assign({}, this.state.filters, {
-			status: (event.target.value === 'any') ? null : event.target.value
+			status: (event.target.value === '') ? null : event.target.value
 		});
 
 		this.setState({filters});
@@ -241,7 +260,7 @@ export class InvoiceList extends React.Component {
 		if (filters.sumStop) {
 			params.max_sum = filters.sumStop;
 		}
-		if (filters.status && (filters.status !== 'any')) {
+		if (filters.status && (filters.status !== '')) {
 			params.status = filters.status;
 		}
 
@@ -278,20 +297,6 @@ export class InvoiceList extends React.Component {
 				status: ''
 			}
 		}, this.handleFilter);
-	}
-
-	componentDidMount() {
-		xhr({
-			url: '/api/invoices/',
-			method: 'GET',
-			json: true
-		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				this.setState({data});
-			}
-
-			this.setState({isLoading: false});
-		});
 	}
 
 	getSortedData() {
