@@ -198,9 +198,7 @@ export class InvoiceList extends React.Component {
 					break;
 			}
 
-			this.setState({
-				ordering: newOrdering
-			}, this.handleFilter);
+			this.setState({ordering: newOrdering});
 		}
 	}
 
@@ -220,14 +218,12 @@ export class InvoiceList extends React.Component {
 					break;
 			}
 
-			this.setState({
-				ordering: newOrdering
-			}, this.handleFilter);
+			this.setState({ordering: newOrdering});
 		}
 	}
 
 	makeFilterUrl() {
-		const {filters, ordering} = this.state;
+		const {filters} = this.state;
 		const params = {};
 
 		if (filters.date) {
@@ -247,9 +243,6 @@ export class InvoiceList extends React.Component {
 		}
 		if (filters.status && (filters.status !== 'any')) {
 			params.status = filters.status;
-		}
-		if (ordering) {
-			params.order_by = ordering;
 		}
 
 		const result = '/api/invoices/?' + Object.keys(params).reduce((memo, key) => {
@@ -301,10 +294,34 @@ export class InvoiceList extends React.Component {
 		});
 	}
 
+	getSortedData() {
+		const {data, ordering} = this.state;
+		let sortedData = _.clone(data);
+
+		switch (ordering) {
+			case 'created_at':
+				sortedData = _.sortBy(sortedData, 'id');
+				break;
+			case '-created_at':
+				sortedData = _.sortBy(sortedData, 'id').reverse();
+				break;
+			case 'sum':
+				sortedData = _.sortBy(sortedData, 'sum');
+				break;
+			case '-sum':
+				sortedData = _.sortBy(sortedData, 'sum').reverse();
+				break;
+			default: {
+				break;
+			}
+		}
+
+		return sortedData;
+	}
+
 	render() {
 		const {
 			allSelected,
-			data,
 			filters,
 			isLoading,
 			newStatus,
@@ -312,6 +329,7 @@ export class InvoiceList extends React.Component {
 			selectedItems
 		} = this.state;
 
+		const sortedData = this.getSortedData();
 		const selectedItemsIds = selectedItems.map(invoiceItem => {
 			return invoiceItem.id;
 		});
@@ -558,7 +576,7 @@ export class InvoiceList extends React.Component {
 					</thead>
 
 					<tbody>
-						{data.map(invoiceItem => {
+						{sortedData.map(invoiceItem => {
 							const itemIsSelected = (selectedItems.indexOf(invoiceItem.id) >= 0);
 
 							return (

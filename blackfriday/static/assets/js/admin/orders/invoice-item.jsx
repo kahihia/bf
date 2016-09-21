@@ -113,18 +113,20 @@ export default class InvoiceItem extends React.Component {
 						currency={'₽'}
 						/>
 				</td>
-				<td className="text-nowrap">
-					{data.status === 0 ? (
-						<a
-							href="#"
-							onClick={this.handleClickEditExpireDate}
-							style={{marginRight: 4}}
-							>
-							<Glyphicon name="time"/>
-						</a>
-					) : null}
+				<td>
+					<div className="text-nowrap">
+						{data.status === 0 ? (
+							<a
+								href="#"
+								onClick={this.handleClickEditExpireDate}
+								style={{marginRight: 4}}
+								>
+								<Glyphicon name="time"/>
+							</a>
+						) : null}
 
-					<InvoiceStatus code={data.status}/>
+						<InvoiceStatus code={data.status}/>
+					</div>
 
 					{isEditingExpireDate ? (
 						<DatePicker

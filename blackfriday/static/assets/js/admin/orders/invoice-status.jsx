@@ -7,11 +7,13 @@ export default class InvoiceStatus extends React.Component {
 	render() {
 		const {code} = this.props;
 
-		let className = 'text-muted';
+		let className = 'text-nowrap ';
 		if (code === 0) {
-			className = 'text-danger';
+			className += 'text-danger';
 		} else if (code === 1) {
-			className = 'text-success';
+			className += 'text-success';
+		} else {
+			className += 'text-muted';
 		}
 
 		return (
