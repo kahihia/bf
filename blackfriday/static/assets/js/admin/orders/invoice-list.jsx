@@ -1,4 +1,4 @@
-/* global moment, _ */
+/* global window moment _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint react/require-optimization: 0 */
 
@@ -80,11 +80,47 @@ export class InvoiceList extends React.Component {
 		}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
 				data = _.sortBy(data, 'id').reverse();
-				this.setState({data});
+
+				const activeMerchantId = this.getActiveMerchant();
+				let invoice;
+				let merchant;
+				if (activeMerchantId) {
+					invoice = _.find(data, item => {
+						return item.merchant.id === activeMerchantId;
+					});
+
+					if (invoice) {
+						merchant = invoice.merchant;
+					}
+				}
+
+				this.setState(previousState => {
+					if (merchant) {
+						previousState.filters.name = merchant.name;
+					}
+
+					previousState.data = data;
+					return previousState;
+				});
 			}
 
 			this.setState({isLoading: false});
 		});
+	}
+
+	getActiveMerchant() {
+		const hash = window.location.hash;
+		let activeMerchantId = null;
+
+		if (/invoice/.test(hash)) {
+			let param = hash.split('invoice')[1];
+
+			if (param) {
+				activeMerchantId = parseInt(param, 10);
+			}
+		}
+
+		return activeMerchantId;
 	}
 
 	onItemSelected(itemId) {
