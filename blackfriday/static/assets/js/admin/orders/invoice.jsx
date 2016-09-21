@@ -1,4 +1,4 @@
-/* global moment saveAs Blob */
+/* global moment saveAs Blob toastr */
 
 import React from 'react';
 import Price from 'react-price';
@@ -38,12 +38,16 @@ const Invoice = React.createClass({
 			method: 'GET',
 			responseType: 'arraybuffer'
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
+			const {statusCode} = resp;
+
+			if (statusCode >= 200 && statusCode < 300) {
 				const d = moment(this.props.createdDatetime).format('D MMMM YYYY');
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Счёт №${this.props.id} на оплату от ${d}.pdf`);
-			} else {
+			} else if (statusCode === 400) {
 				processErrors(data);
+			} else {
+				toastr.error('Не удалось получить файл счёта');
 			}
 		});
 	},
@@ -210,7 +214,7 @@ const Invoice = React.createClass({
 						{status === 0 ? (
 							<div className={b(className, 'process')}>
 								<button
-									className="btn btn-success"
+									className="btn btn-default"
 									type="button"
 									onClick={this.handleClickDownloadPayment}
 									>

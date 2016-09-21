@@ -1,4 +1,4 @@
-/* global window _ */
+/* global window _ toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -69,12 +69,16 @@ const AdvertiserInvoiceList = React.createClass({
 			},
 			json
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
+			const {statusCode} = resp;
+
+			if (statusCode >= 200 && statusCode < 300) {
 				const invoice = this.getInvoiceById(id);
 				invoice.status = 2;
 				this.forceUpdate();
-			} else {
+			} else if (statusCode === 400) {
 				processErrors(data);
+			} else {
+				toastr.error('Не удалось аннулировать счёт');
 			}
 		});
 	},
