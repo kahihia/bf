@@ -33,13 +33,16 @@ class Option(models.Model):
 
     @property
     def count_available(self):
-        qs = self.in_invoices.exclude(invoice__status=InvoiceStatus.cancelled)
-        ordered = qs.aggregate(Sum('value')).get('value__sum', 0)
-        return self.max_count - ordered
+        if self.max_count:
+            qs = self.in_invoices.exclude(invoice__status=InvoiceStatus.cancelled)
+            ordered = qs.aggregate(result=Sum('value')).get('result') or 0
+            return self.max_count - ordered
 
     @property
     def is_available(self):
-        return self.count_available > 0
+        if self.max_count:
+            return self.count_available > 0
+        return True
 
     class Meta:
         verbose_name = 'Тарифная опция'

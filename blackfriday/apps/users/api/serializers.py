@@ -43,9 +43,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if 'data' in kwargs:
-            captcha = self.initial_data.get('captcha')
-            captcha = self.initial_data.pop('g-recaptcha-response', captcha)
-            self.initial_data['captcha'] = captcha
+            try:
+                captcha = self.initial_data.get('captcha')
+                captcha = self.initial_data.pop('g-recaptcha-response', captcha)
+                self.initial_data['captcha'] = captcha
+            except AttributeError:
+                # If is empty, then it's QueryDict
+                pass
 
     def validate_password(self, value):
         return make_password(value)
