@@ -12,7 +12,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAuthenticated,
         IsAdmin |
-        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create') |
+        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create', 'update', 'partial_update') |
         IsManager & action_permission('list', 'retrieve', 'update', 'partial_update', 'statuses')
     ]
     queryset = Invoice.objects.all()
