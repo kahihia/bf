@@ -1,43 +1,26 @@
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
+import {PAYMENT_STATUS} from '../const.js';
 
-export const invoiceStatuses = {
-	waiting: 'Не оплачен',
-	paid: 'Оплачен',
-	canceled: 'Отменён'
-};
-
-export class InvoiceStatus extends React.Component {
-	constructor(props) {
-		let statusClass;
-
-		super(props);
-
-		switch (props.code) {
-			case 'waiting':
-				statusClass = 'text-danger';
-				break;
-			case 'paid':
-				statusClass = 'text-success';
-				break;
-			case 'canceled':
-			default:
-				statusClass = 'text-muted';
-				break;
-		}
-		this.state = {
-			statusClass: statusClass
-		};
-	}
-
+export default class InvoiceStatus extends React.Component {
 	render() {
+		const {code} = this.props;
+
+		let className = 'text-muted';
+		if (code === 0) {
+			className = 'text-danger';
+		} else if (code === 1) {
+			className = 'text-success';
+		}
+
 		return (
-			<span className={this.state.statusClass}>{invoiceStatuses[this.props.code]}</span>
+			<span className={className}>
+				{PAYMENT_STATUS[code]}
+			</span>
 		);
 	}
 }
-
 InvoiceStatus.propTypes = {
-	code: React.PropTypes.string
+	code: React.PropTypes.number
 };

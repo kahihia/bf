@@ -61,7 +61,8 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 	render() {
 		return (
 			<button
-				className="btn btn-default" type="button"
+				className="btn btn-default"
+				type="button"
 				disabled={this.state.disabled}
 				onClick={this.handleClick}
 				>
@@ -73,7 +74,7 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 ChangeManyInvoiceStatusesBtn.propTypes = {
 	invoiceIds: React.PropTypes.array,
 	disabled: React.PropTypes.bool,
-	newStatus: React.PropTypes.string
+	newStatus: React.PropTypes.number
 };
 ChangeManyInvoiceStatusesBtn.defaultProps = {
 	disabled: false

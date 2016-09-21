@@ -4,8 +4,9 @@ import React from 'react';
 import Price from 'react-price';
 import DatePicker from 'react-datepicker';
 import {formatPrice} from '../utils.js';
+import Glyphicon from '../components/glyphicon.jsx';
 import {invoiceActions} from './invoice-list.jsx';
-import {InvoiceStatus} from './invoice-status.jsx';
+import InvoiceStatus from './invoice-status.jsx';
 
 export default class InvoiceItem extends React.Component {
 	constructor(props) {
@@ -40,10 +41,9 @@ export default class InvoiceItem extends React.Component {
 
 	onStatusChanged(invoiceIds, newStatus) {
 		if (invoiceIds.indexOf(this.state.data.id) >= 0) {
-			const newData = Object.assign({}, this.state.data, {status: newStatus});
-
-			this.setState({
-				data: newData
+			this.setState(previousState => {
+				previousState.data.status = newStatus;
+				return previousState;
 			});
 		}
 	}
@@ -75,28 +75,32 @@ export default class InvoiceItem extends React.Component {
 		return (
 			<tr className={selected ? 'active' : ''}>
 				<td>
-					<input type="checkbox" checked={selected} onChange={this.handleSelect}/>
+					<input
+						type="checkbox"
+						checked={selected}
+						onChange={this.handleSelect}
+						/>
 				</td>
 				<td>
-					{moment(data.created_at).format('DD.MM.YYYY')}
+					{moment(data.createdDatetime).format('DD.MM.YYYY')}
 				</td>
 				<td>
-					{data.advertiser_name || ''}
+					{data.advertiser.name || ''}
 				</td>
 				<td>
-					{data.merchant_name || ''}
+					{data.merchant.name || ''}
 				</td>
 				<td>
-					{data.invoice || ''}
+					{data.id || ''}
 				</td>
 				<td>
-					{data.promo_name || ''}
+					{data.promo.name || ''}
 				</td>
 				<td>
 					<ul>
-						{data.options.map((option, index) => {
+						{data.options.map(option => {
 							return (
-								<li key={index}>
+								<li key={option.id}>
 									{option.name}
 								</li>
 							);
@@ -104,16 +108,19 @@ export default class InvoiceItem extends React.Component {
 					</ul>
 				</td>
 				<td>
-					<Price cost={formatPrice(data.sum)} currency={'₽'}/>
+					<Price
+						cost={formatPrice(data.sum)}
+						currency={'₽'}
+						/>
 				</td>
 				<td className="text-nowrap">
-					{data.status === 'waiting' ? (
+					{data.status === 0 ? (
 						<a
 							href="#"
 							onClick={this.handleClickEditExpireDate}
 							style={{marginRight: 4}}
 							>
-							<span className="glyphicon glyphicon-time"/>
+							<Glyphicon name="time"/>
 						</a>
 					) : null}
 
@@ -124,9 +131,9 @@ export default class InvoiceItem extends React.Component {
 							className="form-control datepicker-input-sm"
 							style={{fontSize: 14}}
 							dateFormat="DD/MM"
-							selected={moment(data.expired)}
-							maxDate={moment(data.expired).add(7, 'd')}
-							minDate={moment(data.expired)}
+							selected={moment(data.expiredDatetime)}
+							maxDate={moment(data.expiredDatetime).add(7, 'd')}
+							minDate={moment(data.expiredDatetime)}
 							locale="ru-ru"
 							todayButton="Сегодня"
 							onChange={this.handleChangeExpireDate}

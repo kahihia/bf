@@ -1,12 +1,13 @@
 /* global moment, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
+/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import xhr from 'xhr';
 import DatePicker from 'react-datepicker';
 import InvoiceActions from './invoice-actions.js';
 import InvoiceItem from './invoice-item.jsx';
-import {invoiceStatuses} from './invoice-status.jsx';
+import {PAYMENT_STATUS} from '../const.js';
 import ChangeManyInvoiceStatusesBtn from './change-many-invoice-statuses-btn.jsx';
 
 export const invoiceActions = new InvoiceActions();
@@ -19,7 +20,7 @@ export class InvoiceList extends React.Component {
 			data: [],
 			filters: {},
 			isLoading: true,
-			newStatus: 'paid',
+			newStatus: 1,
 			ordering: null,
 			selectedItems: []
 		};
@@ -61,7 +62,7 @@ export class InvoiceList extends React.Component {
 	}
 
 	onItemSelected(itemId) {
-		let selectedItems = this.state.selectedItems.slice();
+		const selectedItems = this.state.selectedItems.slice();
 
 		for (let i = 0; i < this.state.data.length; i++) {
 			if (this.state.data[i].id === itemId) {
@@ -71,12 +72,12 @@ export class InvoiceList extends React.Component {
 
 		this.setState({
 			allSelected: (selectedItems.length === this.state.data.length),
-			selectedItems: selectedItems
+			selectedItems
 		});
 	}
 
 	onItemUnselected(itemId) {
-		let selectedItems = this.state.selectedItems.slice();
+		const selectedItems = this.state.selectedItems.slice();
 
 		for (let i = 0; i < selectedItems.length; i++) {
 			if (selectedItems[i].id === itemId) {
@@ -86,7 +87,7 @@ export class InvoiceList extends React.Component {
 
 		this.setState({
 			allSelected: false,
-			selectedItems: selectedItems
+			selectedItems
 		});
 	}
 
@@ -124,7 +125,7 @@ export class InvoiceList extends React.Component {
 			method: 'PUT',
 			json: [{
 				id: options.invoiceId,
-				expired: expired
+				expired
 			}]
 		}, (err, resp) => {
 			if (!err && resp.statusCode === 200) {
@@ -132,9 +133,7 @@ export class InvoiceList extends React.Component {
 				invoice.expired = expired;
 			}
 
-			this.setState({
-				isLoading: false
-			});
+			this.setState({isLoading: false});
 		});
 	}
 
@@ -147,13 +146,11 @@ export class InvoiceList extends React.Component {
 	}
 
 	handleChangeNewStatus(event) {
-		this.setState({
-			newStatus: event.target.value
-		});
+		this.setState({newStatus: event.target.value});
 	}
 
 	handleChangeDateFilter(date) {
-		const filters = Object.assign({}, this.state.filters, {date: date});
+		const filters = Object.assign({}, this.state.filters, {date});
 		this.setState({filters});
 	}
 
@@ -231,22 +228,22 @@ export class InvoiceList extends React.Component {
 
 	makeFilterUrl() {
 		const {filters, ordering} = this.state;
-		let params = {};
+		const params = {};
 
 		if (filters.date) {
-			params.created_at = filters.date.format('YYYY-MM-DD');
+			params.date = filters.date.format('YYYY-MM-DD');
 		}
 		if (filters.name) {
 			params.name = filters.name;
 		}
 		if (filters.invoice) {
-			params.invoice = filters.invoice;
+			params.id = filters.invoice;
 		}
 		if (filters.sumStart) {
-			params.sum_start = filters.sumStart;
+			params.min_sum = filters.sumStart;
 		}
 		if (filters.sumStop) {
-			params.sum_stop = filters.sumStop;
+			params.max_sum = filters.sumStop;
 		}
 		if (filters.status && (filters.status !== 'any')) {
 			params.status = filters.status;
@@ -255,7 +252,7 @@ export class InvoiceList extends React.Component {
 			params.order_by = ordering;
 		}
 
-		let result = '/admin/invoices?' + Object.keys(params).reduce((memo, key) => {
+		const result = '/api/invoices/?' + Object.keys(params).reduce((memo, key) => {
 			return memo + (key + '=' + encodeURIComponent(params[key]) + '&');
 		}, '');
 
@@ -285,7 +282,7 @@ export class InvoiceList extends React.Component {
 	handleFiltersReset() {
 		this.setState({
 			filters: {
-				status: 'any'
+				status: ''
 			}
 		}, this.handleFilter);
 	}
@@ -353,7 +350,9 @@ export class InvoiceList extends React.Component {
 						<div className="row">
 							<div className="form-group col-sm-2">
 								<div>
-									<label>Дата</label>
+									<label>
+										{'Дата'}
+									</label>
 								</div>
 								<DatePicker
 									className="form-control datepicker-input-sm"
@@ -367,9 +366,12 @@ export class InvoiceList extends React.Component {
 									onChange={this.handleChangeDateFilter}
 									/>
 							</div>
+
 							<div className="form-group col-sm-2">
 								<div>
-									<label>Юр.лицо / магазин</label>
+									<label>
+										{'Юр.лицо / магазин'}
+									</label>
 								</div>
 								<input
 									type="text"
@@ -380,9 +382,12 @@ export class InvoiceList extends React.Component {
 									onChange={this.handleChangeNameFilter}
 									/>
 							</div>
+
 							<div className="form-group col-sm-2">
 								<div>
-									<label>№ счёта</label>
+									<label>
+										{'№ счёта'}
+									</label>
 								</div>
 								<input
 									type="text"
@@ -393,13 +398,19 @@ export class InvoiceList extends React.Component {
 									onChange={this.handleChangeInvoiceFilter}
 									/>
 							</div>
+
 							<div className="form-group col-sm-4">
 								<div className="row">
 									<div className="col-sm-12">
-										<label>Сумма</label>
+										<label>
+											{'Сумма'}
+										</label>
 									</div>
+
 									<div className="col-sm-2">
-										<div className="form-control-static">от</div>
+										<div className="form-control-static">
+											{'от'}
+										</div>
 									</div>
 									<div className="col-sm-4">
 										<input
@@ -411,8 +422,11 @@ export class InvoiceList extends React.Component {
 											onChange={this.handleChangeSumStartFilter}
 											/>
 									</div>
+
 									<div className="col-sm-2">
-										<div className="form-control-static">до</div>
+										<div className="form-control-static">
+											{'до'}
+										</div>
 									</div>
 									<div className="col-sm-4">
 										<input
@@ -426,110 +440,125 @@ export class InvoiceList extends React.Component {
 									</div>
 								</div>
 							</div>
+
 							<div className="form-group col-sm-2">
 								<div>
-									<label>Статус</label>
+									<label>
+										{'Статус'}
+									</label>
 								</div>
 								<select
 									className="form-control"
 									style={{fontSize: 14}}
 									value={filters.status}
-									defaultValue={filters.status === 'any'}
+									defaultValue={filters.status === ''}
 									disabled={isLoading}
 									onChange={this.handleChangeStatusFilter}
 									>
-									<option value="any">Все</option>
-									<option value="paid">{invoiceStatuses.paid}</option>
-									<option value="waiting">{invoiceStatuses.waiting}</option>
-									<option value="canceled">{invoiceStatuses.canceled}</option>
+									<option value="">
+										{'Все'}
+									</option>
+									<option value={0}>
+										{PAYMENT_STATUS[0]}
+									</option>
+									<option value={1}>
+										{PAYMENT_STATUS[1]}
+									</option>
+									<option value={2}>
+										{PAYMENT_STATUS[2]}
+									</option>
 								</select>
 							</div>
+
 							<div className="col-sm-6">
 								<button
-									type="button"
 									className="btn btn-link"
 									disabled={isLoading}
 									onClick={this.handleFiltersReset}
+									type="button"
 									>
-									Очистить фильтры
+									{'Очистить фильтры'}
 								</button>
 							</div>
+
 							<div className="col-sm-6 text-right">
 								<button
-									type="button"
 									className="btn btn-default"
-									disabled={isLoading}
 									onClick={this.handleFilter}
+									disabled={isLoading}
+									type="button"
 									>
-									Фильтровать
+									{'Фильтровать'}
 								</button>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div className="form-group">
-					<div className="col-sm-2">
-						<div className="form-control-static">Для выбранных</div>
-					</div>
-					<div className="col-sm-4">
-						<select
-							className="form-control"
-							value={newStatus}
-							disabled={noSelectedItems || isLoading}
-							onChange={this.handleChangeNewStatus}
-							>
-							<option value="paid">Изменить статус на &laquo;Оплачен&raquo;</option>
-							<option value="waiting">Изменить статус на &laquo;Не оплачен&raquo;</option>
-							<option value="canceled">Изменить статус на &laquo;Отменён&raquo;</option>
-						</select>
-					</div>
-					<div className="col-sm-2">
-						<ChangeManyInvoiceStatusesBtn
-							invoiceIds={selectedItemsIds}
-							disabled={noSelectedItems || isLoading}
-							newStatus={newStatus}
-							/>
-					</div>
-					<div className="col-sm-4 text-right">
-						{isLoading ?
-							(<div className="form-control-static text-muted">Загрузка...</div>) :
-							null
-						}
-					</div>
-				</div>
+				<InvoiceListSelectedAction
+					onChangeNewStatus={this.handleChangeNewStatus}
+					{...{
+						isLoading,
+						newStatus,
+						noSelectedItems,
+						selectedItemsIds
+					}}
+					/>
+
 				<table className="table table-striped">
 					<thead>
 						<tr>
 							<th>
-								<input type="checkbox" checked={allSelected} onChange={this.handleSelectAll}/>
+								<input
+									type="checkbox"
+									checked={allSelected}
+									onChange={this.handleSelectAll}
+									/>
 							</th>
 							<th>
 								<span
-									style={{borderBottom: '1px dotted', cursor: 'pointer'}}
+									style={{
+										borderBottom: '1px dotted',
+										cursor: 'pointer'
+									}}
 									onClick={this.handleOrderingByDate}
 									>
-									Дата&nbsp;<i className={orderByDateIconCssClass}/>
+									{'Дата '}
+									<i className={orderByDateIconCssClass}/>
 								</span>
 							</th>
-							<th>Юр. лицо</th>
-							<th>Магазин</th>
-							<th>№ счёта</th>
-							<th>Пакет</th>
-							<th>Доп. опции</th>
+							<th>
+								{'Юр. лицо'}
+							</th>
+							<th>
+								{'Магазин'}
+							</th>
+							<th>
+								{'№ счёта'}
+							</th>
+							<th>
+								{'Пакет'}
+							</th>
+							<th>
+								{'Доп. опции'}
+							</th>
 							<th>
 								<span
 									style={{borderBottom: '1px dotted', cursor: 'pointer'}}
 									onClick={this.handleOrderingBySum}
 									>
-									Сумма&nbsp;<i className={orderBySumIconCssClass}/>
+									{'Сумма '}
+									<i className={orderBySumIconCssClass}/>
 								</span>
 							</th>
-							<th>Статус</th>
+							<th>
+								{'Статус'}
+							</th>
 						</tr>
 					</thead>
+
 					<tbody>
-						{data.map(function (invoiceItem) {
+						{data.map(invoiceItem => {
 							const itemIsSelected = (selectedItems.indexOf(invoiceItem.id) >= 0);
 
 							return (
@@ -542,37 +571,92 @@ export class InvoiceList extends React.Component {
 						})}
 					</tbody>
 				</table>
-				<div className="form-group">
-					<div className="col-sm-2">
-						<div className="form-control-static">Для выбранных</div>
+
+				<InvoiceListSelectedAction
+					onChangeNewStatus={this.handleChangeNewStatus}
+					{...{
+						isLoading,
+						newStatus,
+						noSelectedItems,
+						selectedItemsIds
+					}}
+					/>
+			</div>
+		);
+	}
+}
+
+class InvoiceListSelectedAction extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
+	}
+
+	handleChangeNewStatus(e) {
+		this.props.onChangeNewStatus(e);
+	}
+
+	render() {
+		const {
+			isLoading,
+			newStatus,
+			noSelectedItems,
+			selectedItemsIds
+		} = this.props;
+
+		return (
+			<div className="form-group">
+				<div className="col-sm-2">
+					<div className="form-control-static">
+						{'Для выбранных'}
 					</div>
-					<div className="col-sm-4">
-						<select
-							className="form-control"
-							value={newStatus}
-							disabled={noSelectedItems || isLoading}
-							onChange={this.handleChangeNewStatus}
-							>
-							<option value="paid">Изменить статус на &laquo;Оплачен&raquo;</option>
-							<option value="waiting">Изменить статус на &laquo;Не оплачен&raquo;</option>
-							<option value="canceled">Изменить статус на &laquo;Отменён&raquo;</option>
-						</select>
-					</div>
-					<div className="col-sm-2">
-						<ChangeManyInvoiceStatusesBtn
-							invoiceIds={selectedItemsIds}
-							disabled={noSelectedItems || isLoading}
-							newStatus={newStatus}
-							/>
-					</div>
-					<div className="col-sm-4 text-right">
-						{isLoading ?
-							(<div className="form-control-static text-muted">Загрузка...</div>) :
-							null
-						}
-					</div>
+				</div>
+
+				<div className="col-sm-4">
+					<select
+						className="form-control"
+						value={newStatus}
+						disabled={noSelectedItems || isLoading}
+						onChange={this.handleChangeNewStatus}
+						>
+						<option value={1}>
+							{`Изменить статус на «${PAYMENT_STATUS[1]}»`}
+						</option>
+						<option value={0}>
+							{`Изменить статус на «${PAYMENT_STATUS[0]}»`}
+						</option>
+						<option value={2}>
+							{`Изменить статус на «${PAYMENT_STATUS[2]}»`}
+						</option>
+					</select>
+				</div>
+
+				<div className="col-sm-2">
+					<ChangeManyInvoiceStatusesBtn
+						invoiceIds={selectedItemsIds}
+						disabled={noSelectedItems || isLoading}
+						newStatus={newStatus}
+						/>
+				</div>
+
+				<div className="col-sm-4 text-right">
+					{isLoading ? (
+						<div className="form-control-static text-muted">
+							{'Загрузка...'}
+						</div>
+					) : null}
 				</div>
 			</div>
 		);
 	}
 }
+InvoiceListSelectedAction.propTypes = {
+	isLoading: React.PropTypes.bool,
+	newStatus: React.PropTypes.number,
+	noSelectedItems: React.PropTypes.bool,
+	onChangeNewStatus: React.PropTypes.func,
+	selectedItemsIds: React.PropTypes.array
+};
+InvoiceListSelectedAction.defaultProps = {
+};
