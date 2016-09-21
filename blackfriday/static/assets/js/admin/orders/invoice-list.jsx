@@ -9,6 +9,7 @@ import InvoiceActions from './invoice-actions.js';
 import InvoiceItem from './invoice-item.jsx';
 import {PAYMENT_STATUS} from '../const.js';
 import ChangeManyInvoiceStatusesBtn from './change-many-invoice-statuses-btn.jsx';
+import AdvertiserSelect from './advertiser-select.jsx';
 
 export const invoiceActions = new InvoiceActions();
 
@@ -27,11 +28,11 @@ export class InvoiceList extends React.Component {
 
 		this.handleChangeDateFilter = this.handleChangeDateFilter.bind(this);
 		this.handleChangeInvoiceFilter = this.handleChangeInvoiceFilter.bind(this);
-		this.handleChangeNameFilter = this.handleChangeNameFilter.bind(this);
+		this.handleChangeAdvertiserFilter = this.handleChangeAdvertiserFilter.bind(this);
 		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
 		this.handleChangeStatusFilter = this.handleChangeStatusFilter.bind(this);
-		this.handleChangeSumStartFilter = this.handleChangeSumStartFilter.bind(this);
-		this.handleChangeSumStopFilter = this.handleChangeSumStopFilter.bind(this);
+		this.handleChangeMinSumFilter = this.handleChangeMinSumFilter.bind(this);
+		this.handleChangeMaxSumFilter = this.handleChangeMaxSumFilter.bind(this);
 		this.handleFilter = this.handleFilter.bind(this);
 		this.handleFiltersReset = this.handleFiltersReset.bind(this);
 		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
@@ -173,8 +174,8 @@ export class InvoiceList extends React.Component {
 		this.setState({filters});
 	}
 
-	handleChangeNameFilter(event) {
-		const filters = Object.assign({}, this.state.filters, {name: event.target.value});
+	handleChangeAdvertiserFilter(value) {
+		const filters = Object.assign({}, this.state.filters, {advertiser: value});
 		this.setState({filters});
 	}
 
@@ -183,13 +184,15 @@ export class InvoiceList extends React.Component {
 		this.setState({filters});
 	}
 
-	handleChangeSumStartFilter(event) {
-		const filters = Object.assign({}, this.state.filters, {sumStart: event.target.value});
-		this.setState({filters});
+	handleChangeMinSumFilter(event) {
+		const value = event.target.value;
+		const {filters} = this.state;
+		filters.minSum = value;
+		this.forceUpdate();
 	}
 
-	handleChangeSumStopFilter(event) {
-		const filters = Object.assign({}, this.state.filters, {sumStop: event.target.value});
+	handleChangeMaxSumFilter(event) {
+		const filters = Object.assign({}, this.state.filters, {maxSum: event.target.value});
 		this.setState({filters});
 	}
 
@@ -248,17 +251,17 @@ export class InvoiceList extends React.Component {
 		if (filters.date) {
 			params.date = filters.date.format('YYYY-MM-DD');
 		}
-		if (filters.name) {
-			params.name = filters.name;
+		if (filters.advertiser) {
+			params.advertiser = filters.advertiser;
 		}
 		if (filters.invoice) {
 			params.id = filters.invoice;
 		}
-		if (filters.sumStart) {
-			params.min_sum = filters.sumStart;
+		if (filters.minSum) {
+			params.min_sum = filters.minSum;
 		}
-		if (filters.sumStop) {
-			params.max_sum = filters.sumStop;
+		if (filters.maxSum) {
+			params.max_sum = filters.maxSum;
 		}
 		if (filters.status && (filters.status !== '')) {
 			params.status = filters.status;
@@ -283,6 +286,7 @@ export class InvoiceList extends React.Component {
 				json: true
 			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
+					data = _.sortBy(data, 'id').reverse();
 					this.setState({data});
 				}
 
@@ -393,16 +397,13 @@ export class InvoiceList extends React.Component {
 							<div className="form-group col-sm-2">
 								<div>
 									<label>
-										{'Юр.лицо / магазин'}
+										{'Юр. лицо'}
 									</label>
 								</div>
-								<input
-									type="text"
-									className="form-control"
-									style={{fontSize: 14}}
-									value={filters.name}
+								<AdvertiserSelect
+									value={filters.advertiser || 0}
+									onChange={this.handleChangeAdvertiserFilter}
 									disabled={isLoading}
-									onChange={this.handleChangeNameFilter}
 									/>
 							</div>
 
@@ -416,7 +417,7 @@ export class InvoiceList extends React.Component {
 									type="text"
 									className="form-control"
 									style={{fontSize: 14}}
-									value={filters.invoice}
+									value={filters.invoice || ''}
 									disabled={isLoading}
 									onChange={this.handleChangeInvoiceFilter}
 									/>
@@ -440,9 +441,9 @@ export class InvoiceList extends React.Component {
 											type="text"
 											className="form-control"
 											style={{fontSize: 14}}
-											value={filters.sumStart}
+											value={filters.minSum || ''}
 											disabled={isLoading}
-											onChange={this.handleChangeSumStartFilter}
+											onChange={this.handleChangeMinSumFilter}
 											/>
 									</div>
 
@@ -456,9 +457,9 @@ export class InvoiceList extends React.Component {
 											type="text"
 											className="form-control"
 											style={{fontSize: 14}}
-											value={filters.sumStop}
+											value={filters.maxSum || ''}
 											disabled={isLoading}
-											onChange={this.handleChangeSumStopFilter}
+											onChange={this.handleChangeMaxSumFilter}
 											/>
 									</div>
 								</div>
@@ -551,13 +552,13 @@ export class InvoiceList extends React.Component {
 								</span>
 							</th>
 							<th>
-								{'Юр. лицо'}
+								{'Юр. лицо'}
 							</th>
 							<th>
 								{'Магазин'}
 							</th>
 							<th>
-								{'№ счёта'}
+								{'№ счёта'}
 							</th>
 							<th>
 								{'Пакет'}
@@ -586,9 +587,9 @@ export class InvoiceList extends React.Component {
 
 							return (
 								<InvoiceItem
+									key={invoiceItem.id}
 									data={invoiceItem}
 									selected={itemIsSelected}
-									key={invoiceItem.id}
 									/>
 							);
 						})}
