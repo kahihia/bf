@@ -3,6 +3,7 @@ psycopg2 ~= 2.6.0
 pillow ~= 3.3.1
 xlrd ~= 1.0.0
 jsonschema ~= 2.5.1
+WeasyPrint ~= 0.31
 
 pytest ~= 2.9.2
 pytest-django ~= 2.9.1

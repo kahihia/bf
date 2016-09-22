@@ -51,6 +51,9 @@ class Invoice(models.Model):
     def owner_id(self):
         return self.advertiser_id
 
+    def total_number(self):
+        return self.options.all().count() + 1 if self.promo else self.options.all().count()
+
 
 class InvoiceOption(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='options', verbose_name='Счёт')
@@ -62,3 +65,6 @@ class InvoiceOption(models.Model):
     class Meta:
         verbose_name = 'Опция в счёте'
         verbose_name_plural = 'Опции в счёте'
+
+    def total_price(self):
+        return self.price * self.value
