@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 from jsonschema import validate, ValidationError as JsonSchemaValidationError
 
 from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
-from libs.api.exceptions import BadResponse
+from libs.api.exceptions import BadRequest
 
 from apps.advertisers.models import Merchant
 
@@ -124,7 +124,7 @@ class ProductViewSet(
     def parse(self, request, **kwargs):
         f = request.FILES.get('file')
         if f is None:
-            raise BadResponse('file is required')
+            raise BadRequest('file is required')
         result = []
         for counter, row in enumerate(FeedParser(f)):
             cleaned_data, errors, warnings = row
