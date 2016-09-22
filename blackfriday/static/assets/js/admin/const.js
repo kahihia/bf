@@ -11,7 +11,8 @@ export const REGEXP = {
 
 export const USER_ROLE = {
 	advertiser: 'Рекламодатель',
-	manager: 'Менеджер',
+	manager: 'Контент-менеджер',
+	operator: 'Менеджер',
 	admin: 'Администратор'
 };
 

@@ -153,6 +153,9 @@
                                     Реквизиты
                                 </a>
                             </li>
+
+                        {# Operator Menu #}
+                        {% elif user.role == 'operator' %}
                         {% endif %}
                     {% endblock navbar %}
                 </ul>
