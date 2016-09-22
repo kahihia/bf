@@ -100,7 +100,7 @@ class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
-                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_editable', 'is_previewable',
+                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_previewable',
                   'moderation', 'preview_url')
 
     def get_moderation(self, obj):

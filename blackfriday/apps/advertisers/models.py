@@ -93,10 +93,6 @@ class Merchant(models.Model):
         return self.get_promo(InvoiceStatus.paid)
 
     @property
-    def is_editable(self):
-        return self.invoices.filter(status=InvoiceStatus.paid).exists()
-
-    @property
     def is_previewable(self):
         return self.invoices.filter(status=InvoiceStatus.paid).exists()
 
