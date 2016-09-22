@@ -1,10 +1,12 @@
 import pytest
+from apps.users.models import Role
+
 from . import UserFactory
 
 
 @pytest.fixture
 def admin_user():
-    return UserFactory.create(create_profile=False, is_admin=True)
+    return UserFactory.create(create_profile=False, _role=Role.ADMIN)
 
 
 @pytest.fixture

@@ -11,6 +11,13 @@ from django.utils import timezone
 from apps.advertisers.models import AdvertiserProfile
 
 
+class Role:
+    OPERATOR = 0
+    MANAGER = 1
+    ADVERTISER = 2
+    ADMIN = 3
+
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -24,14 +31,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_admin', False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_admin', True)
-        if extra_fields.get('is_admin') is not True:
-            raise ValueError('Admin must have is_admin=True.')
-        return self._create_user(email, password, **extra_fields)
+        return self._create_user(email, password, _role=Role.ADMIN, **extra_fields)
 
 
 class TokenType:
@@ -87,13 +90,6 @@ class Token(models.Model):
             return cls.objects.get(token=token, **({'type': type} if type else {}))
         except cls.DoesNotExist:
             return None
-
-
-class Role:
-    OPERATOR = 0
-    MANAGER = 1
-    ADVERTISER = 2
-    ADMIN = 3
 
 
 class User(AbstractBaseUser):
