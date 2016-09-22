@@ -1,6 +1,6 @@
 import React from 'react';
 import b from 'b_';
-import {hasRole} from '../utils.js';
+import {hasRole, getUrl} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import MerchantProps from './merchant-props.jsx';
 
@@ -81,10 +81,7 @@ const MerchantListItem = React.createClass({
 		id: React.PropTypes.number,
 		image: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
-		isEditable: React.PropTypes.bool,
 		isPreviewable: React.PropTypes.bool,
-		link: React.PropTypes.string,
-		moderation: React.PropTypes.object,
 		moderationStatus: React.PropTypes.number,
 		name: React.PropTypes.string,
 		onClickMerchantDelete: React.PropTypes.func,
@@ -113,9 +110,7 @@ const MerchantListItem = React.createClass({
 			id,
 			image,
 			isActive,
-			isEditable,
 			isPreviewable,
-			link,
 			moderationStatus,
 			name,
 			optionsCount,
@@ -124,21 +119,20 @@ const MerchantListItem = React.createClass({
 			promo
 		} = this.props;
 
+		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
 
 		return (
 			<tr>
 				<td className={b('merchant-list', 'table-td', {name: 'logo'})}>
-					<a href={link}>
-						<span className={b('merchant-list', 'logo-placeholder')}>
-							{image ? (
-								<img
-									src={image}
-									alt=""
-									/>
-							) : null}
-						</span>
-					</a>
+					<span className={b('merchant-list', 'logo-placeholder')}>
+						{image ? (
+							<img
+								src={image}
+								alt=""
+								/>
+						) : null}
+					</span>
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'name'})}>
@@ -153,7 +147,6 @@ const MerchantListItem = React.createClass({
 					<MerchantProps
 						{...{
 							id,
-							isEditable,
 							moderationStatus,
 							optionsCount,
 							paymentStatus,
@@ -163,15 +156,13 @@ const MerchantListItem = React.createClass({
 				</td>
 
 				<td className={b('merchant-list', 'table-td', {name: 'action'})}>
-					{isEditable ? (
-						<a
-							className="btn btn-default btn-sm"
-							href={`/admin/merchants/${id}/`}
-							title="Редактирование"
-							>
-							<Glyphicon name="pencil"/>
-						</a>
-					) : null}
+					<a
+						className="btn btn-default btn-sm"
+						href={editUrl}
+						title="Редактирование"
+						>
+						<Glyphicon name="pencil"/>
+					</a>
 
 					{isPreviewable && previewUrl ? (
 						<a

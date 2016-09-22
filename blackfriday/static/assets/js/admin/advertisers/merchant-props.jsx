@@ -15,7 +15,6 @@ class MerchantProps extends React.Component {
 	render() {
 		const {
 			id,
-			isEditable,
 			moderation,
 			moderationStatus,
 			optionsCount,
@@ -24,12 +23,15 @@ class MerchantProps extends React.Component {
 		} = this.props;
 
 		const isAdmin = hasRole('admin');
+		const isAdvertiser = hasRole('advertiser');
 
 		const isCanceled = paymentStatus === 2;
 
 		const promoName = promo && promo.name;
-		const isAllowPlanSelect = !promoName;
+		const isAllowPlanSelect = (!promoName || isCanceled) && (isAdmin || isAdvertiser);
 		const planName = isAllowPlanSelect ? 'Выберите пакет' : promoName;
+
+		const editUrl = `${getUrl('merchants')}${id}/`;
 
 		return (
 			<ul className="props merchant-props">
@@ -42,11 +44,11 @@ class MerchantProps extends React.Component {
 						className="props__value"
 						title={planName}
 						>
-						{isAdmin || isEditable || isCanceled || isAllowPlanSelect ? (
-							<a href={`${getUrl('merchants')}${id}/#plan`}>
+						{isAllowPlanSelect ? (
+							<a href={`${editUrl}#plan`}>
 								{planName}
 							</a>
-						) : planName}
+						) : planName || 'Не выбран'}
 					</span>
 				</li>
 
@@ -91,8 +93,8 @@ class MerchantProps extends React.Component {
 						</span>
 
 						<span className="props__value">
-							{isEditable || isCanceled ? (
-								<a href={`${getUrl('merchants')}${id}/#plan`}>
+							{isCanceled ? (
+								<a href={`${editUrl}#plan`}>
 									{optionsCount}
 								</a>
 							) : optionsCount}
@@ -140,7 +142,6 @@ class MerchantProps extends React.Component {
 }
 MerchantProps.propTypes = {
 	id: React.PropTypes.number,
-	isEditable: React.PropTypes.bool,
 	moderation: React.PropTypes.object,
 	moderationStatus: React.PropTypes.number,
 	optionsCount: React.PropTypes.number,
