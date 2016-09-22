@@ -89,7 +89,21 @@ class Token(models.Model):
             return None
 
 
+class Role:
+    OPERATOR = 0
+    MANAGER = 1
+    ADVERTISER = 2
+    ADMIN = 3
+
+
 class User(AbstractBaseUser):
+    ROLES = (
+        (Role.OPERATOR, 'operator'),
+        (Role.MANAGER, 'manager'),
+        (Role.ADVERTISER, 'advertiser'),
+        (Role.ADMIN, 'admin'),
+    )
+
     email = models.EmailField(unique=True, blank=False, verbose_name='Электронная почта')
     name = models.CharField(max_length=120, null=True, blank=True, verbose_name='Имя')
 
@@ -101,9 +115,16 @@ class User(AbstractBaseUser):
     profile = models.OneToOneField(AdvertiserProfile, null=True, blank=True, on_delete=models.SET_NULL,
                                    verbose_name='Профиль рекламодателя')
 
+    # use self.role to access this field
+    _role = models.IntegerField(choices=ROLES, default=Role.MANAGER)
+
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
+
+    @property
+    def is_admin(self):
+        return self._role == Role.ADMIN
 
     @property
     def is_staff(self):
@@ -115,15 +136,12 @@ class User(AbstractBaseUser):
 
     @property
     def role(self):
-        if self.is_admin:
-            return 'admin'
-        if self.profile:
-            return 'advertiser'
-        return 'manager'
+        return dict(self.ROLES).get(self._role)
 
     @role.setter
     def role(self, value):
-        self.is_admin = (value == 'admin')
+        self._role = dict(map(reversed, self.ROLES)).get(value, Role.MANAGER)
+
         if value == 'advertiser':
             if not self.profile:
                 self.profile = AdvertiserProfile.objects.create()
