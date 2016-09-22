@@ -15,7 +15,6 @@ class MerchantProps extends React.Component {
 	render() {
 		const {
 			id,
-			isEditable,
 			moderation,
 			moderationStatus,
 			optionsCount,
@@ -42,7 +41,7 @@ class MerchantProps extends React.Component {
 						className="props__value"
 						title={planName}
 						>
-						{isAdmin || isEditable || isCanceled || isAllowPlanSelect ? (
+						{isAdmin || isCanceled || isAllowPlanSelect ? (
 							<a href={`${getUrl('merchants')}${id}/#plan`}>
 								{planName}
 							</a>
@@ -91,7 +90,7 @@ class MerchantProps extends React.Component {
 						</span>
 
 						<span className="props__value">
-							{isEditable || isCanceled ? (
+							{isCanceled ? (
 								<a href={`${getUrl('merchants')}${id}/#plan`}>
 									{optionsCount}
 								</a>
@@ -140,7 +139,6 @@ class MerchantProps extends React.Component {
 }
 MerchantProps.propTypes = {
 	id: React.PropTypes.number,
-	isEditable: React.PropTypes.bool,
 	moderation: React.PropTypes.object,
 	moderationStatus: React.PropTypes.number,
 	optionsCount: React.PropTypes.number,
