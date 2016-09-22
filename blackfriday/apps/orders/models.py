@@ -34,14 +34,22 @@ class Invoice(models.Model):
         if self.status > InvoiceStatus.new:
             return
 
-        total = self.options.annotate(subtotal=F('value') * F('price')).aggregate(total=Sum('subtotal'))['total']
+        total = 0
+        options_price = (self.options
+                         .annotate(subtotal=F('value') * F('price'))
+                         .aggregate(total=Sum('subtotal'))
+                         .get('total'))
+
+        if options_price:
+            total += options_price
         if self.promo:
             total += self.promo.price
         if self.discount:
             total *= (1 - self.discount / 100)
 
-        if self.promo and self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new):
-            total -= self.merchant.promo.price
+        last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new)
+        if self.promo and last_promo:
+            total -= last_promo.price
 
         self.sum = ceil(total)
         if commit:
