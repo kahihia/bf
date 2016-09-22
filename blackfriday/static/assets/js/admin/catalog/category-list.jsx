@@ -38,23 +38,24 @@ const CategoryList = React.createClass({
 
 	render() {
 		const {categories} = this.props;
+		const className = 'category-list';
 
 		return (
-			<div className={b('category-list')}>
-				<table className={'table table-hover ' + b('category-list', 'table')}>
+			<div className={b(className)}>
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th className={b('category-list', 'table-th', {name: 'id'})}/>
+							<th className={b(className, 'table-th', {name: 'id'})}/>
 
-							<th className={b('category-list', 'table-th', {name: 'name'})}>
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								{'Название'}
 							</th>
 
-							<th className={b('category-list', 'table-th', {name: 'link'})}>
+							<th className={b(className, 'table-th', {name: 'link'})}>
 								{'Ссылка'}
 							</th>
 
-							<th className={b('category-list', 'table-th', {name: 'edit'})}/>
+							<th className={b(className, 'table-th', {name: 'edit'})}/>
 						</tr>
 					</thead>
 
@@ -96,24 +97,25 @@ const CategoryListItem = React.createClass({
 	render() {
 		const {id, name, slug} = this.props;
 		const link = `${getFullUrl('categories')}${slug}/`;
+		const className = 'category-list';
 
 		return (
 			<tr>
-				<td className={b('category-list', 'table-td', {name: 'id'})}>
+				<td className={b(className, 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
 
-				<td className={b('category-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name}
 				</td>
 
-				<td className={b('category-list', 'table-td', {name: 'link'})}>
+				<td className={b(className, 'table-td', {name: 'link'})}>
 					<a href={link}>
 						{link}
 					</a>
 				</td>
 
-				<td className={b('category-list', 'table-td', {name: 'edit'})}>
+				<td className={b(className, 'table-td', {name: 'edit'})}>
 					<button
 						className="btn btn-sm btn-default"
 						onClick={this.handleClickEdit}

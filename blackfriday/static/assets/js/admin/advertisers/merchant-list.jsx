@@ -22,29 +22,30 @@ class MerchantList extends React.Component {
 
 	render() {
 		const {merchants} = this.props;
+		const className = 'merchant-list';
 
 		return (
-			<div className={b('merchant-list')}>
-				<table className={'table table-hover ' + b('merchant-list', 'table')}>
+			<div className={b(className)}>
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th className={b('merchant-list', 'table-th', {name: 'logo'})}>
+							<th className={b(className, 'table-th', {name: 'logo'})}>
 								{'Логотип'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'name'})}>
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								{'Название'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'advertiser'})}>
+							<th className={b(className, 'table-th', {name: 'advertiser'})}>
 								{'Рекламодатель'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'data'})}>
+							<th className={b(className, 'table-th', {name: 'data'})}>
 								{'Данные'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'action'})}/>
+							<th className={b(className, 'table-th', {name: 'action'})}/>
 						</tr>
 					</thead>
 
@@ -121,11 +122,12 @@ const MerchantListItem = React.createClass({
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
+		const className = 'merchant-list';
 
 		return (
 			<tr>
-				<td className={b('merchant-list', 'table-td', {name: 'logo'})}>
-					<span className={b('merchant-list', 'logo-placeholder')}>
+				<td className={b(className, 'table-td', {name: 'logo'})}>
+					<span className={b(className, 'logo-placeholder')}>
 						{image ? (
 							<img
 								src={image.url}
@@ -135,15 +137,15 @@ const MerchantListItem = React.createClass({
 					</span>
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'advertiser'})}>
+				<td className={b(className, 'table-td', {name: 'advertiser'})}>
 					{advertiser.name}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'data'})}>
+				<td className={b(className, 'table-td', {name: 'data'})}>
 					<MerchantProps
 						{...{
 							id,
@@ -155,7 +157,7 @@ const MerchantListItem = React.createClass({
 						/>
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'action'})}>
+				<td className={b(className, 'table-td', {name: 'action'})}>
 					<a
 						className="btn btn-default btn-sm"
 						href={editUrl}

@@ -15,6 +15,10 @@
 			.user-list__table-td_name_role
 				color: $state-danger-text
 
+		&_role_operator
+			.user-list__table-td_name_role
+				color: $state-info-text
+
 	&__table-th
 		&_name_id
 			width: 1%
@@ -31,10 +35,7 @@
 		&_name_status
 			width: 1%
 
-		&_name_change-password
-			width: 1%
-
-		&_name_verification
+		&_name_action
 			width: 1%
 
 	&__table-td
@@ -50,13 +51,10 @@
 			word-break: break-word
 
 		&_name_role
-			{}
+			white-space: nowrap
 
 		&_name_status
 			text-align: center
 
 		&_name_change-password
-			{}
-
-		&_name_verification
 			{}

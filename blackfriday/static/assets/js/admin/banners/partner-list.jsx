@@ -37,25 +37,26 @@ const PartnerList = React.createClass({
 
 	render() {
 		const {partners} = this.props;
+		const className = 'partner-list';
 
 		return (
-			<div className={b('partner-list')}>
-				<table className={'table table-hover ' + b('partner-list', 'table')}>
+			<div className={b(className)}>
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th className={b('partner-list', 'table-th', {name: 'logo'})}>
+							<th className={b(className, 'table-th', {name: 'logo'})}>
 								{'Логотип'}
 							</th>
 
-							<th className={b('partner-list', 'table-th', {name: 'name'})}>
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								{'Название'}
 							</th>
 
-							<th className={b('partner-list', 'table-th', {name: 'link'})}>
+							<th className={b(className, 'table-th', {name: 'link'})}>
 								{'Ссылка'}
 							</th>
 
-							<th className={b('partner-list', 'table-th', {name: 'edit'})}/>
+							<th className={b(className, 'table-th', {name: 'edit'})}/>
 						</tr>
 					</thead>
 
@@ -97,11 +98,12 @@ const PartnerListItem = React.createClass({
 
 	render() {
 		const {image, name, url} = this.props;
+		const className = 'partner-list';
 
 		return (
 			<tr>
-				<td className={b('partner-list', 'table-td', {name: 'logo'})}>
-					<span className={b('partner-list', 'logo-placeholder')}>
+				<td className={b(className, 'table-td', {name: 'logo'})}>
+					<span className={b(className, 'logo-placeholder')}>
 						{image ? (
 							<img
 								src={image}
@@ -111,17 +113,17 @@ const PartnerListItem = React.createClass({
 					</span>
 				</td>
 
-				<td className={b('partner-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name}
 				</td>
 
-				<td className={b('partner-list', 'table-td', {name: 'link'})}>
+				<td className={b(className, 'table-td', {name: 'link'})}>
 					<a href={url}>
 						{url}
 					</a>
 				</td>
 
-				<td className={b('partner-list', 'table-td', {name: 'edit'})}>
+				<td className={b(className, 'table-td', {name: 'edit'})}>
 					<button
 						className="btn btn-sm btn-default"
 						onClick={this.handleClickEdit}

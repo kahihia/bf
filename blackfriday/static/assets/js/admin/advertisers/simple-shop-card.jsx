@@ -37,13 +37,14 @@ const SimpleShopCard = React.createClass({
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
+		const className = 'simple-shop-card';
 
 		return (
-			<div className={b('simple-shop-card')}>
-				<span className={b('simple-shop-card', 'logo-placeholder')}>
+			<div className={b(className)}>
+				<span className={b(className, 'logo-placeholder')}>
 					{image ? (
 						<img
-							className={b('simple-shop-card', 'logo')}
+							className={b(className, 'logo')}
 							src={image.url}
 							alt=""
 							/>
@@ -51,7 +52,7 @@ const SimpleShopCard = React.createClass({
 				</span>
 
 				<div
-					className={b('simple-shop-card', 'name')}
+					className={b(className, 'name')}
 					title={name}
 					>
 					{name}
@@ -67,7 +68,7 @@ const SimpleShopCard = React.createClass({
 					}}
 					/>
 
-				<div className={b('simple-shop-card', 'action-list')}>
+				<div className={b(className, 'action-list')}>
 					<div className={b('action-list')}>
 						<a
 							className={b('action-list', 'item')}

@@ -136,6 +136,8 @@ const AdvertiserList = React.createClass({
 			});
 		}
 
+		const className = 'advertiser-list';
+
 		return (
 			<div>
 				{isAdmin ? (
@@ -161,26 +163,26 @@ const AdvertiserList = React.createClass({
 						/>
 				</div>
 
-				<div className={b('advertiser-list')}>
-					<table className={'table table-hover ' + b('advertiser-list', 'table')}>
+				<div className={b(className)}>
+					<table className={'table table-hover ' + b(className, 'table')}>
 						<thead>
 							<tr>
-								<th className={b('advertiser-list', 'table-th', {name: 'id'})}/>
+								<th className={b(className, 'table-th', {name: 'id'})}/>
 
-								<th className={b('advertiser-list', 'table-th', {name: 'email'})}>
+								<th className={b(className, 'table-th', {name: 'email'})}>
 									{'Email'}
 								</th>
 
-								<th className={b('advertiser-list', 'table-th', {name: 'name'})}>
+								<th className={b(className, 'table-th', {name: 'name'})}>
 									{'Название'}
 								</th>
 
-								<th className={b('advertiser-list', 'table-th', {name: 'status'})}>
+								<th className={b(className, 'table-th', {name: 'status'})}>
 									{'Подтверждён'}
 								</th>
 
 								{isAdmin ? (
-									<th className={b('advertiser-list', 'table-th', {name: 'edit'})}/>
+									<th className={b(className, 'table-th', {name: 'edit'})}/>
 								) : null}
 							</tr>
 						</thead>
@@ -233,20 +235,21 @@ const AdvertiserListItem = React.createClass({
 
 	render() {
 		const {id, name, email, isActive} = this.props;
+		const className = 'advertiser-list';
 
 		return (
 			<tr>
-				<td className={b('advertiser-list', 'table-td', {name: 'id'})}>
+				<td className={b(className, 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
 
-				<td className={b('advertiser-list', 'table-td', {name: 'email'})}>
+				<td className={b(className, 'table-td', {name: 'email'})}>
 					<a href={`mailto:${email}`}>
 						{email}
 					</a>
 				</td>
 
-				<td className={b('advertiser-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name ? (
 						name
 					) : (
@@ -256,7 +259,7 @@ const AdvertiserListItem = React.createClass({
 					)}
 				</td>
 
-				<td className={b('advertiser-list', 'table-td', {name: 'status'})}>
+				<td className={b(className, 'table-td', {name: 'status'})}>
 					{isActive ? (
 						<Glyphicon
 							name="ok"
@@ -271,7 +274,7 @@ const AdvertiserListItem = React.createClass({
 				</td>
 
 				{this.props.isAdmin ? (
-					<td className={b('advertiser-list', 'table-td', {name: 'edit'})}>
+					<td className={b(className, 'table-td', {name: 'edit'})}>
 						<button
 							className="btn btn-sm btn-default"
 							onClick={this.handleClickEdit}
