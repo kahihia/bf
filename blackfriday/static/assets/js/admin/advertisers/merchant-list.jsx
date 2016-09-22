@@ -79,7 +79,7 @@ const MerchantListItem = React.createClass({
 	propTypes: {
 		advertiser: React.PropTypes.object,
 		id: React.PropTypes.number,
-		image: React.PropTypes.string,
+		image: React.PropTypes.object,
 		isActive: React.PropTypes.bool,
 		isPreviewable: React.PropTypes.bool,
 		moderationStatus: React.PropTypes.number,
@@ -128,7 +128,7 @@ const MerchantListItem = React.createClass({
 					<span className={b('merchant-list', 'logo-placeholder')}>
 						{image ? (
 							<img
-								src={image}
+								src={image.url}
 								alt=""
 								/>
 						) : null}

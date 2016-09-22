@@ -44,7 +44,7 @@ const SimpleShopCard = React.createClass({
 					{image ? (
 						<img
 							className={b('simple-shop-card', 'logo')}
-							src={image}
+							src={image.url}
 							alt=""
 							/>
 					) : null}
