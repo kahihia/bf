@@ -116,11 +116,15 @@ class MerchantListSerializer(serializers.ModelSerializer):
     promo = PromoTinySerializer()
     advertiser = AdvertiserTinySerializer()
     image = ImageSerializer()
+    moderation = serializers.SerializerMethodField()
 
     class Meta:
         model = Merchant
-        fields = ('id', 'name', 'image', 'payment_status', 'moderation_status', 'promo',
+        fields = ('id', 'name', 'image', 'payment_status', 'moderation', 'promo',
                   'is_active', 'is_previewable', 'preview_url', 'advertiser')
+
+    def get_moderation(self, obj):
+        return MerchantModerationSerializer(obj).data
 
 
 class MerchantCreateSerializer(serializers.ModelSerializer):
