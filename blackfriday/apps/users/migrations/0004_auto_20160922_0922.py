@@ -28,12 +28,17 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+
+    # ... the actual migration operations here ...
+
         migrations.AddField(
             model_name='user',
             name='_role',
             field=models.IntegerField(choices=[(0, 'operator'), (1, 'manager'), (2, 'advertiser'), (3, 'admin')], default=1),
         ),
+        migrations.RunSQL('SET CONSTRAINTS ALL IMMEDIATE', reverse_sql=migrations.RunSQL.noop),
         migrations.RunPython(migrate_role, noop),
+        migrations.RunSQL(migrations.RunSQL.noop, reverse_sql='SET CONSTRAINTS ALL IMMEDIATE'),
         migrations.RemoveField(
             model_name='user',
             name='is_admin',
