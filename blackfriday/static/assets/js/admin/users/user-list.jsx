@@ -54,25 +54,23 @@ const UserList = React.createClass({
 		const {users} = this.props;
 
 		let filteredUsers = users;
-		function foo(a, b) {
-			if (!a || !b) {
-				return;
-			}
 
-			return a.toLowerCase().indexOf(b.toLowerCase()) > -1;
-		}
 		if (userFilter) {
 			filteredUsers = _.filter(filteredUsers, user => {
 				const {email, name} = user;
+
 				if (!name && !email) {
 					return false;
 				}
-				return foo(name, userFilter) || foo(email, userFilter);
+
+				return contains(userFilter, name) || contains(userFilter, email);
 			});
 		}
 
+		const className = 'user-list';
+
 		return (
-			<div className={b('user-list')}>
+			<div className={b(className)}>
 				<div className="form">
 					<FormRow
 						label="Поиск пользователя"
@@ -82,30 +80,28 @@ const UserList = React.createClass({
 						/>
 				</div>
 
-				<table className={'table table-hover ' + b('user-list', 'table')}>
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th className={b('user-list', 'table-th', {name: 'id'})}/>
+							<th className={b(className, 'table-th', {name: 'id'})}/>
 
-							<th className={b('user-list', 'table-th', {name: 'email'})}>
+							<th className={b(className, 'table-th', {name: 'email'})}>
 								{'Email'}
 							</th>
 
-							<th className={b('user-list', 'table-th', {name: 'name'})}>
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								{'Имя/Название'}
 							</th>
 
-							<th className={b('user-list', 'table-th', {name: 'role'})}>
+							<th className={b(className, 'table-th', {name: 'role'})}>
 								{'Роль'}
 							</th>
 
-							<th className={b('user-list', 'table-th', {name: 'status'})}>
+							<th className={b(className, 'table-th', {name: 'status'})}>
 								{'Подтверждён'}
 							</th>
 
-							<th className={b('user-list', 'table-th', {name: 'change-password'})}/>
-
-							<th className={b('user-list', 'table-th', {name: 'verification'})}/>
+							<th className={b(className, 'table-th', {name: 'change-password'})}/>
 						</tr>
 					</thead>
 
@@ -154,20 +150,21 @@ const UserListItem = React.createClass({
 
 	render() {
 		const {id, name, email, role, isActive} = this.props;
+		const className = 'user-list';
 
 		return (
-			<tr className={b('user-list', 'table-tr', {role: role})}>
-				<td className={b('user-list', 'table-td', {name: 'id'})}>
+			<tr className={b(className, 'table-tr', {role: role})}>
+				<td className={b(className, 'table-td', {name: 'id'})}>
 					{`#${id}`}
 				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'email'})}>
+				<td className={b(className, 'table-td', {name: 'email'})}>
 					<a href={`mailto:${email}`}>
 						{email}
 					</a>
 				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name ? (
 						name
 					) : (
@@ -177,11 +174,11 @@ const UserListItem = React.createClass({
 					)}
 				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'role'})}>
+				<td className={b(className, 'table-td', {name: 'role'})}>
 					{USER_ROLE[role]}
 				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'status'})}>
+				<td className={b(className, 'table-td', {name: 'status'})}>
 					{isActive ? (
 						<Glyphicon
 							name="ok"
@@ -195,20 +192,18 @@ const UserListItem = React.createClass({
 					)}
 				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'change-password'})}>
+				<td className={b(className, 'table-td', {name: 'change-password'})}>
 					<button
-						className="btn btn-sm btn-default"
+						className="btn btn-sm btn-warning btn-block"
 						onClick={this.handleClickPasswordChange}
 						type="button"
 						>
 						{'Сменить пароль'}
 					</button>
-				</td>
 
-				<td className={b('user-list', 'table-td', {name: 'verification'})}>
 					{isActive ? null : (
 						<button
-							className="btn btn-sm btn-default"
+							className="btn btn-sm btn-success btn-block"
 							onClick={this.handleClickVerification}
 							type="button"
 							>
@@ -220,3 +215,14 @@ const UserListItem = React.createClass({
 		);
 	}
 });
+
+function contains(what, where) {
+	if (!what || !where) {
+		return;
+	}
+
+	if (where.toLowerCase().indexOf(what.toLowerCase()) > -1) {
+		return true;
+	}
+	return false;
+}
