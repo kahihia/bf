@@ -23,12 +23,15 @@ class MerchantProps extends React.Component {
 		} = this.props;
 
 		const isAdmin = hasRole('admin');
+		const isAdvertiser = hasRole('advertiser');
 
 		const isCanceled = paymentStatus === 2;
 
 		const promoName = promo && promo.name;
-		const isAllowPlanSelect = !promoName;
+		const isAllowPlanSelect = (!promoName || isCanceled) && (isAdmin || isAdvertiser);
 		const planName = isAllowPlanSelect ? 'Выберите пакет' : promoName;
+
+		const editUrl = `${getUrl('merchants')}${id}/`;
 
 		return (
 			<ul className="props merchant-props">
@@ -41,11 +44,11 @@ class MerchantProps extends React.Component {
 						className="props__value"
 						title={planName}
 						>
-						{isAdmin || isCanceled || isAllowPlanSelect ? (
-							<a href={`${getUrl('merchants')}${id}/#plan`}>
+						{isAllowPlanSelect ? (
+							<a href={`${editUrl}#plan`}>
 								{planName}
 							</a>
-						) : planName}
+						) : planName || 'Не выбран'}
 					</span>
 				</li>
 
@@ -91,7 +94,7 @@ class MerchantProps extends React.Component {
 
 						<span className="props__value">
 							{isCanceled ? (
-								<a href={`${getUrl('merchants')}${id}/#plan`}>
+								<a href={`${editUrl}#plan`}>
 									{optionsCount}
 								</a>
 							) : optionsCount}
