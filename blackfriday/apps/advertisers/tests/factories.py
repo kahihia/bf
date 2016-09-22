@@ -20,7 +20,7 @@ class AdvertiserProfileFactory(factory.django.DjangoModelFactory):
 
 class MerchantFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: 'merchant {}'.format(n))
-    image = factory.django.ImageField()
+    image = factory.SubFactory('apps.mediafiles.tests.factories.ImageFactory')
     advertiser = factory.SubFactory('apps.users.tests.factories.UserFactory')
     is_active = True
 

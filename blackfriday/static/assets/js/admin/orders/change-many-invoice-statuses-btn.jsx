@@ -2,6 +2,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
+import {TOKEN} from '../const.js';
 import {invoiceActions} from './invoice-list.jsx';
 
 export default class ChangeManyInvoiceStatusesBtn extends React.Component {
@@ -23,29 +24,34 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 	}
 
 	handleClick() {
-		let self = this;
+		const {disabled, invoiceIds} = this.state;
+		const {newStatus} = this.props;
 
-		if (!self.state.disabled) {
-			const data = self.state.invoiceIds.map(invoiceId => {
-				return {
-					id: invoiceId,
-					status: self.props.newStatus
-				};
-			});
+		if (!disabled) {
+			const json = {
+				ids: invoiceIds,
+				status: newStatus
+			};
 
-			self.setState({
+			this.setState({
 				disabled: true
-			}, function () {
-				xhr.put('/admin/invoices', {json: data}, function (err, resp) {
-					self.setState({
+			}, () => {
+				xhr({
+					url: '/api/invoices/statuses/',
+					method: 'PATCH',
+					headers: {
+						'X-CSRFToken': TOKEN.csrftoken
+					},
+					json
+				}, (err, resp) => {
+					this.setState({
 						disabled: false
-					}, function () {
+					}, () => {
 						if (!err && (resp.statusCode === 200)) {
-							toastr.success('Статусы счетов изменены.');
 							invoiceActions.allUnselected(true /* stop */);
-							invoiceActions.statusChanged(self.state.invoiceIds, self.props.newStatus);
+							invoiceActions.statusChanged(invoiceIds, newStatus);
 						} else {
-							toastr.error('Не удалось изменить статусы счетов.');
+							toastr.error('Не удалось изменить статусы счетов');
 						}
 					});
 				});
@@ -56,22 +62,21 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 	render() {
 		return (
 			<button
-				className="btn btn-default" type="button"
+				className="btn btn-default"
+				type="button"
 				disabled={this.state.disabled}
 				onClick={this.handleClick}
 				>
-				Применить
+				{'Применить'}
 			</button>
 		);
 	}
 }
-
 ChangeManyInvoiceStatusesBtn.propTypes = {
 	invoiceIds: React.PropTypes.array,
 	disabled: React.PropTypes.bool,
-	newStatus: React.PropTypes.string
+	newStatus: React.PropTypes.number
 };
-
 ChangeManyInvoiceStatusesBtn.defaultProps = {
 	disabled: false
 };

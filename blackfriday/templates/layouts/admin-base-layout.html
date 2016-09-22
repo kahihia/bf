@@ -96,6 +96,11 @@
                                     Партнёры
                                 </a>
                             </li>
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'orders:invoice-list' %}">
+                                    Счета
+                                </a>
+                            </li>
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
@@ -119,6 +124,11 @@
                                     Категории
                                 </a>
                             </li>
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'orders:invoice-list' %}">
+                                    Счета
+                                </a>
+                            </li>
 
                         {# Advertiser Menu #}
                         {% elif user.role == 'advertiser' %}
@@ -127,7 +137,11 @@
                                     Магазины
                                 </a>
                             </li>
-
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'orders:invoice-list' %}">
+                                    Счета
+                                </a>
+                            </li>
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="{% url 'advertisers:profile' %}">
                                     Реквизиты

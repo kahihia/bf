@@ -36,6 +36,7 @@ class Input extends React.Component {
 	render() {
 		const {
 			addon,
+			disabled,
 			mask,
 			name,
 			options,
@@ -62,7 +63,7 @@ class Input extends React.Component {
 				<Select
 					onChange={this.handleChange}
 					selected={val}
-					{...{options, name, valueType}}
+					{...{disabled, options, name, valueType}}
 					/>
 			);
 		} else if (mask) {
@@ -70,7 +71,7 @@ class Input extends React.Component {
 				<MaskedInput
 					className="form-control"
 					value={val}
-					{...{name, required, readOnly, mask}}
+					{...{disabled, name, required, readOnly, mask}}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -80,7 +81,7 @@ class Input extends React.Component {
 				<input
 					className="form-control"
 					value={val}
-					{...{placeholder, name, type, required, readOnly}}
+					{...{disabled, placeholder, name, type, required, readOnly}}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -103,6 +104,7 @@ class Input extends React.Component {
 }
 Input.propTypes = {
 	addon: React.PropTypes.string,
+	disabled: React.PropTypes.bool,
 	mask: React.PropTypes.string,
 	name: React.PropTypes.string,
 	onChange: React.PropTypes.func.isRequired,

@@ -4,8 +4,9 @@ import React from 'react';
 import Price from 'react-price';
 import DatePicker from 'react-datepicker';
 import {formatPrice} from '../utils.js';
+import Glyphicon from '../components/glyphicon.jsx';
 import {invoiceActions} from './invoice-list.jsx';
-import {InvoiceStatus} from './invoice-status.jsx';
+import InvoiceStatus from './invoice-status.jsx';
 
 export default class InvoiceItem extends React.Component {
 	constructor(props) {
@@ -31,23 +32,18 @@ export default class InvoiceItem extends React.Component {
 	}
 
 	onAllSelected() {
-		this.setState({
-			selected: true
-		});
+		this.setState({selected: true});
 	}
 
 	onAllUnselected() {
-		this.setState({
-			selected: false
-		});
+		this.setState({selected: false});
 	}
 
 	onStatusChanged(invoiceIds, newStatus) {
 		if (invoiceIds.indexOf(this.state.data.id) >= 0) {
-			const newData = Object.assign({}, this.state.data, {status: newStatus});
-
-			this.setState({
-				data: newData
+			this.setState(previousState => {
+				previousState.data.status = newStatus;
+				return previousState;
 			});
 		}
 	}
@@ -55,7 +51,7 @@ export default class InvoiceItem extends React.Component {
 	handleSelect() {
 		this.setState({
 			selected: !this.state.selected
-		}, function () {
+		}, () => {
 			if (this.state.selected) {
 				invoiceActions.itemSelected(this.state.data.id);
 			} else {
@@ -74,59 +70,72 @@ export default class InvoiceItem extends React.Component {
 	}
 
 	render() {
+		const {selected, data, isEditingExpireDate} = this.state;
+
 		return (
-			<tr className={this.state.selected ? 'active' : ''}>
+			<tr className={selected ? 'active' : ''}>
 				<td>
-					<input type="checkbox" checked={this.state.selected} onChange={this.handleSelect}/>
+					<input
+						type="checkbox"
+						checked={selected}
+						onChange={this.handleSelect}
+						/>
 				</td>
 				<td>
-					{moment(this.state.data.created_at).format('DD.MM.YYYY')}
+					{moment(data.createdDatetime).format('DD.MM.YYYY')}
 				</td>
 				<td>
-					{this.state.data.advertiser_name || ''}
+					{data.advertiser.name || ''}
 				</td>
 				<td>
-					{this.state.data.merchant_name || ''}
+					{data.merchant.name || ''}
 				</td>
 				<td>
-					{this.state.data.invoice || ''}
+					{data.id || ''}
 				</td>
 				<td>
-					{this.state.data.promo_name || ''}
+					{data.promo.name || ''}
 				</td>
 				<td>
 					<ul>
-						{this.state.data.options.map((option, index) => {
+						{data.options.map(option => {
 							return (
-								<li key={index}>{option.name}</li>
+								<li key={option.id}>
+									{option.name}
+								</li>
 							);
 						})}
 					</ul>
 				</td>
 				<td>
-					<Price cost={formatPrice(this.state.data.sum)} currency={'₽'}/>
+					<Price
+						cost={formatPrice(data.sum)}
+						currency={'₽'}
+						/>
 				</td>
-				<td className="text-nowrap">
-					{this.state.data.status === 'waiting' ? (
-						<a
-							href="#"
-							onClick={this.handleClickEditExpireDate}
-							style={{marginRight: 4}}
-							>
-							<span className="glyphicon glyphicon-time"/>
-						</a>
-					) : null}
+				<td>
+					<div className="text-nowrap">
+						{data.status === 0 ? (
+							<a
+								href="#"
+								onClick={this.handleClickEditExpireDate}
+								style={{marginRight: 4}}
+								>
+								<Glyphicon name="time"/>
+							</a>
+						) : null}
 
-					<InvoiceStatus code={this.state.data.status}/>
+						<InvoiceStatus code={data.status}/>
+					</div>
 
-					{this.state.isEditingExpireDate ? (
+					{isEditingExpireDate ? (
 						<DatePicker
 							className="form-control datepicker-input-sm"
 							style={{fontSize: 14}}
 							dateFormat="DD/MM"
-							selected={moment(this.state.data.expired)}
-							maxDate={moment(this.state.data.expired).add(7, 'd')}
-							minDate={moment(this.state.data.expired)}
+							selected={moment(data.expiredDatetime)}
+							maxDate={moment(data.expiredDatetime).add(7, 'd')}
+							minDate={moment(data.expiredDatetime)}
 							locale="ru-ru"
 							todayButton="Сегодня"
 							onChange={this.handleChangeExpireDate}
@@ -137,7 +146,6 @@ export default class InvoiceItem extends React.Component {
 		);
 	}
 }
-
 InvoiceItem.propTypes = {
 	data: React.PropTypes.object,
 	selected: React.PropTypes.bool

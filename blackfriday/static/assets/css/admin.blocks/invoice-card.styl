@@ -5,7 +5,7 @@
 		margin-top: 35px
 
 	&_active
-		box-shadow: 0 0 0 3px #0089ff
+		box-shadow: 0 0 0 3px $link-color
 
 	&__header
 		position: relative
@@ -20,7 +20,7 @@
 	&__status
 		font-weight: bold
 		font-size: 22px
-		color: #0089ff
+		color: $link-color
 		margin-left: 0.25em
 
 	&__cancel
@@ -51,23 +51,56 @@
 
 		.props__value
 			font-weight: bold
-			color: #0e5cd7
+			color: $link-color
 			margin-left: 0.5em
 
 	&__option-list
 		margin: 0
 		padding: 0
 
-		.option-list__item
-			border-top: 1px solid #e4eaef
-			padding: 7px 0
-			list-style-type: none
+		.option-list
+			&__th
+				padding: 3px 0
+				border-bottom: 1px solid #e4eaef
 
-			.price
-				float: right
+				+ .option-list__th
+					padding-left: 25px
 
-		.option-list__name
-			color: #666
+				&_name_name
+					width: 90%
+
+				&_name_price
+					white-space: nowrap
+					text-align: right
+
+				&_name_count
+					white-space: nowrap
+					text-align: center
+
+				&_name_sum
+					white-space: nowrap
+					text-align: right
+
+			&__td
+				padding: 7px 0
+
+				+ .option-list__td
+					padding-left: 25px
+
+				&_name_name
+					color: #666
+
+				&_name_price
+					white-space: nowrap
+					text-align: right
+
+				&_name_count
+					white-space: nowrap
+					text-align: center
+
+				&_name_sum
+					white-space: nowrap
+					text-align: right
 
 	&__footer
 		padding: 10px 40px 23px 26px

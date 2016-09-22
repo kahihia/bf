@@ -315,7 +315,7 @@ export class PromoMaker extends React.Component {
 						</colgroup>
 						<thead>
 							<tr>
-								<th colSpan="2">Тарифы</th>
+								<th colSpan="2">Пакеты</th>
 								<th colSpan="2">Custom VIP</th>
 							</tr>
 						</thead>

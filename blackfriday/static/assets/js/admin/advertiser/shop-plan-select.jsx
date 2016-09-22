@@ -18,7 +18,7 @@ const ShopPlanSelect = React.createClass({
 		return (
 			<div>
 				<h2>
-					{'Тарифные планы '}
+					{'Рекламные пакеты '}
 					<small>
 						<a
 							className="download-file"

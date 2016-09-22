@@ -60,7 +60,7 @@ class Merchant(models.Model):
 
     image = models.ForeignKey('mediafiles.Image', verbose_name='Изображение', null=True)
 
-    partners = models.ManyToManyField('banners.Partner', related_name='merchants', verbose_name='Партнеры')
+    partners = models.ManyToManyField('banners.Partner', blank=True, related_name='merchants', verbose_name='Партнеры')
     advertiser = models.ForeignKey('users.User', related_name='merchants', verbose_name='Рекламодатель')
 
     moderation_comment = models.TextField(null=True, blank=True, verbose_name='Комментарий модератора')

@@ -23,12 +23,6 @@ import ReactDOM from 'react-dom';
 		ReactDOM.render(<PageMerchantProfile userId={ENV.userId}/>, pageMerchantProfile);
 	}
 
-	const pageMerchantInvoices = document.getElementById('page-merchant-invoices');
-	if (pageMerchantInvoices) {
-		let PageMerchantInvoices = require('./admin/advertiser/page-merchant-invoices');
-		ReactDOM.render(<PageMerchantInvoices/>, pageMerchantInvoices);
-	}
-
 	// Рендер таблицы загруженных товаров
 	const shopGoodsControl = document.getElementById('shop-goods-control');
 	if (shopGoodsControl) {
@@ -53,7 +47,7 @@ import ReactDOM from 'react-dom';
 		ReactDOM.render(<CustomBackground merchantId={merchantId}/>, customBackground);
 	}
 
-	// Рендер блока изменения выбора тарифа
+	// Рендер блока изменения рекламного пакета
 	const shopEditPlanSelect = document.getElementById('shop-edit-plan-select');
 	if (shopEditPlanSelect) {
 		let ShopEditPlanSelect = require('./admin/advertiser/shop-edit-plan-select');
@@ -80,12 +74,6 @@ import ReactDOM from 'react-dom';
 	if (promoMaker) {
 		let PromoMaker = require('./admin/administrator/promo-maker').PromoMaker;
 		ReactDOM.render(<PromoMaker/>, promoMaker);
-	}
-
-	const invoiceList = document.getElementById('invoice-list');
-	if (invoiceList) {
-		let InvoiceList = require('./admin/administrator/invoice-list').InvoiceList;
-		ReactDOM.render(<InvoiceList/>, invoiceList);
 	}
 
 	const feedMaker = document.getElementById('feed-maker');

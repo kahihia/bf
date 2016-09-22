@@ -1,0 +1,17 @@
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        Счета
+    </h1>
+</div>
+
+<div id="admin-invoices"></div>
+{% endblock content %}
+
+{% block js %}
+    {% render_bundle 'admin-invoices' 'js' %}
+{% endblock js %}
