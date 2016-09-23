@@ -1,5 +1,5 @@
-from libs.api.permissions import IsAuthenticated, IsAdmin, IsAdvertiser, IsOwner, action_permission, IsManager
 from rest_framework import viewsets
+from rest_framework import mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from django.template.loader import render_to_string
@@ -8,18 +8,21 @@ from django.conf import settings
 from weasyprint import HTML
 from rest_framework.exceptions import ValidationError
 
+from libs.api.permissions import IsAuthenticated, IsAdmin, IsAdvertiser, IsOwner, action_permission, IsManager
 from ..models import Invoice
 from .filters import InvoiceFilter
 from .serializers import InvoiceSerializer, InvoiceUpdateSerializer, InvoiceStatusBulkSerializer
 from io import BytesIO
 
 
-class InvoiceViewSet(viewsets.ModelViewSet):
+class InvoiceViewSet(
+        mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     permission_classes = [
         IsAuthenticated,
         IsAdmin |
-        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create', 'update', 'partial_update') |
-        IsManager & action_permission('list', 'retrieve', 'update', 'partial_update', 'statuses')
+        IsManager |
+        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create', 'update', 'partial_update', 'receipt')
     ]
     queryset = Invoice.objects.all()
     filter_class = InvoiceFilter
