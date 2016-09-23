@@ -1,10 +1,11 @@
 from math import ceil
 
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.db.models import F, Sum
+from django.utils import timezone
 
 
 class InvoiceStatus:
@@ -14,7 +15,7 @@ class InvoiceStatus:
 
 
 def get_default_expiration_date():
-    return datetime.now() + timedelta(days=settings.INVOICE_TTL_DAYS)
+    return timezone.now() + timedelta(days=settings.INVOICE_TTL_DAYS)
 
 
 class Invoice(models.Model):
@@ -42,7 +43,7 @@ class Invoice(models.Model):
     def status(self):
         if self.is_paid:
             return InvoiceStatus.paid
-        if self.expired_datetime <= datetime.now():
+        if self.expired_datetime <= timezone.now():
             return InvoiceStatus.cancelled
         return InvoiceStatus.new
 
@@ -53,7 +54,7 @@ class Invoice(models.Model):
         else:
             self.is_paid = False
             if value == InvoiceStatus.cancelled:
-                self.expired_datetime = datetime.now()
+                self.expired_datetime = timezone.now()
             elif value == InvoiceStatus.new:
                 self.expired_datetime = get_default_expiration_date()
 
@@ -71,9 +72,9 @@ class Invoice(models.Model):
         else:
             exclude['is_paid'] = update['is_paid'] = False
             if status == InvoiceStatus.cancelled:
-                exclude['expired_datetime__lte'] = update['expired_datetime'] = datetime.now()
+                exclude['expired_datetime__lte'] = update['expired_datetime'] = timezone.now()
             if status == InvoiceStatus.new:
-                exclude['expired_datetime__gt'] = datetime.now()
+                exclude['expired_datetime__gt'] = timezone.now()
                 update['expired_datetime'] = get_default_expiration_date()
 
         qs.exclude(**exclude).update(**update)
