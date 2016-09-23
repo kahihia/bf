@@ -1,8 +1,10 @@
+from datetime import datetime
+
 from django_filters import filterset, filters
 
 from apps.users.models import User
 
-from ..models import Invoice
+from ..models import Invoice, InvoiceStatus
 
 
 class InvoiceFilter(filterset.FilterSet):
@@ -14,8 +16,15 @@ class InvoiceFilter(filterset.FilterSet):
     min_sum = filters.NumberFilter(name='sum', lookup_expr='gte')
     max_sum = filters.NumberFilter(name='sum', lookup_expr='lte')
 
-    status = filters.ChoiceFilter(choices=Invoice.STATUSES)
+    status = filters.MethodFilter(choices=Invoice.STATUSES, action='filter_status')
 
     class Meta:
         model = Invoice
         fields = ['date', 'advertiser', 'id', 'min_sum', 'max_sum', 'status']
+
+    def filter_status(self, qs, value):
+        if value == InvoiceStatus.paid:
+            return qs.filter(is_paid=True)
+        if value == InvoiceStatus.cancelled:
+            return qs.filter(expired_datetime__lte=datetime.now(), is_paid=False)
+        return qs.filter(expired_datetime__gt=datetime.now(), is_paid=False)

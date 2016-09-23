@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from ..models import Invoice
 from .filters import InvoiceFilter
-from .serializers import InvoiceSerializer, InvoiceStatusSerializer, InvoiceStatusBulkSerializer
+from .serializers import InvoiceSerializer, InvoiceUpdateSerializer, InvoiceStatusBulkSerializer
 
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -20,7 +20,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if 'update' in self.action:
-            return InvoiceStatusSerializer
+            return InvoiceUpdateSerializer
         if self.action == 'statuses':
             return InvoiceStatusBulkSerializer
         return InvoiceSerializer
