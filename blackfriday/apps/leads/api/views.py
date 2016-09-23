@@ -48,8 +48,9 @@ class AdvertiserRequestsViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         if (
-                instance.user_responsible and
-                instance.user_responsible_id != request.user.id and
-                request.user.role != 'admin'):
+            instance.user_responsible and
+            instance.user_responsible_id != request.user.id and
+            request.user.role != 'admin'
+        ):
             raise PermissionDenied
         return super().update(request, *args, **kwargs)

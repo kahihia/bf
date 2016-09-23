@@ -1,9 +1,9 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from apps.users.models import User
 
 from ..models import Subscriber, AdvertiserRequest, AdvertiserRequestStatus
-from rest_framework.exceptions import ValidationError
 
 
 class UserResponsibleSerializer(serializers.ModelSerializer):
@@ -44,8 +44,9 @@ class AdvertiserRequestStatusSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if (
-                instance.status == AdvertiserRequestStatus.new and
-                validated_data['status'] == AdvertiserRequestStatus.in_process):
+            instance.status == AdvertiserRequestStatus.new and
+            validated_data['status'] == AdvertiserRequestStatus.in_process
+        ):
             instance.user_responsible_id = self.context['request'].user.id
         return super().update(instance, validated_data)
 
