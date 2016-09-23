@@ -2,8 +2,9 @@ import io
 
 from PIL import Image, ImageFile
 
-from django.core.files.base import ContentFile
 from django.db.models import ImageField
+from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 
 
 class ResizedImageFieldFile(ImageField.attr_class):
@@ -11,6 +12,9 @@ class ResizedImageFieldFile(ImageField.attr_class):
         content.file.seek(0)
 
         img = Image.open(content.file)
+        if img.format not in ('PNG', 'JPEG'):
+            raise ValidationError('Неподдерживаемый формат изображения')
+
         img.thumbnail(self.field.size, Image.ANTIALIAS)
 
         ImageFile.MAXBLOCK = max(ImageFile.MAXBLOCK, img.size[0] * img.size[1])
