@@ -10,7 +10,7 @@ from rest_framework.exceptions import ValidationError
 
 from ..models import Invoice
 from .filters import InvoiceFilter
-from .serializers import InvoiceSerializer, InvoiceStatusSerializer, InvoiceStatusBulkSerializer
+from .serializers import InvoiceSerializer, InvoiceUpdateSerializer, InvoiceStatusBulkSerializer
 from io import BytesIO
 
 
@@ -26,7 +26,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if 'update' in self.action:
-            return InvoiceStatusSerializer
+            return InvoiceUpdateSerializer
         if self.action == 'statuses':
             return InvoiceStatusBulkSerializer
         return InvoiceSerializer
