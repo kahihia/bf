@@ -3,6 +3,6 @@ from .views import SubscribersViewSet, AdvertiserRequestsViewSet
 
 router = routers.SimpleRouter()
 router.register(r'subscribers', SubscribersViewSet)
-router.register(r'applications', AdvertiserRequestsViewSet)
+router.register(r'applications', AdvertiserRequestsViewSet, base_name='applications')
 
 urlpatterns = router.urls

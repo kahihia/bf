@@ -2,7 +2,7 @@ import pytest
 
 from django.conf import settings
 
-from .factories import CategoryFactory, ProductFactory
+from apps.catalog.tests.factories import CategoryFactory, ProductFactory
 
 
 @pytest.fixture
