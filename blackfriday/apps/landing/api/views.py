@@ -19,13 +19,15 @@ class LandingLogoViewSet(ModelViewSet):
         try:
             new_order = list(map(int, request.data))
         except (TypeError, ValueError):
-            raise BadRequest
+            raise BadRequest('Неверный формат запроса')
 
         logos = LandingLogo.objects.all().order_by('position')
 
         new_order_set, old_order_set = set(new_order), set(logo.id for logo in logos)
-        if new_order_set != old_order_set or len(new_order_set) != len(new_order):
-            raise BadRequest
+        if new_order_set != old_order_set:
+            raise BadRequest('Не все идентификаторы переданы')
+        if len(new_order_set) != len(new_order):
+            raise BadRequest('В сортировке присутствуют повторы')
 
         logos_to_update = []
         for logo, position in zip(logos, new_order):
