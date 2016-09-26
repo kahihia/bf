@@ -1,8 +1,12 @@
+import operator
+from functools import reduce
+
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Q
 
 from apps.orders.models import InvoiceStatus
 from apps.promo.models import Option
+from django.utils import timezone
 
 
 class ModerationStatus:
@@ -77,8 +81,18 @@ class Merchant(models.Model):
 
     def get_promo(self, *statuses):
         qs = self.invoices.filter(promo__isnull=False)
-        if statuses:
-            qs = qs.filter(status__in=statuses)
+
+        qlist = []
+        if InvoiceStatus.paid in statuses:
+            qlist.append(Q(is_paid=True))
+        if InvoiceStatus.new in statuses:
+            qlist.append(Q(is_paid=False, expired_datetime__gt=timezone.now()))
+        if InvoiceStatus.cancelled in statuses:
+            qlist.append(Q(is_paid=False, expired_datetime__lte=timezone.now()))
+
+        if qlist:
+            qs = qs.filter(reduce(operator.__or__, qlist))
+
         invoice = qs.order_by('-id').first()
         if invoice:
             return invoice.promo
@@ -112,4 +126,4 @@ class Merchant(models.Model):
 
     @property
     def owner_id(self):
-        return self.advertiser_id
+        return self.advertiser.id
