@@ -27,7 +27,8 @@ const SORT_OPTIONS = {
 				applications: [],
 				applicationFilter: '',
 				sortKey: 'id',
-				sortDir: SORT_TYPES.ASC
+				sortDir: SORT_TYPES.ASC,
+				isLoading: false
 			};
 		},
 
@@ -36,11 +37,15 @@ const SORT_OPTIONS = {
 		},
 
 		requestApplications() {
+			this.setState({isLoading: true});
+
 			xhr({
 				url: '/api/applications/',
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
 				if (!err && resp.statusCode === 200) {
 					if (data) {
 						this.setState({applications: _.sortBy(data, 'id')});
@@ -52,6 +57,8 @@ const SORT_OPTIONS = {
 		},
 
 		requestChangeStatus(id, status) {
+			this.setState({isLoading: true});
+
 			xhr({
 				url: `/api/applications/${id}/`,
 				method: 'PATCH',
@@ -60,6 +67,8 @@ const SORT_OPTIONS = {
 				},
 				json: {status}
 			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
 				if (!err && resp.statusCode === 200) {
 					if (data) {
 						const application = this.getApplicationById(id);
@@ -93,7 +102,7 @@ const SORT_OPTIONS = {
 		},
 
 		render() {
-			const {applications, applicationFilter, sortDir, sortKey} = this.state;
+			const {applications, applicationFilter, sortDir, sortKey, isLoading} = this.state;
 
 			let filteredApplications = applications;
 
@@ -128,6 +137,7 @@ const SORT_OPTIONS = {
 									placeholder="Email, Имя или Организация"
 									value={applicationFilter}
 									onChange={this.handleFilterApplication}
+									disabled={isLoading}
 									/>
 
 								<FormCol
@@ -137,6 +147,7 @@ const SORT_OPTIONS = {
 									options={SORT_OPTIONS}
 									value={sortKey}
 									onChange={this.handleSortKey}
+									disabled={isLoading}
 									/>
 
 								<span className="form-group col-xs-3">
@@ -149,6 +160,7 @@ const SORT_OPTIONS = {
 										name={'sortDirDESC'}
 										isChecked={sortDir === SORT_TYPES.DESC}
 										onChange={this.handleSortDir}
+										disabled={isLoading}
 										/>
 								</span>
 							</div>
