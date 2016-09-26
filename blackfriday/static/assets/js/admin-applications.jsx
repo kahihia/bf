@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
+import FormRow from './admin/components/form-row.jsx';
 import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 
 (function () {
@@ -12,7 +13,8 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 	const AdminApplications = React.createClass({
 		getInitialState() {
 			return {
-				applications: []
+				applications: [],
+				applicationFilter: ''
 			};
 		},
 
@@ -65,11 +67,40 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 			return _.find(this.state.applications, {id});
 		},
 
+		handleFilterApplication(e) {
+			this.setState({applicationFilter: e.target.value});
+		},
+
 		render() {
+			const {applications, applicationFilter} = this.state;
+
+			let filteredApplications = applications;
+
+			if (applicationFilter) {
+				filteredApplications = _.filter(filteredApplications, item => {
+					const {email, name, organizationName} = item;
+
+					if (!name && !email && !organizationName) {
+						return false;
+					}
+
+					return contains(applicationFilter, name) || contains(applicationFilter, email) || contains(applicationFilter, organizationName);
+				});
+			}
+
 			return (
 				<div>
+					<div className="form">
+						<FormRow
+							label="Поиск заявки"
+							placeholder="Email, Имя или Организация"
+							value={applicationFilter}
+							onChange={this.handleFilterApplication}
+							/>
+					</div>
+
 					<AdvertiserRequestList
-						applications={this.state.applications}
+						applications={filteredApplications}
 						onClickStatusChange={this.handleClickStatusChange}
 						/>
 				</div>
@@ -80,3 +111,14 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 	const block = document.getElementById('admin-applications');
 	ReactDOM.render(<AdminApplications/>, block);
 })();
+
+function contains(what, where) {
+	if (!what || !where) {
+		return;
+	}
+
+	if (where.toLowerCase().indexOf(what.toLowerCase()) > -1) {
+		return true;
+	}
+	return false;
+}
