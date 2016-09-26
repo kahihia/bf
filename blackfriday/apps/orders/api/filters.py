@@ -16,7 +16,7 @@ class InvoiceFilter(filterset.FilterSet):
     min_sum = filters.NumberFilter(name='sum', lookup_expr='gte')
     max_sum = filters.NumberFilter(name='sum', lookup_expr='lte')
 
-    status = filters.MethodFilter(choices=Invoice.STATUSES, action='filter_status')
+    status = filters.MethodFilter(action='filter_status')
 
     class Meta:
         model = Invoice
