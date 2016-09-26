@@ -65,6 +65,7 @@ if (env === 'dev') {
 module.exports = {
 	entry: {
 		'admin-advertisers': path.resolve(PATH_SRC, 'js/admin-advertisers.jsx'),
+		'admin-applications': path.resolve(PATH_SRC, 'js/admin-applications.jsx'),
 		'admin-categories': path.resolve(PATH_SRC, 'js/admin-categories.jsx'),
 		'admin-invoices': path.resolve(PATH_SRC, 'js/admin-invoices.jsx'),
 		'admin-merchants': path.resolve(PATH_SRC, 'js/admin-merchants.jsx'),
