@@ -3,7 +3,6 @@
 
 import React from 'react';
 import b from 'b_';
-import {APPLICATION_STATUS} from '../const.js';
 
 const AdvertiserRequestList = React.createClass({
 	getInitialState() {
@@ -55,10 +54,6 @@ const AdvertiserRequestList = React.createClass({
 
 							<th className={b(className, 'table-th', {name: 'comment'})}>
 								{'Комментарий'}
-							</th>
-
-							<th className={b(className, 'table-th', {name: 'status'})}>
-								{'Статус'}
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'manager'})}>
@@ -127,7 +122,7 @@ const AdvertiserRequestListItem = React.createClass({
 		const className = 'advertiser-request-list';
 
 		return (
-			<tr className={b(className, 'table-tr')}>
+			<tr className={b(className, 'table-tr') + getApplicationStatusLabelClassName(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
 					<div>
 						{moment(datetimeCreated).format('DD.MM.YYYY')}
@@ -160,10 +155,6 @@ const AdvertiserRequestListItem = React.createClass({
 					{comment}
 				</td>
 
-				<td className={b(className, 'table-td', {name: 'status'}) + getApplicationStatusLabelClassName(status, ' bg-')}>
-					{APPLICATION_STATUS[status]}
-				</td>
-
 				<td className={b(className, 'table-td', {name: 'manager'})}>
 					{userResponsible ? (
 						userResponsible.displayName
@@ -171,6 +162,10 @@ const AdvertiserRequestListItem = React.createClass({
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'action'})}>
+					{status === 0 || status === 10 ? (
+						<div style={{height: '5px'}}/>
+					) : null}
+
 					{status === 0 ? (
 						<button
 							className="btn btn-sm btn-block"

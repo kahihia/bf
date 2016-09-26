@@ -3,9 +3,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {TOKEN} from './admin/const.js';
-import FormRow from './admin/components/form-row.jsx';
+import {SORT_TYPES, TOKEN} from './admin/const.js';
+import {reverseSortDirection} from './admin/utils.js';
+import FormCol from './admin/components/form-col.jsx';
+import Checkbox from './admin/components/checkbox.jsx';
 import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
+
+const SORT_OPTIONS = {
+	id: 'Дата',
+	name: 'Имя',
+	organizationName: 'Организация',
+	email: 'Email',
+	status: 'Статус',
+	userResponsible: 'Менеджер'
+};
 
 (function () {
 	'use strict';
@@ -14,7 +25,9 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 		getInitialState() {
 			return {
 				applications: [],
-				applicationFilter: ''
+				applicationFilter: '',
+				sortKey: 'id',
+				sortDir: SORT_TYPES.ASC
 			};
 		},
 
@@ -71,8 +84,16 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 			this.setState({applicationFilter: e.target.value});
 		},
 
+		handleSortKey(e) {
+			this.setState({sortKey: e.target.value});
+		},
+
+		handleSortDir() {
+			this.setState({sortDir: reverseSortDirection(this.state.sortDir)});
+		},
+
 		render() {
-			const {applications, applicationFilter} = this.state;
+			const {applications, applicationFilter, sortDir, sortKey} = this.state;
 
 			let filteredApplications = applications;
 
@@ -88,15 +109,50 @@ import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
 				});
 			}
 
+			if (sortKey) {
+				filteredApplications = _.sortBy(filteredApplications, sortKey);
+
+				if (sortDir === SORT_TYPES.DESC) {
+					filteredApplications.reverse();
+				}
+			}
+
 			return (
 				<div>
 					<div className="form">
-						<FormRow
-							label="Поиск заявки"
-							placeholder="Email, Имя или Организация"
-							value={applicationFilter}
-							onChange={this.handleFilterApplication}
-							/>
+						<div className="form-group">
+							<div className="row">
+								<FormCol
+									className="col-xs-6"
+									label="Поиск заявки"
+									placeholder="Email, Имя или Организация"
+									value={applicationFilter}
+									onChange={this.handleFilterApplication}
+									/>
+
+								<FormCol
+									className="col-xs-3"
+									label="Сортировка"
+									type="select"
+									options={SORT_OPTIONS}
+									value={sortKey}
+									onChange={this.handleSortKey}
+									/>
+
+								<span className="form-group col-xs-3">
+									<span className="control-label">
+										{' '}
+									</span>
+
+									<Checkbox
+										text={'В обратном порядке'}
+										name={'sortDirDESC'}
+										isChecked={sortDir === SORT_TYPES.DESC}
+										onChange={this.handleSortDir}
+										/>
+								</span>
+							</div>
+						</div>
 					</div>
 
 					<AdvertiserRequestList

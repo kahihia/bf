@@ -22,14 +22,14 @@ class ControlLabel extends React.Component {
 					</span>
 				) : null}
 
-				{':'}
+				{name ? ':' : ' '}
 			</span>
 		);
 	}
 }
 ControlLabel.propTypes = {
 	className: React.PropTypes.string,
-	name: React.PropTypes.string.isRequired,
+	name: React.PropTypes.string,
 	required: React.PropTypes.bool
 };
 ControlLabel.defaultProps = {

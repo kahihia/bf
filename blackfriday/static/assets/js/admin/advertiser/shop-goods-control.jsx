@@ -7,16 +7,13 @@ import xhr from 'xhr';
 import Price from 'react-price';
 import ApiToggler from 'api-toggler';
 import {formatPrice} from '../utils.js';
+import {SORT_TYPES} from '../const.js';
 import Select from '../components/select.jsx';
+import SortHeaderCell from '../components/sort-header-cell.jsx';
 import {getLimit} from './limits.js';
 import EditableCell from './editable-cell.jsx';
 import {renderGoodsCounter} from './goods-counter.jsx';
 import getCategories from './categories.js';
-
-const SORT_TYPES = {
-	ASC: 'ASC',
-	DESC: 'DESC'
-};
 
 const ShopGoodsControl = React.createClass({
 	getInitialState() {
@@ -668,40 +665,6 @@ const GoodsTableRow = React.createClass({
 		);
 	}
 });
-
-class SortHeaderCell extends React.Component {
-	constructor(props) {
-		super(props);
-		this.handleSortChange = this.handleSortChange.bind(this);
-	}
-
-	handleSortChange() {
-		const sortDir = reverseSortDirection(this.props.sortDir);
-		this.props.onSortChange(this.props.columnKey, sortDir);
-	}
-
-	render() {
-		const {children, sortDir} = this.props;
-		return (
-			<span onClick={this.handleSortChange}>
-				{children} {sortDir === SORT_TYPES.DESC ? '↓' : '↑'}
-			</span>
-		);
-	}
-}
-SortHeaderCell.propTypes = {
-	columnKey: React.PropTypes.string.isRequired,
-	sortDir: React.PropTypes.string,
-	onSortChange: React.PropTypes.func.isRequired,
-	children: React.PropTypes.node.isRequired
-};
-SortHeaderCell.defaultProps = {
-	sortDir: SORT_TYPES.DESC
-};
-
-function reverseSortDirection(sortDir) {
-	return sortDir === SORT_TYPES.DESC ? SORT_TYPES.ASC : SORT_TYPES.DESC;
-}
 
 const CategoryChanger = React.createClass({
 	propTypes: {

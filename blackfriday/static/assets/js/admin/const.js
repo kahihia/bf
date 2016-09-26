@@ -50,3 +50,8 @@ export const TOKEN = {
 };
 
 export const SITE_URL = ENV.siteUrl;
+
+export const SORT_TYPES = {
+	ASC: 'ASC',
+	DESC: 'DESC'
+};
