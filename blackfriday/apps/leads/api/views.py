@@ -29,8 +29,8 @@ class AdvertiserRequestsViewSet(viewsets.ModelViewSet):
     queryset = AdvertiserRequest.objects.all()
     permission_classes = [
         action_permission('create') |
-        action_permission('list', 'update', 'partial_update') & IsAuthenticated & IsManager |
-        IsAuthenticated & (IsAdmin | IsOperator)
+        action_permission('list', 'update', 'partial_update') & IsAuthenticated & IsOperator |
+        IsAuthenticated & IsAdmin
     ]
 
     def get_serializer_class(self):
