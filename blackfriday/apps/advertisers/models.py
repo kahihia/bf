@@ -2,7 +2,7 @@ import operator
 from functools import reduce
 
 from django.db import models
-from django.db.models import Min, Q
+from django.db.models import Q
 
 from apps.orders.models import InvoiceStatus
 from apps.promo.models import Option
@@ -117,8 +117,11 @@ class Merchant(models.Model):
 
     @property
     def payment_status(self):
-        status = self.invoices.all().aggregate(status=Min('status'))['status']
-        return InvoiceStatus.paid if status == InvoiceStatus.paid else InvoiceStatus.cancelled
+        new = self.invoices.filter(is_paid=False, expired_datetime__lte=timezone.now()).exists()
+        paid = self.invoices.filter(is_paid=True).exists()
+        if not new and paid:
+            return InvoiceStatus.paid
+        return InvoiceStatus.new
 
     @property
     def options_count(self):
