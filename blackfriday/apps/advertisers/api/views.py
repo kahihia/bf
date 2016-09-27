@@ -1,16 +1,19 @@
-from apps.banners.api.serializers import PartnerTinySerializer
-from apps.banners.models import Partner
+from django.db.models import Sum
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
-
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
+from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
+from apps.banners.api.serializers import PartnerTinySerializer
+from apps.banners.models import Partner
+from apps.orders.models import InvoiceOption
+
 from .filters import AdvertiserFilter, MerchantFilter
-from .serializers import (User, AdvertiserSerializer,
-                          Merchant, MerchantSerializer, MerchantListSerializer, MerchantCreateSerializer,
-                          MerchantUpdateSerializer, MerchantModerationSerializer)
+from .serializers import (
+    User, AdvertiserSerializer, Merchant, MerchantSerializer, MerchantListSerializer, MerchantCreateSerializer,
+    MerchantUpdateSerializer, MerchantModerationSerializer, LimitSerializer
+)
 
 
 class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
@@ -80,3 +83,17 @@ class MerchantViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+    @detail_route(methods=['get'])
+    def limits(self, request, *args, **kwargs):
+        qs = (
+            InvoiceOption
+            .objects
+            .filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
+            .values('option__tech_name')
+            .annotate(option_sum=Sum('value'))
+        )
+        serializer = LimitSerializer(
+            data=[{'tech_name': obj['option__tech_name'], 'value': obj['option_sum']} for obj in qs], many=True)
+        serializer.is_valid()
+        return Response(data=serializer.data)
