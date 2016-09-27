@@ -1,3 +1,5 @@
+import collections
+
 import operator
 from functools import reduce
 
@@ -79,19 +81,25 @@ class Merchant(models.Model):
     def __str__(self):
         return self.name
 
-    def get_promo(self, *statuses):
+    def get_promo(self, *statuses, exclude=None):
         qs = self.invoices.filter(promo__isnull=False)
 
-        qlist = []
-        if InvoiceStatus.paid in statuses:
-            qlist.append(Q(is_paid=True))
-        if InvoiceStatus.new in statuses:
-            qlist.append(Q(is_paid=False, expired_datetime__gt=timezone.now()))
-        if InvoiceStatus.cancelled in statuses:
-            qlist.append(Q(is_paid=False, expired_datetime__lte=timezone.now()))
+        if exclude:
+            if isinstance(exclude, collections.Iterable):
+                qs = qs.exclude(id__in=exclude)
+            else:
+                qs = qs.exclude(id=exclude)
 
-        if qlist:
-            qs = qs.filter(reduce(operator.__or__, qlist))
+        q_list = []
+        if InvoiceStatus.paid in statuses:
+            q_list.append(Q(is_paid=True))
+        if InvoiceStatus.new in statuses:
+            q_list.append(Q(is_paid=False, expired_datetime__gt=timezone.now()))
+        if InvoiceStatus.cancelled in statuses:
+            q_list.append(Q(is_paid=False, expired_datetime__lte=timezone.now()))
+
+        if q_list:
+            qs = qs.filter(reduce(operator.__or__, q_list))
 
         invoice = qs.order_by('-id').first()
         if invoice:
