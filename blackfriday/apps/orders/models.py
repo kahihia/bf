@@ -37,7 +37,7 @@ class Invoice(models.Model):
 
     @property
     def owner_id(self):
-        return self.advertiser_id
+        return self.merchant.advertiser.id
 
     @property
     def status(self):
