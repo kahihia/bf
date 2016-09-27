@@ -9,7 +9,7 @@ from ..models import User, TokenType, Token
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.RegexField(r'^[a-zA-Z0-9]{8,}$', write_only=True)
-    role = serializers.ChoiceField(choices=[(x, x) for x in ['admin', 'manager', 'advertiser']])
+    role = serializers.ChoiceField(choices=[(x, x) for x in ['admin', 'manager', 'advertiser', 'operator']])
 
     class Meta:
         model = User
