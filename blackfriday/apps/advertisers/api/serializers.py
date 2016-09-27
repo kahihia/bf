@@ -197,3 +197,8 @@ class MerchantTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name')
+
+
+class LimitSerializer(serializers.Serializer):
+    tech_name = serializers.CharField()
+    value = serializers.IntegerField()
