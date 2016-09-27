@@ -108,7 +108,7 @@ class Merchant(models.Model):
 
     @property
     def is_previewable(self):
-        return self.invoices.filter(status=InvoiceStatus.paid).exists()
+        return self.invoices.filter(is_paid=True).exists()
 
     @property
     def preview_url(self):
@@ -125,7 +125,7 @@ class Merchant(models.Model):
 
     @property
     def options_count(self):
-        return Option.objects.filter(in_invoices__invoice__status=InvoiceStatus.paid).distinct().count()
+        return Option.objects.filter(in_invoices__invoice__is_paid=True).distinct().count()
 
     @property
     def owner_id(self):
