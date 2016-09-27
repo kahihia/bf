@@ -29,8 +29,8 @@ class AdvertiserRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdvertiserRequest
         fields = ['id', 'name', 'organization_name', 'phone', 'email', 'comment',
-                  'status', 'datetime_created', 'datetime_updated', 'user_responsible']
-        read_only_fields = ['status', 'datetime_created', 'datetime_updated', 'user_responsible']
+                  'status', 'created_datetime', 'updated_datetime', 'user_responsible']
+        read_only_fields = ['status', 'created_datetime', 'updated_datetime', 'user_responsible']
 
 
 class AdvertiserRequestStatusSerializer(serializers.ModelSerializer):
