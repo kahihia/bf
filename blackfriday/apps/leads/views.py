@@ -9,6 +9,8 @@ class SubscriberListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateVi
 
 
 class AdvertiserRequestListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    raise_exception = True
+
     def test_func(self):
         return self.request.user.role in ('operator', 'admin')
 
