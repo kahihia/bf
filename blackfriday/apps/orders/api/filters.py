@@ -8,8 +8,6 @@ from ..models import Invoice, InvoiceStatus
 
 
 class InvoiceFilter(filterset.FilterSet):
-    strict = filterset.STRICTNESS.RAISE_VALIDATION_ERROR
-
     advertiser = filters.ModelChoiceFilter(name='merchant__advertiser', queryset=User.objects.filter(profile__isnull=False))
     date = filters.DateFilter(name='created_datetime', lookup_expr='date')
 
@@ -27,4 +25,7 @@ class InvoiceFilter(filterset.FilterSet):
             return qs.filter(is_paid=True)
         if value == InvoiceStatus.cancelled:
             return qs.filter(expired_datetime__lte=datetime.now(), is_paid=False)
-        return qs.filter(expired_datetime__gt=datetime.now(), is_paid=False)
+        if value == InvoiceStatus.new:
+            return qs.filter(expired_datetime__gt=datetime.now(), is_paid=False)
+        return qs.none()
+

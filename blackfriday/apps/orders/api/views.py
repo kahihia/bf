@@ -1,18 +1,20 @@
-from rest_framework import viewsets
-from rest_framework import mixins
-from rest_framework.decorators import list_route, detail_route
-from rest_framework.response import Response
+import io
+import weasyprint
+
 from django.template.loader import render_to_string
 from django.http.response import StreamingHttpResponse
 from django.conf import settings
-from weasyprint import HTML
+
+from rest_framework import viewsets
+from rest_framework.decorators import list_route, detail_route
+from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
 from libs.api.permissions import IsAuthenticated, IsAdmin, IsAdvertiser, IsOwner, action_permission, IsManager
+
 from ..models import Invoice
 from .filters import InvoiceFilter
 from .serializers import InvoiceSerializer, InvoiceUpdateSerializer, InvoiceStatusBulkSerializer
-from io import BytesIO
 
 
 class InvoiceViewSet(
@@ -41,11 +43,11 @@ class InvoiceViewSet(
             qs = qs.filter(merchant__advertiser=user)
         return qs
 
-    @list_route(methods=['patch', 'put'])
+    @list_route(methods=['post'])
     def statuses(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        obj_list = serializer.save()
+        obj_list = Invoice.objects.filter(id__in=serializer.save())
         return Response(InvoiceSerializer(obj_list, many=True, context=serializer.context).data)
 
     @detail_route(methods=['get'])
@@ -59,8 +61,8 @@ class InvoiceViewSet(
                 ])):
             raise ValidationError('не заполнены реквизиты')
 
-        output = BytesIO()
-        HTML(
+        output = io.BytesIO()
+        weasyprint.HTML(
             string=render_to_string(
                 'orders/invoice-payment.html',
                 {

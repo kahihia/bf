@@ -78,7 +78,7 @@ class Invoice(models.Model):
                 update['expired_datetime'] = get_default_expiration_date()
 
         qs.exclude(**exclude).update(**update)
-        return qs.all()
+        return id_list
 
     def calculate_total(self, commit=True):
         if self.status > InvoiceStatus.new:
