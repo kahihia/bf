@@ -2,7 +2,7 @@ import operator
 from functools import reduce
 
 from django.db import models
-from django.db.models import Min, Q, F
+from django.db.models import Q
 
 from apps.orders.models import InvoiceStatus
 from apps.promo.models import Option
