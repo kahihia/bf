@@ -1,6 +1,7 @@
 from apps.orders.models import InvoiceStatus
 from django.db import models
 from django.db.models import Sum
+from django.utils import timezone
 
 
 class Promo(models.Model):
@@ -34,7 +35,7 @@ class Option(models.Model):
     @property
     def count_available(self):
         if self.max_count:
-            qs = self.in_invoices.exclude(invoice__status=InvoiceStatus.cancelled)
+            qs = self.in_invoices.exclude(invoice__is_paid=False, invoice__expired_datetime__lte=timezone.now())
             ordered = qs.aggregate(result=Sum('value')).get('result') or 0
             return self.max_count - ordered
 

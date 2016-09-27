@@ -19,6 +19,12 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value',
                   'promos_available_for')
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if instance.is_required:
+            representation['promos_available_for'] = []
+        return representation
+
 
 class PromoOptionSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Option.objects.all(), source='option')
