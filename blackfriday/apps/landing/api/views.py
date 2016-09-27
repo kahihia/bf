@@ -24,8 +24,13 @@ class LandingLogoViewSet(ModelViewSet):
         logos = LandingLogo.objects.all().order_by('position')
 
         new_order_set, old_order_set = set(new_order), set(logo.id for logo in logos)
-        if new_order_set != old_order_set:
+
+        if old_order_set - new_order_set:
             raise BadRequest('Не все идентификаторы переданы')
+
+        if new_order_set - old_order_set:
+            raise BadRequest('Присутствуют лишние идентификаторы')
+
         if len(new_order_set) != len(new_order):
             raise BadRequest('В сортировке присутствуют повторы')
 
