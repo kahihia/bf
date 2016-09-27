@@ -1,12 +1,15 @@
 from bulk_update.helper import bulk_update
 from rest_framework.decorators import list_route
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import mixins
+from rest_framework.response import Response
 
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
 from ..models import LandingLogo
 from .serializers import LandingLogoSerializer
+from ..utils import render_landing
 
 
 class LandingLogoViewSet(ModelViewSet):
@@ -38,3 +41,12 @@ class LandingLogoViewSet(ModelViewSet):
         if logos_to_update:
             bulk_update(logos_to_update, update_fields=['position'])
         return self.list(request, *args, **kwargs)
+
+
+class StaticGeneratorViewSet(GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    @list_route(methods=['post'])
+    def landing(self, request, *args, **kwargs):
+        render_landing()
+        return Response(status=201)
