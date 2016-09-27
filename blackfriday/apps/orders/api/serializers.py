@@ -121,7 +121,9 @@ class InvoiceUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        instance.status = validated_data.pop('status')
+        status = validated_data.pop('status', None)
+        if status:
+            instance.status = status
         super().update(instance, validated_data)
 
     def create(self, validated_data):
