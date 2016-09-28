@@ -3,6 +3,8 @@
 
 import React from 'react';
 import b from 'b_';
+import {hasRole, ENV} from '../utils.js';
+import {getApplicationStatusColor} from './utils.js';
 
 const AdvertiserRequestList = React.createClass({
 	getInitialState() {
@@ -44,12 +46,8 @@ const AdvertiserRequestList = React.createClass({
 								{'Организация'}
 							</th>
 
-							<th className={b(className, 'table-th', {name: 'email'})}>
-								{'Email'}
-							</th>
-
-							<th className={b(className, 'table-th', {name: 'phone'})}>
-								{'Телефон'}
+							<th className={b(className, 'table-th', {name: 'contacts'})}>
+								{'Контакты'}
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'comment'})}>
@@ -86,8 +84,7 @@ export default AdvertiserRequestList;
 const AdvertiserRequestListItem = React.createClass({
 	propTypes: {
 		comment: React.PropTypes.string,
-		datetimeCreated: React.PropTypes.string,
-		datetimeUpdated: React.PropTypes.string,
+		createdDatetime: React.PropTypes.string,
 		email: React.PropTypes.string,
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
@@ -95,6 +92,7 @@ const AdvertiserRequestListItem = React.createClass({
 		organizationName: React.PropTypes.string,
 		phone: React.PropTypes.string,
 		status: React.PropTypes.number,
+		updatedDatetime: React.PropTypes.string,
 		userResponsible: React.PropTypes.object
 	},
 
@@ -110,26 +108,31 @@ const AdvertiserRequestListItem = React.createClass({
 	render() {
 		const {
 			comment,
-			datetimeCreated,
-			datetimeUpdated,
+			createdDatetime,
 			email,
 			name,
 			organizationName,
 			phone,
 			status,
+			updatedDatetime,
 			userResponsible
 		} = this.props;
 		const className = 'advertiser-request-list';
 
+		const isAdmin = hasRole('admin');
+		const isOperator = hasRole('operator');
+		const isMine = userResponsible ? ENV.userId === userResponsible.id : false;
+		const isActionVisible = isAdmin || (isOperator && isMine);
+
 		return (
-			<tr className={b(className, 'table-tr') + getApplicationStatusLabelClassName(status, ' bg-')}>
+			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
-					<div>
-						{moment(datetimeCreated).format('DD.MM.YYYY')}
+					<div title="Дата создания">
+						{moment(createdDatetime).format('DD.MM.YYYY')}
 					</div>
 
-					<div>
-						{moment(datetimeUpdated).format('DD.MM.YYYY')}
+					<div title="Дата обновления">
+						{moment(updatedDatetime).format('DD.MM.YYYY')}
 					</div>
 				</td>
 
@@ -141,13 +144,13 @@ const AdvertiserRequestListItem = React.createClass({
 					{organizationName}
 				</td>
 
-				<td className={b(className, 'table-td', {name: 'email'})}>
+				<td className={b(className, 'table-td', {name: 'contacts'})}>
 					<a href={`mailto:${email}`}>
 						{email}
 					</a>
-				</td>
 
-				<td className={b(className, 'table-td', {name: 'phone'})}>
+					<br/>
+
 					{phone}
 				</td>
 
@@ -162,71 +165,44 @@ const AdvertiserRequestListItem = React.createClass({
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'action'})}>
-					{status === 0 || status === 10 ? (
-						<div style={{height: '5px'}}/>
-					) : null}
+					{isActionVisible ? (
+						<div>
+							{status === 0 ? (
+								<button
+									className="btn btn-default btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="10"
+									type="button"
+									>
+									{'В работу'}
+								</button>
+							) : null}
 
-					{status === 0 ? (
-						<button
-							className="btn btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="10"
-							type="button"
-							>
-							{'В работу'}
-						</button>
-					) : null}
+							{status === 10 ? (
+								<button
+									className="btn btn-success btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="20"
+									type="button"
+									>
+									{'Участвует'}
+								</button>
+							) : null}
 
-					{status === 10 ? (
-						<button
-							className="btn btn-success btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="20"
-							type="button"
-							>
-							{'Участвует'}
-						</button>
-					) : null}
-
-					{status === 10 ? (
-						<button
-							className="btn btn-danger btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="30"
-							type="button"
-							>
-							{'Отказ'}
-						</button>
+							{status === 10 ? (
+								<button
+									className="btn btn-danger btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="30"
+									type="button"
+									>
+									{'Отказ'}
+								</button>
+							) : null}
+						</div>
 					) : null}
 				</td>
 			</tr>
 		);
 	}
 });
-
-function getApplicationStatusLabelClassName(status, className) {
-	let type = className || '';
-	switch (status) {
-		case 0: {
-			type += 'info';
-			break;
-		}
-		case 10: {
-			type += 'warning';
-			break;
-		}
-		case 20: {
-			type += 'success';
-			break;
-		}
-		case 30: {
-			type += 'danger';
-			break;
-		}
-		default: {
-			break;
-		}
-	}
-
-	return `${type}`;
-}
