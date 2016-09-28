@@ -109,8 +109,8 @@ class AddUser extends Form {
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			}
-		}, err => {
-			if (err) {
+		}, (err, resp) => {
+			if (resp.statusCode !== 200) {
 				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});

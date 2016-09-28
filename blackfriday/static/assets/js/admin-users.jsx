@@ -85,9 +85,6 @@ import UserList from './admin/users/user-list.jsx';
 			const users = this.state.users;
 			users.push(user);
 			this.forceUpdate();
-
-			// Send verification request for newbie user
-			this.requestVerification(user.id);
 		},
 
 		getUserById(userId) {
