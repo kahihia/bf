@@ -3,6 +3,7 @@ from rest_framework.decorators import list_route
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAuthenticated, IsAdmin
@@ -10,6 +11,7 @@ from libs.api.permissions import IsAuthenticated, IsAdmin
 from ..models import LandingLogo
 from .serializers import LandingLogoSerializer
 from ..utils import render_landing
+from ..exceptions import NoContent
 
 
 class LandingLogoViewSet(ModelViewSet):
@@ -56,5 +58,8 @@ class StaticGeneratorViewSet(GenericViewSet):
 
     @list_route(methods=['post'])
     def landing(self, request, *args, **kwargs):
-        render_landing()
-        return Response(status=201)
+        try:
+            render_landing()
+        except NoContent:
+            raise ValidationError('no banners and logos available')
+        return Response(status=200)
