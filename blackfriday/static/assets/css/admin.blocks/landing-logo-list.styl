@@ -24,7 +24,7 @@
 			box-shadow: 0 0 25px rgba(0, 0, 0, 0.25)
 			z-index: 1
 
-			.landing-logo-list__action
+			.landing-logo-list__actions
 				opacity: 1
 
 	&__link
@@ -36,7 +36,7 @@
 		max-width: 70%
 		height: auto
 
-	&__action
+	&__actions
 		position: absolute
 		top: 0
 		right: 0
@@ -45,17 +45,11 @@
 		background-color: #fff
 		box-shadow: 0 0 0 1px #eee
 
-	&__edit
+	&__action
 		cursor: pointer
 		display: block
 		line-height: 1
-		padding: 15px
-		color: $link-color
+		padding: 10px
 
-	&__delete
-		cursor: pointer
-		display: block
-		line-height: 1
-		padding: 15px
-		color: $state-danger-text
-		border-top: 1px solid #eee
+		& + &
+			border-top: 1px solid #eee

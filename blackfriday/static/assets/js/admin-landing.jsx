@@ -232,7 +232,11 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 		deleteLandingLogo(id) {
 			this.setState(previousState => {
 				const logo = this.getLogoById(id);
-				previousState.logos = _.without(previousState.logos, logo);
+				let logos = _.without(previousState.logos, logo);
+				logos.forEach((logo, index) => {
+					logo.position = index + 1;
+				});
+				previousState.logos = logos;
 				return previousState;
 			});
 		},
@@ -336,9 +340,9 @@ class LandingLogoListItem extends React.Component {
 						/>
 				</a>
 
-				<span className="landing-logo-list__action">
+				<span className="landing-logo-list__actions">
 					<span
-						className="landing-logo-list__edit"
+						className="landing-logo-list__action text-info"
 						title="Отредактировать"
 						onClick={this.handleClickLandingLogoEdit}
 						>
@@ -346,7 +350,7 @@ class LandingLogoListItem extends React.Component {
 					</span>
 
 					<span
-						className="landing-logo-list__delete"
+						className="landing-logo-list__action text-danger"
 						title="Удалить"
 						onClick={this.handleClickLandingLogoDelete}
 						>
