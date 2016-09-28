@@ -1,4 +1,5 @@
-/* global document toastr _ jQuery */
+/* global window document toastr _ jQuery */
+/* eslint-disable no-alert */
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
@@ -100,6 +101,36 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 			});
 		},
 
+		requestLandingLogoDelete(id) {
+			this.setState({isLoading: true});
+
+			xhr({
+				url: `/api/landing-logos/${id}/`,
+				method: 'DELETE',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: true
+			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
+				switch (resp.statusCode) {
+					case 204: {
+						this.deleteLandingLogo(id);
+						break;
+					}
+					case 400: {
+						this.processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось удалить логотип');
+						break;
+					}
+				}
+			});
+		},
+
 		updateState(data) {
 			let {fromPosition, toPosition} = this.state;
 			if (typeof data.draggingIndex === 'string') {
@@ -171,6 +202,12 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 			);
 		},
 
+		handleClickLandingLogoDelete(id) {
+			if (window.confirm('Удалить логотип?')) {
+				this.requestLandingLogoDelete(id);
+			}
+		},
+
 		handleClickStaticGeneratorLanding() {
 			this.requestStaticGeneratorLanding();
 		},
@@ -190,6 +227,14 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 				_.merge(logo, data);
 				this.forceUpdate();
 			}
+		},
+
+		deleteLandingLogo(id) {
+			this.setState(previousState => {
+				const logo = this.getLogoById(id);
+				previousState.logos = _.without(previousState.logos, logo);
+				return previousState;
+			});
 		},
 
 		getLogoById(id) {
@@ -239,7 +284,8 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 									childProps={{data: item}}
 									>
 									<LandingLogoListItem
-										onClick={this.handleClickLandingLogoEdit}
+										onClickEdit={this.handleClickLandingLogoEdit}
+										onClickDelete={this.handleClickLandingLogoDelete}
 										{...item}
 										/>
 								</SortableLandingLogoListItem>
@@ -259,11 +305,17 @@ class LandingLogoListItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleClickLandingLogoEdit = this.handleClickLandingLogoEdit.bind(this);
+		this.handleClickLandingLogoDelete = this.handleClickLandingLogoDelete.bind(this);
 	}
 
 	handleClickLandingLogoEdit(e) {
 		e.preventDefault();
-		this.props.onClick(this.props.id);
+		this.props.onClickEdit(this.props.id);
+	}
+
+	handleClickLandingLogoDelete(e) {
+		e.preventDefault();
+		this.props.onClickDelete(this.props.id);
 	}
 
 	render() {
@@ -284,12 +336,22 @@ class LandingLogoListItem extends React.Component {
 						/>
 				</a>
 
-				<span
-					className="landing-logo-list__edit"
-					title="Отредактировать"
-					onClick={this.handleClickLandingLogoEdit}
-					>
-					<Glyphicon name="pencil"/>
+				<span className="landing-logo-list__action">
+					<span
+						className="landing-logo-list__edit"
+						title="Отредактировать"
+						onClick={this.handleClickLandingLogoEdit}
+						>
+						<Glyphicon name="pencil"/>
+					</span>
+
+					<span
+						className="landing-logo-list__delete"
+						title="Удалить"
+						onClick={this.handleClickLandingLogoDelete}
+						>
+						<Glyphicon name="remove"/>
+					</span>
 				</span>
 			</div>
 		);
@@ -298,7 +360,8 @@ class LandingLogoListItem extends React.Component {
 LandingLogoListItem.propTypes = {
 	id: React.PropTypes.number,
 	image: React.PropTypes.string,
-	onClick: React.PropTypes.func,
+	onClickEdit: React.PropTypes.func,
+	onClickDelete: React.PropTypes.func,
 	url: React.PropTypes.string
 };
 LandingLogoListItem.defaultProps = {
