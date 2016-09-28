@@ -97,9 +97,10 @@ class Invoice(models.Model):
         if self.discount:
             total *= (1 - self.discount / 100)
 
-        last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new, exclude=self.promo.id)
-        if self.promo and last_promo:
-            total -= last_promo.price
+        if self.promo:
+            last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new, exclude=self.promo.id)
+            if last_promo:
+                total -= last_promo.price
 
         self.sum = ceil(total)
         if commit:
