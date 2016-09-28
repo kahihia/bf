@@ -79,6 +79,27 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 			});
 		},
 
+		requestStaticGeneratorLanding() {
+			this.setState({isLoading: true});
+
+			xhr({
+				url: '/api/static-generator/landing/',
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: true
+			}, (err, resp) => {
+				this.setState({isLoading: false});
+
+				if (!err && resp.statusCode === 201) {
+					toastr.success('Лэндинг успешно сгенерирован');
+				} else {
+					toastr.error('Не удалось сгенерировать лэндинг');
+				}
+			});
+		},
+
 		updateState(data) {
 			let {fromPosition, toPosition} = this.state;
 			if (typeof data.draggingIndex === 'string') {
@@ -150,6 +171,10 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 			);
 		},
 
+		handleClickStaticGeneratorLanding() {
+			this.requestStaticGeneratorLanding();
+		},
+
 		addLandingLogo(data) {
 			if (data) {
 				this.setState(previousState => {
@@ -186,6 +211,17 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 						type="button"
 						>
 						{'Добавить'}
+					</button>
+
+					{' '}
+
+					<button
+						className="btn btn-warning"
+						onClick={this.handleClickStaticGeneratorLanding}
+						type="button"
+						>
+						<Glyphicon name="refresh"/>
+						{' Сгенерировать'}
 					</button>
 
 					<hr/>
