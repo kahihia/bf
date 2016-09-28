@@ -3,6 +3,7 @@
 
 import React from 'react';
 import b from 'b_';
+import {hasRole, ENV} from '../utils.js';
 import {getApplicationStatusColor} from './utils.js';
 
 const AdvertiserRequestList = React.createClass({
@@ -118,6 +119,11 @@ const AdvertiserRequestListItem = React.createClass({
 		} = this.props;
 		const className = 'advertiser-request-list';
 
+		const isAdmin = hasRole('admin');
+		const isOperator = hasRole('operator');
+		const isMine = userResponsible ? ENV.userId === userResponsible.id : false;
+		const isActionVisible = isAdmin || (isOperator && isMine);
+
 		return (
 			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
@@ -159,41 +165,41 @@ const AdvertiserRequestListItem = React.createClass({
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'action'})}>
-					{status === 0 || status === 10 ? (
-						<div style={{height: '5px'}}/>
-					) : null}
+					{isActionVisible ? (
+						<div>
+							{status === 0 ? (
+								<button
+									className="btn btn-default btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="10"
+									type="button"
+									>
+									{'В работу'}
+								</button>
+							) : null}
 
-					{status === 0 ? (
-						<button
-							className="btn btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="10"
-							type="button"
-							>
-							{'В работу'}
-						</button>
-					) : null}
+							{status === 10 ? (
+								<button
+									className="btn btn-success btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="20"
+									type="button"
+									>
+									{'Участвует'}
+								</button>
+							) : null}
 
-					{status === 10 ? (
-						<button
-							className="btn btn-success btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="20"
-							type="button"
-							>
-							{'Участвует'}
-						</button>
-					) : null}
-
-					{status === 10 ? (
-						<button
-							className="btn btn-danger btn-sm btn-block"
-							onClick={this.handleClickStatusChange}
-							data-status="30"
-							type="button"
-							>
-							{'Отказ'}
-						</button>
+							{status === 10 ? (
+								<button
+									className="btn btn-danger btn-sm btn-block"
+									onClick={this.handleClickStatusChange}
+									data-status="30"
+									type="button"
+									>
+									{'Отказ'}
+								</button>
+							) : null}
+						</div>
 					) : null}
 				</td>
 			</tr>
