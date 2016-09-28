@@ -3,8 +3,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {SORT_TYPES, TOKEN} from './admin/const.js';
+import {APPLICATION_STATUS, SORT_TYPES, TOKEN} from './admin/const.js';
 import {reverseSortDirection} from './admin/utils.js';
+import {getApplicationStatusColor} from './admin/leads/utils.js';
 import FormCol from './admin/components/form-col.jsx';
 import Checkbox from './admin/components/checkbox.jsx';
 import AdvertiserRequestList from './admin/leads/advertiser-request-list.jsx';
@@ -17,6 +18,30 @@ const SORT_OPTIONS = {
 	status: 'Статус',
 	userResponsible: 'Менеджер'
 };
+
+const StatusList = () => (
+	<table className="application-status-list">
+		<tbody>
+			<tr>
+				<th>
+					{'Статусы: '}
+				</th>
+				{_.map(APPLICATION_STATUS, (item, key) => {
+					const color = getApplicationStatusColor(parseInt(key, 10));
+
+					return (
+						<td
+							className={`text-${color} bg-${color}`}
+							key={key}
+							>
+							{item}
+						</td>
+					);
+				})}
+			</tr>
+		</tbody>
+	</table>
+);
 
 (function () {
 	'use strict';
@@ -166,6 +191,8 @@ const SORT_OPTIONS = {
 							</div>
 						</div>
 					</div>
+
+					<StatusList/>
 
 					<AdvertiserRequestList
 						applications={filteredApplications}

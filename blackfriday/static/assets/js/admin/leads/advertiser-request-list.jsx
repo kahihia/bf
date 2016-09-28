@@ -3,6 +3,7 @@
 
 import React from 'react';
 import b from 'b_';
+import {getApplicationStatusColor} from './utils.js';
 
 const AdvertiserRequestList = React.createClass({
 	getInitialState() {
@@ -122,7 +123,7 @@ const AdvertiserRequestListItem = React.createClass({
 		const className = 'advertiser-request-list';
 
 		return (
-			<tr className={b(className, 'table-tr') + getApplicationStatusLabelClassName(status, ' bg-')}>
+			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
 					<div>
 						{moment(datetimeCreated).format('DD.MM.YYYY')}
@@ -203,30 +204,3 @@ const AdvertiserRequestListItem = React.createClass({
 		);
 	}
 });
-
-function getApplicationStatusLabelClassName(status, className) {
-	let type = className || '';
-	switch (status) {
-		case 0: {
-			type += 'info';
-			break;
-		}
-		case 10: {
-			type += 'warning';
-			break;
-		}
-		case 20: {
-			type += 'success';
-			break;
-		}
-		case 30: {
-			type += 'danger';
-			break;
-		}
-		default: {
-			break;
-		}
-	}
-
-	return `${type}`;
-}
