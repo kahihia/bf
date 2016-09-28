@@ -24,13 +24,18 @@ class SubscriberSerializer(serializers.ModelSerializer):
 
 
 class AdvertiserRequestSerializer(serializers.ModelSerializer):
-    user_responsible = UserResponsibleSerializer()
+    user_responsible = UserResponsibleSerializer(read_only=True)
 
     class Meta:
         model = AdvertiserRequest
         fields = ['id', 'name', 'organization_name', 'phone', 'email', 'comment',
                   'status', 'created_datetime', 'updated_datetime', 'user_responsible']
-        read_only_fields = ['status', 'created_datetime', 'updated_datetime', 'user_responsible']
+        read_only_fields = ['status', 'created_datetime', 'updated_datetime']
+
+    def validate(self, attrs):
+        if self.instance and self.instance.status != AdvertiserRequestStatus.new:
+            raise ValidationError('Перезаписать можно только заявки со статусом "Новая"')
+        return attrs
 
 
 class AdvertiserRequestStatusSerializer(serializers.ModelSerializer):
