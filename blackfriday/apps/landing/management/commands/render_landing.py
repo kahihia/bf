@@ -5,4 +5,4 @@ from apps.landing.utils import render_landing
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        render_landing()
+        render_landing(raise_exception=False)
