@@ -3,7 +3,7 @@
 import formatThousands from 'format-thousands';
 import {SORT_TYPES} from './const.js';
 
-const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
+export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function resolveImgPath(path, type) {
 	if (!type) {

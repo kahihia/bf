@@ -68,6 +68,7 @@ module.exports = {
 		'admin-applications': path.resolve(PATH_SRC, 'js/admin-applications.jsx'),
 		'admin-categories': path.resolve(PATH_SRC, 'js/admin-categories.jsx'),
 		'admin-invoices': path.resolve(PATH_SRC, 'js/admin-invoices.jsx'),
+		'admin-landing': path.resolve(PATH_SRC, 'js/admin-landing.jsx'),
 		'admin-merchants': path.resolve(PATH_SRC, 'js/admin-merchants.jsx'),
 		'admin-partners': path.resolve(PATH_SRC, 'js/admin-partners.jsx'),
 		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
