@@ -83,6 +83,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
         merchant = attrs['merchant'] = attrs.pop('merchant_id', None)
         promo = attrs['promo'] = attrs.pop('promo_id', None)
 
+        if promo and merchant.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists():
+            raise ValidationError('У вас есть неоплаченный пакет')
+
         if not (promo or attrs.get('options')):
             raise ValidationError('Нет ни пакета, ни опций')
 
