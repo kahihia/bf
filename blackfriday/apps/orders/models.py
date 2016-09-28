@@ -98,7 +98,7 @@ class Invoice(models.Model):
             total *= (1 - self.discount / 100)
 
         if self.promo:
-            last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new, exclude=self.promo.id)
+            last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new, exclude=self.id)
             if last_promo:
                 total -= last_promo.price
 
