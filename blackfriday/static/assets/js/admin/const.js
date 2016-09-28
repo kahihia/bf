@@ -34,6 +34,13 @@ export const MODERATION_STATUS = {
 	3: 'Отклонён'
 };
 
+export const APPLICATION_STATUS = {
+	0: 'Новая',
+	10: 'В работе',
+	20: 'Участвует',
+	30: 'Отказ'
+};
+
 export const HELP_TEXT = {
 	password: 'Не менее 8 симв., латинские буквы или цифры.'
 };
@@ -44,3 +51,8 @@ export const TOKEN = {
 };
 
 export const SITE_URL = ENV.siteUrl;
+
+export const SORT_TYPES = {
+	ASC: 'ASC',
+	DESC: 'DESC'
+};

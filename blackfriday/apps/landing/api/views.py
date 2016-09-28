@@ -1,12 +1,15 @@
 from bulk_update.helper import bulk_update
 from rest_framework.decorators import list_route
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import mixins
+from rest_framework.response import Response
 
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
 from ..models import LandingLogo
 from .serializers import LandingLogoSerializer
+from ..utils import render_landing
 
 
 class LandingLogoViewSet(ModelViewSet):
@@ -19,20 +22,39 @@ class LandingLogoViewSet(ModelViewSet):
         try:
             new_order = list(map(int, request.data))
         except (TypeError, ValueError):
-            raise BadRequest
+            raise BadRequest('Неверный формат запроса')
 
         logos = LandingLogo.objects.all().order_by('position')
 
         new_order_set, old_order_set = set(new_order), set(logo.id for logo in logos)
-        if new_order_set != old_order_set or len(new_order_set) != len(new_order):
-            raise BadRequest
 
+        if old_order_set - new_order_set:
+            raise BadRequest('Не все идентификаторы переданы')
+
+        if new_order_set - old_order_set:
+            raise BadRequest('Присутствуют лишние идентификаторы')
+
+        if len(new_order_set) != len(new_order):
+            raise BadRequest('В сортировке присутствуют повторы')
+
+        order_dict = dict(map(reversed, enumerate(new_order)))
         logos_to_update = []
-        for logo, position in zip(logos, new_order):
-            if logo.position != position:
-                logo.position = position
+
+        for logo in logos:
+            new_position = order_dict.get(logo.id)
+            if new_position and logo.position != new_position:
+                logo.position = new_position
                 logos_to_update.append(logo)
 
         if logos_to_update:
             bulk_update(logos_to_update, update_fields=['position'])
         return self.list(request, *args, **kwargs)
+
+
+class StaticGeneratorViewSet(GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    @list_route(methods=['post'])
+    def landing(self, request, *args, **kwargs):
+        render_landing()
+        return Response(status=201)

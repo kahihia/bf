@@ -1,7 +1,8 @@
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
-from libs.api.permissions import action_permission, IsAuthenticated, IsManager, IsAdmin
+from libs.api.permissions import action_permission, IsAuthenticated, IsManager, IsAdmin, IsOperator
 from .serializers import (Subscriber, SubscriberSerializer,
                           AdvertiserRequest, AdvertiserRequestSerializer, AdvertiserRequestStatusSerializer)
 
@@ -28,7 +29,7 @@ class AdvertiserRequestsViewSet(viewsets.ModelViewSet):
     queryset = AdvertiserRequest.objects.all()
     permission_classes = [
         action_permission('create') |
-        action_permission('list', 'update', 'partial_update') & IsAuthenticated & IsManager |
+        action_permission('list', 'update', 'partial_update') & IsAuthenticated & IsOperator |
         IsAuthenticated & IsAdmin
     ]
 
@@ -43,3 +44,13 @@ class AdvertiserRequestsViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK if advertiser_request else status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if (
+            instance.user_responsible and
+            instance.user_responsible_id != request.user.id and
+            request.user.role != 'admin'
+        ):
+            raise PermissionDenied
+        return super().update(request, *args, **kwargs)

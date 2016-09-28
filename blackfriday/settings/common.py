@@ -105,6 +105,8 @@ VERIFICATION = {
 }
 
 VERIFICATION_TTL_HOURS = 24
+INVOICE_TTL_DAYS = 5
+INVOICE_NEW_LIMIT = 5
 
 MANAGERS = []
 PROMO_MANAGERS = []
@@ -130,4 +132,18 @@ PRODUCT_FILE_COLUMNS_MAPPING = {
     'countryoforigin': 'country',
     'url': 'url',
     'image': 'image',
+}
+
+BANK_ACCOUNT = {
+    'bank': 'ФИЛИАЛ "САНКТ-ПЕТЕРБУРГСКИЙ" АО "АЛЬФА-БАНК" Г. САНКТ-ПЕТЕРБУРГ',
+    'name': 'ООО "Эксперт Таун"',
+    'inn': '7801203510',
+    'kpp': '780101001',
+    'legal_address': '199178, г.Санкт-Петербург, 18-я линия В.О. д.29 , лит Ж, пом 2-Н',
+    'address': '199178, г.Санкт-Петербург, 18-я линия В.О. д.29 , лит.Д.',
+    'account': '40702810632230001020, в филиале "САНКТ-ПЕТЕРБУРГСКИЙ" АО "АЛЬФА-БАНК"',
+    'korr': '30101810600000000786',
+    'bik': '044030786',
+    'head': 'Тимофеев К. И.',
+    'accountant': 'Шавкеро А. А.',
 }

@@ -18,6 +18,12 @@
 
 ## Development
 
+
+### Dependencies
+
+Для генерации pdf используется weasypring. Необходима установка системных пакетов, подробности по ссылке
+http://weasyprint.readthedocs.io/en/latest/install.html
+
 ### Install project
 ```
 cd /sites

@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -18,7 +20,8 @@ class InvoiceOptionSerializer(serializers.ModelSerializer):
         model = InvoiceOption
         fields = ('id', 'name', 'value', 'price')
         extra_kwargs = {
-            'price': {'required': False, 'allow_null': True}
+            'price': {'required': False, 'allow_null': True, 'min_value': 0},
+            'value': {'min_value': 0}
         }
 
     def validate(self, attrs):
@@ -34,23 +37,45 @@ class InvoiceSerializer(serializers.ModelSerializer):
     promo = PromoTinySerializer(read_only=True)
 
     merchant_id = serializers.PrimaryKeyRelatedField(queryset=Merchant.objects.all(), write_only=True)
-    promo_id = serializers.PrimaryKeyRelatedField(queryset=Promo.objects.all(), write_only=True, allow_null=True)
+    promo_id = serializers.PrimaryKeyRelatedField(queryset=Promo.objects.all(),
+                                                  write_only=True, allow_null=True, required=False)
 
-    options = InvoiceOptionSerializer(many=True)
+    options = InvoiceOptionSerializer(many=True, required=False)
+
+    status = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
         fields = ('id', 'status', 'sum', 'discount', 'created_datetime',
                   'advertiser', 'merchant', 'merchant_id', 'promo', 'promo_id', 'options')
-        read_only_fields = ('id', 'status', 'sum')
+        read_only_fields = ('id', 'sum')
+        extra_kwargs = {
+            'discount': {'min_value': 0, 'max_value': 100, 'allow_null': True, 'required': False}
+        }
+
+    def get_status(self, obj):
+        return obj.status
 
     def get_extra_kwargs(self):
         kwargs = super().get_extra_kwargs()
         user = self.context['request'].user
         if user.role == 'advertiser':
             kwargs['discount'] = {'read_only': True}
-            kwargs['merchant_id'] = {'queryset': Merchant.objects.filter(advertiser=user)}
         return kwargs
+
+    def validate_options(self, value):
+        if len(set(x['option'] for x in value)) < len(value):
+            raise ValidationError('Опции не могут повторяться')
+        return value
+
+    def validate_merchant_id(self, value):
+        user = self.context['request'].user
+        if user.role == 'advertiser' and value.advertiser != user:
+            raise ValidationError('Неверный магазин')
+        return value
+
+    def validate_discount(self, value):
+        return value or 0
 
     def validate(self, attrs):
         merchant = attrs['merchant'] = attrs.pop('merchant_id', None)
@@ -62,22 +87,32 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if merchant.promo and promo and merchant.promo.price > promo.price:
             raise ValidationError('Нельзя назначить более дешёвый пакет')
 
+        count = merchant.invoices.filter(expired_datetime__gt=timezone.now(), is_paid=False).count()
+        if count >= settings.INVOICE_NEW_LIMIT:
+            raise ValidationError('Нельзя создать больше {} неоплаченных счетов'.format(settings.INVOICE_NEW_LIMIT))
+
         return attrs
 
     def create(self, validated_data):
-        options = validated_data.pop('options')
+        options = validated_data.pop('options', [])
         invoice = super().create(validated_data)
         InvoiceOption.objects.bulk_create(InvoiceOption(invoice=invoice, **option) for option in options)
         invoice.calculate_total()
         return invoice
 
 
-class InvoiceStatusSerializer(serializers.ModelSerializer):
+class InvoiceUpdateSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Invoice.STATUSES)
 
     class Meta:
         model = Invoice
-        fields = ('status',)
+
+    def get_default_field_names(self, declared_fields, model_info):
+        fields = ['status']
+        user = self.context['request'].user
+        if user.role == 'admin':
+            fields.append('expired_datetime')
+        return fields
 
     def validate_status(self, value):
         user = self.context['request'].user
@@ -85,8 +120,17 @@ class InvoiceStatusSerializer(serializers.ModelSerializer):
             raise ValidationError('Вы можете только отменить свой счет')
         return value
 
+    def update(self, instance, validated_data):
+        status = validated_data.pop('status', None)
+        if status:
+            instance.status = status
+        super().update(instance, validated_data)
+
+    def create(self, validated_data):
+        raise NotImplementedError
+
     def to_representation(self, instance):
-        return InvoiceSerializer().to_representation(instance)
+        return InvoiceSerializer(context=self.context).to_representation(instance)
 
 
 class InvoiceStatusBulkSerializer(serializers.ModelSerializer):
@@ -102,9 +146,7 @@ class InvoiceStatusBulkSerializer(serializers.ModelSerializer):
         return attrs
 
     def bulk_update(self, validated_data):
-        invoices = validated_data.pop('invoices', [])
-        self.Meta.model.objects.filter(id__in=[invoice.id for invoice in invoices]).update(**validated_data)
-        return invoices
+        return Invoice.change_status([invoice.id for invoice in validated_data['invoices']], validated_data['status'])
 
     def update(self, instance, validated_data):
         return self.bulk_update(validated_data)
