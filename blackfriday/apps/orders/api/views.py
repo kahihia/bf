@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.http.response import StreamingHttpResponse
 from django.conf import settings
 
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
@@ -17,12 +17,14 @@ from .filters import InvoiceFilter
 from .serializers import InvoiceSerializer, InvoiceUpdateSerializer, InvoiceStatusBulkSerializer
 
 
-class InvoiceViewSet(viewsets.ModelViewSet):
+class InvoiceViewSet(
+        mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+        mixins.UpdateModelMixin, viewsets.GenericViewSet):
     permission_classes = [
         IsAuthenticated,
         IsAdmin |
-        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create', 'update', 'partial_update') |
-        IsManager & action_permission('list', 'retrieve', 'update', 'partial_update', 'statuses')
+        IsManager |
+        IsAdvertiser & IsOwner & action_permission('list', 'retrieve', 'create', 'update', 'partial_update', 'receipt')
     ]
     queryset = Invoice.objects.all()
     filter_class = InvoiceFilter

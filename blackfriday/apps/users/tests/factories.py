@@ -12,8 +12,8 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     _role = Role.MANAGER
 
-    datetime_created = factory.Faker('date_time_this_month')
-    datetime_updated = factory.Faker('date_time_this_month')
+    created_datetime = factory.Faker('date_time_this_month')
+    updated_datetime = factory.Faker('date_time_this_month')
 
     class Meta:
         model = 'users.User'

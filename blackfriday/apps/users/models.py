@@ -103,8 +103,8 @@ class User(AbstractBaseUser):
     email = models.EmailField(unique=True, blank=False, verbose_name='Электронная почта')
     name = models.CharField(max_length=120, null=True, blank=True, verbose_name='Имя')
 
-    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    datetime_updated = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
+    created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    updated_datetime = models.DateTimeField(auto_now=True, verbose_name='Время обновления')
 
     is_active = models.BooleanField(default=False, verbose_name='Пользователь активен')
     is_admin = models.BooleanField(default=False, verbose_name='Администратор')

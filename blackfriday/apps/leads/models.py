@@ -41,8 +41,8 @@ class AdvertiserRequest(models.Model):
     email = models.EmailField(max_length=255, unique=True, verbose_name='E-mail')
     comment = models.TextField(blank=True, null=True, verbose_name='Комментарии')
     status = models.IntegerField(default=AdvertiserRequestStatus.new, choices=REQUEST_STATUSES, verbose_name='Статус')
-    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    datetime_updated = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
+    created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    updated_datetime = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
     user_responsible = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
     class Meta:

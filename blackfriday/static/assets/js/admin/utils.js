@@ -1,6 +1,7 @@
 /* global window toastr _ */
 
 import formatThousands from 'format-thousands';
+import {SORT_TYPES} from './const.js';
 
 const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
@@ -57,4 +58,8 @@ function processArray(errors) {
 }
 function processString(error) {
 	toastr.warning(error);
+}
+
+export function reverseSortDirection(sortDir) {
+	return sortDir === SORT_TYPES.DESC ? SORT_TYPES.ASC : SORT_TYPES.DESC;
 }

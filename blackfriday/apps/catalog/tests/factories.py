@@ -18,7 +18,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     is_teaser_on_main = False
     brand = 'Brand'
     url = factory.Sequence(lambda n: 'http://lol.com/{}'.format(n))
-    datetime_created = factory.Faker('date_time_this_month')
+    created_datetime = factory.Faker('date_time_this_month')
     image = factory.django.ImageField()
     currency = 'rur'
 
