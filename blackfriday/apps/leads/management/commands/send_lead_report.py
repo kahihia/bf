@@ -16,7 +16,7 @@ class Command(BaseCommand):
         fields = ['name', 'organization_name', 'email', 'phone']
         fieldnames = ['Имя', 'Организация', 'E-mail', 'Телефон']
 
-        qs = AdvertiserRequest.objects.all().order_by('-datetime_updated').values_list(*fields)
+        qs = AdvertiserRequest.objects.all().order_by('-updated_datetime').values_list(*fields)
 
         csv_file = io.StringIO()
         csv_file.write(codecs.BOM_UTF8.decode('utf-8'))

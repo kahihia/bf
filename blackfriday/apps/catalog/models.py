@@ -27,7 +27,7 @@ class Product(models.Model):
     is_teaser_on_main = models.BooleanField(verbose_name='Товар является тизером на главной', default=False)
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
     url = models.CharField(verbose_name='Ссылка', max_length=255)
-    datetime_created = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     image = models.FileField(upload_to='products', verbose_name='Изображение')
     currency = models.CharField(max_length=10)
 

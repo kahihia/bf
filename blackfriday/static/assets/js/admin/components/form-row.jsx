@@ -37,6 +37,7 @@ class FormRow extends React.Component {
 	renderInput() {
 		const {
 			addon,
+			disabled,
 			mask,
 			name,
 			options,
@@ -54,6 +55,7 @@ class FormRow extends React.Component {
 				onKeyUp={this.handleKeyUp}
 				{...{
 					addon,
+					disabled,
 					mask,
 					name,
 					options,
@@ -114,6 +116,7 @@ class FormRow extends React.Component {
 }
 FormRow.propTypes = {
 	addon: React.PropTypes.string,
+	disabled: React.PropTypes.bool,
 	hasError: React.PropTypes.bool,
 	help: React.PropTypes.oneOfType([
 		React.PropTypes.string,
@@ -140,6 +143,7 @@ FormRow.propTypes = {
 	valueType: React.PropTypes.string
 };
 FormRow.defaultProps = {
+	disabled: false,
 	type: 'text',
 	required: false,
 	readOnly: false

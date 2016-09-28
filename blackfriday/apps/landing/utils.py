@@ -1,0 +1,12 @@
+import os
+from django.template.loader import render_to_string
+from django.conf import settings
+
+
+def render_landing():
+    path = os.path.join(settings.PROJECT_ROOT, 'landing')
+    os.makedirs(path, exist_ok=True)
+    with open(os.path.join(path, 'index.html'), 'w') as f:
+        f.seek(0)
+        f.write(render_to_string('landing/landing.html', {'SITE_URL': settings.SITE_URL}))
+        f.truncate()

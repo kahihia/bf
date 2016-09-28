@@ -1,8 +1,12 @@
+import operator
+from functools import reduce
+
 from django.db import models
-from django.db.models import Min
+from django.db.models import Q
 
 from apps.orders.models import InvoiceStatus
 from apps.promo.models import Option
+from django.utils import timezone
 
 
 class ModerationStatus:
@@ -77,8 +81,18 @@ class Merchant(models.Model):
 
     def get_promo(self, *statuses):
         qs = self.invoices.filter(promo__isnull=False)
-        if statuses:
-            qs = qs.filter(status__in=statuses)
+
+        qlist = []
+        if InvoiceStatus.paid in statuses:
+            qlist.append(Q(is_paid=True))
+        if InvoiceStatus.new in statuses:
+            qlist.append(Q(is_paid=False, expired_datetime__gt=timezone.now()))
+        if InvoiceStatus.cancelled in statuses:
+            qlist.append(Q(is_paid=False, expired_datetime__lte=timezone.now()))
+
+        if qlist:
+            qs = qs.filter(reduce(operator.__or__, qlist))
+
         invoice = qs.order_by('-id').first()
         if invoice:
             return invoice.promo
@@ -94,7 +108,7 @@ class Merchant(models.Model):
 
     @property
     def is_previewable(self):
-        return self.invoices.filter(status=InvoiceStatus.paid).exists()
+        return self.invoices.filter(is_paid=True).exists()
 
     @property
     def preview_url(self):
@@ -103,13 +117,16 @@ class Merchant(models.Model):
 
     @property
     def payment_status(self):
-        status = self.invoices.all().aggregate(status=Min('status'))['status']
-        return InvoiceStatus.paid if status == InvoiceStatus.paid else InvoiceStatus.cancelled
+        new = self.invoices.filter(is_paid=False, expired_datetime__lte=timezone.now()).exists()
+        paid = self.invoices.filter(is_paid=True).exists()
+        if not new and paid:
+            return InvoiceStatus.paid
+        return InvoiceStatus.new
 
     @property
     def options_count(self):
-        return Option.objects.filter(in_invoices__invoice__status=InvoiceStatus.paid).distinct().count()
+        return Option.objects.filter(in_invoices__invoice__is_paid=True).distinct().count()
 
     @property
     def owner_id(self):
-        return self.advertiser_id
+        return self.advertiser.id
