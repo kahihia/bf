@@ -37,10 +37,13 @@ class LandingLogoViewSet(ModelViewSet):
         if len(new_order_set) != len(new_order):
             raise BadRequest('В сортировке присутствуют повторы')
 
+        order_dict = dict(map(reversed, enumerate(new_order)))
         logos_to_update = []
-        for logo, position in zip(logos, new_order):
-            if logo.position != position:
-                logo.position = position
+
+        for logo in logos:
+            new_position = order_dict.get(logo.id)
+            if new_position and logo.position != new_position:
+                logo.position = new_position
                 logos_to_update.append(logo)
 
         if logos_to_update:
