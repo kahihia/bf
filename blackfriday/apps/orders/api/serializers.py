@@ -32,6 +32,8 @@ class InvoiceOptionSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
+    expired_date = serializers.DateTimeField(source='expired_datetime', format='%Y-%m-%d')
+
     advertiser = AdvertiserTinySerializer(source='merchant.advertiser', read_only=True)
     merchant = MerchantTinySerializer(read_only=True)
     promo = PromoTinySerializer(read_only=True)
@@ -46,9 +48,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Invoice
-        fields = ('id', 'status', 'sum', 'discount', 'created_datetime',
+        fields = ('id', 'status', 'sum', 'discount', 'created_datetime', 'expired_date',
                   'advertiser', 'merchant', 'merchant_id', 'promo', 'promo_id', 'options')
-        read_only_fields = ('id', 'sum')
+        read_only_fields = ('id', 'sum', 'expired_date')
         extra_kwargs = {
             'discount': {'min_value': 0, 'max_value': 100, 'allow_null': True, 'required': False}
         }
@@ -102,6 +104,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 
 class InvoiceUpdateSerializer(serializers.ModelSerializer):
+    expired_date = serializers.DateTimeField(source='expired_datetime', input_formats=['%Y-%m-%d'])
     status = serializers.ChoiceField(choices=Invoice.STATUSES)
 
     class Meta:
@@ -111,7 +114,7 @@ class InvoiceUpdateSerializer(serializers.ModelSerializer):
         fields = ['status']
         user = self.context['request'].user
         if user.role == 'admin':
-            fields.append('expired_datetime')
+            fields.append('expired_date')
         return fields
 
     def validate_status(self, value):
