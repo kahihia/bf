@@ -45,12 +45,8 @@ const AdvertiserRequestList = React.createClass({
 								{'Организация'}
 							</th>
 
-							<th className={b(className, 'table-th', {name: 'email'})}>
-								{'Email'}
-							</th>
-
-							<th className={b(className, 'table-th', {name: 'phone'})}>
-								{'Телефон'}
+							<th className={b(className, 'table-th', {name: 'contacts'})}>
+								{'Контакты'}
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'comment'})}>
@@ -142,13 +138,13 @@ const AdvertiserRequestListItem = React.createClass({
 					{organizationName}
 				</td>
 
-				<td className={b(className, 'table-td', {name: 'email'})}>
+				<td className={b(className, 'table-td', {name: 'contacts'})}>
 					<a href={`mailto:${email}`}>
 						{email}
 					</a>
-				</td>
 
-				<td className={b(className, 'table-td', {name: 'phone'})}>
+					<br/>
+
 					{phone}
 				</td>
 
