@@ -87,8 +87,7 @@ export default AdvertiserRequestList;
 const AdvertiserRequestListItem = React.createClass({
 	propTypes: {
 		comment: React.PropTypes.string,
-		datetimeCreated: React.PropTypes.string,
-		datetimeUpdated: React.PropTypes.string,
+		createdDatetime: React.PropTypes.string,
 		email: React.PropTypes.string,
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
@@ -96,6 +95,7 @@ const AdvertiserRequestListItem = React.createClass({
 		organizationName: React.PropTypes.string,
 		phone: React.PropTypes.string,
 		status: React.PropTypes.number,
+		updatedDatetime: React.PropTypes.string,
 		userResponsible: React.PropTypes.object
 	},
 
@@ -111,13 +111,13 @@ const AdvertiserRequestListItem = React.createClass({
 	render() {
 		const {
 			comment,
-			datetimeCreated,
-			datetimeUpdated,
+			createdDatetime,
 			email,
 			name,
 			organizationName,
 			phone,
 			status,
+			updatedDatetime,
 			userResponsible
 		} = this.props;
 		const className = 'advertiser-request-list';
@@ -126,11 +126,11 @@ const AdvertiserRequestListItem = React.createClass({
 			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
 					<div>
-						{moment(datetimeCreated).format('DD.MM.YYYY')}
+						{moment(createdDatetime).format('DD.MM.YYYY')}
 					</div>
 
 					<div>
-						{moment(datetimeUpdated).format('DD.MM.YYYY')}
+						{moment(updatedDatetime).format('DD.MM.YYYY')}
 					</div>
 				</td>
 
