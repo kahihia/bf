@@ -144,7 +144,13 @@ const StatusList = () => (
 			}
 
 			if (sortKey) {
-				filteredApplications = _.sortBy(filteredApplications, sortKey);
+				filteredApplications = _.sortBy(filteredApplications, item => {
+					if (typeof item[sortKey] === 'string') {
+						return item[sortKey].toLowerCase();
+					}
+
+					return item[sortKey];
+				});
 
 				if (sortDir === SORT_TYPES.DESC) {
 					filteredApplications.reverse();
