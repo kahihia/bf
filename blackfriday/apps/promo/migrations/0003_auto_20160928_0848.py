@@ -91,9 +91,11 @@ def migrate_available_options(apps, schema_editor):
 def delete_all(apps, schema_editor):
     Option = apps.get_model('promo', 'Option')
     Promo = apps.get_model('promo', 'Promo')
+    Invoice = apps.get_model('orders', 'Invoice')
 
     Option.objects.all().delete()
     Promo.objects.all().delete()
+    Invoice.objects.all().delete()
 
 
 class Migration(migrations.Migration):
