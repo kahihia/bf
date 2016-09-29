@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from apps.users.models import User
 
-from apps.promo.models import Promo
+from apps.promo.models import Promo, Option
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
@@ -202,3 +202,11 @@ class MerchantTinySerializer(serializers.ModelSerializer):
 class LimitSerializer(serializers.Serializer):
     tech_name = serializers.CharField()
     value = serializers.IntegerField()
+
+
+class AvailableOptionSerializer(serializers.ModelSerializer):
+    available_value = serializers.IntegerField(source='count_available')
+
+    class Meta:
+        model = Option
+        fields = ('id', 'name', 'tech_name', 'price', 'available_value', 'is_boolean', 'image')

@@ -8,11 +8,12 @@ from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
+from apps.promo.models import Option
 
 from .filters import AdvertiserFilter, MerchantFilter
 from .serializers import (
     User, AdvertiserSerializer, Merchant, MerchantSerializer, MerchantListSerializer, MerchantCreateSerializer,
-    MerchantUpdateSerializer, MerchantModerationSerializer, LimitSerializer
+    MerchantUpdateSerializer, MerchantModerationSerializer, LimitSerializer, AvailableOptionSerializer
 )
 
 
@@ -97,3 +98,16 @@ class MerchantViewSet(viewsets.ModelViewSet):
             data=[{'tech_name': obj['option__tech_name'], 'value': obj['option_sum']} for obj in qs], many=True)
         serializer.is_valid()
         return Response(data=serializer.data)
+
+    @detail_route(methods=['get'], url_path='available-options')
+    def available_options(self, request, *args, **kwargs):
+        merchant = self.get_object()
+        qs = Option.objects.all()
+        if merchant.promo:
+            qs = Option.objects.filter(available_in_promos__id=self.get_object().promo.id)
+        else:
+            qs = qs.none()
+        # TODO: do it in one or two db requests. for now it quick-coding, but affects a bunch of requests
+        serializer = AvailableOptionSerializer(data=filter(lambda x: x.is_available, qs), many=True)
+        serializer.is_valid()
+        return Response(serializer.data)
