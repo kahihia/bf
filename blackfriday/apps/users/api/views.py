@@ -1,3 +1,4 @@
+from logging import getLogger
 from smtplib import SMTPException
 
 from django.conf import settings
@@ -41,7 +42,9 @@ def send_verification(request, user):
 
     try:
         send_mail(message=message, recipient_list=[user.email], **settings.VERIFICATION)
-    except SMTPException:
+    except SMTPException as e:
+        logger = getLogger('mailing')
+        logger.error(e)
         raise ServiceUnavailable('Ошибка отправки почты')
 
 
