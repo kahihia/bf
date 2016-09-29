@@ -147,3 +147,7 @@ BANK_ACCOUNT = {
     'head': 'Тимофеев К. И.',
     'accountant': 'Шавкеро А. А.',
 }
+
+EXPERT_SENDER_URL = 'https://api.esv2.com'
+EXPERT_SENDER_KEY = 'GNauUObtBmX85IVs5VMf'
+EXPERT_SENDER_LIST = 44
