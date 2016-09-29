@@ -250,13 +250,14 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 		},
 
 		render() {
-			const {draggingIndex, logos} = this.state;
+			const {draggingIndex, isLoading, logos} = this.state;
 
 			return (
 				<div>
 					<button
 						className="btn btn-success"
 						onClick={this.handleClickLandingLogoAdd}
+						disabled={isLoading}
 						type="button"
 						>
 						{'Добавить'}
@@ -267,6 +268,7 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 					<button
 						className="btn btn-warning"
 						onClick={this.handleClickStaticGeneratorLanding}
+						disabled={isLoading}
 						type="button"
 						>
 						<Glyphicon name="refresh"/>
