@@ -104,7 +104,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         merchant = self.get_object()
         qs = Option.objects.all()
         if merchant.promo:
-            qs = Option.objects.filter(available_in_promos__id=self.get_object().promo.id)
+            qs = qs.filter(available_in_promos__id=self.get_object().promo.id)
         else:
             qs = qs.none()
         # TODO: do it in one or two db requests. for now it quick-coding, but affects a bunch of requests
