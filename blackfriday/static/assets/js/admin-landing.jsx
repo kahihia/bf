@@ -329,18 +329,16 @@ class LandingLogoListItem extends React.Component {
 
 		return (
 			<div className="">
-				<a
+				<span
 					className="landing-logo-list__link"
-					href={url}
-					target="_blank"
-					rel="noopener noreferrer"
+					title={url}
 					>
 					<img
 						className="landing-logo-list__logo"
 						src={image}
 						alt=""
 						/>
-				</a>
+				</span>
 
 				<span className="landing-logo-list__actions">
 					<span
