@@ -16,7 +16,7 @@ options = [
     (3, 'Товар-тизер сквозной (ротация)', 'teaser', 0, 'images/options/teaser.jpg', None, True, False),
     (4, 'Супербаннер в категории (ротация)', 'superbanner_at_cat', 0, 'images/options/superbanner_at_cat.jpg', None, True, False),
     (5, 'Баннер акции на главной', 'banner_on_main', 0, 'images/options/banner_on_main.jpg', None, True, True),
-    (6, 'Размещение логотипа в категории', 'logo_at_cat', 0, 'images/options/logo_at_cat.jpg', None, True, True),
+    (6, 'Размещение логотипа в категории', 'logo_at_cat', 0, 'images/options/logo_at_cat.jpg', None, True, False),
     (7, 'Участие в сборной рассылке (до)', 'mailing', 0, 'images/options/mailing.jpg', None, True, False),
     (8, 'Количество уникальных категорий размещения', 'cats_num', 0, 'images/options/cats_num.jpg', None, True, False),
     (9, 'Баннер акции в категории', 'banner_at_cat', 0, 'images/options/banner_at_cat.jpg', None, True, False),
@@ -44,8 +44,8 @@ promos = [
 promo_options = [
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
     [1, 0, 0, 0, 0, 1, 2, 1, 2, 25],
-    [1, 0, 1, 1, 1, 1, 3, 2, 4, 150],
-    [1, 1, 2, 2, 1, 1, 4, 4, 8, 250]
+    [1, 0, 1, 1, 1, 2, 3, 2, 4, 150],
+    [1, 1, 2, 2, 1, 4, 4, 4, 8, 250]
 ]
 
 available_options = [
@@ -58,12 +58,16 @@ available_options = [
 
 def migrate_options(apps, schema_editor):
     Option = apps.get_model('promo', 'Option')
-    Option.objects.bulk_create(Option(**dict(option)) for option in map(partial(zip, options_header), options))
+    Option.objects.bulk_create(
+        Option(**dict(option)) for option in map(partial(zip, options_header), options)
+    )
 
 
 def migrate_promos(apps, schema_editor):
     Promo = apps.get_model('promo', 'Promo')
-    Promo.objects.bulk_create(Promo(**dict(promo)) for promo in map(partial(zip, promos_header), promos))
+    Promo.objects.bulk_create(
+        Promo(is_custom=False, **dict(promo)) for promo in map(partial(zip, promos_header), promos)
+    )
 
 
 def migrate_promo_options(apps, schema_editor):
