@@ -93,7 +93,7 @@ import SortableLandingLogoListItem from './admin/landing/sortable-landing-logo-l
 			}, (err, resp) => {
 				this.setState({isLoading: false});
 
-				if (!err && resp.statusCode === 201) {
+				if (!err && resp.statusCode === 200) {
 					toastr.success('Лэндинг успешно сгенерирован');
 				} else {
 					toastr.error('Не удалось сгенерировать лэндинг');
