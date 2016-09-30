@@ -145,11 +145,17 @@ const StatusList = () => (
 
 			if (sortKey) {
 				filteredApplications = _.sortBy(filteredApplications, item => {
-					if (typeof item[sortKey] === 'string') {
-						return item[sortKey].toLowerCase();
+					let i = item[sortKey];
+
+					if (sortKey === 'userResponsible' && i) {
+						i = i.displayName;
 					}
 
-					return item[sortKey];
+					if (typeof i === 'string') {
+						return i.toLowerCase();
+					}
+
+					return i;
 				});
 
 				if (sortDir === SORT_TYPES.DESC) {

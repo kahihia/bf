@@ -80,32 +80,6 @@ class Invoice(models.Model):
         qs.exclude(**exclude).update(**update)
         return id_list
 
-    def calculate_total(self, commit=True):
-        if self.status > InvoiceStatus.new:
-            return
-
-        total = 0
-        options_price = (self.options
-                         .annotate(subtotal=F('value') * F('price'))
-                         .aggregate(total=Sum('subtotal'))
-                         .get('total'))
-
-        if options_price:
-            total += options_price
-        if self.promo:
-            total += self.promo.price
-        if self.discount:
-            total *= (1 - self.discount / 100)
-
-        if self.promo:
-            last_promo = self.merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new, exclude=self.id)
-            if last_promo:
-                total -= last_promo.price
-
-        self.sum = ceil(total)
-        if commit:
-            self.save()
-
     def total_number(self):
         return self.options.all().count() + 1 if self.promo else self.options.all().count()
 
