@@ -11,4 +11,5 @@ REST_FRAMEWORK = {
         'rest_framework.filters.DjangoFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'libs.api.pagination.BlackFridayPagination',
+    'EXCEPTION_HANDLER': 'libs.api.exceptions.exception_handler'
 }
