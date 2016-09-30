@@ -52,31 +52,25 @@ class AddMerchantForm extends Form {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (data) {
-				switch (resp.statusCode) {
-					case 201: {
-						this.resetForm();
+			switch (resp.statusCode) {
+				case 201: {
+					this.resetForm();
 
-						if (this.props.onSubmit) {
-							this.props.onSubmit(data);
-						}
+					if (this.props.onSubmit) {
+						this.props.onSubmit(data);
+					}
 
-						break;
-					}
-					case 400: {
-						this.processErrors(data);
-						break;
-					}
-					default: {
-						toastr.error('Не удалось добавить логотип');
-						break;
-					}
+					break;
 				}
-
-				return;
+				case 400: {
+					this.processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось добавить логотип');
+					break;
+				}
 			}
-
-			toastr.error('Не удалось добавить логотип');
 		});
 	}
 
