@@ -96,7 +96,8 @@ module.exports = {
 			// JS
 			{
 				test: /\.(js|jsx)$/,
-				loader: 'babel-loader'
+				loader: 'babel-loader',
+				exclude: /(dnd-core|disposables)/,
 			},
 			// CSS
 			{
@@ -126,7 +127,7 @@ module.exports = {
 	eslint: {
 		configFile: path.join(__dirname, '.eslintrc')
 	},
-	devtool: 'cheap-module-source-map',
+	devtool: env === 'dev' ? 'eval' : null,
 	plugins: plugins,
 	externals: {
 		moment: 'moment',

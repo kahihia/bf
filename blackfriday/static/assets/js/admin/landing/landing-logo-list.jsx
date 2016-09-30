@@ -1,87 +1,67 @@
+/* eslint react/require-optimization: 0 */
+
 import React from 'react';
-import {Sortable as sortable} from 'react-sortable';
+import {DropTarget as dropTarget, DragDropContext as dragDropContext} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
+import LandingLogoListItem from './landing-logo-list-item.jsx';
 
-const LandingLogoListItem = React.createClass({
-	propTypes: {
-		children: React.PropTypes.any
-	},
-
-	getDefaultProps() {
-		return {};
-	},
-
-	render() {
-		return (
-			<div
-				{...this.props}
-				className="landing-logo-list__item"
-				>
-				{this.props.children}
-			</div>
-		);
+const logoTarget = {
+	drop(props) {
+		props.onDrop();
 	}
-});
+};
 
-const SortableLandingLogoListItem = sortable(LandingLogoListItem);
+class LandingLogoList extends React.Component {
+	constructor(props) {
+		super(props);
+		this.handleClickLandingLogoEdit = this.handleClickLandingLogoEdit.bind(this);
+		this.handleClickLandingLogoDelete = this.handleClickLandingLogoDelete.bind(this);
+	}
 
-const LandingLogoList = React.createClass({
-	propTypes: {
-		logos: React.PropTypes.array
-	},
+	handleClickLandingLogoEdit(id) {
+		this.props.onClickEdit(id);
+	}
 
-	getDefaultProps() {
-		return {};
-	},
-
-	getInitialState() {
-		return {
-			draggingIndex: null,
-			logos: []
-		};
-	},
-
-	componentWillReceiveProps(props) {
-		const {logos} = props;
-		this.setState({logos});
-	},
-
-	updateState(data) {
-		this.setState(data);
-	},
+	handleClickLandingLogoDelete(id) {
+		this.props.onClickDelete(id);
+	}
 
 	render() {
-		const {draggingIndex, logos} = this.state;
+		const {logos, connectDropTarget, moveLogo, findLogo} = this.props;
 
-		return (
+		return connectDropTarget(
 			<div className="landing-logo-list">
-				{logos.map((item, index) => {
+				{logos.map(item => {
 					return (
-						<SortableLandingLogoListItem
-							key={index}
-							updateState={this.updateState}
-							items={logos}
-							draggingIndex={draggingIndex}
-							sortId={index}
-							outline="column"
-							>
-							<a
-								className="landing-logo-list__link"
-								href={item.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								>
-								<img
-									className="landing-logo-list__logo"
-									src={item.image}
-									alt=""
-									/>
-							</a>
-						</SortableLandingLogoListItem>
+						<LandingLogoListItem
+							key={item.id}
+							moveLogo={moveLogo}
+							findLogo={findLogo}
+							onClickEdit={this.handleClickLandingLogoEdit}
+							onClickDelete={this.handleClickLandingLogoDelete}
+							{...item}
+							/>
 					);
 				})}
 			</div>
 		);
 	}
-});
+}
+LandingLogoList.propTypes = {
+	connectDropTarget: React.PropTypes.func,
+	logos: React.PropTypes.array,
+	moveLogo: React.PropTypes.func,
+	findLogo: React.PropTypes.func,
+	onClickEdit: React.PropTypes.func,
+	onClickDelete: React.PropTypes.func,
+	onDrop: React.PropTypes.func
+};
+LandingLogoList.defaultProps = {
+};
 
-export default LandingLogoList;
+const Lllt = dropTarget('logo', logoTarget, connect => ({
+	connectDropTarget: connect.dropTarget()
+}))(LandingLogoList);
+const Lllc = dragDropContext(HTML5Backend)(Lllt);
+
+export default Lllc;
