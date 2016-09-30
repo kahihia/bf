@@ -97,7 +97,7 @@ module.exports = {
 			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
-				exclude: /(dnd-core|disposables)/,
+				exclude: /(dnd-core|disposables)/
 			},
 			// CSS
 			{
