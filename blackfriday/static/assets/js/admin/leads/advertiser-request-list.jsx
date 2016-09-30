@@ -121,8 +121,8 @@ const AdvertiserRequestListItem = React.createClass({
 
 		const isAdmin = hasRole('admin');
 		const isOperator = hasRole('operator');
-		const isMine = userResponsible ? ENV.userId === userResponsible.id : false;
-		const isActionVisible = isAdmin || (isOperator && isMine);
+		const isMine = isAdmin || (userResponsible ? ENV.userId === userResponsible.id : false);
+		const isActionVisible = isAdmin || isOperator;
 
 		return (
 			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
@@ -145,7 +145,11 @@ const AdvertiserRequestListItem = React.createClass({
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'contacts'})}>
-					<a href={`mailto:${email}`}>
+					<a
+						className={b(className, 'email')}
+						href={`mailto:${email}`}
+						title={email}
+						>
 						{email}
 					</a>
 
@@ -178,7 +182,7 @@ const AdvertiserRequestListItem = React.createClass({
 								</button>
 							) : null}
 
-							{status === 10 ? (
+							{status === 10 && isMine ? (
 								<button
 									className="btn btn-success btn-sm btn-block"
 									onClick={this.handleClickStatusChange}
@@ -189,7 +193,7 @@ const AdvertiserRequestListItem = React.createClass({
 								</button>
 							) : null}
 
-							{status === 10 ? (
+							{status === 10 && isMine ? (
 								<button
 									className="btn btn-danger btn-sm btn-block"
 									onClick={this.handleClickStatusChange}
