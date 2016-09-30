@@ -1,3 +1,8 @@
+from math import ceil
+
+import operator
+from functools import reduce
+
 from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
@@ -92,17 +97,44 @@ class InvoiceSerializer(serializers.ModelSerializer):
         if merchant.promo and promo and merchant.promo.price > promo.price:
             raise ValidationError('Нельзя назначить более дешёвый пакет')
 
+        if merchant.promo == promo:
+            raise ValidationError('Нельзя назначить уже купленный пакет')
+
+        if reduce(operator.__or__, map(lambda x: x.option.is_required, attrs.get('options', [])), False):
+            raise ValidationError('Нельзя заказать пакетную опцию')
+
         count = merchant.invoices.filter(expired_datetime__gt=timezone.now(), is_paid=False).count()
         if count >= settings.INVOICE_NEW_LIMIT:
             raise ValidationError('Нельзя создать больше {} неоплаченных счетов'.format(settings.INVOICE_NEW_LIMIT))
 
+        attrs['sum'] = self.calculate_sum(merchant, promo, attrs.get('options'), attrs.get('discount'))
+
+        if attrs['sum'] < 0:
+            raise ValidationError('Нельзя создавать отрицательные счета')
+
         return attrs
+
+    def calculate_sum(self, merchant, promo, options, discount):
+        total = 0
+
+        if options:
+            total += reduce(operator.add, map(lambda option: option['value'] * option['price'], options), 0)
+        if promo:
+            total += promo.price
+        if discount:
+            total *= (100 - discount) / 100
+
+        if promo:
+            last_promo = merchant.get_promo(InvoiceStatus.paid, InvoiceStatus.new)
+            if last_promo:
+                total -= last_promo.price
+
+        return ceil(total)
 
     def create(self, validated_data):
         options = validated_data.pop('options', [])
         invoice = super().create(validated_data)
         InvoiceOption.objects.bulk_create(InvoiceOption(invoice=invoice, **option) for option in options)
-        invoice.calculate_total()
         return invoice
 
 
@@ -130,7 +162,7 @@ class InvoiceUpdateSerializer(serializers.ModelSerializer):
         status = validated_data.pop('status', None)
         if status:
             instance.status = status
-        super().update(instance, validated_data)
+        return super().update(instance, validated_data)
 
     def create(self, validated_data):
         raise NotImplementedError
