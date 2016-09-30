@@ -266,7 +266,7 @@ class AdminLanding extends React.Component {
 					type="button"
 					>
 					<Glyphicon name="refresh"/>
-					{' Сгенерировать'}
+					{' Сгенерировать лэндинг'}
 				</button>
 
 				<hr/>
