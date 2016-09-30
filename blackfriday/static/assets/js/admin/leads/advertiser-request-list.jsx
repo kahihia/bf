@@ -114,7 +114,6 @@ const AdvertiserRequestListItem = React.createClass({
 			organizationName,
 			phone,
 			status,
-			updatedDatetime,
 			userResponsible
 		} = this.props;
 		const className = 'advertiser-request-list';
@@ -127,13 +126,7 @@ const AdvertiserRequestListItem = React.createClass({
 		return (
 			<tr className={b(className, 'table-tr') + getApplicationStatusColor(status, ' bg-')}>
 				<td className={b(className, 'table-td', {name: 'date'})}>
-					<div title="Дата создания">
-						{moment(createdDatetime).format('DD.MM.YYYY')}
-					</div>
-
-					<div title="Дата обновления">
-						{moment(updatedDatetime).format('DD.MM.YYYY')}
-					</div>
+					{moment(createdDatetime).format('DD.MM.YYYY')}
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'name'})}>
