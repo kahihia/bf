@@ -16,16 +16,16 @@ options = [
     (3, 'Товар-тизер сквозной (ротация)', 'teaser', 0, 'images/options/teaser.jpg', None, True, False),
     (4, 'Супербаннер в категории (ротация)', 'superbanner_at_cat', 0, 'images/options/superbanner_at_cat.jpg', None, True, False),
     (5, 'Баннер акции на главной', 'banner_on_main', 0, 'images/options/banner_on_main.jpg', None, True, True),
-    (6, 'Размещение логотипа в категории', 'logo_at_cat', 0, 'images/options/logo_at_cat.jpg', None, True, True),
+    (6, 'Размещение логотипа в категории', 'logo_at_cat', 0, 'images/options/logo_at_cat.jpg', None, True, False),
     (7, 'Участие в сборной рассылке (до)', 'mailing', 0, 'images/options/mailing.jpg', None, True, False),
     (8, 'Количество уникальных категорий размещения', 'cats_num', 0, 'images/options/cats_num.jpg', None, True, False),
     (9, 'Баннер акции в категории', 'banner_at_cat', 0, 'images/options/banner_at_cat.jpg', None, True, False),
-    (10, 'Товарная витрина', 'products', 0, 'images/options/goods.jpg', None, True, True),
+    (10, 'Товарная витрина', 'products', 0, 'images/options/products.jpg', None, True, True),
     (11, 'Доп.баннер в 1 категорию, 1 шт.', 'additional_banner_at_cat', 20000, 'images/options/additional_banner_at_cat.jpg', None, False, False),
     (12, 'Брендирование фона главной страницы, 1 шт. (Только Gold и FridayVIP)', 'main_background', 0, 'images/options/main_background.jpg', 1, False, False),
     (13, '1 дополнительная категория размещения логотипа, 1 шт.', 'additional_logo_cat', 20000, 'images/options/additional_logo_cat.jpg', None, False, False),
     (14, 'Баннер 240*400 на главной, 1 шт.', 'vertical_banner_on_main', 0, 'images/options/vertical_banner_on_main.jpg', 3, False, False),
-    (15, 'Дополнительные 100 товаров к пакету, 1 шт. (Только Gold и FridayVIP)', 'additional_goods', 50000, 'images/options/additional_goods.jpg', None, False, False),
+    (15, 'Дополнительные 100 товаров к пакету, 1 шт. (Только Gold и FridayVIP)', 'additional_products', 50000, 'images/options/additional_products.jpg', None, False, False),
     (16, 'Брендирование фона 1 категории, 1 шт. (Только Silver, Gold и FridayVIP)', 'cat_background', 0, 'images/options/cat_background.jpg', 10, False, False),
     (17, 'Супербаннер в 1 категории, 1 шт.', 'additional_superbanner_at_cat', 50000, 'images/options/additional_superbanner_at_cat.jpg', None, False, False),
     (18, 'Товар-тизер на главной, 1 экран (20 в ротации), 1 шт. (Только Gold и FridayVIP)', 'teaser_on_main', 15000, 'images/options/teaser_on_main.jpg', None, False, False),
@@ -44,8 +44,8 @@ promos = [
 promo_options = [
     [0, 0, 0, 0, 0, 1, 1, 1, 1, 0],
     [1, 0, 0, 0, 0, 1, 2, 1, 2, 25],
-    [1, 0, 1, 1, 1, 1, 3, 2, 4, 150],
-    [1, 1, 2, 2, 1, 1, 4, 4, 8, 250]
+    [1, 0, 1, 1, 1, 2, 3, 2, 4, 150],
+    [1, 1, 2, 2, 1, 4, 4, 4, 8, 250]
 ]
 
 available_options = [
@@ -58,12 +58,16 @@ available_options = [
 
 def migrate_options(apps, schema_editor):
     Option = apps.get_model('promo', 'Option')
-    Option.objects.bulk_create(Option(**dict(option)) for option in map(partial(zip, options_header), options))
+    Option.objects.bulk_create(
+        Option(**dict(option)) for option in map(partial(zip, options_header), options)
+    )
 
 
 def migrate_promos(apps, schema_editor):
     Promo = apps.get_model('promo', 'Promo')
-    Promo.objects.bulk_create(Promo(**dict(promo)) for promo in map(partial(zip, promos_header), promos))
+    Promo.objects.bulk_create(
+        Promo(is_custom=False, **dict(promo)) for promo in map(partial(zip, promos_header), promos)
+    )
 
 
 def migrate_promo_options(apps, schema_editor):
@@ -91,9 +95,11 @@ def migrate_available_options(apps, schema_editor):
 def delete_all(apps, schema_editor):
     Option = apps.get_model('promo', 'Option')
     Promo = apps.get_model('promo', 'Promo')
+    Invoice = apps.get_model('orders', 'Invoice')
 
     Option.objects.all().delete()
     Promo.objects.all().delete()
+    Invoice.objects.all().delete()
 
 
 class Migration(migrations.Migration):
