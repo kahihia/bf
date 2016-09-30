@@ -36,6 +36,7 @@ class FormRow extends React.Component {
 
 	renderInput() {
 		const {
+			accept,
 			addon,
 			disabled,
 			mask,
@@ -54,6 +55,7 @@ class FormRow extends React.Component {
 				onChange={this.handleChange}
 				onKeyUp={this.handleKeyUp}
 				{...{
+					accept,
 					addon,
 					disabled,
 					mask,
@@ -115,6 +117,7 @@ class FormRow extends React.Component {
 	}
 }
 FormRow.propTypes = {
+	accept: React.PropTypes.string,
 	addon: React.PropTypes.string,
 	disabled: React.PropTypes.bool,
 	hasError: React.PropTypes.bool,

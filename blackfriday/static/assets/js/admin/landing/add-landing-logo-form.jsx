@@ -23,6 +23,7 @@ class AddMerchantForm extends Form {
 					label: 'Логотип',
 					value: '',
 					type: 'file',
+					accept: 'image/*',
 					required: true
 				}
 			}

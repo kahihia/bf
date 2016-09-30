@@ -20,7 +20,8 @@ class EditLandingLogoForm extends Form {
 				image: {
 					label: 'Логотип',
 					value: '',
-					type: 'file'
+					type: 'file',
+					accept: 'image/*'
 				}
 			}
 		};
