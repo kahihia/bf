@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView, DetailView
 
-from apps.users.mixins import ManagerOrAdminOnlyMixin
+from apps.users.mixins import ManagerOrAdminOnlyMixin, ManagerOrAdminOrAdvertiser
 
 from .models import Merchant
 
@@ -10,7 +10,7 @@ class AdvertiserListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateVi
     template_name = 'advertisers/advertiser-list.html'
 
 
-class MerchantListView(LoginRequiredMixin, TemplateView):
+class MerchantListView(LoginRequiredMixin, ManagerOrAdminOrAdvertiser, TemplateView):
     template_name = 'advertisers/merchant-list.html'
 
 

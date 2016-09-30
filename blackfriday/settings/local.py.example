@@ -40,6 +40,11 @@ DATABASES = {
 #    'level': 'ERROR'
 #}
 
+#LOGGING['loggers']['mailing'] = {
+#    'handlers': ['sentry'],
+#    'level': 'ERROR'
+#}
+
 # значения брать из соответствующего проекта в Sentry
 #RAVEN_CONFIG = {
 #    # Insert actual DSN from Sentry here
