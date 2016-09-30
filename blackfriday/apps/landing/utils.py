@@ -12,7 +12,7 @@ from .exceptions import NoContent
 def render_landing(raise_exception=True):
     path = os.path.join(settings.PROJECT_ROOT, 'landing')
     os.makedirs(path, exist_ok=True)
-    if not LandingLogo.objects.exists() and not Partner.objects.exists() and raise_exception:
+    if raise_exception and not (LandingLogo.objects.exists() and Partner.objects.exists()):
         raise NoContent
     with open(os.path.join(path, 'index.html'), 'w') as f:
         f.seek(0)
