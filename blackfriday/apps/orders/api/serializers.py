@@ -37,7 +37,7 @@ class InvoiceOptionSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    expired_date = serializers.DateTimeField(source='expired_datetime', format='%Y-%m-%d')
+    expired_date = serializers.DateTimeField(source='expired_datetime', format='%Y-%m-%d', required=False)
 
     advertiser = AdvertiserTinySerializer(source='merchant.advertiser', read_only=True)
     merchant = MerchantTinySerializer(read_only=True)
@@ -139,7 +139,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 
 class InvoiceUpdateSerializer(serializers.ModelSerializer):
-    expired_date = serializers.DateTimeField(source='expired_datetime', input_formats=['%Y-%m-%d'])
+    expired_date = serializers.DateTimeField(source='expired_datetime', input_formats=['%Y-%m-%d'], required=False)
     status = serializers.ChoiceField(choices=Invoice.STATUSES)
 
     class Meta:
