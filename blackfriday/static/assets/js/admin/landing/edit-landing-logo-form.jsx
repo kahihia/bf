@@ -121,6 +121,7 @@ class EditLandingLogoForm extends Form {
 					<form
 						ref={form}
 						action=""
+						onSubmit={this.handleClickSubmit}
 						>
 						{this.buildRow('url')}
 						{this.buildRow('image')}

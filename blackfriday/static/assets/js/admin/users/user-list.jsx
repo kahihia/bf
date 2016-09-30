@@ -30,9 +30,9 @@ const UserList = React.createClass({
 	},
 
 	handleClickPasswordChange(userId) {
-		jQuery('#changePasswordModal').modal('show');
+		jQuery('#change-password-modal').modal('show');
 		const onSubmit = () => {
-			jQuery('#changePasswordModal').modal('hide');
+			jQuery('#change-password-modal').modal('hide');
 		};
 		ReactDOM.render(
 			<ChangePasswordForm
@@ -41,7 +41,7 @@ const UserList = React.createClass({
 				onSubmit={onSubmit}
 				/>
 			,
-			document.getElementById('changePasswordForm')
+			document.getElementById('change-password-form')
 		);
 	},
 

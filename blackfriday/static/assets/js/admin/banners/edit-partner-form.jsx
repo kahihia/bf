@@ -126,6 +126,7 @@ class EditPartnerForm extends Form {
 					<form
 						ref={form}
 						action=""
+						onSubmit={this.handleClickSubmit}
 						>
 						{this.buildRow('name')}
 						{this.buildRow('url')}

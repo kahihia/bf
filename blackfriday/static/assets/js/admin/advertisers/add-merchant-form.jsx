@@ -134,7 +134,10 @@ class AddMerchantForm extends Form {
 		return (
 			<div className={b('add-merchant')}>
 				<div className="modal-body">
-					<form action="">
+					<form
+						action=""
+						onSubmit={this.handleClickSubmit}
+						>
 						{this.buildRow('name')}
 
 						{hasRole('advertiser') ? null : (
