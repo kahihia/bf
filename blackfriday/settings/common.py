@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.mediafiles',
 
     'webpack_loader',
+    'django_rq',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -148,6 +149,15 @@ BANK_ACCOUNT = {
     'accountant': 'Шавкеро А. А.',
 }
 
+EXPERT_SENDER = False
 EXPERT_SENDER_URL = 'https://api.esv2.com'
 EXPERT_SENDER_KEY = 'GNauUObtBmX85IVs5VMf'
 EXPERT_SENDER_LIST = 44
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0
+    }
+}
