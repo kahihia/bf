@@ -47,7 +47,6 @@ class AddMerchantForm extends Form {
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
-			responseType: 'json',
 			body
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
@@ -57,13 +56,13 @@ class AddMerchantForm extends Form {
 					this.resetForm();
 
 					if (this.props.onSubmit) {
-						this.props.onSubmit(data);
+						this.props.onSubmit(JSON.parse(data));
 					}
 
 					break;
 				}
 				case 400: {
-					this.processErrors(data);
+					this.processErrors(JSON.parse(data));
 					break;
 				}
 				default: {
