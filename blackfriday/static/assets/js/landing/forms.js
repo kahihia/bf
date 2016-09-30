@@ -12,10 +12,22 @@ $.ajaxSetup({
 
 $('form').ajaxForm({
 	clearForm: true,
-	success: showResponse
+	success: showResponse,
+	error: showError
 });
 
 function showResponse() {
 	toastr.success('Заявка успешно отправлена');
 	$('.modal.in').modal('hide');
+}
+
+function showError(resp) {
+	if (resp.status !== 400) {
+		toastr.error('Не удалось отправить заявку');
+		return;
+	}
+
+	if (resp.responseJSON && resp.responseJSON.nonFieldErrors) {
+		toastr.warning('Заявка с таким адресом электронной почты уже в работе');
+	}
 }
