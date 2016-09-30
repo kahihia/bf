@@ -10,6 +10,9 @@ from .models import Subscriber
 
 @job
 def delete_subscriber(email):
+    if not settings.EXPERT_SENDER:
+        return
+
     requests.delete(
         settings.EXPERT_SENDER_URL + '/Api/Subscribers',
         params={
@@ -22,6 +25,9 @@ def delete_subscriber(email):
 
 @job
 def save_subscriber(email, name=None):
+    if not settings.EXPERT_SENDER:
+        return
+
     data = {
         'ListId': settings.EXPERT_SENDER_LIST,
         'Email': email
@@ -41,6 +47,9 @@ def save_subscriber(email, name=None):
 
 
 def save_all_subscribers():
+    if not settings.EXPERT_SENDER:
+        return
+
     data = []
 
     for subscriber in Subscriber.objects.all():
