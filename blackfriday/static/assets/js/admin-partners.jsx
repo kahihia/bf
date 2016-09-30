@@ -3,6 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
+import {TOKEN} from './admin/const.js';
+import Glyphicon from './admin/components/glyphicon.jsx';
 import AddPartnerForm from './admin/banners/add-partner-form.jsx';
 import PartnerList from './admin/banners/partner-list.jsx';
 
@@ -12,6 +14,7 @@ import PartnerList from './admin/banners/partner-list.jsx';
 	const AdminPartners = React.createClass({
 		getInitialState() {
 			return {
+				isLoading: false,
 				partners: []
 			};
 		},
@@ -32,6 +35,27 @@ import PartnerList from './admin/banners/partner-list.jsx';
 					}
 				} else {
 					toastr.error('Не удалось получить список партнёров');
+				}
+			});
+		},
+
+		requestStaticGeneratorLanding() {
+			this.setState({isLoading: true});
+
+			xhr({
+				url: '/api/static-generator/landing/',
+				method: 'POST',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: true
+			}, (err, resp) => {
+				this.setState({isLoading: false});
+
+				if (!err && resp.statusCode === 200) {
+					toastr.success('Лэндинг успешно сгенерирован');
+				} else {
+					toastr.error('Не удалось сгенерировать лэндинг');
 				}
 			});
 		},
@@ -74,11 +98,17 @@ import PartnerList from './admin/banners/partner-list.jsx';
 			});
 		},
 
+		handleClickStaticGeneratorLanding() {
+			this.requestStaticGeneratorLanding();
+		},
+
 		getPartnerById(id) {
 			return _.find(this.state.partners, {id});
 		},
 
 		render() {
+			const {isLoading} = this.state;
+
 			return (
 				<div>
 					<button
@@ -87,6 +117,18 @@ import PartnerList from './admin/banners/partner-list.jsx';
 						type="button"
 						>
 						{'Добавить'}
+					</button>
+
+					{' '}
+
+					<button
+						className="btn btn-warning"
+						onClick={this.handleClickStaticGeneratorLanding}
+						disabled={isLoading}
+						type="button"
+						>
+						<Glyphicon name="refresh"/>
+						{' Сгенерировать лэндинг'}
 					</button>
 
 					<hr/>
