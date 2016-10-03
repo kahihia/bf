@@ -13,7 +13,7 @@ const Invoice = React.createClass({
 		id: React.PropTypes.number,
 		merchant: React.PropTypes.object,
 		createdDatetime: React.PropTypes.string,
-		expiredDatetime: React.PropTypes.string,
+		expiredDate: React.PropTypes.string,
 		options: React.PropTypes.array,
 		promo: React.PropTypes.object,
 		status: React.PropTypes.number,
@@ -56,7 +56,7 @@ const Invoice = React.createClass({
 		const {
 			active,
 			createdDatetime,
-			expiredDatetime,
+			expiredDate,
 			id,
 			merchant,
 			options,
@@ -196,7 +196,7 @@ const Invoice = React.createClass({
 							{'Ваш пакет и доп. опции забронированны.'}
 							<br/>
 							<strong>
-								{`Бронь действует до ${moment(expiredDatetime).format('D MMMM YYYY')}. `}
+								{`Бронь действует до ${moment(expiredDate).format('D MMMM YYYY')}. `}
 							</strong>
 							{'В случае не поступления средств по счёту бронь снимается и позиции возвращаются в продажу.'}
 						</div>

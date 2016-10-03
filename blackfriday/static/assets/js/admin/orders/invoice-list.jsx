@@ -7,7 +7,7 @@ import xhr from 'xhr';
 import DatePicker from 'react-datepicker';
 import InvoiceActions from './invoice-actions.js';
 import InvoiceItem from './invoice-item.jsx';
-import {PAYMENT_STATUS} from '../const.js';
+import {TOKEN, PAYMENT_STATUS} from '../const.js';
 import Input from '../components/input.jsx';
 import ChangeManyInvoiceStatusesBtn from './change-many-invoice-statuses-btn.jsx';
 
@@ -180,19 +180,20 @@ export class InvoiceList extends React.Component {
 	}
 
 	onItemExpireDateChanged(options) {
-		const expired = options.newDate.format('YYYY-MM-DD hh:mm:ss');
+		const id = options.invoiceId;
+		const expiredDate = options.newDate.format('YYYY-MM-DD');
 
 		xhr({
-			url: '/admin/invoices',
-			method: 'PUT',
-			json: [{
-				id: options.invoiceId,
-				expired
-			}]
+			url: `/api/invoices/${id}/`,
+			method: 'PATCH',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json: {expiredDate}
 		}, (err, resp) => {
 			if (!err && resp.statusCode === 200) {
-				const invoice = _.find(this.state.data, {id: options.invoiceId});
-				invoice.expired = expired;
+				const invoice = _.find(this.state.data, {id});
+				invoice.expiredDate = expiredDate;
 			}
 
 			this.setState({isLoading: false});

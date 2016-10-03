@@ -133,9 +133,9 @@ export default class InvoiceItem extends React.Component {
 							className="form-control datepicker-input-sm"
 							style={{fontSize: 14}}
 							dateFormat="DD/MM"
-							selected={moment(data.expiredDatetime)}
-							maxDate={moment(data.expiredDatetime).add(7, 'd')}
-							minDate={moment(data.expiredDatetime)}
+							selected={moment(data.expiredDate)}
+							maxDate={moment(data.expiredDate).add(7, 'd')}
+							minDate={moment(data.expiredDate)}
 							locale="ru-ru"
 							todayButton="Сегодня"
 							onChange={this.handleChangeExpireDate}
