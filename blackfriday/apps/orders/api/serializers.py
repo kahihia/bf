@@ -37,7 +37,7 @@ class InvoiceOptionSerializer(serializers.ModelSerializer):
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    expired_date = serializers.DateTimeField(source='expired_datetime', format='%Y-%m-%d', required=False)
+    expired_date = serializers.DateTimeField(source='expired_datetime', format='%Y-%m-%d', read_only=True)
 
     advertiser = AdvertiserTinySerializer(source='merchant.advertiser', read_only=True)
     merchant = MerchantTinySerializer(read_only=True)
@@ -55,7 +55,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
         model = Invoice
         fields = ('id', 'status', 'sum', 'discount', 'created_datetime', 'expired_date',
                   'advertiser', 'merchant', 'merchant_id', 'promo', 'promo_id', 'options')
-        read_only_fields = ('id', 'sum', 'expired_date')
+        read_only_fields = ('id', 'sum')
         extra_kwargs = {
             'discount': {'min_value': 0, 'max_value': 100, 'allow_null': True, 'required': False}
         }
@@ -88,19 +88,19 @@ class InvoiceSerializer(serializers.ModelSerializer):
         merchant = attrs['merchant'] = attrs.pop('merchant_id', None)
         promo = attrs['promo'] = attrs.pop('promo_id', None)
 
-        if promo and merchant.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists():
-            raise ValidationError('У вас есть неоплаченный пакет')
-
         if not (promo or attrs.get('options')):
             raise ValidationError('Нет ни пакета, ни опций')
 
-        if merchant.promo and promo and merchant.promo.price > promo.price:
-            raise ValidationError('Нельзя назначить более дешёвый пакет')
+        if promo:
+            if merchant.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists():
+                raise ValidationError('У вас есть неоплаченный пакет')
+            if merchant.promo:
+                if merchant.promo.price > promo.price:
+                    raise ValidationError('Нельзя назначить более дешёвый пакет')
+                if merchant.promo == promo:
+                    raise ValidationError('Нельзя назначить уже купленный пакет')
 
-        if merchant.promo == promo:
-            raise ValidationError('Нельзя назначить уже купленный пакет')
-
-        if reduce(operator.__or__, map(lambda x: x.option.is_required, attrs.get('options', [])), False):
+        if reduce(operator.__or__, map(lambda x: x['option'].is_required, attrs.get('options', [])), False):
             raise ValidationError('Нельзя заказать пакетную опцию')
 
         count = merchant.invoices.filter(expired_datetime__gt=timezone.now(), is_paid=False).count()
