@@ -9,13 +9,94 @@
     <meta name="changedby" content="User"/>
     <meta name="changed" content="2016-04-04T12:36:52"/>
 
-    <style type="text/css">
-        body,div,table,thead,tbody,tfoot,tr,th,td,p { font-family:"Arial"; font-size:xx-small }
+    <style>
+        body,
+        div,
+        table,
+        thead,
+        tbody,
+        tfoot,
+        tr,
+        th,
+        td,
+        p {
+            font-family: "Arial";
+            font-size: xx-small;
+        }
+
+        table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            border: none;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .fz1 {
+            font-size: 100%;
+        }
+        .fz2 {
+            font-size: 120%;
+        }
+        .fz3 {
+            font-size: 140%;
+        }
+        .fz4 {
+            font-size: 160%;
+        }
+
+        .tal {
+            text-align: left;
+        }
+        .tac {
+            text-align: center;
+        }
+        .tar {
+            text-align: right;
+        }
+
+        .vat {
+            vertical-align: top;
+        }
+        .vam {
+            vertical-align: middle;
+        }
+        .vab {
+            vertical-align: bottom;
+        }
+
+        .b {
+            border: 1px solid #000000;
+        }
+        .bt {
+            border-top: 1px solid #000000;
+        }
+        .br {
+            border-right: 1px solid #000000;
+        }
+        .bb {
+            border-bottom: 1px solid #000000;
+        }
+        .bl {
+            border-left: 1px solid #000000;
+        }
+        .bt2 {
+            border-top: 2px solid #000000;
+        }
+        .br2 {
+            border-right: 2px solid #000000;
+        }
+        .bb2 {
+            border-bottom: 2px solid #000000;
+        }
+        .bl2 {
+            border-left: 2px solid #000000;
+        }
     </style>
 </head>
 <body>
 
-<table cellspacing="0" border="0" style="max-width: 100%; width: 100%; table-layout: fixed;">
+<table>
     <colgroup span="15" width="21"></colgroup>
     <colgroup width="9"></colgroup>
     <colgroup width="12"></colgroup>
@@ -36,194 +117,326 @@
     <colgroup width="4"></colgroup>
 
     <tr>
-        <td colspan=20 rowspan=2 style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="33" align="left" valign=top><font size=2>{{ account.bank }}</font></td>
-        <td colspan=3 style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=middle><font size=2>БИК</font></td>
-        <td colspan=15 style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=middle sdnum="1033;"><font size=2>{{ account.bik }}</font></td>
-    </tr>
-
-    <tr>
-        <td colspan=3 rowspan=2 style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=top><font size=2>Сч. №</font></td>
-        <td colspan=15 rowspan=2 style="border-top: 1px solid border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=top sdnum="1033;"><font size=2>{{ account.korr }}</font></td>
-    </tr>
-
-    <tr>
-        <td colspan=20 style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="15" align="left" valign=bottom>Банк получателя</td>
-    </tr>
-
-    <tr>
-        <td colspan=2 style="border-top: 1px solid #000000; border-left: 1px solid #000000" height="17" align="left" valign=middle><font size=2>ИНН</font></td>
-        <td colspan=7 style="border-top: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=middle sdnum="1033;"><font size=2>{{ account.inn }}</font></td>
-        <td colspan=2 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left" valign=middle><font size=2>КПП</font></td>
-        <td colspan=9 style="border-top: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=middle sdnum="1033;"><font size=2>{{ account.kpp }}</font></td>
-        <td colspan=3 rowspan=4 style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=top><font size=2>Сч. №</font></td>
-        <td colspan=15 rowspan=4 style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" align="left" valign=top sdnum="1033;"><font size=2>{{ account.account }}</font></td>
-    </tr>
-
-    <tr>
-        <td colspan=20 style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="29" align="left" valign=top><font size=2>{{ account.name }}</font></td>
-    </tr>
-
-    <tr>
-        <td colspan=20 height="15" align="left" style="border-left: 1px solid #000000; border-right: 1px solid #000000"><br></td>
-    </tr>
-
-    <tr>
-        <td colspan=20 style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="15" align="left" valign=middle>Получатель</td>
-    </tr>
-
-    <tr>
-        <td colspan=38 height="15" align="left" valign=bottom><br></td>
-    </tr>
-
-    <tr>
-        <td colspan=38 height="29" align="left" valign=middle><b><font size=4>Счет на оплату № {{ object.id }} от {{ object.created_datetime|date }}.</font></b></td>
-    </tr>
-
-    <tr>
-        <td colspan=38 style="border-bottom: 2px solid #000000" height="9" align="left" valign=bottom><br></td>
-    </tr>
-
-    <tr>
-        <td colspan=38 height="9" align="left" valign=bottom><br></td>
-    </tr>
-
-    <tr>
-        <td colspan=5 height="17" align="left" valign=middle>
-            <font size=2>Поставщик</font>
+        <td colspan=20 rowspan=2 class="bt br bl tal vat" height="33">
+            <span class="fz2">{{ account.bank }}</span>
         </td>
-        <td colspan=33 rowspan=2 align="left" valign=top>
-            <b><font size=2>{{ account.name }}, ИНН {{ account.inn }}, КПП {{ account.kpp }},</font></b>
+        <td colspan=3 class="b tal vam">
+            <span class="fz2">БИК</span>
+        </td>
+        <td colspan=15 class="b tal vam">
+            <span class="fz2">{{ account.bik }}</span>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=3 rowspan=2 class="b tal vat">
+            <span class="fz2">Сч. №</span>
+        </td>
+        <td colspan=15 rowspan=2 class="b tal vat">
+            <span class="fz2">{{ account.korr }}</span>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=20 class="br bb bl tal vab" height="15">
+            Банк получателя
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=2 class="bt bl tal vam" height="17">
+            <span class="fz2">ИНН</span>
+        </td>
+        <td colspan=7 class="bt br tal vam">
+            <span class="fz2">{{ account.inn }}</span>
+        </td>
+        <td colspan=2 class="bt bl tal vam">
+            <span class="fz2">КПП</span>
+        </td>
+        <td colspan=9 class="bt br tal vam">
+            <span class="fz2">{{ account.kpp }}</span>
+        </td>
+        <td colspan=3 rowspan=4 class="b tal vat">
+            <span class="fz2">Сч. №</span>
+        </td>
+        <td colspan=15 rowspan=4 class="b tal vat">
+            <span class="fz2">{{ account.account }}</span>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=20 class="bt br bl tal vat" height="29">
+            <span class="fz2">{{ account.name }}</span>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=20 class="br bl tal" height="15">
             <br>
-            <b><font size=2>{{ account.legal_address }}</font></b>
         </td>
     </tr>
 
     <tr>
-        <td colspan=5 height="16" align="left" valign=bottom>(исполнитель):</td>
-    </tr>
-
-    <tr>
-        <td colspan=38 height="5" align="left" valign=bottom><br></td>
-    </tr>
-
-    <tr>
-        <td colspan=5 height="17" align="left" valign=middle>
-            <font size=2>Покупатель</font>
+        <td colspan=20 class="br bb bl tal vam" height="15">
+            Получатель
         </td>
-        <td colspan=33 rowspan=2 align="left" valign=top>
-            <b><font size=2>{{ advertiser.name }}, ИНН {{ advertiser.profile.inn }}, КПП {{ advertiser.profile.kpp }},</font></b>
+    </tr>
+
+    <tr>
+        <td colspan=38 class="tal vab" height="15">
             <br>
-            <b><font size=2>{{ advertiser.profile.legal_address }}</font></b>
         </td>
     </tr>
 
     <tr>
-        <td colspan=5 height="16" align="left" valign=bottom>(заказчик):</td>
+        <td colspan=38 class="tal vam" height="29">
+            <b><span class="fz4">Счет на оплату № {{ object.id }} от {{ object.created_datetime|date }}.</span></b>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 height="9" align="left" valign=bottom><br></td>
+        <td colspan=38 class="bb2 tal vab" height="9">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=2 style="border-top: 2px solid #000000; border-left: 2px solid #000000" height="17" align="center" valign=middle><b><font size=2>№</font></b></td>
-        <td colspan=11 style="border-top: 2px solid #000000; border-left: 1px solid #000000" align="center" valign=middle><b><font size=2>Товар</font></b></td>
-        <td colspan=3 style="border-top: 2px solid #000000; border-left: 1px solid #000000" align="center" valign=middle><b><font size=2>Кол-во</font></b></td>
-        <td colspan=3 style="border-top: 2px solid #000000; border-left: 1px solid #000000" align="center" valign=middle><b><font size=2>Ед.</font></b></td>
-        <td colspan=5 style="border-top: 2px solid #000000; border-left: 1px solid #000000" align="center" valign=middle><b><font size=2>Цена</font></b></td>
-        <td colspan=14 style="border-top: 2px solid #000000; border-left: 1px solid #000000; border-right: 2px solid #000000" align="center" valign=middle><b><font size=2>Сумма</font></b></td>
+        <td colspan=38 class="tal vab" height="9">
+            <br>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=5 class="tal vam" height="17">
+            <span class="fz2">Поставщик</span>
+        </td>
+        <td colspan=33 rowspan=2 class="tal vat">
+            <b><span class="fz2">{{ account.name }}, ИНН {{ account.inn }}, КПП {{ account.kpp }},</span></b>
+            <br>
+            <b><span class="fz2">{{ account.legal_address }}</span></b>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=5 class="tal vab" height="16">
+            (исполнитель):
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=38 class="tal vab" height="5">
+            <br>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=5 class="tal vam" height="17">
+            <span class="fz2">Покупатель</span>
+        </td>
+        <td colspan=33 rowspan=2 class="tal vat">
+            <b><span class="fz2">{{ advertiser.name }}, ИНН {{ advertiser.profile.inn }}, КПП {{ advertiser.profile.kpp }},</span></b>
+            <br>
+            <b><span class="fz2">{{ advertiser.profile.legal_address }}</span></b>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=5 class="tal vab" height="16">
+            (заказчик):
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=38 class="tal vab" height="9">
+            <br>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan=2 class="bt2 bl2 tac vam" height="17">
+            <b><span class="fz2">№</span></b>
+        </td>
+        <td colspan=11 class="bt2 bl2 tac vam">
+            <b><span class="fz2">Товар</span></b>
+        </td>
+        <td colspan=3 class="bt2 bl2 tac vam">
+            <b><span class="fz2">Кол-во</span></b>
+        </td>
+        <td colspan=3 class="bt2 bl2 tac vam">
+            <b><span class="fz2">Ед.</span></b>
+        </td>
+        <td colspan=5 class="bt2 bl2 tac vam">
+            <b><span class="fz2">Цена</span></b>
+        </td>
+        <td colspan=14 class="bt2 br2 bl2 tac vam">
+            <b><span class="fz2">Сумма</span></b>
+        </td>
     </tr>
 
     {%if object.promo %}
     <tr>
-        <td colspan=2 style="border-top: 1px solid #000000; border-left: 2px solid #000000" height="29" align="center" valign=top sdnum="1033;0;0">1</td>
-        <td colspan=11 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left" valign=top><font>Пакет участника акции "Настоящая черная пятница 2016", "{{ object.promo.name }}"</font></td>
-        <td colspan=3 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="right" valign=top sdnum="1033;0;0"><font>1</font></td>
-        <td colspan=3 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left" valign=top><font>шт</font></td>
-        <td colspan=5 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="right" valign=top sdnum="1033;0;#,##0.00"><font>{{ object.promo.price|floatformat:"2" }}</font></td>
-        <td colspan=14 style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 2px solid #000000" align="right" valign=top sdnum="1033;0;#,##0.00"><font>{{ object.promo.price|floatformat:"2" }}</font></td>
+        <td colspan=2 class="bt bl2 tac vat" height="29">
+            1
+        </td>
+        <td colspan=11 class="bt bl tal vat">
+            <font>Пакет участника акции "Настоящая черная пятница 2016", "{{ object.promo.name }}"</span>
+        </td>
+        <td colspan=3 class="bt bl tar vat">
+            <font>1</span>
+        </td>
+        <td colspan=3 class="bt bl tal vat">
+            <font>шт</span>
+        </td>
+        <td colspan=5 class="bt bl tar vat">
+            <font>{{ object.promo.price|floatformat:"2" }}</span>
+        </td>
+        <td colspan=14 class="bt br2 bl tar vat">
+            <font>{{ object.promo.price|floatformat:"2" }}</span>
+        </td>
     </tr>
     {%endif%}
 
     {% for option in object.options.all %}
     <tr>
-        <td colspan=2 style="border-top: 1px solid #000000; border-left: 2px solid #000000" height="29" align="center" valign=top sdnum="1033;0;0">
+        <td colspan=2 class="bt bl2 tac vat" height="29">
         {%if object.promo %}
             {{ forloop.counter|add:"1" }}
         {% else %}
             {{ forloop.counter }}
         {% endif %}
-        <td colspan=11 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left" valign=top><font>{{ option.option.name }}</font></td>
-        <td colspan=3 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="right" valign=top sdnum="1033;0;0"><font>{{ option.value }}</font></td>
-        <td colspan=3 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left" valign=top><font>шт</font></td>
-        <td colspan=5 style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="right" valign=top sdnum="1033;0;#,##0.00"><font>{{ option.price|floatformat:"2" }}</font></td>
-        <td colspan=14 style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 2px solid #000000" align="right" valign=top sdnum="1033;0;#,##0.00"><font>{{ option.total_price }}</font></td>
+        <td colspan=11 class="bt bl tal vat">
+            <font>{{ option.option.name }}</span>
+        </td>
+        <td colspan=3 class="bt bl tar vat">
+            <font>{{ option.value }}</span>
+        </td>
+        <td colspan=3 class="bt bl tal vat">
+            <font>шт</span>
+        </td>
+        <td colspan=5 class="bt bl tar vat" >
+            <font>{{ option.price|floatformat:"2" }}</span>
+        </td>
+        <td colspan=14 class="bt br2 bl tar vat">
+            <font>{{ option.total_price }}</span>
+        </td>
     </tr>
     {% endfor %}
 
     <tr>
-        <td colspan=38 style="border-top: 2px solid #000000" height="9" align="left" valign=bottom><br></td>
+        <td colspan=38 class="bt2 tal vab" height="9">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=17 height="17" align="left" valign=bottom><br></td>
-        <td colspan=7 align="left" valign=bottom>Итого:</td>
-        <td colspan=14 align="right" valign=top sdnum="1033;0;#,##0.00"><b><font size=2>{{ object.sum|floatformat:"2" }}</font></b></td>
+        <td colspan=17 class="tal vab" height="17">
+            <br>
+        </td>
+        <td colspan=7 class="tal vab">
+            Итого:
+        </td>
+        <td colspan=14 class="tar vat">
+            <b><span class="fz2">{{ object.sum|floatformat:"2" }}</span></b>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=17 height="17" align="left" valign=bottom><br></td>
-        <td colspan=7 align="left" valign=bottom>Без налога (НДС):</td>
-        <td colspan=14 align="right" valign=top><b><font size=2>-</font></b></td>
+        <td colspan=17 class="tal vab" height="17">
+            <br>
+        </td>
+        <td colspan=7 class="tal vab">
+            Без налога (НДС):
+        </td>
+        <td colspan=14 class="tar vat">
+            <b><span class="fz2">-</span></b>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=17 height="17" align="left" valign=bottom><br></td>
-        <td colspan=7 align="left" valign=bottom>Всего к оплате:</td>
-        <td colspan=14 align="right" valign=top sdnum="1033;0;#,##0.00"><b><font size=2>{{ object.sum|floatformat:"2" }}</font></b></td>
+        <td colspan=17 class="tal vab" height="17">
+            <br>
+        </td>
+        <td colspan=7 class="tal vab">
+            Всего к оплате:
+        </td>
+        <td colspan=14 class="tar vat">
+            <b><span class="fz2">{{ object.sum|floatformat:"2" }}</span></b>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 height="15" align="left" valign=bottom><br></td>
+        <td colspan=38 class="tal vab" height="15">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 height="17" align="left" valign=bottom><font size=2>Всего наименований {{ object.total_number }}, на сумму {{ object.sum|floatformat:"2" }} руб.</font></td>
+        <td colspan=38 class="tal vab" height="17">
+            <span class="fz2">Всего наименований {{ object.total_number }}, на сумму {{ object.sum|floatformat:"2" }} руб.</span>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 height="17" align="left" valign=top><b><font size=2>{{ object.sum|numeral_rubles }} 00 копеек</font></b></td>
+        <td colspan=38 class="tal vat" height="17">
+            <b><span class="fz2">{{ object.sum|numeral_rubles }} 00 копеек</span></b>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 height="16" align="left" valign=bottom><br></td>
+        <td colspan=38 class="tal vab" height="16">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=38 style="border-bottom: 2px solid #000000" height="9" align="left" valign=bottom><br></td>
+        <td colspan=38 class="bb2 tal vab" height="9">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=17 height="15" align="left" valign=bottom><br></td>
-        <td colspan=2 height="15" align="left" valign=bottom><br></td>
-        <td colspan=19 rowspan=4 align="left" valign=bottom><img src='{% static "images/orders/invoice-stamp-with-signature.png" %}' style="width: 100px; height: 100px;" /><font size=2>М.П.</font></td>
+        <td colspan=17 class="tal vab" height="15">
+            <br>
+        </td>
+        <td colspan=2 class="tal vab" height="15">
+            <br>
+        </td>
+        <td colspan=19 rowspan=4 class="tal vab">
+            <img src='{% static "images/orders/invoice-stamp-with-signature.png" %}' class="" style="width: 100px; height: 100px;" /><span class="fz2">М.П.</span>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=5 height="17" align="left" valign=bottom><b><font size=2>Руководитель</font></b></td>
-        <td colspan=12 style="border-bottom: 1px solid #000000" align="left" valign=bottom>{{ account.head }}</td>
-        <td colspan=2 height="15" align="left" valign=bottom><br></td>
+        <td colspan=5 class="tal vab" height="17">
+            <b><span class="fz2">Руководитель</span></b>
+        </td>
+        <td colspan=12 class="bb tal vab">
+            {{ account.head }}
+        </td>
+        <td colspan=2 class="tal vab" height="15">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=17 height="17" align="left" valign=bottom><b><font size=2><br></font></b></td>
-        <td colspan=2 height="15" align="left" valign=bottom><br></td>
+        <td colspan=17 class="tal vab" height="17">
+            <b><span class="fz2"><br></span></b>
+        </td>
+        <td colspan=2 class="vab" height="15">
+            <br>
+        </td>
     </tr>
 
     <tr>
-        <td colspan=5 height="17" align="left" valign=bottom><b><font size=2>Бухгалтер</font></b></td>
-        <td colspan=12 style="border-bottom: 1px solid #000000" align="left" valign=bottom>{{ account.accountant }}</td>
-        <td colspan=2 height="15" align="left" valign=bottom><br></td>
+        <td colspan=5 class="tal vab" height="17">
+            <b><span class="fz2">Бухгалтер</span></b>
+        </td>
+        <td colspan=12 class="bb tal vab">
+            {{ account.accountant }}
+        </td>
+        <td colspan=2 class="tal vab" height="15">
+            <br>
+        </td>
     </tr>
 </table>
 
