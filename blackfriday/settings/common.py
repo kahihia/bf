@@ -98,7 +98,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/admin/login/'
-DEFAULT_FROM_EMAIL = 'noreply@realblackfriday.com'
+DEFAULT_FROM_EMAIL = 'no-reply@realblackfriday.ru'
 
 VERIFICATION_SUBJ = 'RealBlackFriday — активация учётной записи'
 VERIFICATION_TTL_HOURS = 24
