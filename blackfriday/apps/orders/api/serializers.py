@@ -158,6 +158,11 @@ class InvoiceUpdateSerializer(serializers.ModelSerializer):
             raise ValidationError('Вы можете только отменить свой счет')
         return value
 
+    def validate_expired_date(self, value):
+        if value <= self.instance.expired_datetime:
+            raise ValidationError('Нельзя уменьшить время истечения')
+        return value
+
     def update(self, instance, validated_data):
         status = validated_data.pop('status', None)
         if status:
