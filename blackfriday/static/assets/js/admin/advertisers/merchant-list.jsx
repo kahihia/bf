@@ -122,6 +122,7 @@ const MerchantListItem = React.createClass({
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
+		const isAdvertiser = hasRole('advertiser');
 		const className = 'merchant-list';
 
 		return (
@@ -158,13 +159,15 @@ const MerchantListItem = React.createClass({
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'action'})}>
-					<a
-						className="btn btn-default btn-sm"
-						href={editUrl}
-						title="Редактирование"
-						>
-						<Glyphicon name="pencil"/>
-					</a>
+					{isAdmin || isAdvertiser ? (
+						<a
+							className="btn btn-default btn-sm"
+							href={editUrl}
+							title="Редактирование"
+							>
+							<Glyphicon name="pencil"/>
+						</a>
+					) : null}
 
 					{isPreviewable && previewUrl ? (
 						<a

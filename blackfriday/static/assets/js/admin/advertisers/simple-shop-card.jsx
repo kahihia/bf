@@ -37,6 +37,7 @@ const SimpleShopCard = React.createClass({
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
+		const isAdvertiser = hasRole('advertiser');
 		const className = 'simple-shop-card';
 
 		return (
@@ -70,13 +71,15 @@ const SimpleShopCard = React.createClass({
 
 				<div className={b(className, 'action-list')}>
 					<div className={b('action-list')}>
-						<a
-							className={b('action-list', 'item')}
-							href={editUrl}
-							title="Редактирование"
-							>
-							<Icon name="shop-edit"/>
-						</a>
+						{isAdvertiser ? (
+							<a
+								className={b('action-list', 'item')}
+								href={editUrl}
+								title="Редактирование"
+								>
+								<Icon name="shop-edit"/>
+							</a>
+						) : null}
 
 						{isPreviewable && previewUrl ? (
 							<a
