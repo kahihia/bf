@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
 
     'rest_framework',
-    'blackfriday',
+    'apps.landing',
     'apps.users',
     'apps.catalog',
     'apps.advertisers',
@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.mediafiles',
 
     'webpack_loader',
+    'django_rq',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -97,14 +98,12 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/admin/login/'
-DEFAULT_FROM_EMAIL = 'noreply@realblackfriday.com'
+DEFAULT_FROM_EMAIL = 'no-reply@realblackfriday.ru'
 
-VERIFICATION = {
-    'subject': 'RealBlackFriday — активация учётной записи',
-    'from_email': DEFAULT_FROM_EMAIL,
-}
-
+VERIFICATION_SUBJ = 'RealBlackFriday — активация учётной записи'
 VERIFICATION_TTL_HOURS = 24
+INVOICE_TTL_DAYS = 5
+INVOICE_NEW_LIMIT = 5
 
 MANAGERS = []
 PROMO_MANAGERS = []
@@ -130,4 +129,31 @@ PRODUCT_FILE_COLUMNS_MAPPING = {
     'countryoforigin': 'country',
     'url': 'url',
     'image': 'image',
+}
+
+BANK_ACCOUNT = {
+    'bank': 'ФИЛИАЛ "САНКТ-ПЕТЕРБУРГСКИЙ" АО "АЛЬФА-БАНК" Г. САНКТ-ПЕТЕРБУРГ',
+    'name': 'ООО "Эксперт Таун"',
+    'inn': '7801203510',
+    'kpp': '780101001',
+    'legal_address': '199178, г.Санкт-Петербург, 18-я линия В.О. д.29 , лит Ж, пом 2-Н',
+    'address': '199178, г.Санкт-Петербург, 18-я линия В.О. д.29 , лит.Д.',
+    'account': '40702810632230001020, в филиале "САНКТ-ПЕТЕРБУРГСКИЙ" АО "АЛЬФА-БАНК"',
+    'korr': '30101810600000000786',
+    'bik': '044030786',
+    'head': 'Тимофеев К. И.',
+    'accountant': 'Шавкеро А. А.',
+}
+
+EXPERT_SENDER = False
+EXPERT_SENDER_URL = 'https://api.esv2.com'
+EXPERT_SENDER_KEY = 'GNauUObtBmX85IVs5VMf'
+EXPERT_SENDER_LIST = 44
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0
+    }
 }

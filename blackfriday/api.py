@@ -8,5 +8,6 @@ urlpatterns = [
     url('^', include('apps.promo.api.urls', namespace='promo')),
     url('^', include('apps.leads.api.urls', namespace='leads')),
     url('^', include('apps.orders.api.urls', namespace='orders')),
-    url('^', include('apps.mediafiles.api.urls', namespace='mediafiles'))
+    url('^', include('apps.mediafiles.api.urls', namespace='mediafiles')),
+    url('^', include('apps.landing.api.urls', namespace='landing')),
 ]

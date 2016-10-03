@@ -109,8 +109,8 @@ class AddUser extends Form {
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			}
-		}, err => {
-			if (err) {
+		}, (err, resp) => {
+			if (resp.statusCode !== 200) {
 				toastr.error('Не удалось отправить письмо верификации');
 			}
 		});
@@ -166,7 +166,10 @@ class AddUser extends Form {
 		return (
 			<div className={b('add-user')}>
 				<div className="modal-body">
-					<form action="">
+					<form
+						action=""
+						onClick={this.handleClickSubmit}
+						>
 						{this.buildRow('email')}
 						{this.buildRow('name')}
 						{this.buildRow('password')}

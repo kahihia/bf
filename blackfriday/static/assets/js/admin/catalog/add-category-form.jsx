@@ -87,7 +87,10 @@ class AddCategoryForm extends Form {
 		return (
 			<div className={b('add-category')}>
 				<div className="modal-body">
-					<form action="">
+					<form
+						action=""
+						onSubmit={this.handleClickSubmit}
+						>
 						{this.buildRow('name')}
 						{this.buildRow('slug')}
 					</form>

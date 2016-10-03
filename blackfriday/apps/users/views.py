@@ -17,6 +17,7 @@ class RedirectByRoleMixin:
         return {
             'admin': reverse('users:user-list'),
             'manager': reverse('advertisers:advertiser-list'),
+            'operator': reverse('leads:advertiser-request-list'),
             'advertiser': reverse('advertisers:merchant-list')
         }[self.request.user.role]
 

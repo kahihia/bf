@@ -269,6 +269,7 @@ class MerchantProfileForm extends Form {
 			<form
 				action={`/profile/${profileId}`}
 				method="POST"
+				onSubmit={this.handleClickSubmit}
 				>
 				<input
 					name="user_id"
@@ -308,7 +309,6 @@ class MerchantProfileForm extends Form {
 					<div className="form-group">
 						<button
 							className="btn btn-primary"
-							onClick={this.handleClickSubmit}
 							disabled={isLoading || !isValid}
 							type="submit"
 							>

@@ -35,6 +35,7 @@ class Input extends React.Component {
 
 	render() {
 		const {
+			accept,
 			addon,
 			disabled,
 			mask,
@@ -81,7 +82,7 @@ class Input extends React.Component {
 				<input
 					className="form-control"
 					value={val}
-					{...{disabled, placeholder, name, type, required, readOnly}}
+					{...{accept, disabled, placeholder, name, type, required, readOnly}}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -103,6 +104,7 @@ class Input extends React.Component {
 	}
 }
 Input.propTypes = {
+	accept: React.PropTypes.string,
 	addon: React.PropTypes.string,
 	disabled: React.PropTypes.bool,
 	mask: React.PropTypes.string,

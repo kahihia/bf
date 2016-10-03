@@ -28,9 +28,8 @@
     <meta name="referrer" content="always" />
 
 
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="icon" type="image/png" href="{% static 'favicon-32x32.png' %}" sizes="32x32">
-    <link rel="icon" type="image/png" href="{% static 'favicon-16x16.png' %}" sizes="16x16">
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#000000">
     <meta name="theme-color" content="#000000">
@@ -978,6 +977,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div><!-- about-section -->
 
 
+{% if partner_list %}
 <div class="partners-section">
     <a name="anchor-partners"></a>
 
@@ -988,141 +988,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         <div class="partners-section__carousel">
             <div class="bxslider-multi">
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/yandexmoney.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/upd.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/inpost.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/rp.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/qiwi.png' %}" alt="">
-                </div>
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/yandexmarket.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/mastercity.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/mnogoru.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/flocktory.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/retailrocket.png' %}" alt="">
-                </div>
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/maxipost.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/cdek.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/nr.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/rnl.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/businessfm.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/kupongid.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/price.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/qlean.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/delivery-club.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/nadavi.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/livemaster.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/assist.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/blizko.png' %}" alt="">
-                </div>
-
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/bitrix24.png' %}" alt="">
-                </div>
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/ekatalog.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/magazilla.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
-                {% comment %}
-                <div class="new-59-partners__slide">
-                    <img src="{% static 'images/landing/pa/shoko.png' %}" alt="">
-                </div>
-                {% endcomment %}
-
+                {% for partner in partner_list %}
+                    <div class="new-59-partners__slide">
+                        <img src="{{ SITE_URL }}{{ partner.image.url }}" alt="">
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 </div><!-- partners-section -->
+{% endif %}
 
 
+{% if logo_list %}
 <div class="shops-section">
     <a name="anchor-shops"></a>
 
@@ -1132,236 +1010,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </h2>
 
         <ul class="shops-section__list">
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/3be650395aa5912b6a7bbfa53c8a3d/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/mediamarkt.png' %}" alt="Media Markt" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/975d12f817a5912b6a7b2623caac57/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/quiksilver.png' %}" alt="Quiksilver RU" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://modato.ru/g/3f2779c2d4a5912b6a7b4e8640d77b/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/lamoda.png' %}" alt="Lamoda RU" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/b6c9f808c5a5912b6a7ba4151509f8/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/dc.png' %}" alt="DC Shoes" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/18ee485e93a5912b6a7be490185392/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/laroche-posay.png' %}" alt="LA ROCHE-POSAY" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/b5e36b3fd7a5912b6a7b3ba973aefe/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/roxy.png' %}" alt="Roxy RU" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/26c4402dc2a5912b6a7b465aacd5b6/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/ibody.png' %}" alt="IBODY" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/95d8174bcca5912b6a7be20a1b9cd2/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/tehnosila.png' %}" alt="Техносила" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/339e04f6a2a5912b6a7bbff64d477b/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/tehnopark.png' %}" alt="Технопарк" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/d7c66d8759a5912b6a7bef4e02d809/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/vichy.png' %}" alt="VICHY" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/ih21ujqkwfa5912b6a7bb09e931874/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/sportmaster.png' %}" alt="Спортмастер" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/2559705e24a5912b6a7b4b9351d46e/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/kupivip.png' %}" alt="KupiVIP" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/c9f1ad68bca5912b6a7b3a3184f61a/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/mvideo.png' %}" alt="М.Видео" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/eff06bcc62a5912b6a7b2c9175ee84/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/restore.png' %}" alt="re:Store" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="http://ad.admitad.com/g/84582bebefa5912b6a7b4a2f625b4f/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/quelle.png' %}" alt="Quelle" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/9742974f70a5912b6a7b1d67ad1083/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/proskater.png' %}" alt="Proskater" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/9c4ca2202ba5912b6a7b92c5d6d73b/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/pleer.png' %}" alt="Pleer" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/096074f47ba5912b6a7b1ffe6b23a4/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/posteldeluxe.png' %}" alt="Postel Deluxe" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/b2f204e91ea5912b6a7bda0f3ff6fc/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/mebelion.png' %}" alt="Mebelion.ru" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/68d8d2af3ba5912b6a7b14ec56d999/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/alltime.png' %}" alt="AllTime" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/9ca7893949a5912b6a7bc4d17e040f/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/svyaznoy.png' %}" alt="Связной" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/9abb69244ca5912b6a7bdf1d251e42/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/audiomania.png' %}" alt="Audiomania" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/a509ac0047a5912b6a7b7db12ac047/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/conceptclub.png' %}" alt="Concept Club" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/198208c530a5912b6a7b0662b58f95/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/pult.png' %}" alt="Pult.RU" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/eb8b7c12f0a5912b6a7b780e165f0f/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/topbrands.png' %}" alt="TOPBRANDS" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/330c142f2ea5912b6a7bd37733f903/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/holodilnik.png' %}" alt="Холодильник" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/af32a0d124a5912b6a7b259fbd42ba/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/expeditia.png' %}" alt="Экспедиция" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/3ee376590aa5912b6a7b27b1e69e41/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/babadu.png' %}" alt="Babadu" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/1cae95280aa5912b6a7b4547c7e77d/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/zarina.png' %}" alt="Zarina" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/2d388421f4a5912b6a7b3baa9723ff/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/litres.png' %}" alt="ЛитРес" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/eca1415c7da5912b6a7b1ebfd6fcfa/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/mts_210x130.png' %}" alt="МТС" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/e5be4e10efa5912b6a7bcb6358ff62/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/laredoute_210x130.png' %}" alt="La Redoute" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/8ab65fb2f0a5912b6a7be50977eb13/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/finn_flare_210x130.png' %}" alt="Finn Flare" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/321b5af526a5912b6a7b7f2bf10faa/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/bebakids_210x130.png' %}" alt="Bebakids" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/b8b3a74378a5912b6a7bc25bf1f9a9/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/snowqueen.png' %}" alt="Снежная Королева" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/d83ff14ff6a5912b6a7ba58c949569/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/sozvezdie_krasoty_210x130.png' %}" alt="Созвездие Красоты" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item">
-                <a href="https://ad.admitad.com/g/3d868e6371a5912b6a7b4a4c3b6924/" target="_blank" class="shops-section__link">
-                    <img src="{% static 'images/landing/p2/ostin_210x130.png' %}" alt="O'STIN" class="shops-section__logo" />
-                </a>
-            </li>
-
-            <li class="shops-section__item"></li>
-            <li class="shops-section__item"></li>
-            <li class="shops-section__item"></li>
-
+            {% for logo in logo_list %}
+                <li class="shops-section__item">
+                    <a href="{{ logo.url }}" target="_blank" class="shops-section__link">
+                        <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" class="shops-section__logo" />
+                    </a>
+                </li>
+            {% endfor %}
         </ul>
     </div>
 </div><!-- shops-section -->
+{% endif %}
 
 
 <div class="subscribe-section">
@@ -1672,6 +1331,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-xs-12">
                 <div class="site-footer__project-by">
                     Проект АКИТ. Для рекламодателей: <a href="tel:88005053704" title="Бесплатный номер">+7 (800) 505-37-04</a>
+                </div>
+
+                <div class="site-footer__offer-text">
+                    Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank">договора-оферты</a>.
                 </div>
             </div>
         </div>

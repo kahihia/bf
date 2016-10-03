@@ -65,8 +65,10 @@ if (env === 'dev') {
 module.exports = {
 	entry: {
 		'admin-advertisers': path.resolve(PATH_SRC, 'js/admin-advertisers.jsx'),
+		'admin-applications': path.resolve(PATH_SRC, 'js/admin-applications.jsx'),
 		'admin-categories': path.resolve(PATH_SRC, 'js/admin-categories.jsx'),
 		'admin-invoices': path.resolve(PATH_SRC, 'js/admin-invoices.jsx'),
+		'admin-landing': path.resolve(PATH_SRC, 'js/admin-landing.jsx'),
 		'admin-merchants': path.resolve(PATH_SRC, 'js/admin-merchants.jsx'),
 		'admin-partners': path.resolve(PATH_SRC, 'js/admin-partners.jsx'),
 		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
@@ -94,7 +96,8 @@ module.exports = {
 			// JS
 			{
 				test: /\.(js|jsx)$/,
-				loader: 'babel-loader'
+				loader: 'babel-loader',
+				exclude: /(dnd-core|disposables)/
 			},
 			// CSS
 			{
@@ -124,7 +127,7 @@ module.exports = {
 	eslint: {
 		configFile: path.join(__dirname, '.eslintrc')
 	},
-	devtool: 'cheap-module-source-map',
+	devtool: env === 'dev' ? 'eval' : null,
 	plugins: plugins,
 	externals: {
 		moment: 'moment',

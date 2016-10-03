@@ -4,10 +4,11 @@ from rest_framework import serializers
 
 from apps.users.models import User
 
-from apps.promo.models import Promo
+from apps.promo.models import Promo, Option
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import empty
+from rest_framework import validators
 
 from apps.mediafiles.models import Image
 from apps.mediafiles.api.serializers import ImageSerializer
@@ -16,6 +17,10 @@ from ..models import AdvertiserProfile, Merchant, ModerationStatus
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    inn = serializers.CharField(
+        max_length=12, validators=[
+            validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')])
+
     class Meta:
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
@@ -100,7 +105,7 @@ class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
-                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_editable', 'is_previewable',
+                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_previewable',
                   'moderation', 'preview_url')
 
     def get_moderation(self, obj):
@@ -116,15 +121,25 @@ class MerchantListSerializer(serializers.ModelSerializer):
     promo = PromoTinySerializer()
     advertiser = AdvertiserTinySerializer()
     image = ImageSerializer()
+    moderation = serializers.SerializerMethodField()
 
     class Meta:
         model = Merchant
-        fields = ('id', 'name', 'image', 'payment_status', 'moderation_status', 'promo',
-                  'is_active', 'is_editable', 'is_previewable', 'preview_url', 'advertiser')
+        fields = ('id', 'name', 'image', 'payment_status', 'moderation', 'promo',
+                  'is_active', 'is_previewable', 'preview_url', 'advertiser')
+
+    def get_moderation(self, obj):
+        return MerchantModerationSerializer(obj).data
 
 
 class MerchantCreateSerializer(serializers.ModelSerializer):
     advertiser_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='advertiser')
+
+    name = serializers.CharField(
+        max_length=120, validators=[
+            validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
+    url = serializers.URLField(validators=[
+        validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
 
     class Meta:
         model = Merchant
@@ -158,6 +173,12 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
         queryset=Image.objects.all(), required=False, allow_null=True, error_messages={
             'does_not_exist': 'does_not_exist'})
 
+    name = serializers.CharField(
+        max_length=120, validators=[
+            validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
+    url = serializers.URLField(validators=[
+        validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
+
     class Meta:
         model = Merchant
 
@@ -176,3 +197,16 @@ class MerchantTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name')
+
+
+class LimitSerializer(serializers.Serializer):
+    tech_name = serializers.CharField()
+    value = serializers.IntegerField()
+
+
+class AvailableOptionSerializer(serializers.ModelSerializer):
+    available_value = serializers.IntegerField(source='count_available')
+
+    class Meta:
+        model = Option
+        fields = ('id', 'name', 'tech_name', 'price', 'available_value', 'is_boolean', 'image')

@@ -25,7 +25,8 @@ class EditPartnerForm extends Form {
 				image: {
 					label: 'Логотип',
 					value: '',
-					type: 'file'
+					type: 'file',
+					accept: 'image/*'
 				}
 			}
 		};
@@ -91,7 +92,6 @@ class EditPartnerForm extends Form {
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
-			responseType: 'json',
 			body
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
@@ -99,11 +99,11 @@ class EditPartnerForm extends Form {
 			if (!err && resp.statusCode === 200) {
 				if (data) {
 					if (this.props.onSubmit) {
-						this.props.onSubmit(data);
+						this.props.onSubmit(JSON.parse(data));
 					}
 				}
 			} else if (resp.statusCode === 400) {
-				this.processErrors(data);
+				this.processErrors(JSON.parse(data));
 			} else {
 				toastr.error('Не удалось отредактировать партнёра');
 			}
@@ -126,6 +126,7 @@ class EditPartnerForm extends Form {
 					<form
 						ref={form}
 						action=""
+						onSubmit={this.handleClickSubmit}
 						>
 						{this.buildRow('name')}
 						{this.buildRow('url')}

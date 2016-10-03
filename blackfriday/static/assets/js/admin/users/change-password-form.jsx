@@ -95,7 +95,10 @@ class ChangePasswordForm extends Form {
 		return (
 			<div>
 				<div className="modal-body">
-					<form action="">
+					<form
+						action=""
+						onClick={this.handleClickSubmit}
+						>
 						{this.buildRow('password')}
 						{this.buildRow('passwordConfirm')}
 					</form>

@@ -1,6 +1,6 @@
 import React from 'react';
 import b from 'b_';
-import {hasRole} from '../utils.js';
+import {hasRole, getUrl} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import Icon from '../components/icon.jsx';
 import MerchantProps from './merchant-props.jsx';
@@ -22,64 +22,46 @@ const SimpleShopCard = React.createClass({
 	},
 
 	render() {
-		const item = this.props.data;
 		const {
 			id,
+			image,
+			isActive,
+			isPreviewable,
 			moderationStatus,
+			name,
 			optionsCount,
 			paymentStatus,
+			previewUrl,
 			promo
-		} = item;
+		} = this.props.data;
 
+		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
-		const isEditable = item.editable || isAdmin;
+		const isAdvertiser = hasRole('advertiser');
+		const className = 'simple-shop-card';
 
 		return (
-			<div className={b('simple-shop-card')}>
-				{isEditable ? (
-					<a href={`/admin/merchant/${item.id}`}>
-						<span className={b('simple-shop-card', 'logo-placeholder')}>
-							{item.image ? (
-								<img
-									className={b('simple-shop-card', 'logo')}
-									src={item.image}
-									alt=""
-									/>
-							) : null}
-						</span>
+			<div className={b(className)}>
+				<span className={b(className, 'logo-placeholder')}>
+					{image ? (
+						<img
+							className={b(className, 'logo')}
+							src={image.url}
+							alt=""
+							/>
+					) : null}
+				</span>
 
-						<div
-							className={b('simple-shop-card', 'name')}
-							title={item.name}
-							>
-							{item.name}
-						</div>
-					</a>
-				) : (
-					<div>
-						<span className={b('simple-shop-card', 'logo-placeholder')}>
-							{item.image ? (
-								<img
-									className={b('simple-shop-card', 'logo')}
-									src={item.image}
-									alt=""
-									/>
-							) : null}
-						</span>
-
-						<div
-							className={b('simple-shop-card', 'name')}
-							title={item.name}
-							>
-							{item.name}
-						</div>
-					</div>
-				)}
+				<div
+					className={b(className, 'name')}
+					title={name}
+					>
+					{name}
+				</div>
 
 				<MerchantProps
 					{...{
 						id,
-						isEditable,
 						moderationStatus,
 						optionsCount,
 						paymentStatus,
@@ -87,22 +69,22 @@ const SimpleShopCard = React.createClass({
 					}}
 					/>
 
-				<div className={b('simple-shop-card', 'action-list')}>
+				<div className={b(className, 'action-list')}>
 					<div className={b('action-list')}>
-						{isEditable ? (
+						{isAdvertiser ? (
 							<a
 								className={b('action-list', 'item')}
-								href={`/admin/merchants/${id}/`}
+								href={editUrl}
 								title="Редактирование"
 								>
 								<Icon name="shop-edit"/>
 							</a>
 						) : null}
 
-						{item.isPreviewable && item.previewUrl ? (
+						{isPreviewable && previewUrl ? (
 							<a
 								className={b('action-list', 'item')}
-								href={item.previewUrl}
+								href={previewUrl}
 								target="_blank"
 								rel="noopener noreferrer"
 								title="Предпросмотр"
@@ -114,22 +96,22 @@ const SimpleShopCard = React.createClass({
 						{isAdmin ? (
 							<span
 								className={b('action-list', 'item')}
-								title={item.isActive ? 'Скрыть загруженный контент' : 'Показывать загруженный контент'}
+								title={isActive ? 'Скрыть загруженный контент' : 'Показывать загруженный контент'}
 								onClick={this.handleClickMerchantHide}
 								>
 								<Glyphicon
 									name="eye-close"
-									className={item.isActive ? 'text-muted' : 'text-danger'}
+									className={isActive ? 'text-muted' : 'text-danger'}
 									/>
 							</span>
 						) : (
 							<span
 								className={b('action-list', 'item')}
-								title={item.isActive ? 'Активен' : 'Не активен'}
+								title={isActive ? 'Активен' : 'Не активен'}
 								>
 								<Glyphicon
 									name="eye-close"
-									className={item.isActive ? 'text-muted' : 'text-danger'}
+									className={isActive ? 'text-muted' : 'text-danger'}
 									/>
 							</span>
 						)}

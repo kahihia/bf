@@ -79,3 +79,4 @@ def action_permission(*action_list):
 IsAdmin = role_permission('admin')
 IsAdvertiser = role_permission('advertiser')
 IsManager = role_permission('manager')
+IsOperator = role_permission('operator')

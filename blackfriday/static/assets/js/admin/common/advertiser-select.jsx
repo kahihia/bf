@@ -38,7 +38,15 @@ class AdvertiserSelect extends React.Component {
 					});
 					return a;
 				}, []);
-				advertisers = _.sortBy(advertisers, 'name');
+				advertisers = _.sortBy(advertisers, item => {
+					const {name} = item;
+
+					if (typeof name === 'string') {
+						return name.toLowerCase();
+					}
+
+					return name;
+				});
 				advertisers.unshift({
 					id: 0,
 					name: 'Любой'

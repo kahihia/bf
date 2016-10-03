@@ -63,17 +63,17 @@ import UserList from './admin/users/user-list.jsx';
 		},
 
 		handleClickUserAdd() {
-			jQuery('#addUserModal').modal('show');
+			jQuery('#add-user-modal').modal('show');
 			const onSubmit = user => {
 				this.handleUserAdd(user);
-				jQuery('#addUserModal').modal('hide');
+				jQuery('#add-user-modal').modal('hide');
 			};
 			ReactDOM.render(
 				<AddUserForm
 					onSubmit={onSubmit}
 					/>
 				,
-				document.getElementById('addUserForm')
+				document.getElementById('add-user-form')
 			);
 		},
 
@@ -85,9 +85,6 @@ import UserList from './admin/users/user-list.jsx';
 			const users = this.state.users;
 			users.push(user);
 			this.forceUpdate();
-
-			// Send verification request for newbie user
-			this.requestVerification(user.id);
 		},
 
 		getUserById(userId) {

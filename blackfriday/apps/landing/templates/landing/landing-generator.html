@@ -1,0 +1,20 @@
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        Лэндинг
+    </h1>
+</div>
+
+<div id="admin-landing"></div>
+
+{% include "landing/includes/add-landing-logo-modal.html" %}
+{% include "landing/includes/edit-landing-logo-modal.html" %}
+{% endblock content %}
+
+{% block js %}
+    {% render_bundle 'admin-landing' 'js' %}
+{% endblock js %}

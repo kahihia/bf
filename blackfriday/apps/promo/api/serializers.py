@@ -13,11 +13,20 @@ class PromoTinySerializer(serializers.ModelSerializer):
 class OptionSerializer(serializers.ModelSerializer):
     max_value = serializers.IntegerField(source='max_count')
     promos_available_for = PromoTinySerializer(source='available_in_promos', many=True)
+    available_value = serializers.IntegerField(source='count_available')
 
     class Meta:
         model = Option
-        fields = ('id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value',
-                  'promos_available_for')
+        fields = (
+            'id', 'name', 'tech_name', 'price', 'image', 'is_required', 'is_boolean', 'is_available', 'max_value',
+            'promos_available_for', 'available_value'
+        )
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        if instance.is_required:
+            representation['promos_available_for'] = []
+        return representation
 
 
 class PromoOptionSerializer(serializers.ModelSerializer):

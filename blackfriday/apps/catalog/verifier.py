@@ -5,7 +5,7 @@ from .validators import (
 )
 from .parser import Row, Column, Grouped, GenericValidator
 from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
-from .models import Category
+from apps.catalog.models import Category
 
 
 def together(**cleaned_data):

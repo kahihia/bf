@@ -13,3 +13,10 @@ class AdminOnlyMixin(UserPassesTestMixin):
 
     def test_func(self):
         return self.request.user.role == 'admin'
+
+
+class ManagerOrAdminOrAdvertiser(UserPassesTestMixin):
+    raise_exception = True
+
+    def test_func(self):
+        return self.request.user.role in ('manager', 'admin', 'advertiser')

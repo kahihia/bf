@@ -6,11 +6,10 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from rest_framework.exceptions import ValidationError
 
-from apps.users.tests.fixtures import *
 from apps.advertisers.tests.fixtures import *
 from libs.testing.helpers import lists_of_dicts_equalled
 
-from ..views import ProductViewSet
+from apps.catalog.api.views import ProductViewSet
 from apps.catalog.models import Product
 
 

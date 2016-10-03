@@ -1,6 +1,6 @@
 import React from 'react';
 import b from 'b_';
-import {hasRole} from '../utils.js';
+import {hasRole, getUrl} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import MerchantProps from './merchant-props.jsx';
 
@@ -22,29 +22,30 @@ class MerchantList extends React.Component {
 
 	render() {
 		const {merchants} = this.props;
+		const className = 'merchant-list';
 
 		return (
-			<div className={b('merchant-list')}>
-				<table className={'table table-hover ' + b('merchant-list', 'table')}>
+			<div className={b(className)}>
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th className={b('merchant-list', 'table-th', {name: 'logo'})}>
+							<th className={b(className, 'table-th', {name: 'logo'})}>
 								{'Логотип'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'name'})}>
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								{'Название'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'advertiser'})}>
+							<th className={b(className, 'table-th', {name: 'advertiser'})}>
 								{'Рекламодатель'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'data'})}>
+							<th className={b(className, 'table-th', {name: 'data'})}>
 								{'Данные'}
 							</th>
 
-							<th className={b('merchant-list', 'table-th', {name: 'action'})}/>
+							<th className={b(className, 'table-th', {name: 'action'})}/>
 						</tr>
 					</thead>
 
@@ -79,12 +80,9 @@ const MerchantListItem = React.createClass({
 	propTypes: {
 		advertiser: React.PropTypes.object,
 		id: React.PropTypes.number,
-		image: React.PropTypes.string,
+		image: React.PropTypes.object,
 		isActive: React.PropTypes.bool,
-		isEditable: React.PropTypes.bool,
 		isPreviewable: React.PropTypes.bool,
-		link: React.PropTypes.string,
-		moderation: React.PropTypes.object,
 		moderationStatus: React.PropTypes.number,
 		name: React.PropTypes.string,
 		onClickMerchantDelete: React.PropTypes.func,
@@ -113,9 +111,7 @@ const MerchantListItem = React.createClass({
 			id,
 			image,
 			isActive,
-			isEditable,
 			isPreviewable,
-			link,
 			moderationStatus,
 			name,
 			optionsCount,
@@ -124,36 +120,36 @@ const MerchantListItem = React.createClass({
 			promo
 		} = this.props;
 
+		const editUrl = `${getUrl('merchants')}${id}/`;
 		const isAdmin = hasRole('admin');
+		const isAdvertiser = hasRole('advertiser');
+		const className = 'merchant-list';
 
 		return (
 			<tr>
-				<td className={b('merchant-list', 'table-td', {name: 'logo'})}>
-					<a href={link}>
-						<span className={b('merchant-list', 'logo-placeholder')}>
-							{image ? (
-								<img
-									src={image}
-									alt=""
-									/>
-							) : null}
-						</span>
-					</a>
+				<td className={b(className, 'table-td', {name: 'logo'})}>
+					<span className={b(className, 'logo-placeholder')}>
+						{image ? (
+							<img
+								src={image.url}
+								alt=""
+								/>
+						) : null}
+					</span>
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'name'})}>
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					{name}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'advertiser'})}>
+				<td className={b(className, 'table-td', {name: 'advertiser'})}>
 					{advertiser.name}
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'data'})}>
+				<td className={b(className, 'table-td', {name: 'data'})}>
 					<MerchantProps
 						{...{
 							id,
-							isEditable,
 							moderationStatus,
 							optionsCount,
 							paymentStatus,
@@ -162,11 +158,11 @@ const MerchantListItem = React.createClass({
 						/>
 				</td>
 
-				<td className={b('merchant-list', 'table-td', {name: 'action'})}>
-					{isEditable ? (
+				<td className={b(className, 'table-td', {name: 'action'})}>
+					{isAdmin || isAdvertiser ? (
 						<a
 							className="btn btn-default btn-sm"
-							href={`/admin/merchants/${id}/`}
+							href={editUrl}
 							title="Редактирование"
 							>
 							<Glyphicon name="pencil"/>
