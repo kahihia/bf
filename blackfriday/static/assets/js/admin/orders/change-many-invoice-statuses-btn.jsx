@@ -38,7 +38,7 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 			}, () => {
 				xhr({
 					url: '/api/invoices/statuses/',
-					method: 'PATCH',
+					method: 'POST',
 					headers: {
 						'X-CSRFToken': TOKEN.csrftoken
 					},
