@@ -64,11 +64,11 @@
     </tr>
 
     <tr>
-        <td colspan=20 style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="15" align="left" valign=middle>Получатель</td>
+        <td colspan=20 height="15" align="left" style="border-left: 1px solid #000000; border-right: 1px solid #000000"><br></td>
     </tr>
 
     <tr>
-        <td colspan=20 height="15" align="left" valign=bottom><br></td>
+        <td colspan=20 style="border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" height="15" align="left" valign=middle>Получатель</td>
     </tr>
 
     <tr>
@@ -88,8 +88,14 @@
     </tr>
 
     <tr>
-        <td colspan=5 height="17" align="left" valign=middle><font size=2>Поставщик</font></td>
-        <td colspan=33 rowspan=2 align="left" valign=top><b><font size=2>{{ account.name }} ИНН {{ account.inn }} КПП {{ account.kpp }}<br>{{ account.legal_address }}</font></b></td>
+        <td colspan=5 height="17" align="left" valign=middle>
+            <font size=2>Поставщик</font>
+        </td>
+        <td colspan=33 rowspan=2 align="left" valign=top>
+            <b><font size=2>{{ account.name }}, ИНН {{ account.inn }}, КПП {{ account.kpp }},</font></b>
+            <br>
+            <b><font size=2>{{ account.legal_address }}</font></b>
+        </td>
     </tr>
 
     <tr>
@@ -101,8 +107,14 @@
     </tr>
 
     <tr>
-        <td colspan=5 height="17" align="left" valign=middle><font size=2>Покупатель</font></td>
-        <td colspan=33 rowspan=2 align="left" valign=top><b><font size=2>{{ advertiser.name }}, ИНН {{ advertiser.profile.inn }}, КПП {{ advertiser.profile.kpp }}, {{ advertiser.profile.addr }}</font></b></td>
+        <td colspan=5 height="17" align="left" valign=middle>
+            <font size=2>Покупатель</font>
+        </td>
+        <td colspan=33 rowspan=2 align="left" valign=top>
+            <b><font size=2>{{ advertiser.name }}, ИНН {{ advertiser.profile.inn }}, КПП {{ advertiser.profile.kpp }},</font></b>
+            <br>
+            <b><font size=2>{{ advertiser.profile.legal_address }}</font></b>
+        </td>
     </tr>
 
     <tr>
