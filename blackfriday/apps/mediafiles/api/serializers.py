@@ -1,17 +1,15 @@
 from rest_framework import serializers
+
 from ..models import Image
 
 
 class ImageSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(
-        error_messages={
-            'invalid_image': 'format',
-        }
-    )
+    image = serializers.ImageField(write_only=True, error_messages={'invalid_image': 'format'})
+    url = serializers.ImageField(read_only=True, source='image')
 
     class Meta:
         model = Image
-        fields = ('image', 'id')
+        fields = ('id', 'image', 'url')
 
     def validate_image(self, value):
         try:

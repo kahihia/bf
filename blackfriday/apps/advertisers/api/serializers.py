@@ -1,13 +1,10 @@
-import collections
-
 from rest_framework import serializers
 
 from apps.users.models import User
 
-from apps.promo.models import Promo, Option
+from apps.promo.models import Option
 from apps.promo.api.serializers import PromoTinySerializer
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import empty
 from rest_framework import validators
 
 from apps.mediafiles.models import Image
