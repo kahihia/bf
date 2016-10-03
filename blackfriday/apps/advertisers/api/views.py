@@ -37,7 +37,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAuthenticated,
         IsAdvertiser & IsOwner & action_permission(
-            'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation'
+            'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation', 'limits', 'available_options'
         ) |
         IsManager & action_permission(
             'list', 'retrieve', 'moderation'
