@@ -6,10 +6,18 @@ import xhr from 'xhr';
 import b from 'b_';
 import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
+import ImageInfo from './image-info.jsx';
 
 class ImagesUploadForm extends Form {
 	constructor(props) {
 		super(props);
+
+		const {
+			ext,
+			width,
+			height
+		} = props;
+
 		this.state = {
 			isLoading: false,
 			fields: {
@@ -18,7 +26,16 @@ class ImagesUploadForm extends Form {
 					value: '',
 					type: 'file',
 					accept: 'image/*',
-					required: true
+					required: true,
+					help: (
+						<ImageInfo
+							{...{
+								ext,
+								width,
+								height
+							}}
+							/>
+					)
 				}
 			}
 		};
@@ -118,8 +135,17 @@ class ImagesUploadForm extends Form {
 	}
 }
 ImagesUploadForm.propTypes = {
-	exactSize: React.PropTypes.bool,
-	onSubmit: React.PropTypes.func.isRequired
+	onSubmit: React.PropTypes.func.isRequired,
+	width: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]),
+	height: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.number
+	]),
+	ext: React.PropTypes.array,
+	exactSize: React.PropTypes.bool
 };
 ImagesUploadForm.defaultProps = {
 };

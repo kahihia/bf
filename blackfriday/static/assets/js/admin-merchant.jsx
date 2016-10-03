@@ -98,6 +98,7 @@ import ImagesUpload from './admin/common/images-upload.jsx';
 
 												<ImagesUpload
 													onUpload={this.handleImagesUploadUpload}
+													ext={['png', 'jpg']}
 													width="210"
 													height="130"
 													exactSize

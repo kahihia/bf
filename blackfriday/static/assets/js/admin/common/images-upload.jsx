@@ -16,7 +16,7 @@ class ImagesUpload extends React.Component {
 	}
 
 	modalOpen() {
-		const {exactSize, onUpload, width, height} = this.props;
+		const {exactSize, ext, onUpload, width, height} = this.props;
 
 		jQuery('#images-upload-modal').modal('show');
 		const onSubmit = data => {
@@ -27,6 +27,7 @@ class ImagesUpload extends React.Component {
 			<ImagesUploadForm
 				{...{
 					exactSize,
+					ext,
 					onSubmit,
 					width,
 					height
@@ -43,6 +44,7 @@ class ImagesUpload extends React.Component {
 
 	render() {
 		const {
+			ext,
 			width,
 			height
 		} = this.props;
@@ -58,8 +60,8 @@ class ImagesUpload extends React.Component {
 				</button>
 
 				<ImageInfo
-					ext={['png', 'jpg']}
 					{...{
+						ext,
 						width,
 						height
 					}}
@@ -78,6 +80,7 @@ ImagesUpload.propTypes = {
 		React.PropTypes.string,
 		React.PropTypes.number
 	]),
+	ext: React.PropTypes.array,
 	exactSize: React.PropTypes.bool
 };
 ImagesUpload.defaultProps = {
