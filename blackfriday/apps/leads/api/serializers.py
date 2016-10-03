@@ -44,13 +44,12 @@ class AdvertiserRequestStatusSerializer(serializers.ModelSerializer):
         fields = ['status']
 
     def to_representation(self, instance):
-
         return AdvertiserRequestSerializer().to_representation(instance)
 
     def update(self, instance, validated_data):
         if (
             instance.status == AdvertiserRequestStatus.new and
-            validated_data['status'] == AdvertiserRequestStatus.in_process
+            validated_data.get('status') == AdvertiserRequestStatus.in_process
         ):
             instance.user_responsible_id = self.context['request'].user.id
         return super().update(instance, validated_data)
