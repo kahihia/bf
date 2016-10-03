@@ -19,8 +19,10 @@ from .serializers import (
 
 class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
                         mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = [IsAuthenticated,
-                          IsOwner & action_permission('retrieve', 'update', 'partial_update', 'current') | IsAdmin]
+    permission_classes = [
+        IsAuthenticated, IsOwner & action_permission('retrieve', 'update', 'partial_update', 'current') |
+        IsAdmin | IsManager
+    ]
     queryset = User.objects.filter(profile__isnull=False)
     serializer_class = AdvertiserSerializer
     filter_class = AdvertiserFilter
