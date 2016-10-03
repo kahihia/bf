@@ -41,7 +41,8 @@ def send_verification(request, user):
     )
 
     try:
-        send_mail(message=message, recipient_list=[user.email], **settings.VERIFICATION)
+        send_mail(subject=settings.VERIFICATION_SUBJ, message=message,
+                  recipient_list=[user.email], from_email=settings.DEFAULT_FROM_EMAIL)
     except SMTPException as e:
         logger = getLogger('mailing')
         logger.error(e)
