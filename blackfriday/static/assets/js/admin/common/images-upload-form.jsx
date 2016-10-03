@@ -35,8 +35,14 @@ class ImagesUploadForm extends Form {
 
 		const body = new FormData(this.form);
 
+		let url = '/api/images/';
+		if (this.props.exactSize) {
+			const {width, height} = this.props;
+			url += `?exact_width=${width}&exact_height=${height}`;
+		}
+
 		xhr({
-			url: '/api/images/',
+			url,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -112,6 +118,8 @@ class ImagesUploadForm extends Form {
 	}
 }
 ImagesUploadForm.propTypes = {
+	exactSize: React.PropTypes.bool,
+	onSubmit: React.PropTypes.func.isRequired
 };
 ImagesUploadForm.defaultProps = {
 };

@@ -100,6 +100,7 @@ import ImagesUpload from './admin/common/images-upload.jsx';
 													onUpload={this.handleImagesUploadUpload}
 													width="210"
 													height="130"
+													exactSize
 													/>
 											</div>
 										</div>
