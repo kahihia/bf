@@ -92,7 +92,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
             raise ValidationError('Нет ни пакета, ни опций')
 
         if promo:
-            if merchant.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists():
+            if merchant.invoices.filter(
+                promo__isnull=False, is_paid=False, expired_datetime__gt=timezone.now()
+            ).exists():
                 raise ValidationError('У вас есть неоплаченный пакет')
             if merchant.promo:
                 if merchant.promo.price > promo.price:
