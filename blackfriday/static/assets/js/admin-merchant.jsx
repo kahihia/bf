@@ -11,6 +11,7 @@ import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
+import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
 
 (function () {
 	'use strict';
@@ -79,12 +80,26 @@ import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select
 			} = this.state;
 			const {
 				image,
-				partners
+				partners,
+				isPreviewable,
+				previewUrl,
+				moderation = {},
+				paymentStatus
 			} = data;
 
 			return (
 				<div className="">
-					<div className="shop-edit-block">
+					<MerchantEditStatusPanel
+						moderationStatus={moderation.status}
+						moderationComment={moderation.comment}
+						{...{
+							isPreviewable,
+							previewUrl,
+							paymentStatus
+						}}
+						/>
+
+					<div className="merchant-edit-block">
 						<h2>
 							{'Информация'}
 						</h2>
