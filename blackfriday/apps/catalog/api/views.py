@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -8,6 +9,7 @@ from jsonschema import validate, ValidationError as JsonSchemaValidationError
 from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 from libs.api.exceptions import BadRequest
 
+from apps.promo.models import Option
 from apps.advertisers.models import Merchant
 
 from .serializers import Category, CategorySerializer, ProductSerializer
@@ -19,6 +21,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated & IsAdmin | ReadOnly]
+
+    def perform_create(self, serializer):
+        super().perform_create(serializer)
+        Option.objects.filter(tech_name='cat_background').update(max_count=F('max_count') + 1)
+
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+        Option.objects.filter(tech_name='cat_background').update(max_count=F('max_count') - 1)
 
 
 class ProductViewSet(
