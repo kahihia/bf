@@ -1,3 +1,7 @@
+import operator
+
+from functools import partial, reduce
+
 from django.db.models import Sum
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -92,15 +96,43 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        qs = (
-            InvoiceOption
-            .objects
-            .filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
-            .values('option__tech_name')
-            .annotate(option_sum=Sum('value'))
-        )
-        serializer = LimitSerializer(
-            data=[{'tech_name': obj['option__tech_name'], 'value': obj['option_sum']} for obj in qs], many=True)
+        options = dict(InvoiceOption.objects.filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
+                       .values('option__tech_name').annotate(option_sum=Sum('value'))
+                       .values_list('option__tech_name', 'option_sum'))
+
+        options_rules = {
+            'banner_on_main': ['banner_on_main'],
+            'banner_positions': ['banner_at_cat', 'additional_banner_at_cat'],
+            'banners': [4],
+            'categories': ['cats_num'],
+            'category_backgrounds': ['cat_background'],
+            'extra_banner_categories': ['additional_banner_at_cat'],
+            'logo_categories': ['logo_at_cat', 'additional_logo_cat'],
+            'main_backgrounds': ['main_background'],
+            'products': ['products', 'additional_products'],
+            'superbanner_categories': ['superbanner_at_cat', 'additional_superbanner_at_cat'],
+            'superbanner_in_mailing': ['superbanner_at_mailing'],
+            'superbanner_on_main': ['superbanner_on_main'],
+            'superbanners': [1, 'superbanner_at_mailing'],
+            'teasers': ['teaser', 'additional_teaser'],
+            'teasers_on_main': ['teaser_on_main'],
+            'vertical_banners': ['vertical_banner_on_main'],
+        }
+
+        def get_value(rule):
+            if isinstance(rule, int):
+                return rule
+            return int(options.get(rule, 0))
+
+        limits = [
+            {
+                'tech_name': limit,
+                'value': reduce(operator.add, map(get_value, rules), 0)
+            }
+            for limit, rules in options_rules.items()
+        ]
+
+        serializer = LimitSerializer(data=limits, many=True)
         serializer.is_valid()
         return Response(data=serializer.data)
 
