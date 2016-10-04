@@ -1,4 +1,10 @@
+import operator
+
+from functools import reduce
+
+from django.conf import settings
 from django.db.models import Sum
+
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.exceptions import ValidationError
@@ -92,15 +98,24 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        qs = (
-            InvoiceOption
-            .objects
-            .filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
-            .values('option__tech_name')
-            .annotate(option_sum=Sum('value'))
-        )
-        serializer = LimitSerializer(
-            data=[{'tech_name': obj['option__tech_name'], 'value': obj['option_sum']} for obj in qs], many=True)
+        options = dict(InvoiceOption.objects.filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
+                       .values('option__tech_name').annotate(option_sum=Sum('value'))
+                       .values_list('option__tech_name', 'option_sum'))
+
+        def get_value(rule):
+            if isinstance(rule, int):
+                return rule
+            return int(options.get(rule, 0))
+
+        limits = [
+            {
+                'tech_name': limit,
+                'value': reduce(operator.add, map(get_value, rules), 0)
+            }
+            for limit, rules in settings.LIMITS_RULES.items()
+        ]
+
+        serializer = LimitSerializer(data=limits, many=True)
         serializer.is_valid()
         return Response(data=serializer.data)
 
