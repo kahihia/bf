@@ -42,11 +42,13 @@ class MerchantEditForm extends Form {
 					label: 'Описание',
 					value: '',
 					type: 'textarea',
-					required: true
+					required: true,
+					help: 'Max. 1000 симв.'
 				},
 				promocode: {
 					label: 'Промо-код',
-					value: ''
+					value: '',
+					help: 'Если Ваш магазин предоставляет скидку по промо-коду, укажите его в данном поле'
 				}
 			}
 		};
