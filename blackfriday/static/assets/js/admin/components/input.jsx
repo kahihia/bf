@@ -41,6 +41,7 @@ class Input extends React.Component {
 			mask,
 			name,
 			options,
+			pattern,
 			placeholder,
 			readOnly,
 			required,
@@ -67,6 +68,16 @@ class Input extends React.Component {
 					{...{disabled, options, name, valueType}}
 					/>
 			);
+		} else if (type === 'textarea') {
+			input = (
+				<textarea
+					className="form-control"
+					value={val}
+					{...{accept, disabled, placeholder, name, type, required, readOnly}}
+					onChange={this.handleChange}
+					onKeyUp={this.handleKeyUp}
+					/>
+			);
 		} else if (mask) {
 			input = (
 				<MaskedInput
@@ -82,7 +93,7 @@ class Input extends React.Component {
 				<input
 					className="form-control"
 					value={val}
-					{...{accept, disabled, placeholder, name, type, required, readOnly}}
+					{...{accept, disabled, pattern, placeholder, name, type, required, readOnly}}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -115,6 +126,7 @@ Input.propTypes = {
 		React.PropTypes.array,
 		React.PropTypes.object
 	]),
+	pattern: React.PropTypes.string,
 	placeholder: React.PropTypes.string,
 	readOnly: React.PropTypes.bool,
 	required: React.PropTypes.bool,

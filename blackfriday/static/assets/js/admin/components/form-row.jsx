@@ -42,6 +42,7 @@ class FormRow extends React.Component {
 			mask,
 			name,
 			options,
+			pattern,
 			placeholder,
 			readOnly,
 			required,
@@ -61,6 +62,7 @@ class FormRow extends React.Component {
 					mask,
 					name,
 					options,
+					pattern,
 					placeholder,
 					readOnly,
 					required,
@@ -135,6 +137,7 @@ FormRow.propTypes = {
 		React.PropTypes.array,
 		React.PropTypes.object
 	]),
+	pattern: React.PropTypes.string,
 	placeholder: React.PropTypes.string,
 	readOnly: React.PropTypes.bool,
 	required: React.PropTypes.bool,

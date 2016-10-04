@@ -37,13 +37,21 @@ class Form extends React.Component {
 
 		const {fields} = this.state;
 		_.forEach(fields, field => {
-			const {required, value, label} = field;
+			const {pattern, required, value, label} = field;
 			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
 				isValid = false;
 				if (warnings) {
 					toastr.warning(`Заполните поле "${label}"`);
 				}
 				return false;
+			} else if (pattern) {
+				let test = new RegExp(pattern);
+				if (!test.test(value)) {
+					isValid = false;
+					if (warnings) {
+						toastr.warning(`Неверный формат поля "${label}"`);
+					}
+				}
 			}
 		});
 
