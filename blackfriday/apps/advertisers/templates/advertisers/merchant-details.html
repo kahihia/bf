@@ -24,6 +24,9 @@
 {% block js %}
     <script>
     window.ENV.merchantId = {{ merchant.id }};
+    window.ENV.urls = {
+        merchants: '/merchants/'
+    };
     </script>
 
     {% render_bundle 'admin-merchant' 'js' %}

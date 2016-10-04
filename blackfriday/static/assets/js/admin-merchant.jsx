@@ -7,7 +7,9 @@ import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
 import {ENV} from './admin/utils.js';
+import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
+import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 
 (function () {
 	'use strict';
@@ -65,10 +67,18 @@ import ImagesUpload from './admin/common/images-upload.jsx';
 			this.requestMerchantUploadLogo(data.id);
 		},
 
+		handleMerchantUpdate(data) {
+			this.setState({data});
+		},
+
 		render() {
 			const {
+				data,
+				id
+			} = this.state;
+			const {
 				image
-			} = this.state.data;
+			} = data;
 
 			return (
 				<div className="">
@@ -79,32 +89,36 @@ import ImagesUpload from './admin/common/images-upload.jsx';
 
 						<div className="panel panel-default form-horizontal">
 							<div className="panel-body">
+								<MerchantEditForm
+									onSubmit={this.handleMerchantUpdate}
+									{...{
+										data,
+										id
+									}}
+									/>
+
 								<div className="form-group">
-									<span className="col-xs-2 control-label">
-										{'Логотип'}
-									</span>
+									<ControlLabel
+										name="Логотип"
+										/>
 
-									<div className="col-xs-10">
-										<div className="row">
-											<div className="col-xs-3">
-												<p>
-													{image ? (
-														<img
-															src={image.url}
-															alt=""
-															/>
-													) : null}
-												</p>
-
-												<ImagesUpload
-													onUpload={this.handleImagesUploadUpload}
-													ext={['png', 'jpg']}
-													width="210"
-													height="130"
-													exactSize
+									<div className="">
+										<p>
+											{image ? (
+												<img
+													src={image.url}
+													alt=""
 													/>
-											</div>
-										</div>
+											) : null}
+										</p>
+
+										<ImagesUpload
+											onUpload={this.handleImagesUploadUpload}
+											ext={['png', 'jpg']}
+											width="210"
+											height="130"
+											exactSize
+											/>
 									</div>
 								</div>
 							</div>
