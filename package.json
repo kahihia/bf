@@ -44,6 +44,7 @@
     "react-dnd-html5-backend": "2.1.2",
     "react-dom": "15.3.1",
     "react-maskedinput": "3.2.4",
+    "react-multiselect-two-sides": "0.8.1",
     "react-price": "0.3.2",
     "react-scroll": "1.3.1",
     "react-simple-dropdown": "1.1.2",

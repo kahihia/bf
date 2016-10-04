@@ -10,6 +10,7 @@ import {ENV} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
+import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
 
 (function () {
 	'use strict';
@@ -77,7 +78,8 @@ import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 				id
 			} = this.state;
 			const {
-				image
+				image,
+				partners
 			} = data;
 
 			return (
@@ -87,7 +89,7 @@ import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 							{'Информация'}
 						</h2>
 
-						<div className="panel panel-default form-horizontal">
+						<div className="panel panel-default">
 							<div className="panel-body">
 								<MerchantEditForm
 									onSubmit={this.handleMerchantUpdate}
@@ -124,6 +126,11 @@ import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 							</div>
 						</div>
 					</div>
+
+					<MerchantPartnersSelect
+						id={id}
+						value={partners}
+						/>
 				</div>
 			);
 		}
