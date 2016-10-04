@@ -76,8 +76,10 @@ class MerchantEditStatusPanel extends React.Component {
 				<div className={b(className, 'action')}>
 					{isPreviewable ? (
 						<a
-							className="btn"
+							className="btn btn-default"
 							href={previewUrl}
+							target="_blank"
+							rel="noopener noreferrer"
 							>
 							{'Предпросмотр'}
 						</a>
