@@ -11,7 +11,11 @@ const className = 'merchant-edit-status-panel';
 class MerchantEditStatusPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.handleClickModeration = this.handleClickModeration.bind(this);
+	}
+
+	handleClickModeration() {
+		this.props.onClickModeration();
 	}
 
 	render() {
@@ -20,7 +24,8 @@ class MerchantEditStatusPanel extends React.Component {
 			previewUrl,
 			paymentStatus,
 			moderationComment,
-			moderationStatus
+			moderationStatus,
+			isModerationAllowed
 		} = this.props;
 
 		return (
@@ -84,6 +89,15 @@ class MerchantEditStatusPanel extends React.Component {
 							{'Предпросмотр'}
 						</a>
 					) : null}
+
+					<button
+						className="btn btn-primary"
+						onClick={this.handleClickModeration}
+						type="button"
+						disabled={!isModerationAllowed}
+						>
+						{'Отправить на модерацию'}
+					</button>
 				</div>
 			</div>
 		);
@@ -94,7 +108,9 @@ MerchantEditStatusPanel.propTypes = {
 	previewUrl: React.PropTypes.string,
 	paymentStatus: React.PropTypes.number,
 	moderationStatus: React.PropTypes.number,
-	moderationComment: React.PropTypes.string
+	moderationComment: React.PropTypes.string,
+	isModerationAllowed: React.PropTypes.bool,
+	onClickModeration: React.PropTypes.func.isRequired
 };
 MerchantEditStatusPanel.defaultProps = {
 };

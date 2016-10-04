@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
-import {ENV} from './admin/utils.js';
+import {ENV, hasRole} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
@@ -65,12 +65,42 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 			});
 		},
 
+		requestModeration() {
+			const json = {status: 1};
+
+			xhr({
+				url: `/api/merchants/${this.state.id}/moderation/`,
+				method: 'PATCH',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json
+			}, (err, resp, data) => {
+				if (resp.statusCode === 200) {
+					if (data) {
+						this.setState(previousState => {
+							previousState.data.moderation = data;
+							return previousState;
+						});
+					}
+				} else if (resp.statusCode === 409) {
+					toastr.warning('Не все материалы заполнены');
+				} else {
+					toastr.error('Не удалось отправить магазин на модерацию');
+				}
+			});
+		},
+
 		handleImagesUploadUpload(data) {
 			this.requestMerchantUploadLogo(data.id);
 		},
 
 		handleMerchantUpdate(data) {
 			this.setState({data});
+		},
+
+		handleClickModeration() {
+			this.requestModeration();
 		},
 
 		render() {
@@ -87,15 +117,31 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 				paymentStatus
 			} = data;
 
+			const moderationStatus = moderation.status;
+			const moderationComment = moderation.comment;
+
+			const isAdmin = hasRole('admin');
+			const isAdvertiser = hasRole('advertiser');
+
+			let isModerationAllowed = false;
+
+			if (moderationStatus !== 1) {
+				if (isAdmin || isAdvertiser) {
+					isModerationAllowed = true;
+				}
+			}
+
 			return (
 				<div className="">
 					<MerchantEditStatusPanel
-						moderationStatus={moderation.status}
-						moderationComment={moderation.comment}
+						onClickModeration={this.handleClickModeration}
 						{...{
 							isPreviewable,
 							previewUrl,
-							paymentStatus
+							paymentStatus,
+							isModerationAllowed,
+							moderationStatus,
+							moderationComment
 						}}
 						/>
 
