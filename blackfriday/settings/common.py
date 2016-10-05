@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'apps.leads',
     'apps.orders',
     'apps.mediafiles',
+    'apps.specials',
 
     'webpack_loader',
     'django_rq',
