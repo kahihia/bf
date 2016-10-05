@@ -119,7 +119,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             for limit, rules in settings.LIMITS_RULES.items()
         ]
 
-        serializer = LimitSerializer(data=limits, many=True)
+        serializer = LimitSerializer(data=filter(lambda limit: limit['value'], limits), many=True)
         serializer.is_valid()
         return Response(data=serializer.data)
 
