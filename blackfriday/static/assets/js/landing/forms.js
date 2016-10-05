@@ -1,6 +1,7 @@
 /* global $ toastr */
 
 import Cookie from 'js-cookie';
+var createFloctory = require('./flocktory.js');
 
 const csrftoken = Cookie.get('csrftoken');
 
@@ -16,9 +17,16 @@ $('form').ajaxForm({
 	error: showError
 });
 
-function showResponse() {
+function showResponse(data) {
 	toastr.success('Заявка успешно отправлена');
 	$('.modal.in').modal('hide');
+
+	// Floctory
+	// Обновляет информацию блока для Floctory
+	var name = data.name || null;
+	var email = data.email || null;
+
+	createFloctory.update(name, email);
 }
 
 function showError(resp) {
