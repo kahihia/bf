@@ -14,7 +14,7 @@ from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
-from apps.promo.models import Option
+from apps.promo.models import Option, PromoOption
 
 from .filters import AdvertiserFilter, MerchantFilter
 from .serializers import (
@@ -98,14 +98,18 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        options = dict(InvoiceOption.objects.filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
-                       .values('option__tech_name').annotate(option_sum=Sum('value'))
-                       .values_list('option__tech_name', 'option_sum'))
+        merchant, options = self.get_object(), {}
+
+        def get_options(qs):
+            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
+            return dict(qs.values_list('option__tech_name', 'option_sum'))
 
         def get_value(rule):
-            if isinstance(rule, int):
-                return rule
-            return int(options.get(rule, 0))
+            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+
+        if merchant.promo:
+            options.update(get_options(merchant.promo.options))
+        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=merchant, invoice__is_paid=True)))
 
         limits = [
             {
