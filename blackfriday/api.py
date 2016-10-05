@@ -10,4 +10,5 @@ urlpatterns = [
     url('^', include('apps.orders.api.urls', namespace='orders')),
     url('^', include('apps.mediafiles.api.urls', namespace='mediafiles')),
     url('^', include('apps.landing.api.urls', namespace='landing')),
+    url('^', include('apps.specials.api.urls', namespace='special')),
 ]
