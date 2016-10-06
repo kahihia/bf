@@ -7,7 +7,8 @@ from django.db import migrations
 
 def calculate_max_values(apps, schema_editor):
     Option = apps.get_model('promo', 'Option')
-    Option.calculate_restrictions()
+    Category = apps.get_model('catalog', 'Category')
+    Option.objects.filter(tech_name='cat_background').update(max_count=Category.objects.all().count())
 
 
 class Migration(migrations.Migration):
