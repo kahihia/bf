@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+
 def calculate_max_values(apps, schema_editor):
-    Category = apps.get_model('catalog', 'Category')
     Option = apps.get_model('promo', 'Option')
-    Option.objects.filter(tech_name='cat_background').update(max_count=Category.objects.count())
+    Option.calculate_restrictions()
 
 
 class Migration(migrations.Migration):

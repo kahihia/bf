@@ -1,4 +1,3 @@
-from django.db.models import F
 from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -24,11 +23,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         super().perform_create(serializer)
-        Option.objects.filter(tech_name='cat_background').update(max_count=F('max_count') + 1)
+        Option.calculate_restrictions()
 
     def perform_destroy(self, instance):
         super().perform_destroy(instance)
-        Option.objects.filter(tech_name='cat_background').update(max_count=F('max_count') - 1)
+        Option.calculate_restrictions()
 
 
 class ProductViewSet(
