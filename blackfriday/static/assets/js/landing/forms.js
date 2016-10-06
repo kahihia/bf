@@ -21,6 +21,10 @@ function showResponse(data) {
 	toastr.success('Заявка успешно отправлена');
 	$('.modal.in').modal('hide');
 
+	if (data.organizationName || data.phone) {
+		return;
+	}
+
 	// Floctory
 	// Обновляет информацию блока для Floctory
 	var name = data.name || null;
