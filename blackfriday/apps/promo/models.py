@@ -48,7 +48,7 @@ class Option(models.Model):
 
     @classmethod
     def calculate_restrictions(cls):
-        cls.objects.filter(tech_name='cat_background').update(Category.objects.all().count())
+        cls.objects.filter(tech_name='cat_background').update(max_count=Category.objects.all().count())
 
     class Meta:
         verbose_name = 'Тарифная опция'
