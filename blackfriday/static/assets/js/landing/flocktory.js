@@ -31,6 +31,10 @@ CreateFloctory.prototype = {
 	},
 
 	_buildMgm: function () {
+		if (this._$blockMgm) {
+			return;
+		}
+
 		this._$blockMgm = $('<div class="i-flocktory" data-fl-action="fire-event" data-fl-event="mgm"></div>').appendTo('body');
 	},
 
