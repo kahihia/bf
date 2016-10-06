@@ -171,18 +171,18 @@ class ProductViewSet(
 class YmlProductViewSet(viewsets.GenericViewSet):
     @list_route(['get'])
     def yml(self, request, **kwargs):
-        include_category_ids = request.GET.getlist('categories[]', [])
-        include_merchants_id = request.GET.getlist('merchants[]', [])
+        include_category_ids = request.GET.getlist('categories', [])
+        include_merchants_id = request.GET.getlist('merchants', [])
 
         categories = Category.objects.filter(
             **({'id__in': include_category_ids} if include_category_ids else {})
         ).exclude(
-            id__in=request.GET.getlist('exclude_categories[]', [])
+            id__in=request.GET.getlist('exclude_categories', [])
         )
         merchants = Merchant.objects.filter(
             **({'id__in': include_merchants_id} if include_merchants_id else {})
         ).exclude(
-            id__in=request.GET.getlist('exclude_merchants[]', [])
+            id__in=request.GET.getlist('exclude_merchants', [])
         )
         products = Product.objects.filter(
             merchant__in=merchants, category__in=categories, merchant__moderation_status=ModerationStatus.confirmed)
@@ -193,7 +193,7 @@ class YmlProductViewSet(viewsets.GenericViewSet):
                 'utm_medium': request.GET.get('utm_medium'),
                 'utm_campaign': request.GET.get('utm_campaign'),
             },
-            'excludes': request.GET.getlist('excludes[]', []),
+            'excludes': request.GET.getlist('excludes', []),
             'url_bindings': {
                 'url_cat': request.GET.get('bind_url_cat', 'url_cat'),
                 'url_shop': request.GET.get('bind_url_shop', 'url_shop'),
