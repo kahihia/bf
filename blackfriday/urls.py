@@ -15,7 +15,7 @@ urlpatterns = [
         url(r'^', include('apps.landing.urls', namespace='landing')),
     ])),
     url(r'^api/', include('api', namespace='api')),
-    
+
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^django-rq/', include('django_rq.urls')),
 ]

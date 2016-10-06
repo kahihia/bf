@@ -177,3 +177,4 @@ LIMITS_RULES = {
     'teasers_on_main': ['teaser_on_main'],
     'vertical_banners': ['vertical_banner_on_main'],
 }
+RETAIL_ROCKET_CAT_SHIFT = 100

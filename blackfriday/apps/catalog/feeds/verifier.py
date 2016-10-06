@@ -3,8 +3,8 @@ from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
-from .parser import Row, Column, Grouped, GenericValidator
-from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
+from apps.catalog.parser import Row, Column, Grouped, GenericValidator
+from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from apps.catalog.models import Category
 
 

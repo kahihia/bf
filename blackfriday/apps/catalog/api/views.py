@@ -1,4 +1,8 @@
+import json
+import datetime
 from django.db.models import F
+from django.http import HttpResponse
+from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -10,10 +14,11 @@ from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertise
 from libs.api.exceptions import BadRequest
 
 from apps.promo.models import Option
-from apps.advertisers.models import Merchant
+from apps.advertisers.models import Merchant, ModerationStatus
 
 from .serializers import Category, CategorySerializer, ProductSerializer
-from ..verifier import FeedParser
+from apps.catalog.feeds.verifier import FeedParser
+from apps.catalog.feeds.generator import FeedGenerator
 from ..models import Product
 
 
@@ -161,3 +166,47 @@ class ProductViewSet(
                 'warnings': warnings,
             })
         return Response(result)
+
+
+class YmlProductViewSet(viewsets.GenericViewSet):
+    @list_route(['get'])
+    def yml(self, request, **kwargs):
+        include_category_ids = request.GET.getlist('categories[]', [])
+        include_merchants_id = request.GET.getlist('merchants[]', [])
+
+        categories = Category.objects.filter(
+            **({'id__in': include_category_ids} if include_category_ids else {})
+        ).exclude(
+            id__in=request.GET.getlist('exclude_categories[]', [])
+        )
+        merchants = Merchant.objects.filter(
+            **({'id__in': include_merchants_id} if include_merchants_id else {})
+        ).exclude(
+            id__in=request.GET.getlist('exclude_merchants[]', [])
+        )
+        products = Product.objects.filter(
+            merchant__in=merchants, category__in=categories, merchant__moderation_status=ModerationStatus.confirmed)
+
+        controls = {
+            'utm': {
+                'utm_source': request.GET.get('utm_source'),
+                'utm_medium': request.GET.get('utm_medium'),
+                'utm_campaign': request.GET.get('utm_campaign'),
+            },
+            'excludes': request.GET.getlist('excludes[]', []),
+            'url_bindings': {
+                'url_cat': request.GET.get('bind_url_cat', 'url_cat'),
+                'url_shop': request.GET.get('bind_url_shop', 'url_shop'),
+                'url': request.GET.get('bind_url', 'url'),
+            },
+            'show_teaser_cat': json.loads(request.GET.get('show_teaser_cat', 'false'))
+        }
+        filename = request.GET.get(
+            'filename', 'blackfriday feed {}'.format(
+                datetime.datetime.strftime(timezone.now(), '%d-%m-%Y %H:%M')))
+
+        yml = FeedGenerator(controls).generate(products, categories)
+        response = HttpResponse(content_type='application/xml')
+        yml.write(response)
+        response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(filename)
+        return response
