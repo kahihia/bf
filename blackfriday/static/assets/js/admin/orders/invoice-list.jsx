@@ -718,7 +718,7 @@ class InvoiceListSelectedAction extends React.Component {
 					</div>
 				</div>
 
-				<div className="col-sm-4">
+				<div className="col-sm-5">
 					<select
 						className="form-control"
 						value={newStatus}
@@ -745,7 +745,7 @@ class InvoiceListSelectedAction extends React.Component {
 						/>
 				</div>
 
-				<div className="col-sm-4 text-right">
+				<div className="col-sm-3 text-right">
 					{isLoading ? (
 						<div className="form-control-static text-muted">
 							{'Загрузка...'}

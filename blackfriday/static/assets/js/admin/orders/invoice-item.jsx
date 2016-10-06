@@ -94,7 +94,7 @@ export default class InvoiceItem extends React.Component {
 					{data.id || ''}
 				</td>
 				<td>
-					{data.promo.name || ''}
+					{data.promo ? data.promo.name : ''}
 				</td>
 				<td>
 					<ul>
