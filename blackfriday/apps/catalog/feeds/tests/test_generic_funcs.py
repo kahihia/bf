@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from ..verifier import together, old_price_gte_price, duplicate_product_urls, clear_category
+from apps.catalog.feeds.verifier import together, old_price_gte_price, duplicate_product_urls, clear_category
 
 
 def test_together_given_both_not_null_members_expect_true():

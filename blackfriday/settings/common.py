@@ -178,3 +178,4 @@ LIMITS_RULES = {
     'vertical_banners': ['vertical_banner_on_main'],
 }
 SPECIAL_SUPPORTED_FORMATS = ['pdf']
+RETAIL_ROCKET_CAT_SHIFT = 100

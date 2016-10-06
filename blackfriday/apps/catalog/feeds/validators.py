@@ -1,4 +1,4 @@
-from .parser import BaseValidator
+from apps.catalog.parser import BaseValidator
 
 
 class IsNumeric(BaseValidator):
