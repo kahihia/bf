@@ -106,11 +106,6 @@ class Merchant(models.Model):
             return invoice.promo
 
     @property
-    def banners(self):
-        # ToDo: Когда будет релейтед нейм на banners.Banner, убрать
-        return []
-
-    @property
     def promo(self):
         return self.get_promo(InvoiceStatus.paid)
 
@@ -138,3 +133,29 @@ class Merchant(models.Model):
     @property
     def owner_id(self):
         return self.advertiser.id
+
+
+class BannerType:
+    SUPER = 0
+    ACTION = 10
+    VERTICAL = 20
+    BG_LEFT = 30
+    BG_RIGHT = 40
+
+
+class Banner(models.Model):
+    TYPES = (
+        (BannerType.SUPER, 'Супербаннер'),
+        (BannerType.ACTION, 'Акционный баннер'),
+        (BannerType.VERTICAL, 'Вертикальный баннер'),
+        (BannerType.BG_LEFT, 'Фон слева'),
+        (BannerType.BG_RIGHT, 'Фон справа'),
+    )
+
+    type = models.IntegerField(choices=TYPES)
+    image = models.ForeignKey('mediafiles.Image', related_name='banners')
+    url = models.URLField()
+    on_main = models.BooleanField(default=False)
+    in_mailing = models.BooleanField(default=False)
+    categories = models.ManyToManyField('catalog.Category', related_name='banners')
+    merchant = models.ForeignKey(Merchant, related_name='banners')

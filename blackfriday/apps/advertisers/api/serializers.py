@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.catalog.api.serializers import CategorySerializer
+from apps.catalog.models import Category
 from apps.users.models import User
 
 from apps.promo.models import Option
@@ -10,7 +12,7 @@ from rest_framework import validators
 from apps.mediafiles.models import Image
 from apps.mediafiles.api.serializers import ImageSerializer
 
-from ..models import AdvertiserProfile, Merchant, ModerationStatus
+from ..models import AdvertiserProfile, Merchant, ModerationStatus, Banner
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -207,3 +209,37 @@ class AvailableOptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
         fields = ('id', 'name', 'tech_name', 'price', 'available_value', 'is_boolean', 'image')
+
+
+class BannerDetailSerializer(serializers.ModelSerializer):
+    image = ImageSerializer()
+    categories = CategorySerializer(many=True)
+
+    class Meta:
+        model = Banner
+        fields = ('id', 'type', 'image', 'url', 'on_main', 'in_mailing', 'categories')
+
+
+class BannerSerializer(BannerDetailSerializer):
+    image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
+    categories = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all()))
+
+    class Meta(BannerDetailSerializer.Meta):
+        pass
+
+    def to_representation(self, instance):
+        return BannerDetailSerializer().to_representation(instance)
+
+    def save(self, **kwargs):
+        categories = self._validated_data.pop('categories', [])
+        instance = super().save(**kwargs)
+
+        instance.categories.clear()
+        for category in categories:
+            instance.categories.add(category)
+
+        instance.merchant.moderation_status = 0
+        instance.merchant.save()
+
+        return instance
+
