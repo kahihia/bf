@@ -22,6 +22,10 @@ CreateFloctory.prototype = {
 		this._buildMgm();
 	},
 
+	renderMgm: function () {
+		this._buildMgm();
+	},
+
 	_build: function () {
 		this._$block = $(`<div class="i-flocktory" data-fl-user-name="${this.name}" data-fl-user-email="${this.email}"></div>`).appendTo('body');
 	},
