@@ -118,9 +118,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
             if not merchant.promo:
                 raise ValidationError('Нет назначенного пакета')
 
-            available_options = set(merchant.promo.available_options.values_list('id', flat=True))
+            available_options = merchant.promo.available_options.all()
             for option in options:
-                if option.id not in available_options:
+                if option['id'] not in available_options:
                     raise ValidationError('Не все опции доступны для покупки')
 
             if reduce(operator.__or__, map(lambda x: x['option'].is_required, options), False):
