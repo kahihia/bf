@@ -2,8 +2,6 @@ import urllib.parse
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 from django.conf import settings
 
-from apps.catalog.models import Category, Product
-
 
 class FeedGenerator:
 
