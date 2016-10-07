@@ -12,14 +12,17 @@ var $d = $('#countdown-d');
 var $h = $('#countdown-h');
 var $m = $('#countdown-m');
 var $s = $('#countdown-s');
+var LANG = $('html').attr('lang');
 
 $('#countdown').countdown({
 	timestamp: ts,
 	callback: function (d, h, m, s) {
-		$d.text(declOfNum(d, ['день', 'дня', 'дней']));
-		$h.text(declOfNum(h, ['час', 'часа', 'часов']));
-		$m.text(declOfNum(m, ['минута', 'минуты', 'минут']));
-		$s.text(declOfNum(s, ['секунда', 'секунды', 'секунд']));
+		if (LANG === 'ru') {
+			$d.text(declOfNum(d, ['день', 'дня', 'дней']));
+			$h.text(declOfNum(h, ['час', 'часа', 'часов']));
+			$m.text(declOfNum(m, ['минута', 'минуты', 'минут']));
+			$s.text(declOfNum(s, ['секунда', 'секунды', 'секунд']));
+		}
 
 		if (d >= 100) {
 			$d.css('width', '27%');
