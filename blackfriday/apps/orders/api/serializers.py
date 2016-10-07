@@ -120,7 +120,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
             available_options = merchant.promo.available_options.all()
             for option in options:
-                if option['id'] not in available_options:
+                if option['option'] not in available_options:
                     raise ValidationError('Не все опции доступны для покупки')
 
             if reduce(operator.__or__, map(lambda x: x['option'].is_required, options), False):
