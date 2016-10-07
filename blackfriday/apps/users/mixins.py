@@ -1,22 +1,8 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 
-class ManagerOrAdminOnlyMixin(UserPassesTestMixin):
+class RolePermissionMixin(UserPassesTestMixin):
     raise_exception = True
 
     def test_func(self):
-        return self.request.user.role in ('manager', 'admin')
-
-
-class AdminOnlyMixin(UserPassesTestMixin):
-    raise_exception = True
-
-    def test_func(self):
-        return self.request.user.role == 'admin'
-
-
-class ManagerOrAdminOrAdvertiser(UserPassesTestMixin):
-    raise_exception = True
-
-    def test_func(self):
-        return self.request.user.role in ('manager', 'admin', 'advertiser')
+        return self.request.user.role in self.allowed_roles

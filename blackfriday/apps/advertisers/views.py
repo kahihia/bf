@@ -1,46 +1,40 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, DetailView
 
-from apps.users.mixins import ManagerOrAdminOnlyMixin, ManagerOrAdminOrAdvertiser
+from apps.users.mixins import RolePermissionMixin
 
 from .models import Merchant
 
 
-class AdvertiserListView(LoginRequiredMixin, ManagerOrAdminOnlyMixin, TemplateView):
+class AdvertiserListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['manager', 'admin']
     template_name = 'advertisers/advertiser-list.html'
 
 
-class MerchantListView(LoginRequiredMixin, ManagerOrAdminOrAdvertiser, TemplateView):
+class MerchantListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['manager', 'admin', 'advertiser']
     template_name = 'advertisers/merchant-list.html'
 
 
-class MerchantDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class MerchantDetailView(LoginRequiredMixin, RolePermissionMixin, DetailView):
+    allowed_roles = ['admin', 'advertiser']
+
     queryset = Merchant.objects.all()
 
     template_name = 'advertisers/merchant-details.html'
     context_object_name = 'merchant'
 
-    raise_exception = True
-
     def test_func(self):
-        return (self.request.user.role == 'admin' or
-                self.request.user.role == 'advertiser' and
-                self.get_object(self.get_queryset()).owner_id == self.request.user.id)
+        if self.request.user.role == 'advertiser':
+            return self.get_object(self.get_queryset()).owner_id == self.request.user.id
+        return super().test_func()
 
 
-class ModerationListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ModerationListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['manager']
     template_name = 'advertisers/moderation-list.html'
 
-    raise_exception = True
 
-    def test_func(self):
-        return self.request.user.role == 'manager'
-
-
-class ProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+class ProfileView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['advertiser']
     template_name = 'advertisers/profile.html'
-
-    raise_exception = True
-
-    def test_func(self):
-        return self.request.user.role == 'advertiser'
