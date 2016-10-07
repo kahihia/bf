@@ -1,13 +1,10 @@
-import os
-
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.conf import settings
 
 
 def validate_file_extension(value):
-    ext = os.path.splitext(value.name)[1]
-    if not ext.lower() in settings.SPECIAL_SUPPORTED_FORMATS:
+    if not value.name.split('.')[-1].lower() in settings.SPECIAL_SUPPORTED_FORMATS:
         raise ValidationError(u'Unsupported file extension.')
 
 
