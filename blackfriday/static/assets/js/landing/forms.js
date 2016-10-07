@@ -1,6 +1,7 @@
 /* global $ toastr */
 
 import Cookie from 'js-cookie';
+import MESSAGES from './messages.js';
 var createFloctory = require('./flocktory.js');
 
 const csrftoken = Cookie.get('csrftoken');
@@ -18,7 +19,7 @@ $('form').ajaxForm({
 });
 
 function showResponse(data) {
-	toastr.success('Заявка успешно отправлена');
+	toastr.success(MESSAGES.subscribeSuccess);
 	$('.modal.in').modal('hide');
 
 	if (data.organizationName || data.phone) {
@@ -31,11 +32,11 @@ function showResponse(data) {
 
 function showError(resp) {
 	if (resp.status !== 400) {
-		toastr.error('Не удалось отправить заявку');
+		toastr.error(MESSAGES.subscribeError);
 		return;
 	}
 
 	if (resp.responseJSON && resp.responseJSON.nonFieldErrors) {
-		toastr.warning('Заявка с таким адресом электронной почты уже в работе');
+		toastr.warning(MESSAGES.subscribeExists);
 	}
 }
