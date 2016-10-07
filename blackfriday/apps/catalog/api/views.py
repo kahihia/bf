@@ -169,6 +169,8 @@ class ProductViewSet(
 
 
 class YmlProductViewSet(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
     @list_route(['get'])
     def yml(self, request, **kwargs):
         include_category_ids = request.GET.getlist('categories', [])
