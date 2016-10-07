@@ -5,17 +5,15 @@
 import React from 'react';
 import xhr from 'xhr';
 import DatePicker from 'react-datepicker';
-import InvoiceActions from './invoice-actions.js';
-import InvoiceItem from './invoice-item.jsx';
 import {TOKEN, PAYMENT_STATUS} from '../const.js';
 import Input from '../components/input.jsx';
-import ChangeManyInvoiceStatusesBtn from './change-many-invoice-statuses-btn.jsx';
-
-export const invoiceActions = new InvoiceActions();
+import InvoiceItem from './invoice-item.jsx';
+import InvoiceListSelectedAction from './invoice-list-selected-action.jsx';
 
 export class InvoiceList extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+
 		this.state = {
 			allSelected: false,
 			data: [],
@@ -30,7 +28,7 @@ export class InvoiceList extends React.Component {
 			isLoading: true,
 			newStatus: 1,
 			ordering: null,
-			selectedItems: []
+			selectedItemsIds: []
 		};
 
 		this.handleFilterByDate = this.handleFilterByDate.bind(this);
@@ -45,27 +43,9 @@ export class InvoiceList extends React.Component {
 		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
 		this.handleOrderingBySum = this.handleOrderingBySum.bind(this);
 		this.handleSelectAll = this.handleSelectAll.bind(this);
-		this.onItemExpireDateChanged = this.onItemExpireDateChanged.bind(this);
-		this.onItemSelected = this.onItemSelected.bind(this);
-		this.onItemUnselected = this.onItemUnselected.bind(this);
-		this.selectAll = this.selectAll.bind(this);
-		this.unselectAll = this.unselectAll.bind(this);
 
-		invoiceActions.onItemSelected(actionData => {
-			this.onItemSelected(actionData.id);
-		});
-
-		invoiceActions.onItemUnselected(actionData => {
-			this.onItemUnselected(actionData.id);
-		});
-
-		invoiceActions.onAllUnselected(actionData => {
-			this.unselectAll(actionData.stop);
-		});
-
-		invoiceActions.onItemExpireDateChanged(actionData => {
-			this.onItemExpireDateChanged(actionData);
-		});
+		this.handleSelectItem = this.handleSelectItem.bind(this);
+		this.handleChangeItemExpireDate = this.handleChangeItemExpireDate.bind(this);
 	}
 
 	componentDidMount() {
@@ -85,9 +65,7 @@ export class InvoiceList extends React.Component {
 				let invoice;
 				let merchant;
 				if (activeMerchantId) {
-					invoice = _.find(data, item => {
-						return item.merchant.id === activeMerchantId;
-					});
+					invoice = _.find(data, item => (item.merchant.id === activeMerchantId));
 
 					if (invoice) {
 						merchant = invoice.merchant;
@@ -100,6 +78,7 @@ export class InvoiceList extends React.Component {
 					}
 
 					previousState.data = data;
+
 					return previousState;
 				});
 			}
@@ -123,65 +102,41 @@ export class InvoiceList extends React.Component {
 		return activeMerchantId;
 	}
 
-	onItemSelected(itemId) {
-		const selectedItems = this.state.selectedItems.slice();
+	handleSelectItem(id) {
+		const {data, selectedItemsIds} = this.state;
 
-		for (let i = 0; i < this.state.data.length; i++) {
-			if (this.state.data[i].id === itemId) {
-				selectedItems.push(this.state.data[i]);
-			}
+		const index = selectedItemsIds.indexOf(id);
+		if (index === -1) {
+			selectedItemsIds.push(id);
+		} else {
+			selectedItemsIds.splice(index, 1);
 		}
 
 		this.setState({
-			allSelected: (selectedItems.length === this.state.data.length),
-			selectedItems
+			allSelected: (selectedItemsIds.length === data.length),
+			selectedItemsIds
 		});
 	}
 
-	onItemUnselected(itemId) {
-		const selectedItems = this.state.selectedItems.slice();
-
-		for (let i = 0; i < selectedItems.length; i++) {
-			if (selectedItems[i].id === itemId) {
-				selectedItems.splice(i, 1);
-			}
-		}
-
-		this.setState({
-			allSelected: false,
-			selectedItems
-		});
-	}
-
-	selectAll(stop) {
-		stop = stop || false;
+	selectAll() {
+		const selectedItemsIds = this.state.data.map(item => item.id);
 
 		this.setState({
 			allSelected: true,
-			selectedItems: this.state.data
-		}, () => {
-			if (!stop) {
-				invoiceActions.allSelected(true /* stop */);
-			}
+			selectedItemsIds
 		});
 	}
 
-	unselectAll(stop) {
-		stop = stop || false;
-
+	unselectAll() {
 		this.setState({
 			allSelected: false,
-			selectedItems: []
-		}, () => {
-			if (!stop) {
-				invoiceActions.allUnselected(true /* stop */);
-			}
+			selectedItemsIds: []
 		});
 	}
 
-	onItemExpireDateChanged(options) {
-		const id = options.invoiceId;
-		const expiredDate = options.newDate.format('YYYY-MM-DD');
+	handleChangeItemExpireDate(id, date) {
+		const expiredDate = date.format('YYYY-MM-DD');
+		const json = {expiredDate};
 
 		xhr({
 			url: `/api/invoices/${id}/`,
@@ -189,15 +144,19 @@ export class InvoiceList extends React.Component {
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
-			json: {expiredDate}
+			json
 		}, (err, resp) => {
 			if (!err && resp.statusCode === 200) {
-				const invoice = _.find(this.state.data, {id});
+				const invoice = this.getInvoiceById(id);
 				invoice.expiredDate = expiredDate;
 			}
 
 			this.setState({isLoading: false});
 		});
+	}
+
+	getInvoiceById(id) {
+		return _.find(this.state.data, {id});
 	}
 
 	handleSelectAll() {
@@ -208,8 +167,8 @@ export class InvoiceList extends React.Component {
 		}
 	}
 
-	handleChangeNewStatus(event) {
-		this.setState({newStatus: parseInt(event.target.value, 10)});
+	handleChangeNewStatus(e) {
+		this.setState({newStatus: parseInt(e.target.value, 10)});
 	}
 
 	handleFilterByDate(date) {
@@ -252,52 +211,60 @@ export class InvoiceList extends React.Component {
 		this.setState({filters});
 	}
 
-	handleFilterByStatus(event) {
-		const filters = Object.assign({}, this.state.filters, {
-			status: (event.target.value === '') ? null : parseInt(event.target.value, 10)
-		});
+	handleFilterByStatus(e) {
+		const value = e.target.value;
+		const status = value === '' ? null : parseInt(value, 10);
 
+		const filters = Object.assign({}, this.state.filters, {status});
 		this.setState({filters});
 	}
 
 	handleOrderingByDate() {
-		if (!this.state.isLoading) {
-			let newOrdering;
+		const {isLoading, ordering} = this.state;
 
-			switch (this.state.ordering) {
-				case 'created_at':
-					newOrdering = '-created_at';
-					break;
-				case '-created_at':
-					newOrdering = null;
-					break;
-				default:
-					newOrdering = 'created_at';
-					break;
-			}
-
-			this.setState({ordering: newOrdering});
+		if (isLoading) {
+			return;
 		}
+
+		let newOrdering;
+
+		switch (ordering) {
+			case 'created_at':
+				newOrdering = '-created_at';
+				break;
+			case '-created_at':
+				newOrdering = null;
+				break;
+			default:
+				newOrdering = 'created_at';
+				break;
+		}
+
+		this.setState({ordering: newOrdering});
 	}
 
 	handleOrderingBySum() {
-		if (!this.state.isLoading) {
-			let newOrdering;
+		const {isLoading, ordering} = this.state;
 
-			switch (this.state.ordering) {
-				case 'sum':
-					newOrdering = '-sum';
-					break;
-				case '-sum':
-					newOrdering = null;
-					break;
-				default:
-					newOrdering = 'sum';
-					break;
-			}
-
-			this.setState({ordering: newOrdering});
+		if (isLoading) {
+			return;
 		}
+
+		let newOrdering;
+
+		switch (ordering) {
+			case 'sum':
+				newOrdering = '-sum';
+				break;
+			case '-sum':
+				newOrdering = null;
+				break;
+			default:
+				newOrdering = 'sum';
+				break;
+		}
+
+		this.setState({ordering: newOrdering});
 	}
 
 	handleFiltersReset() {
@@ -410,9 +377,7 @@ export class InvoiceList extends React.Component {
 			return data;
 		}
 
-		return _.filter(data, item => {
-			return item.status === status;
-		});
+		return _.filter(data, item => (item.status === status));
 	}
 
 	filterData(data) {
@@ -436,15 +401,12 @@ export class InvoiceList extends React.Component {
 			isLoading,
 			newStatus,
 			ordering,
-			selectedItems
+			selectedItemsIds
 		} = this.state;
 
-		let filteredData = this.filterData(data);
+		const filteredData = this.filterData(data);
 		const sortedData = this.getSortedData(filteredData);
-		const selectedItemsIds = selectedItems.map(invoiceItem => {
-			return invoiceItem.id;
-		});
-		const noSelectedItems = (selectedItems.length === 0);
+		const noSelectedItems = (selectedItemsIds.length === 0);
 
 		let orderByDateIconCssClass;
 		let orderBySumIconCssClass;
@@ -483,6 +445,7 @@ export class InvoiceList extends React.Component {
 										{'Дата'}
 									</label>
 								</div>
+
 								<DatePicker
 									className="form-control datepicker-input-sm"
 									style={{fontSize: 14}}
@@ -502,6 +465,7 @@ export class InvoiceList extends React.Component {
 										{'Рекламодатель'}
 									</label>
 								</div>
+
 								<Input
 									value={filters.name || ''}
 									onChange={this.handleFilterByName}
@@ -515,6 +479,7 @@ export class InvoiceList extends React.Component {
 										{'№ счёта'}
 									</label>
 								</div>
+
 								<Input
 									value={filters.id || ''}
 									onChange={this.handleFilterById}
@@ -535,6 +500,7 @@ export class InvoiceList extends React.Component {
 											{'от'}
 										</div>
 									</div>
+
 									<div className="col-sm-4">
 										<Input
 											value={filters.minSum || ''}
@@ -548,6 +514,7 @@ export class InvoiceList extends React.Component {
 											{'до'}
 										</div>
 									</div>
+
 									<div className="col-sm-4">
 										<Input
 											value={filters.maxSum || ''}
@@ -564,6 +531,7 @@ export class InvoiceList extends React.Component {
 										{'Статус'}
 									</label>
 								</div>
+
 								<select
 									className="form-control"
 									style={{fontSize: 14}}
@@ -574,12 +542,15 @@ export class InvoiceList extends React.Component {
 									<option value="">
 										{'Все'}
 									</option>
+
 									<option value={0}>
 										{PAYMENT_STATUS[0]}
 									</option>
+
 									<option value={1}>
 										{PAYMENT_STATUS[1]}
 									</option>
+
 									<option value={2}>
 										{PAYMENT_STATUS[2]}
 									</option>
@@ -610,7 +581,7 @@ export class InvoiceList extends React.Component {
 					}}
 					/>
 
-				<table className="table table-striped">
+				<table className="table table-hover">
 					<thead>
 						<tr>
 							<th>
@@ -663,14 +634,16 @@ export class InvoiceList extends React.Component {
 					</thead>
 
 					<tbody>
-						{sortedData.map(invoiceItem => {
-							const itemIsSelected = (selectedItems.indexOf(invoiceItem.id) >= 0);
+						{sortedData.map(item => {
+							const isSelected = (selectedItemsIds.indexOf(item.id) > -1);
 
 							return (
 								<InvoiceItem
-									key={invoiceItem.id}
-									data={invoiceItem}
-									selected={itemIsSelected}
+									key={item.id}
+									data={item}
+									selected={isSelected}
+									onSelect={this.handleSelectItem}
+									onChangeExpireDate={this.handleChangeItemExpireDate}
 									/>
 							);
 						})}
@@ -690,81 +663,6 @@ export class InvoiceList extends React.Component {
 		);
 	}
 }
-
-class InvoiceListSelectedAction extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
-	}
-
-	handleChangeNewStatus(e) {
-		this.props.onChangeNewStatus(e);
-	}
-
-	render() {
-		const {
-			isLoading,
-			newStatus,
-			noSelectedItems,
-			selectedItemsIds
-		} = this.props;
-
-		return (
-			<div className="form-group">
-				<div className="col-sm-2">
-					<div className="form-control-static">
-						{'Для выбранных'}
-					</div>
-				</div>
-
-				<div className="col-sm-5">
-					<select
-						className="form-control"
-						value={newStatus}
-						disabled={noSelectedItems || isLoading}
-						onChange={this.handleChangeNewStatus}
-						>
-						<option value={1}>
-							{`Изменить статус на «${PAYMENT_STATUS[1]}»`}
-						</option>
-						<option value={0}>
-							{`Изменить статус на «${PAYMENT_STATUS[0]}»`}
-						</option>
-						<option value={2}>
-							{`Изменить статус на «${PAYMENT_STATUS[2]}»`}
-						</option>
-					</select>
-				</div>
-
-				<div className="col-sm-2">
-					<ChangeManyInvoiceStatusesBtn
-						invoiceIds={selectedItemsIds}
-						disabled={noSelectedItems || isLoading}
-						newStatus={newStatus}
-						/>
-				</div>
-
-				<div className="col-sm-3 text-right">
-					{isLoading ? (
-						<div className="form-control-static text-muted">
-							{'Загрузка...'}
-						</div>
-					) : null}
-				</div>
-			</div>
-		);
-	}
-}
-InvoiceListSelectedAction.propTypes = {
-	isLoading: React.PropTypes.bool,
-	newStatus: React.PropTypes.number,
-	noSelectedItems: React.PropTypes.bool,
-	onChangeNewStatus: React.PropTypes.func,
-	selectedItemsIds: React.PropTypes.array
-};
-InvoiceListSelectedAction.defaultProps = {
-};
 
 function contains(what, where) {
 	if (where.toLowerCase().indexOf(what.toLowerCase()) > -1) {
