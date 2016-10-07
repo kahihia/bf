@@ -3,7 +3,7 @@
 import React from 'react';
 import Price from 'react-price';
 import DatePicker from 'react-datepicker';
-import {formatPrice} from '../utils.js';
+import {formatPrice, hasRole} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
 import InvoiceStatus from './invoice-status.jsx';
 
@@ -35,6 +35,7 @@ export default class InvoiceItem extends React.Component {
 	render() {
 		const {isEditingExpireDate} = this.state;
 		const {data, selected} = this.props;
+		const isAdmin = hasRole('admin');
 
 		return (
 			<tr className={selected ? 'active' : ''}>
@@ -79,7 +80,7 @@ export default class InvoiceItem extends React.Component {
 				</td>
 				<td>
 					<div className="text-nowrap">
-						{data.status === 0 ? (
+						{isAdmin && (data.status === 0) ? (
 							<a
 								href="#"
 								onClick={this.handleClickEditExpireDate}
