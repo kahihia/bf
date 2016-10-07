@@ -1,4 +1,4 @@
-/* global window moment _ */
+/* global window moment _ toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint react/require-optimization: 0 */
 
@@ -39,6 +39,7 @@ export class InvoiceList extends React.Component {
 		this.handleFilterByStatus = this.handleFilterByStatus.bind(this);
 
 		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
+		this.handleClickChangeStatuses = this.handleClickChangeStatuses.bind(this);
 		this.handleFiltersReset = this.handleFiltersReset.bind(this);
 		this.handleOrderingByDate = this.handleOrderingByDate.bind(this);
 		this.handleOrderingBySum = this.handleOrderingBySum.bind(this);
@@ -84,6 +85,37 @@ export class InvoiceList extends React.Component {
 			}
 
 			this.setState({isLoading: false});
+		});
+	}
+
+	requestInvoicesStatuses(ids) {
+		this.setState({isLoading: true});
+
+		const {newStatus} = this.state;
+		const json = {
+			status: newStatus,
+			ids
+		};
+
+		xhr({
+			url: '/api/invoices/statuses/',
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			if (resp.statusCode === 200) {
+				data.forEach(item => {
+					const invoice = this.getInvoiceById(item.id);
+					_.merge(invoice, item);
+				});
+				this.unselectAll();
+			} else {
+				toastr.error('Не удалось изменить статусы счетов');
+			}
 		});
 	}
 
@@ -169,6 +201,10 @@ export class InvoiceList extends React.Component {
 
 	handleChangeNewStatus(e) {
 		this.setState({newStatus: parseInt(e.target.value, 10)});
+	}
+
+	handleClickChangeStatuses(ids) {
+		this.requestInvoicesStatuses(ids);
 	}
 
 	handleFilterByDate(date) {
@@ -406,7 +442,15 @@ export class InvoiceList extends React.Component {
 
 		const filteredData = this.filterData(data);
 		const sortedData = this.getSortedData(filteredData);
-		const noSelectedItems = (selectedItemsIds.length === 0);
+
+		const filteredSelectedItemsIds = filteredData.reduce((a, b) => {
+			if (selectedItemsIds.indexOf(b.id) > -1) {
+				a.push(b.id);
+			}
+
+			return a;
+		}, []);
+		const noSelectedItems = (filteredSelectedItemsIds.length === 0);
 
 		let orderByDateIconCssClass;
 		let orderBySumIconCssClass;
@@ -573,11 +617,12 @@ export class InvoiceList extends React.Component {
 
 				<InvoiceListSelectedAction
 					onChangeNewStatus={this.handleChangeNewStatus}
+					onClickChangeStatuses={this.handleClickChangeStatuses}
+					selectedItemsIds={filteredSelectedItemsIds}
 					{...{
 						isLoading,
 						newStatus,
-						noSelectedItems,
-						selectedItemsIds
+						noSelectedItems
 					}}
 					/>
 
@@ -635,7 +680,7 @@ export class InvoiceList extends React.Component {
 
 					<tbody>
 						{sortedData.map(item => {
-							const isSelected = (selectedItemsIds.indexOf(item.id) > -1);
+							const isSelected = (filteredSelectedItemsIds.indexOf(item.id) > -1);
 
 							return (
 								<InvoiceItem
@@ -652,11 +697,12 @@ export class InvoiceList extends React.Component {
 
 				<InvoiceListSelectedAction
 					onChangeNewStatus={this.handleChangeNewStatus}
+					onClickChangeStatuses={this.handleClickChangeStatuses}
+					selectedItemsIds={filteredSelectedItemsIds}
 					{...{
 						isLoading,
 						newStatus,
-						noSelectedItems,
-						selectedItemsIds
+						noSelectedItems
 					}}
 					/>
 			</div>

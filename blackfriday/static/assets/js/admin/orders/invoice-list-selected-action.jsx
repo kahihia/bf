@@ -9,10 +9,15 @@ class InvoiceListSelectedAction extends React.Component {
 		super(props);
 
 		this.handleChangeNewStatus = this.handleChangeNewStatus.bind(this);
+		this.handleClickChangeStatuses = this.handleClickChangeStatuses.bind(this);
 	}
 
 	handleChangeNewStatus(e) {
 		this.props.onChangeNewStatus(e);
+	}
+
+	handleClickChangeStatuses(ids) {
+		this.props.onClickChangeStatuses(ids);
 	}
 
 	render() {
@@ -57,6 +62,7 @@ class InvoiceListSelectedAction extends React.Component {
 						invoiceIds={selectedItemsIds}
 						disabled={noSelectedItems || isLoading}
 						newStatus={newStatus}
+						onClick={this.handleClickChangeStatuses}
 						/>
 				</div>
 
@@ -75,7 +81,8 @@ InvoiceListSelectedAction.propTypes = {
 	isLoading: React.PropTypes.bool,
 	newStatus: React.PropTypes.number,
 	noSelectedItems: React.PropTypes.bool,
-	onChangeNewStatus: React.PropTypes.func,
+	onChangeNewStatus: React.PropTypes.func.isRequired,
+	onClickChangeStatuses: React.PropTypes.func.isRequired,
 	selectedItemsIds: React.PropTypes.array
 };
 InvoiceListSelectedAction.defaultProps = {

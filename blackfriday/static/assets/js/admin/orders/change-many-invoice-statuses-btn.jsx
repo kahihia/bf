@@ -1,9 +1,6 @@
-/* global toastr */
+/* eslint react/require-optimization: 0 */
 
 import React from 'react';
-import xhr from 'xhr';
-import {TOKEN} from '../const.js';
-import {invoiceActions} from './invoice-list.jsx';
 
 export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 	constructor(props) {
@@ -22,39 +19,7 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 	}
 
 	handleClick() {
-		if (this.state.disabled) {
-			return;
-		}
-
-		this.requestIvoicesStatuses();
-	}
-
-	requestIvoicesStatuses() {
-		this.setState({disabled: true});
-
-		const {newStatus, invoiceIds} = this.props;
-		const json = {
-			ids: invoiceIds,
-			status: newStatus
-		};
-
-		xhr({
-			url: '/api/invoices/statuses/',
-			method: 'POST',
-			headers: {
-				'X-CSRFToken': TOKEN.csrftoken
-			},
-			json
-		}, (err, resp) => {
-			this.setState({disabled: false});
-
-			if (resp.statusCode === 200) {
-				invoiceActions.allUnselected(true /* stop */);
-				invoiceActions.statusChanged(invoiceIds, newStatus);
-			} else {
-				toastr.error('Не удалось изменить статусы счетов');
-			}
-		});
+		this.props.onClick(this.props.invoiceIds);
 	}
 
 	render() {
@@ -64,8 +29,8 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 			<button
 				className="btn btn-default"
 				type="button"
-				disabled={disabled}
 				onClick={this.handleClick}
+				disabled={disabled}
 				>
 				{'Применить'}
 			</button>
@@ -75,8 +40,8 @@ export default class ChangeManyInvoiceStatusesBtn extends React.Component {
 ChangeManyInvoiceStatusesBtn.propTypes = {
 	invoiceIds: React.PropTypes.array,
 	disabled: React.PropTypes.bool,
-	newStatus: React.PropTypes.number
+	newStatus: React.PropTypes.number,
+	onClick: React.PropTypes.func.isRequired
 };
 ChangeManyInvoiceStatusesBtn.defaultProps = {
-	disabled: false
 };
