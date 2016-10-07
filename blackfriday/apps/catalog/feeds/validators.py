@@ -65,4 +65,4 @@ class Required(BaseValidator):
 
     def validate(self, value, **kwargs):
 
-        return bool(value)
+        return value is not None

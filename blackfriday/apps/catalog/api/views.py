@@ -84,7 +84,6 @@ class ProductViewSet(
             if errors and not failed:
                 failed = True
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,
@@ -95,7 +94,7 @@ class ProductViewSet(
         qs = [
             Product(
                 **dict(
-                    row['data'],
+                    **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
                     **{
                         'category_id': categories[str.lower(row['data'].pop('category'))],
                         'merchant_id': self.merchant.id
@@ -119,6 +118,7 @@ class ProductViewSet(
 
         if errors:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        cleaned_data.pop('_id')
         data = dict(
             cleaned_data,
             **{
@@ -143,7 +143,6 @@ class ProductViewSet(
         for counter, row in enumerate(FeedParser(f)):
             cleaned_data, errors, warnings = row
             result.append({
-                '_id': counter,
                 'data': cleaned_data,
                 'warnings': warnings,
                 'errors': errors,
@@ -159,7 +158,6 @@ class ProductViewSet(
             # so we need save given identifiers
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,
