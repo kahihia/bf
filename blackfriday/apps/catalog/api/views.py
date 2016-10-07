@@ -93,13 +93,9 @@ class ProductViewSet(
         categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
         qs = [
             Product(
-                **dict(
-                    **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
-                    **{
-                        'category_id': categories[str.lower(row['data'].pop('category'))],
-                        'merchant_id': self.merchant.id
-                    }
-                )
+                category_id=categories[str.lower(row['data'].pop('category'))],
+                merchant_id=self.merchant.id,
+                **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
