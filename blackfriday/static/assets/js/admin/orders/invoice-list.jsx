@@ -579,7 +579,7 @@ export class InvoiceList extends React.Component {
 								<select
 									className="form-control"
 									style={{fontSize: 14}}
-									value={filters.status || ''}
+									value={filters.status === null ? '' : filters.status}
 									disabled={isLoading}
 									onChange={this.handleFilterByStatus}
 									>
