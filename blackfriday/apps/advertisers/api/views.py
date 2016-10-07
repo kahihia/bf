@@ -12,6 +12,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.advertisers.api.serializers import BannerSerializer
+from apps.catalog.api.serializers import CategorySerializer
+from apps.catalog.models import Category
+from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
@@ -52,7 +55,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
     permission_classes = [
         IsAuthenticated,
         IsAdvertiser & IsOwner & action_permission(
-            'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation', 'limits', 'available_options'
+            'list', 'retrieve', 'create', 'update', 'partial_update',
+            'moderation', 'limits', 'available_options', 'logo_categories'
         ) |
         IsManager & action_permission(
             'list', 'retrieve', 'moderation'
@@ -72,7 +76,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'list': MerchantListSerializer,
             'update': MerchantUpdateSerializer,
             'partial_update': MerchantUpdateSerializer,
-            'moderation': MerchantModerationSerializer
+            'moderation': MerchantModerationSerializer,
+            'logo_categories': CategorySerializer,
         }.get(self.action, MerchantSerializer)
 
     @detail_route(methods=['patch', 'put', 'get'])
@@ -138,6 +143,28 @@ class MerchantViewSet(viewsets.ModelViewSet):
         # TODO: do it in one or two db requests. for now it quick-coding, but affects a bunch of requests
         serializer = AvailableOptionSerializer(data=filter(lambda x: x.is_available, qs), many=True)
         serializer.is_valid()
+        return Response(serializer.data)
+
+    @detail_route(methods=['get', 'patch'], url_path='logo-categories')
+    def logo_categories(self, request, *args, **kwargs):
+        merchant = self.get_object()
+        self.check_object_permissions(self.request, merchant)
+
+        if request.method == 'PATCH':
+            try:
+                cat_list = list(map(int, request.data))
+            except (TypeError, ValueError):
+                raise BadRequest('Неверные данные')
+            if len(cat_list) > len(set(cat_list)):
+                raise BadRequest('Значения не должны повторяться')
+
+            cats = Category.objects.filter(id__in=cat_list)
+            if cats.count() < len(cat_list):
+                raise BadRequest('Не все ключи присутствуют в базе')
+
+            merchant.logo_categories.set(cats)
+
+        serializer = self.get_serializer(merchant.logo_categories.all(), many=True)
         return Response(serializer.data)
 
 
