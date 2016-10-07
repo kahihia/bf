@@ -8,13 +8,17 @@ from django.db.models import Sum
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from apps.advertisers.api.serializers import BannerSerializer
 from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
 from apps.promo.models import Option, PromoOption
+
+from ..models import Banner
 
 from .filters import AdvertiserFilter, MerchantFilter
 from .serializers import (
@@ -135,3 +139,20 @@ class MerchantViewSet(viewsets.ModelViewSet):
         serializer = AvailableOptionSerializer(data=filter(lambda x: x.is_available, qs), many=True)
         serializer.is_valid()
         return Response(serializer.data)
+
+
+class BannerViewSet(viewsets.ModelViewSet):
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
+    permission_classes = [IsAuthenticated, IsAdmin | IsAdvertiser & IsOwner]
+
+    def get_parent(self):
+        parent = get_object_or_404(Merchant.objects.all(), id=self.kwargs.get('merchant_pk'))
+        self.check_object_permissions(self.request, parent)
+        return parent
+
+    def get_queryset(self):
+        return super().get_queryset().filter(merchant=self.get_parent())
+
+    def perform_create(self, serializer):
+        serializer.save(merchant=self.get_parent())

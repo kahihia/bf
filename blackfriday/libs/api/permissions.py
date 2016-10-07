@@ -35,10 +35,16 @@ class ReadOnly(BaseComplexPermission):
     def has_permission(self, request, view):
         return request.method in permissions.SAFE_METHODS
 
+    def has_object_permission(self, request, view, obj):
+        return self.has_permission(request, view)
+
 
 class IsAuthenticated(BaseComplexPermission):
     def has_permission(self, request, view):
         return request.user and request.user.is_authenticated and request.user.is_active
+
+    def has_object_permission(self, request, view, obj):
+        return self.has_permission(request, view)
 
 
 class IsOwner(BaseComplexPermission):
