@@ -1,10 +1,9 @@
-from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from apps.users.mixins import RolePermissionMixin
 
-class SpecialListView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
-    raise_exception = True
+
+class SpecialListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['admin', 'advertiser']
     template_name = 'specials/special-list.html'
-
-    def test_func(self):
-        return self.request.user.role in ('admin', 'advertiser')
