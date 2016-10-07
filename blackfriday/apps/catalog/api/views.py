@@ -1,6 +1,7 @@
 import json
 import datetime
 from django.http import HttpResponse
+from django.conf import settings
 from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework import status
@@ -84,7 +85,6 @@ class ProductViewSet(
             if errors and not failed:
                 failed = True
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,
@@ -94,13 +94,9 @@ class ProductViewSet(
         categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
         qs = [
             Product(
-                **dict(
-                    row['data'],
-                    **{
-                        'category_id': categories[str.lower(row['data'].pop('category'))],
-                        'merchant_id': self.merchant.id
-                    }
-                )
+                category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
+                merchant_id=self.merchant.id,
+                **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
@@ -119,6 +115,7 @@ class ProductViewSet(
 
         if errors:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        cleaned_data.pop('_id')
         data = dict(
             cleaned_data,
             **{
@@ -143,7 +140,6 @@ class ProductViewSet(
         for counter, row in enumerate(FeedParser(f)):
             cleaned_data, errors, warnings = row
             result.append({
-                '_id': counter,
                 'data': cleaned_data,
                 'warnings': warnings,
                 'errors': errors,
@@ -159,7 +155,6 @@ class ProductViewSet(
             # so we need save given identifiers
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,

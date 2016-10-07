@@ -3,6 +3,7 @@ from django.conf import settings
 
 SUCCESS_DATA = {
     'input': {
+        "_id": 12,
         "category": "correct_category_name",
         "name": "name",
         "image": "http://image.com",
@@ -17,6 +18,7 @@ SUCCESS_DATA = {
     },
     'output': (
         {
+            "_id": 12,
             "category": "correct_category_name",
             "name": "name",
             "image": "http://image.com",
@@ -36,6 +38,7 @@ SUCCESS_DATA = {
 
 FAIL_DATA = {
     'input': {
+        "_id": 32,
         "category": "incorrect_category_name",
         "name": "name",
         "image": "image.com",
@@ -50,6 +53,7 @@ FAIL_DATA = {
     },
     'output': (
         {
+            "_id": 32,
             "category": settings.DEFAULT_CATEGORY_NAME,
             "name": "name",
             "image": "image.com",
