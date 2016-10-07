@@ -91,13 +91,13 @@ class ProductViewSet(
             })
         if failed:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
-        categories = {cat.name: cat.id for cat in Category.objects.all()}
+        categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
         qs = [
             Product(
                 **dict(
                     row['data'],
                     **{
-                        'category_id': categories[row['data'].pop('category')],
+                        'category_id': categories[str.lower(row['data'].pop('category'))],
                         'merchant_id': self.merchant.id
                     }
                 )
