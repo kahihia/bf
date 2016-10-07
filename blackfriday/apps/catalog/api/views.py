@@ -1,6 +1,7 @@
 import json
 import datetime
 from django.http import HttpResponse
+from django.conf import settings
 from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework import status
@@ -93,7 +94,7 @@ class ProductViewSet(
         categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
         qs = [
             Product(
-                category_id=categories[str.lower(row['data'].pop('category'))],
+                category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
                 merchant_id=self.merchant.id,
                 **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
