@@ -32,13 +32,20 @@ def clear_category(category, context):
     return category
 
 
+def optional_required(_id, context):
+    if context.get('_id_required', True):
+        return _id is not None
+    return True
+
+
 clear_category.null = True
 
 
 class ProductRow(Row):
     _columns = (
         Column(
-            '_id', pipes=(float, int), validators=(Required(),)),
+            '_id', pipes=(float, int),
+            validators=(GenericValidator(message='Обязательное поле', rule=optional_required),)),
         Column(
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
@@ -91,6 +98,8 @@ class FeedParser:
             'product_urls': set(),
             'categories': list(map(str.lower, Category.objects.values_list('name', flat=True)))
         }
+        for key, value in kwargs.items():
+            self.context[key] = value
 
     def __iter__(self):
         reader = self.get_reader()
