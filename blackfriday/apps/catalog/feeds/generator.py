@@ -16,12 +16,12 @@ class FeedGenerator:
         return product.url
 
     def get_category_url(self, product):
-        return '{}category/{}'.format(
+        return '{}/category/{}'.format(
             settings.SITE_URL, product.category.slug
         )
 
     def get_merchant_url(self, product):
-        return '{}merchant/{}'.format(
+        return '{}/merchant/{}'.format(
             settings.SITE_URL, product.merchant.url
         )
 
@@ -107,7 +107,8 @@ class FeedGenerator:
                 bannerskidka = SubElement(offer, 'param', {'name': 'bannerskidka'})
                 bannerskidka.text = str(product.discount)
 
-            if 'legal_info' not in self.excludes and product.merchant.advertiser.profile:
+            if 'legal_info' not in self.excludes and (
+                    product.merchant.advertiser.profile and product.merchant.advertiser.profile.legal_address):
                 legal_info = SubElement(offer, 'legal_info')
                 legal_info.text = product.merchant.advertiser.profile.legal_address
 
@@ -121,10 +122,10 @@ class FeedGenerator:
                 product.category.id + settings.RETAIL_ROCKET_CAT_SHIFT)
 
             price = SubElement(offer, 'price')
-            price.text = str(product.price)
+            price.text = str(product.price or '')
 
             old_price = SubElement(offer, 'oldprice')
-            old_price.text = str(product.old_price)
+            old_price.text = str(product.old_price or '')
 
             currency = SubElement(offer, 'currencyId')
             currency.text = 'RUR'
