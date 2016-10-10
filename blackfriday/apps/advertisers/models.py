@@ -74,6 +74,8 @@ class Merchant(models.Model):
                                             verbose_name='Статус модерации')
     is_active = models.BooleanField(default=False, verbose_name='Активен')
 
+    logo_categories = models.ManyToManyField('catalog.Category', related_name='merchant_logos')
+
     class Meta:
         verbose_name = 'Магазин'
         verbose_name_plural = 'Магазины'
