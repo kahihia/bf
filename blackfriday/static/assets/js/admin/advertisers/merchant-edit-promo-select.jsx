@@ -1,67 +1,68 @@
-/* global window, toastr, _ */
+/* global window toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
 import {hasRole, formatPrice} from '../utils.js';
-import PlanOptionList from './plan-option-list.jsx';
-import ShopPlanSelect from './shop-plan-select.jsx';
+import PromoOptionList from './promo-option-list.jsx';
+import MerchantPromoSelect from './merchant-promo-select.jsx';
 
-const ShopEditPlanSelect = React.createClass({
+const MerchantEditPromoSelect = React.createClass({
 	propTypes: {
-		shopId: React.PropTypes.any,
-		invoiceStatus: React.PropTypes.string
+		activePromoId: React.PropTypes.number,
+		id: React.PropTypes.number,
+		paymentStatus: React.PropTypes.number
 	},
 
 	getInitialState() {
 		return {
-			isCustomPlan: false,
-			activePlan: null,
+			activePromoId: null,
 			availableOptions: [],
-			sum: 0,
-			plans: [],
-			options: []
+			isCustomPromo: false,
+			options: [],
+			promos: [],
+			sum: 0
 		};
 	},
 
 	componentDidMount() {
+		this.requestPromos();
+	},
+
+	requestPromos() {
 		xhr({
-			url: '/admin/promos',
+			url: '/api/promos/',
+			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				data = data || {};
-				const plans = data.promos;
-				const options = data.options;
-
-				if (this.props.invoiceStatus === 'canceled') {
-					this.processData({plans, options});
-				} else {
-					this.requestCurrentPlan({plans, options});
-				}
+			if (resp.statusCode === 200) {
+				const promos = data;
+				this.requestOptions(promos);
 			} else {
-				toastr.error('Не удалось получить список пакетов');
+				toastr.error('Не удалось получить список рекламных пакетов');
 			}
 		});
 	},
 
-	requestCurrentPlan({plans = [], options = []}) {
+	requestOptions(promos) {
 		xhr({
-			url: `/admin/merchant/${this.props.shopId}/promo`,
+			url: `/api/merchants/${this.props.id}/available-options/`,
+			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				this.processData({plans, options, data});
+			if (resp.statusCode === 200) {
+				const options = data;
+				this.processData({promos, options});
 			} else {
-				toastr.error('Не удалось получить данные рекламного пакета');
+				toastr.error('Не удалось получить список опций рекламных пакетов');
 			}
 		});
 	},
 
-	processData({plans, options, data}) {
-		data = data || {
-			id: plans[0].id,
+	processData({promos, options}) {
+		const data = {
+			id: promos[0].id || this.props.activePromoId,
 			options: []
 		};
 
@@ -70,27 +71,27 @@ const ShopEditPlanSelect = React.createClass({
 			priceOld += data.price;
 		}
 
-		const activePlanId = data.id;
-		let currentPlan = _.find(plans, {id: activePlanId});
-		const isCustomPlan = !currentPlan;
+		const activePromoId = data.id;
+		let currentPromo = _.find(promos, {id: activePromoId});
+		const isCustomPromo = !currentPromo;
 
-		if (isCustomPlan) {
-			currentPlan = data;
-			plans.push(currentPlan);
+		if (isCustomPromo) {
+			currentPromo = data;
+			promos.push(currentPromo);
 		} else {
-			const currentPlanPrice = currentPlan.price;
-			// Disable plans with price < current plan price
-			plans.forEach(plan => {
-				if (plan.price < currentPlanPrice) {
-					plan.disabled = true;
+			const currentPromoPrice = currentPromo.price;
+			// Disable promos with price < current promo price
+			promos.forEach(promo => {
+				if (promo.price < currentPromoPrice) {
+					promo.disabled = true;
 				}
 			});
 
-			currentPlan.options = data.options;
+			currentPromo.options = data.options;
 		}
 
-		const availableOptions = this.collectAvailableOptions(options, currentPlan.options);
-		// Collect active plan options
+		const availableOptions = this.collectAvailableOptions(options, currentPromo.options);
+		// Collect active promo options
 		const activeOptions = [];
 		availableOptions.forEach(option => {
 			if (option.price && option.value) {
@@ -102,14 +103,14 @@ const ShopEditPlanSelect = React.createClass({
 			}
 		});
 
-		// Activate active plan options in all plans and options
+		// Activate active promo options in all promos and options
 		activeOptions.forEach(option => {
 			a(options, option);
-			_.forEach(plans, plan => {
-				if (!plan.options) {
+			_.forEach(promos, promo => {
+				if (!promo.options) {
 					return;
 				}
-				a(plan.options, option);
+				a(promo.options, option);
 			});
 		});
 
@@ -126,19 +127,19 @@ const ShopEditPlanSelect = React.createClass({
 		}
 
 		this.setState({
-			isCustomPlan: isCustomPlan,
-			priceOld: priceOld,
-			activePlan: activePlanId,
-			plans: plans,
-			options: options,
-			availableOptions: availableOptions
+			activePromoId,
+			isCustomPromo,
+			priceOld,
+			promos,
+			options,
+			availableOptions
 		});
 	},
 
-	handleChangePlan(planId) {
+	handleChangePromo(promoId) {
 		this.setState({
-			activePlan: planId,
-			availableOptions: this.getAvailableOptions(planId)
+			activePromoId: promoId,
+			availableOptions: this.getAvailableOptions(promoId)
 		});
 	},
 
@@ -173,12 +174,12 @@ const ShopEditPlanSelect = React.createClass({
 		this.requestFinal();
 	},
 
-	getAvailableOptions(planId) {
-		return this.collectAvailableOptions(this.state.options, this.getPlanOptions(planId));
+	getAvailableOptions(promoId) {
+		return this.collectAvailableOptions(this.state.options, this.getPromoOptions(promoId));
 	},
 
-	collectAvailableOptions(options, planOptions) {
-		const availableOptions = planOptions ? planOptions.concat(options) : options;
+	collectAvailableOptions(options, promoOptions) {
+		const availableOptions = promoOptions ? promoOptions.concat(options) : options;
 		const uniqAvailableOptions = _.uniqBy(availableOptions, 'id');
 		// Move 'По запросу' bottom
 		let sorted = _.sortBy(uniqAvailableOptions, 'name');
@@ -187,14 +188,14 @@ const ShopEditPlanSelect = React.createClass({
 		return sorted;
 	},
 
-	getPlanOptions(planId) {
-		const plan = this.getPlanById(planId);
+	getPromoOptions(promoId) {
+		const promo = this.getPromoById(promoId);
 
-		return plan.options || [];
+		return promo.options || [];
 	},
 
 	calculateSum() {
-		const plan = this.getActivePlan();
+		const promo = this.getActivePromo();
 		const activeOptions = this.getActiveOptions();
 
 		let sum = 0;
@@ -205,8 +206,8 @@ const ShopEditPlanSelect = React.createClass({
 				return a + (value * price);
 			}, 0);
 		}
-		if (plan.price) {
-			sum += plan.price;
+		if (promo.price) {
+			sum += promo.price;
 		}
 
 		if (this.state.priceOld) {
@@ -220,12 +221,12 @@ const ShopEditPlanSelect = React.createClass({
 		return this.state.availableOptions.filter(o => o.isActive);
 	},
 
-	getActivePlan() {
-		return this.getPlanById(this.state.activePlan);
+	getActivePromo() {
+		return this.getPromoById(this.state.activePromoId);
 	},
 
-	getPlanById(planId) {
-		return _.find(this.state.plans, {id: planId}) || {};
+	getPromoById(id) {
+		return _.find(this.state.promos, {id}) || {};
 	},
 
 	requestFinal() {
@@ -237,12 +238,12 @@ const ShopEditPlanSelect = React.createClass({
 		}, []);
 
 		xhr({
-			url: `/admin/merchant/${this.props.shopId}/promo`,
+			url: `/admin/merchant/${this.props.id}/promo`,
 			method: 'PUT',
 			json: {
 				name: this.state.name,
 				url: this.state.url,
-				promo_id: this.state.activePlan,
+				promo_id: this.state.activePromoId,
 				options: requestOptions
 			}
 		}, (err, resp, data) => {
@@ -261,13 +262,22 @@ const ShopEditPlanSelect = React.createClass({
 	},
 
 	render() {
+		const {
+			activePromoId,
+			isCustomPromo,
+			promos,
+			availableOptions
+		} = this.state;
+
 		return (
 			<div>
-				{this.state.plans.length && !this.state.isCustomPlan ? (
-					<ShopPlanSelect
-						plans={this.state.plans}
-						activePlan={this.state.activePlan}
-						onChangePlan={this.handleChangePlan}
+				{promos.length && !isCustomPromo ? (
+					<MerchantPromoSelect
+						{...{
+							activePromoId,
+							promos
+						}}
+						onChangePromo={this.handleChangePromo}
 						/>
 				) : null}
 
@@ -275,8 +285,8 @@ const ShopEditPlanSelect = React.createClass({
 					{'Дополнительные опции'}
 				</h2>
 
-				<PlanOptionList
-					options={this.state.availableOptions}
+				<PromoOptionList
+					options={availableOptions}
 					onChange={this.handleChangeOption}
 					onCheck={this.handleCheckOption}
 					/>
@@ -285,16 +295,19 @@ const ShopEditPlanSelect = React.createClass({
 					<div className="add-shop-footer__help">
 						<p/>
 					</div>
+
 					<div className="add-shop-footer__calc">
 						<div className="add-shop-footer__label">
 							{'Итоговая сумма:'}
 						</div>
+
 						<div className="add-shop-footer__price">
 							<Price
 								cost={formatPrice(this.calculateSum())}
 								currency={'₽'}
 								/>
 						</div>
+
 						<button
 							className="btn btn-primary"
 							type="button"
@@ -309,4 +322,4 @@ const ShopEditPlanSelect = React.createClass({
 	}
 });
 
-export default ShopEditPlanSelect;
+export default MerchantEditPromoSelect;

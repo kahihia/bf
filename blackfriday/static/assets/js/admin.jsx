@@ -47,15 +47,6 @@ import ReactDOM from 'react-dom';
 		ReactDOM.render(<CustomBackground merchantId={merchantId}/>, customBackground);
 	}
 
-	// Рендер блока изменения рекламного пакета
-	const shopEditPlanSelect = document.getElementById('shop-edit-plan-select');
-	if (shopEditPlanSelect) {
-		let ShopEditPlanSelect = require('./admin/advertiser/shop-edit-plan-select');
-		window.renderShopEditPlanSelect = function (shopId, invoiceStatus) {
-			ReactDOM.render(<ShopEditPlanSelect {...{shopId, invoiceStatus}}/>, shopEditPlanSelect);
-		};
-	}
-
 	const merchantLimitsWarning = document.getElementById('merchant-limits-warning');
 	if (merchantLimitsWarning) {
 		let MerchantLimitsWarning = require('./admin/advertiser/merchant-limits-warning');

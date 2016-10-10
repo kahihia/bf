@@ -12,25 +12,63 @@ class MerchantEditStatusPanel extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleClickModeration = this.handleClickModeration.bind(this);
+		this.handleClickPromoSelect = this.handleClickPromoSelect.bind(this);
+		this.handleClickPromoOptionsSelect = this.handleClickPromoOptionsSelect.bind(this);
 	}
 
 	handleClickModeration() {
 		this.props.onClickModeration();
 	}
 
+	handleClickPromoSelect() {
+		this.props.onClickPromoSelect();
+	}
+
+	handleClickPromoOptionsSelect() {
+		this.props.onClickPromoOptionsSelect();
+	}
+
 	render() {
 		const {
+			isModerationAllowed,
 			isPreviewable,
-			previewUrl,
-			paymentStatus,
 			moderationComment,
 			moderationStatus,
-			isModerationAllowed
+			optionsCount,
+			paymentStatus,
+			previewUrl,
+			promoName
 		} = this.props;
 
 		return (
 			<div className={className}>
 				<div className={b(className, 'data')}>
+					<ul className="props">
+						<li className="props__item">
+							<span className="props__label">
+								{'Рекламный пакет: '}
+							</span>
+
+							<span className="props__value">
+								{promoName}
+							</span>
+
+							<EditButton onClick={this.handleClickPromoSelect}/>
+						</li>
+
+						<li className="props__item">
+							<span className="props__label">
+								{'Дополнительные опции: '}
+							</span>
+
+							<span className="props__value">
+								{optionsCount}
+							</span>
+
+							<EditButton onClick={this.handleClickPromoOptionsSelect}/>
+						</li>
+					</ul>
+
 					<ul className="props">
 						<li className="props__item">
 							<span className="props__label">
@@ -104,15 +142,32 @@ class MerchantEditStatusPanel extends React.Component {
 	}
 }
 MerchantEditStatusPanel.propTypes = {
-	isPreviewable: React.PropTypes.bool,
-	previewUrl: React.PropTypes.string,
-	paymentStatus: React.PropTypes.number,
-	moderationStatus: React.PropTypes.number,
-	moderationComment: React.PropTypes.string,
 	isModerationAllowed: React.PropTypes.bool,
-	onClickModeration: React.PropTypes.func.isRequired
+	isPreviewable: React.PropTypes.bool,
+	moderationComment: React.PropTypes.string,
+	moderationStatus: React.PropTypes.number,
+	onClickModeration: React.PropTypes.func.isRequired,
+	onClickPromoOptionsSelect: React.PropTypes.func.isRequired,
+	onClickPromoSelect: React.PropTypes.func.isRequired,
+	optionsCount: React.PropTypes.number,
+	paymentStatus: React.PropTypes.number,
+	previewUrl: React.PropTypes.string,
+	promoName: React.PropTypes.string
 };
 MerchantEditStatusPanel.defaultProps = {
 };
 
 export default MerchantEditStatusPanel;
+
+const EditButton = props => (
+	<span
+		className="props__link"
+		onClick={props.onClick}
+		>
+		<Glyphicon name="pencil"/>
+	</span>
+);
+EditButton.propTypes = {
+	onClick: React.PropTypes.func.isRequired
+};
+// EditButton.defaultProps = {};

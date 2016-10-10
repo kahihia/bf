@@ -12,6 +12,7 @@ import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
 import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
+import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
 
 (function () {
 	'use strict';
@@ -103,6 +104,14 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 			this.requestModeration();
 		},
 
+		handleClickPromoSelect() {
+			console.log('p');
+		},
+
+		handleClickPromoOptionsSelect() {
+			console.log('o');
+		},
+
 		render() {
 			const {
 				data,
@@ -110,15 +119,19 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 			} = this.state;
 			const {
 				image,
-				partners,
 				isPreviewable,
-				previewUrl,
 				moderation = {},
-				paymentStatus
+				optionsCount = 0,
+				partners,
+				paymentStatus,
+				previewUrl,
+				promo
 			} = data;
 
 			const moderationStatus = moderation.status;
 			const moderationComment = moderation.comment;
+			const promoName = promo ? promo.name : 'Не выбран';
+			const activePromoId = promo ? promo.id : null;
 
 			const isAdmin = hasRole('admin');
 			const isAdvertiser = hasRole('advertiser');
@@ -126,6 +139,7 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 			let isModerationAllowed = false;
 
 			if (moderationStatus !== 1) {
+				// TODO: Check is all merchant materials uploaded
 				if (isAdmin || isAdvertiser) {
 					isModerationAllowed = true;
 				}
@@ -135,13 +149,25 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 				<div className="">
 					<MerchantEditStatusPanel
 						onClickModeration={this.handleClickModeration}
+						onClickPromoSelect={this.handleClickPromoSelect}
+						onClickPromoOptionsSelect={this.handleClickPromoOptionsSelect}
 						{...{
-							isPreviewable,
-							previewUrl,
-							paymentStatus,
 							isModerationAllowed,
+							isPreviewable,
+							moderationComment,
 							moderationStatus,
-							moderationComment
+							optionsCount,
+							paymentStatus,
+							previewUrl,
+							promoName
+						}}
+						/>
+
+					<MerchantEditPromoSelect
+						{...{
+							activePromoId,
+							id,
+							paymentStatus
 						}}
 						/>
 

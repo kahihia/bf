@@ -1,9 +1,12 @@
 /* global jQuery */
 
 import React from 'react';
+import b from 'b_';
 import Icon from '../components/icon.jsx';
 
-const VipPlan = React.createClass({
+const className = 'vip-promo';
+
+const VipPromo = React.createClass({
 	handleClick() {
 		const modal = jQuery('#urModal');
 		modal.modal('show');
@@ -11,19 +14,22 @@ const VipPlan = React.createClass({
 
 	render() {
 		return (
-			<div className="vip-plan">
-				<div className="vip-plan__title">
-					<div className="vip-plan__name">
+			<div className={className}>
+				<div className={b(className, 'title')}>
+					<div className={b(className, 'name')}>
 						{'Custom VIP'}
 					</div>
 				</div>
-				<div className="vip-plan__content">
-					<Icon name="vip-plan-content"/>
-					<span className="vip-plan__desc">
+
+				<div className={b(className, 'content')}>
+					<Icon name="vip-promo-content"/>
+
+					<span className={b(className, 'desc')}>
 						{'Максимальный трафик, охват, брендинг на КП'}
 					</span>
+
 					<button
-						className="btn btn-success vip-plan__link"
+						className={'btn btn-success ' + b(className, 'link')}
 						onClick={this.handleClick}
 						type="button"
 						>
@@ -35,4 +41,4 @@ const VipPlan = React.createClass({
 	}
 });
 
-export default VipPlan;
+export default VipPromo;

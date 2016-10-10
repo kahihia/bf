@@ -1,11 +1,14 @@
 import React from 'react';
+import b from 'b_';
 import Price from 'react-price';
 import DecInc from 'react-decinc';
 import {resolveImgPath, formatPrice} from '../utils.js';
 import Radio from '../components/radio.jsx';
 import Icon from '../components/icon.jsx';
 
-const PlanOptionList = React.createClass({
+const className = 'promo-option-list';
+
+const PromoOptionList = React.createClass({
 	propTypes: {
 		options: React.PropTypes.array,
 		onCheck: React.PropTypes.func,
@@ -22,11 +25,11 @@ const PlanOptionList = React.createClass({
 
 	render() {
 		return (
-			<table className="plan-option-list">
+			<table className={className}>
 				<tbody>
 					{this.props.options.map(option => {
 						return (
-							<PlanOptionListItem
+							<PromoOptionListItem
 								key={option.id}
 								{...option}
 								onChange={this.handleChange}
@@ -40,9 +43,9 @@ const PlanOptionList = React.createClass({
 	}
 });
 
-export default PlanOptionList;
+export default PromoOptionList;
 
-const PlanOptionListItem = React.createClass({
+const PromoOptionListItem = React.createClass({
 	propTypes: {
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
@@ -73,20 +76,23 @@ const PlanOptionListItem = React.createClass({
 		return (
 			<tr>
 				<td>
-					<span className="plan-option-list__prop-label">
+					<span className={b(className, 'prop-label')}>
 						{this.props.image ? (
 							<span className="help-preview">
-								<Icon name="plan-help"/>
+								<Icon name="promo-help"/>
+
 								<img
 									src={resolveImgPath(this.props.image, 'static')}
 									alt=""
 									/>
 							</span>
 						) : null}
+
 						{this.props.name}
 					</span>
 				</td>
-				<td className="plan-option-list__col-value">
+
+				<td className={b(className, 'col-value')}>
 					{this.props.price === null ? null : (
 						<DecInc
 							value={this.props.value || 0}
@@ -96,7 +102,8 @@ const PlanOptionListItem = React.createClass({
 							/>
 					)}
 				</td>
-				<td className="plan-option-list__col-price">
+
+				<td className={b(className, 'col-price')}>
 					{this.props.price === null ? (
 						<span>
 							{'По запросу'}
@@ -107,6 +114,7 @@ const PlanOptionListItem = React.createClass({
 								cost={formatPrice(this.props.price)}
 								currency={'₽'}
 								/>
+
 							<Radio
 								name={'Выбрать'}
 								nameActive={'Выбрано'}

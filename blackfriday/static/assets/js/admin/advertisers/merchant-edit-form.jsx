@@ -17,6 +17,7 @@ class MerchantEditForm extends Form {
 		const isAdmin = hasRole('admin');
 
 		this.state = {
+			isChanged: false,
 			isLoading: false,
 			fields: {
 				name: {
@@ -71,6 +72,10 @@ class MerchantEditForm extends Form {
 	}
 
 	requestMerchantUpdate() {
+		if (!this.state.isChanged) {
+			return;
+		}
+
 		if (!this.validate(true)) {
 			return;
 		}
@@ -88,7 +93,10 @@ class MerchantEditForm extends Form {
 			},
 			json
 		}, (err, resp, data) => {
-			this.setState({isLoading: false});
+			this.setState({
+				isChanged: false,
+				isLoading: false
+			});
 
 			if (data) {
 				switch (resp.statusCode) {

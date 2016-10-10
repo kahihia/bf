@@ -9,6 +9,7 @@ class Form extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isChanged: false,
 			isLoading: false,
 			fields: {
 			}
@@ -65,6 +66,7 @@ class Form extends React.Component {
 
 	updateData(name, value) {
 		this.setState(previousState => {
+			previousState.isChanged = true;
 			const fields = previousState.fields;
 			const field = fields[name];
 			field.value = value;
