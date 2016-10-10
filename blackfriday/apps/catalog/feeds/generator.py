@@ -97,7 +97,7 @@ class FeedGenerator:
 
             if 'logo' not in self.excludes and product.image:
                 param_logo = SubElement(offer, 'param', {'name': 'logo'})
-                param_logo.text = "/".join((settings.SITE_URL, product.image.url))
+                param_logo.text = product.image
 
             if 'price2' not in self.excludes and product.start_price:
                 price2 = SubElement(offer, 'param', {'name': 'price2'})
@@ -130,7 +130,7 @@ class FeedGenerator:
             currency.text = 'RUR'
 
             picture = SubElement(offer, 'picture')
-            picture.text = "/".join((settings.SITE_URL, product.image.url))
+            picture.text = product.image
 
             name = SubElement(offer, 'name')
             name.text = product.name
