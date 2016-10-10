@@ -32,6 +32,7 @@ FAIL_SAMPLE = {
     },
     'output': {
         'data': {
+            "_id": 23,
             "category": settings.DEFAULT_CATEGORY_NAME,
             "name": "name",
             "image": "image.com",
@@ -60,6 +61,7 @@ FAIL_SAMPLE = {
 
 
 SUCCESS_SAMPLE = {
+    "_id": 23,
     "category": "correct_category_name",
     "name": "name",
     "image": "http://image.com",
@@ -104,7 +106,6 @@ def test_put_given_invalid_data_expect_400(admin_logged_client, merchant, produc
     assert response.status_code == 400
     assert lists_of_dicts_equalled(response.data['warnings'], FAIL_SAMPLE['output']['warnings'])
     assert lists_of_dicts_equalled(response.data['errors'], FAIL_SAMPLE['output']['errors'])
-
     assert frozenset(response.data['data'].items()) == frozenset(FAIL_SAMPLE['output']['data'].items())
 
 

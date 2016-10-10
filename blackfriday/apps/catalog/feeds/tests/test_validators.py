@@ -54,7 +54,7 @@ def test_length_given_valid_str_expect_true():
 
 
 def test_required_given_invalid_arg_expect_false():
-    assert not Required().validate('')
+    assert not Required().validate(None)
 
 
 def test_required_given_valid_arg_expect_true():

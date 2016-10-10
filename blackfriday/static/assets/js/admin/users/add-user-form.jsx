@@ -168,7 +168,7 @@ class AddUser extends Form {
 				<div className="modal-body">
 					<form
 						action=""
-						onClick={this.handleClickSubmit}
+						onSubmit={this.handleClickSubmit}
 						>
 						{this.buildRow('email')}
 						{this.buildRow('name')}

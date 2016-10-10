@@ -5,10 +5,11 @@ from django.views.generic.base import TemplateView, RedirectView
 from django.core.urlresolvers import reverse
 
 from .models import Token, TokenType
-from .mixins import AdminOnlyMixin
+from .mixins import RolePermissionMixin
 
 
-class UserListView(LoginRequiredMixin, AdminOnlyMixin, TemplateView):
+class UserListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['admin']
     template_name = 'users/user-list.html'
 
 

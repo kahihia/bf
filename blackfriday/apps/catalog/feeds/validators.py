@@ -1,4 +1,4 @@
-from .parser import BaseValidator
+from apps.catalog.parser import BaseValidator
 
 
 class IsNumeric(BaseValidator):
@@ -65,4 +65,4 @@ class Required(BaseValidator):
 
     def validate(self, value, **kwargs):
 
-        return bool(value)
+        return value is not None

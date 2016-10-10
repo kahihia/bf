@@ -3,61 +3,20 @@
 import React from 'react';
 import Price from 'react-price';
 import DatePicker from 'react-datepicker';
-import {formatPrice} from '../utils.js';
+import {formatPrice, hasRole} from '../utils.js';
 import Glyphicon from '../components/glyphicon.jsx';
-import {invoiceActions} from './invoice-list.jsx';
 import InvoiceStatus from './invoice-status.jsx';
 
 export default class InvoiceItem extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: props.data,
-			selected: props.selected,
 			isEditingExpireDate: false
 		};
 
 		this.handleSelect = this.handleSelect.bind(this);
-		this.onAllSelected = this.onAllSelected.bind(this);
-		this.onAllUnselected = this.onAllUnselected.bind(this);
-		this.onStatusChanged = this.onStatusChanged.bind(this);
-		this.handleClickEditExpireDate = this.handleClickEditExpireDate.bind(this);
 		this.handleChangeExpireDate = this.handleChangeExpireDate.bind(this);
-
-		invoiceActions.onAllSelected(this.onAllSelected);
-		invoiceActions.onAllUnselected(this.onAllUnselected);
-		invoiceActions.onStatusChanged(actionData => {
-			this.onStatusChanged(actionData.invoiceIds, actionData.newStatus);
-		});
-	}
-
-	onAllSelected() {
-		this.setState({selected: true});
-	}
-
-	onAllUnselected() {
-		this.setState({selected: false});
-	}
-
-	onStatusChanged(invoiceIds, newStatus) {
-		if (invoiceIds.indexOf(this.state.data.id) >= 0) {
-			this.setState(previousState => {
-				previousState.data.status = newStatus;
-				return previousState;
-			});
-		}
-	}
-
-	handleSelect() {
-		this.setState({
-			selected: !this.state.selected
-		}, () => {
-			if (this.state.selected) {
-				invoiceActions.itemSelected(this.state.data.id);
-			} else {
-				invoiceActions.itemUnselected(this.state.data.id);
-			}
-		});
+		this.handleClickEditExpireDate = this.handleClickEditExpireDate.bind(this);
 	}
 
 	handleClickEditExpireDate(e) {
@@ -65,12 +24,18 @@ export default class InvoiceItem extends React.Component {
 		this.setState({isEditingExpireDate: !this.state.isEditingExpireDate});
 	}
 
+	handleSelect() {
+		this.props.onSelect(this.props.data.id);
+	}
+
 	handleChangeExpireDate(date) {
-		invoiceActions.itemExpireDateChanged(this.state.data.id, date);
+		this.props.onChangeExpireDate(this.props.data.id, date);
 	}
 
 	render() {
-		const {selected, data, isEditingExpireDate} = this.state;
+		const {isEditingExpireDate} = this.state;
+		const {data, selected} = this.props;
+		const isAdmin = hasRole('admin');
 
 		return (
 			<tr className={selected ? 'active' : ''}>
@@ -94,7 +59,7 @@ export default class InvoiceItem extends React.Component {
 					{data.id || ''}
 				</td>
 				<td>
-					{data.promo.name || ''}
+					{data.promo ? data.promo.name : ''}
 				</td>
 				<td>
 					<ul>
@@ -115,7 +80,7 @@ export default class InvoiceItem extends React.Component {
 				</td>
 				<td>
 					<div className="text-nowrap">
-						{data.status === 0 ? (
+						{isAdmin && (data.status === 0) ? (
 							<a
 								href="#"
 								onClick={this.handleClickEditExpireDate}
@@ -148,8 +113,9 @@ export default class InvoiceItem extends React.Component {
 }
 InvoiceItem.propTypes = {
 	data: React.PropTypes.object,
-	selected: React.PropTypes.bool
+	selected: React.PropTypes.bool,
+	onSelect: React.PropTypes.func.isRequired,
+	onChangeExpireDate: React.PropTypes.func.isRequired
 };
 InvoiceItem.defaultProps = {
-	selected: false
 };

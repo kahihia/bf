@@ -1,0 +1,1204 @@
+{% load render_bundle from webpack_loader %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN" prefix="og: http://ogp.me/ns#">
+<head itemscope itemtype="http://schema.org/WebSite">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% comment %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endcomment %}
+
+    <title>«黑五» 2016年在俄罗斯</title>
+    <meta name="description" content="官方网站«黑五» 2016年在俄罗斯" />
+    <meta name="keywords" content="" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ SITE_URL }}/cn" />
+    <meta property="og:title" content="«黑五» 2016年在俄罗斯 官方网站«黑五» 2016年"/>
+    <meta property="og:description" content="抓紧时间! 得到百分之九十折扣" />
+    <meta property="og:image" content="{{ SITE_URL }}{% static 'images/landing/share-image.jpg' %}" />
+
+    <meta name="yandex-verification" content="099e2d7cd5eb297c" />
+    <meta name="google-site-verification" content="9Cn9QjQ2oLkwa1YkuO0_8B9EAuCXteDr8c7RkYszvlY" />
+    <meta name="verify-admitad" content="954f2650b0" />
+
+    <meta name="referrer" content="always" />
+
+    <link rel="canonical" href="{{ SITE_URL }}/cn">
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#000000">
+    <meta name="theme-color" content="#000000">
+
+    <link href="{% static 'css/landing/jquery.fancybox.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/jquery.countdown.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/jquery.bxslider.css' %}" rel="stylesheet">
+    <link href="{% static 'css/landing/toastr.min.css' %}" rel="stylesheet">
+
+    {# CSS #}
+    {% render_bundle 'landing' 'css' %}
+    {% block css %}{% endblock css %}
+
+    <!-- Flocktory -->
+    <script src="//api.flocktory.com/v2/loader.js?site_id=2114" async="async"></script>
+
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/html5shiv.min.js' %}"></script>
+    <script src="{% static 'js/respond.min.js' %}"></script>
+    <script src="{% static 'js/es5-shim.min.js' %}"></script>
+    <script src="{% static 'js/es5-sham.min.js' %}"></script>
+    <script src="{% static 'js/ie8.js' %}"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WPFKGH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WPFKGH');</script>
+<!-- End Google Tag Manager -->
+
+<div class="site-header-info">
+    <div class="container">
+        <div class="site-header-info__about">
+            <span class="site-header-info__text">
+                官方网站 «黑五» 2016年在俄罗斯
+            </span>
+        </div>{% comment %}
+
+        {% endcomment %}<div class="site-header-info__rpt">
+            <span class="rpt">
+                <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
+                <span class="rpt__text">
+                    俄罗斯联邦消费者权益及公民平安保护监督局
+                </span>
+            </span>
+        </div>
+
+        {% comment %}
+        <div class="site-header-info__auth">
+            <div class="header-auth">
+                <a class="header-auth__link" href="/admin/login/">
+                    合作伙伴
+                </a>
+            </div>
+        </div>
+        {% endcomment %}
+    </div>
+</div><!-- site-header-info -->
+
+
+<div class="header-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="header-section__logo">
+                    <img src="{% static 'images/landing/zh-CN/header-section__logo.png' %}" alt="">
+                </div>
+
+                <div class="header-section__slogan">
+                    在线出售
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                <h1 class="header-section__title">
+                    黑五2016年11月24-25号
+                </h1>
+
+                <p class="header-section__text">
+                    最好的商品打一折
+                </p>
+
+                <a class="header-section__action" href="#anchor-shops" data-offset="30">
+                    <span>商店目录</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div><!-- header-section -->
+
+
+<div class="aa-section">
+    <div class="container">
+        <div class="aa-section__body">
+            <div class="row">
+                <div class="col-xs-6">
+
+                    <div class="counter-block">
+                        <div class="counter-block__title">
+                            打一折开始
+                        </div>
+
+                        <div class="counter-block__counter">
+
+                            <div class="event-countdown">
+                                <div id="countdown"></div>
+                                <div class="countdown-labels">
+                                    <span id="countdown-d">天</span><span id="countdown-h">小时</span><span id="countdown-m">分钟</span><span id="countdown-s">秒</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-xs-6">
+
+                    <div class="aa-section__subscribe">
+                        <div class="aa-section__subscribe-title">
+                            在促销开始前五个小时内打折
+                        </div>
+
+                        <form
+                            class="aa-section__form"
+                            method="POST"
+                            action="/api/subscribers/"
+                            >
+                            <input
+                                class="form-control"
+                                placeholder="留下电子邮件"
+                                name="email"
+                                type="email"
+                                maxlength="255"
+                                required
+                                >
+
+                            <button class="btn btn-primary btn-lg" type="submit">
+                                <img
+                                    src="{% static 'images/landing/aa-section__subscribe-submit-icon.png' %}"
+                                    style="display: block;"
+                                    width="25"
+                                    height="22"
+                                    alt=""
+                                    />
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="aa-section__footer">
+            <div class="share-block">
+                <span class="share-block__label">
+                    给朋友们讲
+                </span>
+
+                <div class="share-block__buttons">
+                    <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+                    <script src="//yastatic.net/share2/share.js"></script>
+                    <div class="ya-share2" data-services="collections,vkontakte,facebook,odnoklassniki,moimir" data-counter=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- aa-section -->
+
+
+<div class="about-section">
+    <a name="anchor-about"></a>
+
+    <div class="container">
+        <img
+            class="about-section__copter"
+            src="{% static 'images/landing/action-section__copter.png' %}"
+            alt=""
+            />
+    </div>
+
+    <div class="about-section__carousel js-about-section__carousel">
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="about-section__title">
+                            黑五是什么
+                        </div>
+
+                        <div class="about-section__text">
+                            黑五是最大的在网上清仓出售. 俄罗<br>
+                            斯,白俄罗斯,哈萨克斯坦最好的网店<br>
+                            清仓出售. 都在着个网站提供,很方<br>
+                            便. 足不出户就可以买到折扣商品
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间! 促销一共持续<br>
+                                个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-xs-offset-2">
+                        <div class="about-section__action">
+                            <div class="about-section__action-title">
+                                得到百分之九十折扣
+                            </div>
+
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                更多信息
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: -45px; left: -300px;"
+                                src="{% static 'images/landing/action-section__img1.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            俄罗斯产品打折区
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-4 col-xs-offset-3">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 100%;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                更多信息
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: -125px; left: -300px;"
+                                src="{% static 'images/landing/action-section__img2.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: -40px; left: -80px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img3.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: 30px; left: -90px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img4.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: 0px; left: -180px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img5.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: 10px; left: -50px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img6.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: -20px; left: -30px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img7.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: 10px; left: -100px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img8.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: 0px; left: -60px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img9.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+        <!-- begin about-section__slide -->
+        <div class="about-section__slide">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-5">
+                        <div class="about-section__title">
+                            最好的商品打一折
+                        </div>
+
+                        <div class="about-section__text">
+                            都在着个网站提供,很方便. 足不出户就可<br>
+                            以买到折扣商品.
+                        </div>
+
+                        <div class="action-go-go">
+                            <div class="action-go-go__title">
+                                抓紧时间!<br>
+                                促销一共持续个小时
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="about-section__action">
+                            <button
+                                class="about-section__action-link btn btn-primary btn-lg"
+                                style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
+                                data-toggle="modal"
+                                data-target="#subscribe-modal"
+                                type="button"
+                                >
+                                看折扣价格
+                                <img
+                                    src="{% static 'images/landing/about-section__submit-icon.png' %}"
+                                    width="18"
+                                    height="17"
+                                    style="margin: 0 0 0 3px;"
+                                    alt=""
+                                    />
+                            </button>
+
+                            <img
+                                class="about-section__action-img"
+                                style="top: -10px; left: -150px;"
+                                src="{% static 'images/landing/zh-CN/action-section__img10.png' %}"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end about-section__slide -->
+
+    </div>
+</div><!-- about-section -->
+
+
+{% if partner_list %}
+<div class="partners-section">
+    <a name="anchor-partners"></a>
+
+    <div class="container">
+        <h2 class="partners-section__title">
+            伙伴
+        </h2>
+
+        <div class="partners-section__carousel">
+            <div class="bxslider-multi">
+                {% for partner in partner_list %}
+                    <div class="new-59-partners__slide">
+                        <img src="{{ SITE_URL }}{{ partner.image.url }}" alt="">
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div><!-- partners-section -->
+{% endif %}
+
+
+{% if logo_list %}
+<div class="shops-section">
+    <a name="anchor-shops"></a>
+
+    <div class="container">
+        <h2 class="shops-section__title">
+            参与黑五活动的商店
+        </h2>
+
+        <ul class="shops-section__list">
+            {% for logo in logo_list %}
+                <li class="shops-section__item">
+                    <a href="{{ logo.url }}" target="_blank" class="shops-section__link">
+                        <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" class="shops-section__logo" />
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div><!-- shops-section -->
+{% endif %}
+
+
+<div class="subscribe-section">
+    <div class="container">
+        <h2 class="subscribe-section__title">
+            怎么知道最好的建议?
+        </h2>
+
+        <p class="subscribe-section__text">
+            受到邀请参加 «黑五»! 11月24号看网站, 买产品!
+        </p>
+
+        <div class="row">
+            <div class="col-xs-5 col-xs-offset-7">
+                <form
+                    class="subscribe-section__form"
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
+                    <p class="subscribe-section__form-text">
+                        留下电子邮件参加清仓出售
+                    </p>
+
+                    <div class="form-group subscribe-section__form-inputs">
+                        <input
+                            class="form-control"
+                            placeholder="姓名"
+                            name="name"
+                            type="text"
+                            maxlength="255"
+                            >
+
+                        <input
+                            class="form-control"
+                            placeholder="邮箱地址"
+                            name="email"
+                            type="email"
+                            maxlength="255"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">
+                            更多信息
+                            <img
+                                src="{% static 'images/landing/submit-icon_dark.png' %}"
+                                width="15"
+                                height="14"
+                                style="margin: 0 0 0 3px;"
+                                alt=""
+                                />
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- subscribe-section -->
+
+
+<div class="discount-section">
+    <a name="anchor-buyer"></a>
+
+    <div class="container">
+        <h2 class="discount-section__title">
+            怎么获得折扣?
+        </h2>
+
+        <ul class="discount-section__steps row">
+            <li class="discount-section__step col-xs-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_subscribe.png' %}"
+                        width="63"
+                        height="63"
+                        style="margin-top: -2px;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    留下电子邮件
+                </div>
+            </li>
+
+            <li class="discount-section__step col-xs-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_message.png' %}"
+                        width="63"
+                        height="63"
+                        style="margin-top: -12px;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    受到邀请参加 «黑五»
+                </div>
+            </li>
+
+            <li class="discount-section__step col-xs-4">
+                <div class="discount-section__step-icon">
+                    <img
+                        src="{% static 'images/landing/discount-section__icon_buy.png' %}"
+                        width="67"
+                        height="75"
+                        style="margin: -8px -12px 0 0;"
+                        alt=""
+                        />
+                </div>
+
+                <div class="discount-section__step-text">
+                    11月24号看网站, 买产品
+                </div>
+            </li>
+        </ul>
+
+        <div class="discount-section__action">
+            <button
+                class="btn btn-primary btn-lg"
+                data-toggle="modal"
+                data-target="#subscribe-modal"
+                type="button"
+                >
+                获得折扣
+                <img
+                    src="{% static 'images/landing/submit-icon_dark.png' %}"
+                    width="15"
+                    height="14"
+                    style="margin: 0 0 0 3px;"
+                    alt=""
+                    />
+            </button>
+        </div>
+    </div>
+</div><!-- discount-section -->
+
+
+<div class="party-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-5">
+                <div class="party-section__title">
+                    网店
+                </div>
+
+                <p class="party-section__text">
+                    如果你们想当伙伴,倡议打折扣就写申请书.<br>
+                    我们的经理一定跟你们联系
+                </p>
+            </div>
+
+            <div class="col-xs-7">
+                <form
+                    class="party-section__form"
+                    method="POST"
+                    action="/api/applications/"
+                    >
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="名字"
+                                    name="name"
+                                    type="text"
+                                    maxlength="255"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="组织名"
+                                    name="organizationName"
+                                    type="text"
+                                    maxlength="255"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="联系电话"
+                                    name="phone"
+                                    type="text"
+                                    maxlength="255"
+                                    required
+                                    >
+                            </div>
+
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    placeholder="电子邮件"
+                                    name="email"
+                                    type="email"
+                                    maxlength="255"
+                                    required
+                                    >
+                            </div>
+                        </div>
+
+                        <div class="col-xs-7">
+                            <div class="form-group">
+                                <textarea
+                                    class="form-control"
+                                    placeholder="给我们写评论"
+                                    name="comment"
+                                    ></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-default btn-block" type="submit">
+                                    发
+                                    <img
+                                        src="{% static 'images/landing/submit-icon_light.png' %}"
+                                        width="15"
+                                        height="14"
+                                        style="margin: 0 0 0 3px;"
+                                        alt=""
+                                        />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- party-section -->
+
+
+<footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-3">
+                <ul class="simple-menu">
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-about" data-offset="0">
+                            关于黑五
+                        </a>
+                    </li>
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-buyer" data-offset="65">
+                            对顾客
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-xs-3">
+                <ul class="simple-menu">
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="#anchor-shops" data-offset="30">
+                            网店
+                        </a>
+                    </li>
+
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="/oferta">
+                            隐私政策
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-xs-3">
+                <div class="footer-social">
+                    <span class="footer-social__title">
+                        我们在社交网站
+                    </span>
+                    <ul class="footer-social__list">
+                        <li class="footer-social__item">
+                            <a class="footer-social__link" href="https://vk.com/realblackfriday" target="_blank">
+                                <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_vk.png' %}" alt="vkontakte">
+                            </a>
+                        </li>
+                        <li class="footer-social__item">
+                            <a class="footer-social__link" href="https://www.facebook.com/Real-Black-Friday-1598467580447815/" target="_blank">
+                                <img class="footer-social__icon" src="{% static 'images/landing/footer-social__icon_fb.png' %}" alt="facebook">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-xs-3">
+                <a class="akit-copy" href="http://www.akit.ru" target="_blank">
+                    <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © 贸易公司协会
+                </a>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="site-footer__project-by">
+                    AKIT. 设计 <a href="tel:+78005053704">+7 (800) 505-37-04</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer><!-- site-footer -->
+
+
+<div
+    class="modal fade"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="subscribe-modal-label"
+    id="subscribe-modal"
+    >
+    <div
+        class="modal-dialog"
+        role="document"
+        >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="subscribe-modal-label">
+                    留下电子邮件参加清仓出售
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+                <form
+                    method="POST"
+                    action="/api/subscribers/"
+                    >
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="姓名"
+                            name="name"
+                            type="text"
+                            maxlength="255"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <input
+                            class="form-control input-lg"
+                            placeholder="邮箱地址"
+                            name="email"
+                            type="email"
+                            maxlength="255"
+                            required
+                            >
+                    </div>
+
+                    <div class="form-group">
+                        <button
+                            class="btn btn-default btn-block btn-lg"
+                            type="submit"
+                            >
+                            更多信息
+                            <img
+                                src="{% static 'images/landing/submit-icon_light.png' %}"
+                                width="15"
+                                height="14"
+                                style="margin: 0 0 0 3px;"
+                                alt=""
+                                />
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
+<script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
+<script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>
+<script src="{% static 'js/landing/jquery.form.min.js' %}"></script>
+<script src="{% static 'js/landing/toastr.min.js' %}"></script>
+
+{% block js %}
+    {% render_bundle 'landing' 'js' %}
+{% endblock js %}
+
+</body>
+</html>

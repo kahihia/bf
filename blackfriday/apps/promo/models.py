@@ -1,3 +1,4 @@
+from apps.catalog.models import Category
 from apps.orders.models import InvoiceStatus
 from django.db import models
 from django.db.models import Sum
@@ -44,6 +45,10 @@ class Option(models.Model):
         if self.max_count:
             return self.count_available > 0
         return True
+
+    @classmethod
+    def calculate_restrictions(cls):
+        cls.objects.filter(tech_name='cat_background').update(max_count=Category.objects.all().count())
 
     class Meta:
         verbose_name = 'Тарифная опция'

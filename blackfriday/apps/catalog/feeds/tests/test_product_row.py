@@ -2,7 +2,7 @@ import pytest
 
 from libs.testing.helpers import lists_of_dicts_equalled, pytest_generate_tests
 
-from ..verifier import ProductRow
+from apps.catalog.feeds.verifier import ProductRow
 from .fixtures import FAIL_DATA, SUCCESS_DATA
 
 

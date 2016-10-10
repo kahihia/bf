@@ -13,7 +13,17 @@ class BadRequest(APIException):
 def exception_handler(exc, context):
     request = context.get('request')
     if request and isinstance(exc, (ValueError, AttributeError)):
-        exc = BadRequest('{} не является допустимым значением'.format(request.data))
+        types = {
+            type(None): 'Null',
+            int: 'Число',
+            float: 'Число',
+            bool: 'Логическое значение',
+            str: 'Строка'
+        }
+
+        error_type = types.get(type(request.data))
+        if error_type:
+            exc = BadRequest('{} не является допустимым значением'.format(error_type))
 
     from rest_framework.views import exception_handler
     response = exception_handler(exc, context)

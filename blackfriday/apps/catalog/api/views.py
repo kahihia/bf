@@ -1,3 +1,8 @@
+import json
+import datetime
+from django.http import HttpResponse
+from django.conf import settings
+from django.utils import timezone
 from rest_framework import viewsets, mixins
 from rest_framework import status
 from rest_framework.response import Response
@@ -8,10 +13,12 @@ from jsonschema import validate, ValidationError as JsonSchemaValidationError
 from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 from libs.api.exceptions import BadRequest
 
-from apps.advertisers.models import Merchant
+from apps.promo.models import Option
+from apps.advertisers.models import Merchant, ModerationStatus
 
 from .serializers import Category, CategorySerializer, ProductSerializer
-from ..verifier import FeedParser
+from apps.catalog.feeds.verifier import FeedParser
+from apps.catalog.feeds.generator import FeedGenerator
 from ..models import Product
 
 
@@ -19,6 +26,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated & IsAdmin | ReadOnly]
+
+    def perform_create(self, serializer):
+        super().perform_create(serializer)
+        Option.calculate_restrictions()
+
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+        Option.calculate_restrictions()
 
 
 class ProductViewSet(
@@ -70,23 +85,18 @@ class ProductViewSet(
             if errors and not failed:
                 failed = True
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,
             })
         if failed:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
-        categories = {cat.name: cat.id for cat in Category.objects.all()}
+        categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
         qs = [
             Product(
-                **dict(
-                    row['data'],
-                    **{
-                        'category_id': categories[row['data'].pop('category')],
-                        'merchant_id': self.merchant.id
-                    }
-                )
+                category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
+                merchant_id=self.merchant.id,
+                **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
@@ -105,6 +115,7 @@ class ProductViewSet(
 
         if errors:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        cleaned_data.pop('_id')
         data = dict(
             cleaned_data,
             **{
@@ -129,7 +140,6 @@ class ProductViewSet(
         for counter, row in enumerate(FeedParser(f)):
             cleaned_data, errors, warnings = row
             result.append({
-                '_id': counter,
                 'data': cleaned_data,
                 'warnings': warnings,
                 'errors': errors,
@@ -145,9 +155,54 @@ class ProductViewSet(
             # so we need save given identifiers
             cleaned_data, errors, warnings = FeedParser().parse_feed(row)
             result.append({
-                '_id': row.get('_id'),
                 'data': cleaned_data,
                 'errors': errors,
                 'warnings': warnings,
             })
         return Response(result)
+
+
+class YmlProductViewSet(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    @list_route(['get'])
+    def yml(self, request, **kwargs):
+        include_category_ids = request.GET.getlist('categories', [])
+        include_merchants_id = request.GET.getlist('merchants', [])
+
+        categories = Category.objects.filter(
+            **({'id__in': include_category_ids} if include_category_ids else {})
+        ).exclude(
+            id__in=request.GET.getlist('exclude_categories', [])
+        )
+        merchants = Merchant.objects.filter(
+            **({'id__in': include_merchants_id} if include_merchants_id else {})
+        ).exclude(
+            id__in=request.GET.getlist('exclude_merchants', [])
+        )
+        products = Product.objects.filter(
+            merchant__in=merchants, category__in=categories, merchant__moderation_status=ModerationStatus.confirmed)
+
+        controls = {
+            'utm': {
+                'utm_source': request.GET.get('utm_source'),
+                'utm_medium': request.GET.get('utm_medium'),
+                'utm_campaign': request.GET.get('utm_campaign'),
+            },
+            'excludes': request.GET.getlist('excludes', []),
+            'url_bindings': {
+                'url_cat': request.GET.get('bind_url_cat', 'url_cat'),
+                'url_shop': request.GET.get('bind_url_shop', 'url_shop'),
+                'url': request.GET.get('bind_url', 'url'),
+            },
+            'show_teaser_cat': json.loads(request.GET.get('show_teaser_cat', 'false'))
+        }
+        filename = request.GET.get(
+            'filename', 'blackfriday feed {}'.format(
+                datetime.datetime.strftime(timezone.now(), '%d-%m-%Y %H:%M')))
+
+        yml = FeedGenerator(controls).generate(products, categories)
+        response = HttpResponse(content_type='application/xml')
+        yml.write(response)
+        response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(filename)
+        return response

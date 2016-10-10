@@ -11,7 +11,7 @@ class Column(object):
         return self.field
 
     def clean_value(self, value, context):
-        if not value:
+        if value is None and not (self.pipes and hasattr(self.pipes[0], 'null') and self.pipes[0].null):
             return None
         try:
             for func in self.pipes:

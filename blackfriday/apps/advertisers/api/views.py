@@ -1,14 +1,24 @@
+import operator
+
+from functools import reduce
+
+from django.conf import settings
 from django.db.models import Sum
+
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from apps.advertisers.api.serializers import BannerSerializer
 from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
-from apps.promo.models import Option
+from apps.promo.models import Option, PromoOption
+
+from ..models import Banner
 
 from .filters import AdvertiserFilter, MerchantFilter
 from .serializers import (
@@ -92,15 +102,28 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        qs = (
-            InvoiceOption
-            .objects
-            .filter(invoice__merchant=self.get_object(), invoice__is_paid=True)
-            .values('option__tech_name')
-            .annotate(option_sum=Sum('value'))
-        )
-        serializer = LimitSerializer(
-            data=[{'tech_name': obj['option__tech_name'], 'value': obj['option_sum']} for obj in qs], many=True)
+        merchant, options = self.get_object(), {}
+
+        def get_options(qs):
+            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
+            return dict(qs.values_list('option__tech_name', 'option_sum'))
+
+        def get_value(rule):
+            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+
+        if merchant.promo:
+            options.update(get_options(merchant.promo.options))
+        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=merchant, invoice__is_paid=True)))
+
+        limits = [
+            {
+                'tech_name': limit,
+                'value': reduce(operator.add, map(get_value, rules), 0)
+            }
+            for limit, rules in settings.LIMITS_RULES.items()
+        ]
+
+        serializer = LimitSerializer(data=filter(lambda limit: limit['value'], limits), many=True)
         serializer.is_valid()
         return Response(data=serializer.data)
 
@@ -116,3 +139,20 @@ class MerchantViewSet(viewsets.ModelViewSet):
         serializer = AvailableOptionSerializer(data=filter(lambda x: x.is_available, qs), many=True)
         serializer.is_valid()
         return Response(serializer.data)
+
+
+class BannerViewSet(viewsets.ModelViewSet):
+    queryset = Banner.objects.all()
+    serializer_class = BannerSerializer
+    permission_classes = [IsAuthenticated, IsAdmin | IsAdvertiser & IsOwner]
+
+    def get_parent(self):
+        parent = get_object_or_404(Merchant.objects.all(), id=self.kwargs.get('merchant_pk'))
+        self.check_object_permissions(self.request, parent)
+        return parent
+
+    def get_queryset(self):
+        return super().get_queryset().filter(merchant=self.get_parent())
+
+    def perform_create(self, serializer):
+        serializer.save(merchant=self.get_parent())

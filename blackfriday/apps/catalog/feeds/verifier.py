@@ -3,8 +3,8 @@ from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
 )
-from .parser import Row, Column, Grouped, GenericValidator
-from .utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
+from apps.catalog.parser import Row, Column, Grouped, GenericValidator
+from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from apps.catalog.models import Category
 
 
@@ -27,15 +27,18 @@ def duplicate_product_urls(url, context):
 
 
 def clear_category(category, context):
-    if category is None:
-        return None
     if category not in context['categories']:
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
 
+clear_category.null = True
+
+
 class ProductRow(Row):
     _columns = (
+        Column(
+            '_id', pipes=(float, int), validators=(Required(),)),
         Column(
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
@@ -65,7 +68,7 @@ class ProductRow(Row):
             'brand', pipes=(str,),
             validators=(Required(),)),
         Column(
-            'category', pipes=(str, str.lower, clear_category), validators=(Required(is_warning=True),)),
+            'category', pipes=(clear_category,), validators=(Required(is_warning=True),)),
         Column(
             'country', pipes=(str, str.lower),
             validators=(Required(), Length(rule=255))),
@@ -91,7 +94,8 @@ class FeedParser:
 
     def __iter__(self):
         reader = self.get_reader()
-        for row in reader:
+        for counter, row in enumerate(reader):
+            row['_id'] = counter
             yield self.parse_feed(row)
 
     def get_reader(self):
