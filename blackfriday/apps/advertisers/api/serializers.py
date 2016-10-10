@@ -98,13 +98,11 @@ class MerchantSerializer(serializers.ModelSerializer):
     image = ImageSerializer()
 
     advertiser = AdvertiserTinySerializer()
-    # ToDo: импортировать apps.banners.api.serializers.BannerSerializer
-    # banners = BannerSerializer(many=True)
 
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
-                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_previewable',
+                  'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
                   'moderation', 'preview_url')
 
     def get_moderation(self, obj):
@@ -242,4 +240,3 @@ class BannerSerializer(BannerDetailSerializer):
         instance.merchant.save()
 
         return instance
-

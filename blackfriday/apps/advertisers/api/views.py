@@ -156,3 +156,9 @@ class BannerViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(merchant=self.get_parent())
+
+    def perform_destroy(self, instance):
+        instance.merchant.moderation_status = 0
+        instance.merchant.save()
+
+        super().perform_destroy(instance)
