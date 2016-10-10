@@ -13,6 +13,7 @@ import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
 import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
 import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
 import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
+import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-categories-select.jsx';
 
 (function () {
 	'use strict';
@@ -187,27 +188,37 @@ import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-sel
 									/>
 
 								<div className="form-group">
-									<ControlLabel
-										name="Логотип"
-										/>
-
-									<div className="">
-										<p>
-											{image ? (
-												<img
-													src={image.url}
-													alt=""
-													/>
-											) : null}
-										</p>
-
-										<ImagesUpload
-											onUpload={this.handleImagesUploadUpload}
-											ext={['png', 'jpg']}
-											width="210"
-											height="130"
-											exactSize
+									<div className="col-xs-5">
+										<ControlLabel
+											name="Логотип"
 											/>
+
+										<div className="">
+											<p>
+												{image ? (
+													<img
+														src={image.url}
+														alt=""
+														/>
+												) : null}
+											</p>
+
+											<ImagesUpload
+												onUpload={this.handleImagesUploadUpload}
+												ext={['png', 'jpg']}
+												width="210"
+												height="130"
+												exactSize
+												/>
+										</div>
+									</div>
+
+									<div className="col-xs-7">
+										<ControlLabel
+											name="Категории размещения логотипа"
+											/>
+
+										<MerchantLogoCategoriesSelect/>
 									</div>
 								</div>
 							</div>

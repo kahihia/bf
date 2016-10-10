@@ -6,13 +6,13 @@ import xhr from 'xhr';
 import {TOKEN} from '../const.js';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 
-class MerchantPartnersSelect extends React.Component {
+class MerchantLogoCategoriesSelect extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			isDisabled: false,
 			isLoading: false,
-			partners: [],
+			categories: [],
 			value: []
 		};
 
@@ -20,7 +20,7 @@ class MerchantPartnersSelect extends React.Component {
 	}
 
 	componentWillMount() {
-		this.requestPartners();
+		this.requestCategories();
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -29,14 +29,14 @@ class MerchantPartnersSelect extends React.Component {
 			return;
 		}
 
-		this.requestMerchantPartners();
+		this.requestMerchantCategories();
 	}
 
-	requestPartners() {
+	requestCategories() {
 		this.setState({isLoading: true});
 
 		xhr({
-			url: '/api/partners/',
+			url: '/api/categories/',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -44,22 +44,22 @@ class MerchantPartnersSelect extends React.Component {
 
 			if (!err && resp.statusCode === 200) {
 				if (data) {
-					this.setState({partners: data});
+					this.setState({categories: data});
 				}
 			} else {
 				this.setState({isDisabled: true});
-				toastr.error('Не удалось получить список партнёров');
+				toastr.error('Не удалось получить список категорий');
 			}
 		});
 	}
 
-	requestMerchantPartners() {
+	requestMerchantCategories() {
 		this.setState({isLoading: true});
 
 		const {id} = this.props;
 
 		xhr({
-			url: `/api/merchants/${id}/partners/`,
+			url: `/api/merchants/${id}/logo-categories/`,
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -71,12 +71,12 @@ class MerchantPartnersSelect extends React.Component {
 				}
 			} else {
 				this.setState({isDisabled: true});
-				toastr.error('Не удалось получить список партнёров');
+				toastr.error('Не удалось получить список категорий размещения логотипа');
 			}
 		});
 	}
 
-	requestMerchantPartnersUpdate(value) {
+	requestMerchantCategoriesUpdate(value) {
 		this.setState({isLoading: true});
 
 		const {id} = this.props;
@@ -84,7 +84,7 @@ class MerchantPartnersSelect extends React.Component {
 		const json = value;
 
 		xhr({
-			url: `/api/merchants/${id}/partners/`,
+			url: `/api/merchants/${id}/logo-categories/`,
 			method: 'PATCH',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -98,61 +98,47 @@ class MerchantPartnersSelect extends React.Component {
 					this.setState({value: data.map(item => (item.id))});
 				}
 			} else {
-				toastr.error('Не удалось обновить список партнёров');
+				toastr.error('Не удалось обновить список категорий размещения логотипа');
 			}
 		});
 	}
 
 	handleChange(value) {
-		this.requestMerchantPartnersUpdate(value);
+		this.requestMerchantCategoriesUpdate(value);
 	}
 
 	render() {
 		const {
-			partners,
+			categories,
 			isDisabled,
 			isLoading,
 			value
 		} = this.state;
 
 		return (
-			<div className="shop-edit-block">
-				<h2>
-					{'Партнёры'}
-				</h2>
-
-				<div className="panel panel-default">
-					<div className="panel-body">
-						<div className="row">
-							<div className="col-xs-12">
-								<MultiselectTwoSides
-									disabled={isDisabled || isLoading}
-									onChange={this.handleChange}
-									clearFilterText="Очистить"
-									availableHeader="Доступные"
-									selectedHeader="Выбранные"
-									selectAllText="Выбрать все"
-									deselectAllText="Очистить"
-									options={partners}
-									value={value}
-									labelKey="name"
-									valueKey="id"
-									showControls
-									searchable
-									/>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<MultiselectTwoSides
+				disabled={isDisabled || isLoading}
+				onChange={this.handleChange}
+				clearFilterText="Очистить"
+				availableHeader="Доступные"
+				selectedHeader="Выбранные"
+				selectAllText="Выбрать все"
+				deselectAllText="Очистить"
+				options={categories}
+				value={value}
+				labelKey="name"
+				valueKey="id"
+				showControls
+				searchable
+				/>
 		);
 	}
 }
-MerchantPartnersSelect.propTypes = {
+MerchantLogoCategoriesSelect.propTypes = {
 	id: React.PropTypes.number,
 	value: React.PropTypes.array
 };
-MerchantPartnersSelect.defaultProps = {
+MerchantLogoCategoriesSelect.defaultProps = {
 };
 
-export default MerchantPartnersSelect;
+export default MerchantLogoCategoriesSelect;
