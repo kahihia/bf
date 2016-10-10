@@ -4,6 +4,7 @@
 .venv
 node_modules
 /_media/
+/_static/
 
 /blackfriday/settings/local.py
 /landing/
