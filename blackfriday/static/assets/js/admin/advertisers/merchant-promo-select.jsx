@@ -1,4 +1,5 @@
 import React from 'react';
+import {hasRole} from '../utils.js';
 import Icon from '../components/icon.jsx';
 import VipPromo from './vip-promo.jsx';
 import PromoTable from './promo-table.jsx';
@@ -16,6 +17,7 @@ const MerchantPromoSelect = React.createClass({
 
 	render() {
 		const {activePromoId, promos} = this.props;
+		const isAdvertiser = hasRole('advertiser');
 
 		return (
 			<div>
@@ -53,7 +55,9 @@ const MerchantPromoSelect = React.createClass({
 					</div>
 
 					<div className="promo-chooser__vip">
-						<VipPromo/>
+						{isAdvertiser ? (
+							<VipPromo/>
+						) : null}
 					</div>
 				</div>
 			</div>

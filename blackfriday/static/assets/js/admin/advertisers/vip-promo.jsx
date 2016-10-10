@@ -1,15 +1,30 @@
-/* global jQuery */
+/* global document jQuery */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import b from 'b_';
 import Icon from '../components/icon.jsx';
+import CustomPromoRequestForm from './custom-promo-request-form.jsx';
 
 const className = 'vip-promo';
 
 const VipPromo = React.createClass({
 	handleClick() {
-		const modal = jQuery('#urModal');
-		modal.modal('show');
+		this.openCustomPromoRequestModal();
+	},
+
+	openCustomPromoRequestModal() {
+		jQuery('#custom-promo-request-modal').modal('show');
+		const onSubmit = () => {
+			jQuery('#custom-promo-request-modal').modal('hide');
+		};
+		ReactDOM.render(
+			<CustomPromoRequestForm
+				onSubmit={onSubmit}
+				/>
+			,
+			document.getElementById('custom-promo-request-form')
+		);
 	},
 
 	render() {
