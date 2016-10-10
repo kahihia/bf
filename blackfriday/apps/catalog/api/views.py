@@ -105,7 +105,7 @@ class ProductViewSet(
     def update(self, request, *args, **kwargs):
         self.validate_schema(request.data, in_list=False)
         instance = self.get_object()
-        cleaned_data, errors, warnings = FeedParser().parse_feed(request.data)
+        cleaned_data, errors, warnings = FeedParser(_id_required=False).parse_feed(request.data)
         result = {
             'id': instance.id,
             'data': cleaned_data,
