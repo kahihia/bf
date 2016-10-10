@@ -12,7 +12,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.advertisers.api.serializers import BannerSerializer
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
+from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, \
+    IsValidAdvertiser
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
@@ -51,7 +52,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     queryset = Merchant.objects.all()
     permission_classes = [
         IsAuthenticated,
-        IsAdvertiser & IsOwner & action_permission(
+        IsValidAdvertiser & IsOwner & action_permission(
             'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation', 'limits', 'available_options'
         ) |
         IsManager & action_permission(

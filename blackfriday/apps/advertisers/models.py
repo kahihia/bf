@@ -1,6 +1,7 @@
 import collections
 
 import operator
+from functools import partial
 from functools import reduce
 
 from django.db import models
@@ -61,6 +62,13 @@ class AdvertiserProfile(models.Model):
     class Meta:
         verbose_name = 'Профиль рекламодателя'
         verbose_name_plural = 'Профили рекламодателей'
+
+    @property
+    def is_valid(self):
+        if self.inner:
+            return True
+        fields = filter(lambda field: field.name != 'inner', self._meta.fields)
+        return reduce(operator.__and__, map(lambda field: field.value_from_object(self), fields))
 
 
 class Merchant(models.Model):
