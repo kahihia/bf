@@ -29,7 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         kwargs = super().get_extra_kwargs()
 
         request = self.context['request']
-        if request.data.get('inner'):
+        if not request.data.get('inner'):
             for field in self.Meta.fields:
                 kwargs[field] = dict(kwargs.get(field, {}), allow_null=False, allow_blank=False)
 
