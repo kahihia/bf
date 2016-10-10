@@ -28,7 +28,8 @@ const MerchantPromoSelect = React.createClass({
 						<a
 							className="download-file"
 							href="/com_offer"
-							download
+							target="_blank"
+							rel="noopener noreferrer"
 							>
 							<Icon name="file-pdf"/>
 
