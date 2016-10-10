@@ -244,4 +244,3 @@ class BannerSerializer(BannerDetailSerializer):
         instance.merchant.save()
 
         return instance
-

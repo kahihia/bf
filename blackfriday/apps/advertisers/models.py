@@ -171,7 +171,11 @@ class Banner(models.Model):
     type = models.IntegerField(choices=TYPES)
     image = models.ForeignKey('mediafiles.Image', related_name='banners')
     url = models.URLField()
-    on_main = models.BooleanField(default=False)
-    in_mailing = models.BooleanField(default=False)
+    on_main = models.BooleanField()
+    in_mailing = models.BooleanField()
     categories = models.ManyToManyField('catalog.Category', related_name='banners')
     merchant = models.ForeignKey(Merchant, related_name='banners')
+
+    @property
+    def owner_id(self):
+        return self.merchant.owner_id
