@@ -28,7 +28,7 @@ class Product(models.Model):
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
     url = models.CharField(verbose_name='Ссылка', max_length=255)
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    image = models.FileField(upload_to='products', verbose_name='Изображение')
+    image = models.URLField()
     currency = models.CharField(max_length=10)
 
     class Meta:
