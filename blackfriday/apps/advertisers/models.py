@@ -23,11 +23,25 @@ class HeadBasis:
     proxy = 1
 
 
+class InnerType:
+    AKIT = 'АКИТ'
+    ADMIT_AD = 'AdmitAd'
+    PARTNERS = 'Партнеры'
+
+
 class AdvertiserProfile(models.Model):
     HEAD_BASISES = (
         (HeadBasis.charter, 'На основании устава'),
         (HeadBasis.proxy, 'На основании доверенности')
     )
+
+    INNER_TYPES = (
+        (InnerType.AKIT, InnerType.AKIT),
+        (InnerType.ADMIT_AD, InnerType.ADMIT_AD),
+        (InnerType.PARTNERS, InnerType.PARTNERS)
+    )
+
+    inner = models.CharField(max_length=10, null=True, blank=True, choices=INNER_TYPES)
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
