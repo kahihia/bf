@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from rest_framework import serializers
 
 from apps.catalog.api.serializers import CategorySerializer
@@ -27,12 +30,8 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_extra_kwargs(self):
         kwargs = super().get_extra_kwargs()
-
-        request = self.context['request']
-        if not request.data.get('inner'):
-            for field in self.Meta.fields:
-                kwargs[field] = dict(kwargs.get(field, {}), allow_null=False, allow_blank=False)
-
+        for field in self.Meta.fields:
+            kwargs[field] = dict(kwargs.get(field, {}), allow_null=False, allow_blank=False)
         return kwargs
 
     def bind(self, field_name, parent):
@@ -41,6 +40,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             self.instance = parent.instance.profile
         except AttributeError:
             pass
+
+    def validate(self, attrs):
+        inner = attrs.pop('inner', None)
+        if not inner:
+            if not reduce(operator.__and__, attrs.values()):
+                raise ValidationError('Все поля должны быть ненулевыми')
+        else:
+            attrs['inner'] = inner
+        return attrs
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
