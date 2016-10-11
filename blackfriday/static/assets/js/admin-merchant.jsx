@@ -1,4 +1,4 @@
-/* global document toastr */
+/* global document jQuery toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -106,11 +106,36 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 		},
 
 		handleClickPromoSelect() {
-			console.log('p');
+			this.openPromoSelectModal();
 		},
 
 		handleClickPromoOptionsSelect() {
-			console.log('o');
+			this.openPromoSelectModal();
+		},
+
+		openPromoSelectModal() {
+			jQuery('#promo-select-modal').modal('show');
+			const {
+				data,
+				id
+			} = this.state;
+			const {
+				paymentStatus,
+				promo
+			} = data;
+			const activePromoId = promo ? promo.id : null;
+
+			ReactDOM.render(
+				<MerchantEditPromoSelect
+					{...{
+						activePromoId,
+						id,
+						paymentStatus
+					}}
+					/>
+				,
+				document.getElementById('promo-select-form')
+			);
 		},
 
 		render() {
@@ -132,7 +157,6 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 			const moderationStatus = moderation.status;
 			const moderationComment = moderation.comment;
 			const promoName = promo ? promo.name : 'Не выбран';
-			const activePromoId = promo ? promo.id : null;
 
 			const isAdmin = hasRole('admin');
 			const isAdvertiser = hasRole('advertiser');
@@ -161,14 +185,6 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 							paymentStatus,
 							previewUrl,
 							promoName
-						}}
-						/>
-
-					<MerchantEditPromoSelect
-						{...{
-							activePromoId,
-							id,
-							paymentStatus
 						}}
 						/>
 

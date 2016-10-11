@@ -14,6 +14,7 @@ const VipPromo = React.createClass({
 	},
 
 	openCustomPromoRequestModal() {
+		jQuery('.modal').modal('hide');
 		jQuery('#custom-promo-request-modal').modal('show');
 		const onSubmit = () => {
 			jQuery('#custom-promo-request-modal').modal('hide');
