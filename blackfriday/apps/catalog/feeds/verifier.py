@@ -1,3 +1,6 @@
+import logging
+import requests
+
 from django.conf import settings
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
@@ -6,6 +9,9 @@ from .validators import (
 from apps.catalog.parser import Row, Column, Grouped, GenericValidator
 from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from apps.catalog.models import Category
+
+
+logger = logging.getLogger(__name__)
 
 
 def together(**cleaned_data):
@@ -32,13 +38,23 @@ def clear_category(category, context):
     return category
 
 
+clear_category.null = True
+
+
 def optional_required(_id, context):
     if context.get('_id_required', True):
         return _id is not None
     return True
 
 
-clear_category.null = True
+def is_image(image):
+    if image is None:
+        return None
+    try:
+        return requests.head(image).headers['Content-Type'] in ['image/jpeg', 'image/png']
+    except Exception as e:
+        logger.error(str(e))
+        return False
 
 
 class ProductRow(Row):
@@ -86,7 +102,9 @@ class ProductRow(Row):
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
             'image', pipes=(str,),
-            validators=(Required(), Substring(rule=('http://', 'https://')))),
+            validators=(
+                Required(), Substring(rule=('http://', 'https://')),
+                GenericValidator(message='Данный формат не поддерживается', rule=is_image))),
     )
 
 
