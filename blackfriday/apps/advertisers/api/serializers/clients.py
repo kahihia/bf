@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError
 
