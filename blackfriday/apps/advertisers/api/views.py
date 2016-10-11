@@ -12,8 +12,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from libs.api.exceptions import BadRequest
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
-from apps.banners.api.serializers import PartnerTinySerializer
+from libs.api.permissions import (
+    IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
+)
+
 from apps.banners.models import Partner
 from apps.catalog.models import Category
 from apps.orders.models import InvoiceOption
