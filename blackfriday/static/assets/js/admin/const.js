@@ -41,6 +41,34 @@ export const APPLICATION_STATUS = {
 	30: 'Отказ'
 };
 
+export const BANNER_TYPE = {
+	0: {
+		name: 'Супербаннер',
+		width: 900,
+		height: 275
+	},
+	10: {
+		name: 'Акционный баннер',
+		width: 435,
+		height: 250
+	},
+	20: {
+		name: 'Вертикальный баннер',
+		width: 240,
+		height: 400
+	},
+	30: {
+		name: 'Фон слева',
+		width: 500,
+		height: 2000
+	},
+	40: {
+		name: 'Фон справа',
+		width: 500,
+		height: 2000
+	}
+};
+
 export const HELP_TEXT = {
 	password: 'Не менее 8 симв., латинские буквы или цифры.'
 };

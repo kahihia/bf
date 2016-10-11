@@ -14,6 +14,7 @@ import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select
 import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
 import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
 import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-categories-select.jsx';
+import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 
 (function () {
 	'use strict';
@@ -170,6 +171,8 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 				}
 			}
 
+			const availableBannerTypes = [0, 10, 20];
+
 			return (
 				<div className="">
 					<MerchantEditStatusPanel
@@ -234,7 +237,9 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 											name="Категории размещения логотипа"
 											/>
 
-										<MerchantLogoCategoriesSelect/>
+										<MerchantLogoCategoriesSelect
+											id={id}
+											/>
 									</div>
 								</div>
 							</div>
@@ -244,6 +249,13 @@ import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-cate
 					<MerchantPartnersSelect
 						id={id}
 						value={partners}
+						/>
+
+					<MerchantBannerList
+						{...{
+							availableBannerTypes,
+							id
+						}}
 						/>
 				</div>
 			);

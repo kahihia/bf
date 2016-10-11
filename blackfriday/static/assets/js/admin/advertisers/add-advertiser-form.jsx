@@ -21,8 +21,7 @@ class AddAdvertiserForm extends Form {
 				},
 				name: {
 					label: 'Название',
-					value: '',
-					required: false
+					value: ''
 				},
 				password: {
 					label: 'Пароль',

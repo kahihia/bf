@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 import ImageInfo from './image-info.jsx';
@@ -11,12 +10,6 @@ import ImageInfo from './image-info.jsx';
 class ImagesUploadForm extends Form {
 	constructor(props) {
 		super(props);
-
-		const {
-			ext,
-			width,
-			height
-		} = props;
 
 		this.state = {
 			isLoading: false,
@@ -27,15 +20,23 @@ class ImagesUploadForm extends Form {
 					type: 'file',
 					accept: 'image/*',
 					required: true,
-					help: (
-						<ImageInfo
-							{...{
-								ext,
-								width,
-								height
-							}}
-							/>
-					)
+					help: () => {
+						const {
+							ext,
+							width,
+							height
+						} = this.props;
+
+						return (
+							<ImageInfo
+								{...{
+									ext,
+									width,
+									height
+								}}
+								/>
+						);
+					}
 				}
 			}
 		};
@@ -101,7 +102,7 @@ class ImagesUploadForm extends Form {
 		};
 
 		return (
-			<div className={b('images-upload-form')}>
+			<div className="images-upload-form">
 				<div className="modal-body">
 					<form
 						ref={form}

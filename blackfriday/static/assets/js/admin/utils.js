@@ -63,3 +63,17 @@ function processString(error) {
 export function reverseSortDirection(sortDir) {
 	return sortDir === SORT_TYPES.DESC ? SORT_TYPES.ASC : SORT_TYPES.DESC;
 }
+
+export function isUTM(value) {
+	const match = value.match(/utm_medium|utm_source|utm_campaign/g);
+
+	if (match === null) {
+		return false;
+	}
+
+	if (match.length === 3 && /\?/.test(value)) {
+		return true;
+	}
+
+	return false;
+}

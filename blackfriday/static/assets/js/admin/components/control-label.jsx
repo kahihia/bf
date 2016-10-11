@@ -14,7 +14,7 @@ class ControlLabel extends React.Component {
 
 		return (
 			<span className={classNames('control-label', className)}>
-				{name}
+				{typeof name === 'function' ? name() : name}
 
 				{required ? (
 					<span>
@@ -29,7 +29,11 @@ class ControlLabel extends React.Component {
 }
 ControlLabel.propTypes = {
 	className: React.PropTypes.string,
-	name: React.PropTypes.string,
+	name: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.node,
+		React.PropTypes.func
+	]),
 	required: React.PropTypes.bool
 };
 ControlLabel.defaultProps = {

@@ -6,13 +6,33 @@ import ControlLabel from './control-label.jsx';
 import Input from './input.jsx';
 
 class FormRow extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+		this.state = {
+			value: props.value
+		};
+
+		this.handleBlur = this.handleBlur.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({value: nextProps.value});
+	}
+
+	handleBlur(e) {
+		if (!this.props.changeOnBlur) {
+			return;
+		}
+		this.props.onChange(e);
+	}
+
 	handleChange(e) {
+		if (this.props.changeOnBlur) {
+			this.setState({value: e.target.value});
+			return;
+		}
 		this.props.onChange(e);
 	}
 
@@ -35,6 +55,7 @@ class FormRow extends React.Component {
 	}
 
 	renderInput() {
+		const {value} = this.state;
 		const {
 			accept,
 			addon,
@@ -47,12 +68,12 @@ class FormRow extends React.Component {
 			readOnly,
 			required,
 			type,
-			value,
 			valueType
 		} = this.props;
 
 		return (
 			<Input
+				onBlur={this.handleBlur}
 				onChange={this.handleChange}
 				onKeyUp={this.handleKeyUp}
 				{...{
@@ -83,7 +104,7 @@ class FormRow extends React.Component {
 
 		return (
 			<span className="help-block">
-				{help}
+				{typeof help === 'function' ? help() : help}
 			</span>
 		);
 	}
@@ -121,16 +142,23 @@ class FormRow extends React.Component {
 FormRow.propTypes = {
 	accept: React.PropTypes.string,
 	addon: React.PropTypes.string,
+	changeOnBlur: React.PropTypes.bool,
 	disabled: React.PropTypes.bool,
 	hasError: React.PropTypes.bool,
 	help: React.PropTypes.oneOfType([
 		React.PropTypes.string,
-		React.PropTypes.node
+		React.PropTypes.node,
+		React.PropTypes.func
 	]),
 	helpError: React.PropTypes.string,
-	label: React.PropTypes.string.isRequired,
+	label: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.node,
+		React.PropTypes.func
+	]).isRequired,
 	mask: React.PropTypes.string,
 	name: React.PropTypes.string,
+	onBlur: React.PropTypes.func,
 	onChange: React.PropTypes.func.isRequired,
 	onKeyUp: React.PropTypes.func,
 	options: React.PropTypes.oneOfType([

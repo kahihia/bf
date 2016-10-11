@@ -23,8 +23,7 @@ class AddUser extends Form {
 				},
 				name: {
 					label: 'Имя/Название',
-					value: '',
-					required: false
+					value: ''
 				},
 				password: {
 					label: 'Пароль',

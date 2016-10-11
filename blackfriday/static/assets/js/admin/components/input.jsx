@@ -7,8 +7,16 @@ import Select from './select.jsx';
 class Input extends React.Component {
 	constructor(props) {
 		super(props);
+		this.handleBlur = this.handleBlur.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
+	}
+
+	handleBlur(e) {
+		if (!this.props.onBlur) {
+			return;
+		}
+		this.props.onBlur(e);
 	}
 
 	handleChange(e) {
@@ -74,6 +82,7 @@ class Input extends React.Component {
 					className="form-control"
 					value={val}
 					{...{accept, disabled, placeholder, name, type, required, readOnly}}
+					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -84,6 +93,7 @@ class Input extends React.Component {
 					className="form-control"
 					value={val}
 					{...{disabled, name, required, readOnly, mask}}
+					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -94,6 +104,7 @@ class Input extends React.Component {
 					className="form-control"
 					value={val}
 					{...{accept, disabled, pattern, placeholder, name, type, required, readOnly}}
+					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
 					/>
@@ -120,6 +131,7 @@ Input.propTypes = {
 	disabled: React.PropTypes.bool,
 	mask: React.PropTypes.string,
 	name: React.PropTypes.string,
+	onBlur: React.PropTypes.func,
 	onChange: React.PropTypes.func.isRequired,
 	onKeyUp: React.PropTypes.func,
 	options: React.PropTypes.oneOfType([

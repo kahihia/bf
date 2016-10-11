@@ -39,7 +39,11 @@ class Radio extends React.Component {
 	}
 }
 Radio.propTypes = {
-	name: React.PropTypes.string.isRequired,
+	name: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.node,
+		React.PropTypes.func
+	]).isRequired,
 	nameActive: React.PropTypes.string,
 	value: React.PropTypes.oneOfType([
 		React.PropTypes.string,
