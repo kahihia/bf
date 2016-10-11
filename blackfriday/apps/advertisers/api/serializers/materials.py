@@ -24,7 +24,10 @@ class BannerSerializer(BannerDetailSerializer):
     categories = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all()))
 
     class Meta(BannerDetailSerializer.Meta):
-        pass
+        extra_kwargs = {
+            'on_main': {'allow_null': False, 'allow_blank': False, 'required': True},
+            'in_mailing': {'allow_null': False, 'allow_blank': False, 'required': True},
+        }
 
     def to_representation(self, instance):
         return BannerDetailSerializer().to_representation(instance)
