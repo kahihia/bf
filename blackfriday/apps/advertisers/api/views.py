@@ -3,7 +3,7 @@ import operator
 from functools import reduce
 
 from django.conf import settings
-from django.db.models import Sum
+from django.db.models import Q, Sum
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -11,23 +11,24 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from apps.advertisers.api.serializers import BannerSerializer
-from apps.catalog.api.serializers import CategorySerializer
-from apps.catalog.models import Category
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
+from apps.catalog.models import Category
 from apps.orders.models import InvoiceOption
-from apps.promo.models import Option, PromoOption
+from apps.promo.models import Option
+from apps.users.models import User
 
-from ..models import Banner
+from apps.banners.api.serializers import PartnerTinySerializer
+from apps.catalog.api.serializers import CategorySerializer
 
+from ..models import Banner, Merchant
 from .filters import AdvertiserFilter, MerchantFilter
-from .serializers import (
-    User, AdvertiserSerializer, Merchant, MerchantSerializer, MerchantListSerializer, MerchantCreateSerializer,
-    MerchantUpdateSerializer, MerchantModerationSerializer, LimitSerializer, AvailableOptionSerializer
-)
+
+from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
+                                  MerchantCreateSerializer, MerchantUpdateSerializer, MerchantModerationSerializer)
+from .serializers.materials import AvailableOptionSerializer, LimitSerializer, BannerSerializer
 
 
 class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
@@ -159,6 +160,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 raise BadRequest('Значения не должны повторяться')
 
             cats = Category.objects.filter(id__in=cat_list)
+            if request.user.role == 'advertiser':
+                cats = cats.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+
             if cats.count() < len(cat_list):
                 raise BadRequest('Не все ключи присутствуют в базе')
 
