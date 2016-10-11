@@ -28,12 +28,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis', 'inner')
 
-    def get_extra_kwargs(self):
-        kwargs = super().get_extra_kwargs()
-        for field in self.Meta.fields:
-            kwargs[field] = dict(kwargs.get(field, {}), allow_null=False, allow_blank=False)
-        return kwargs
-
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
         try:
