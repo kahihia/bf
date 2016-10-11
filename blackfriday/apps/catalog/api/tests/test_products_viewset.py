@@ -81,7 +81,7 @@ def test_validate_schema():
         ProductViewSet().validate_schema([[]])
 
 
-def test_post_given_invalid_data_expect_400(mocker, admin_logged_client, merchant, fake_image_response):
+def test_post_given_invalid_data_expect_400(admin_logged_client, merchant, fake_image_response):
     with patch('requests.head', return_value=fake_image_response):
         response = admin_logged_client.post(
             reverse('api:catalog:products-list', args=(merchant.id,)),
