@@ -69,7 +69,7 @@ class AdvertiserProfile(models.Model):
         if self.inner:
             return True
         fields = filter(lambda field: field.name != 'inner', self._meta.fields)
-        return reduce(operator.__and__, map(lambda field: field.value_from_object(self), fields))
+        return reduce(operator.__and__, map(lambda field: bool(field.value_from_object(self)), fields))
 
 
 class Merchant(models.Model):
