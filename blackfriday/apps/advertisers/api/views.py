@@ -110,25 +110,13 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        merchant, options = self.get_object(), {}
-
-        def get_options(qs):
-            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
-            return dict(qs.values_list('option__tech_name', 'option_sum'))
-
-        def get_value(rule):
-            return rule if isinstance(rule, int) else int(options.get(rule, 0))
-
-        if merchant.promo:
-            options.update(get_options(merchant.promo.options))
-        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=merchant, invoice__is_paid=True)))
-
+        merchant = self.get_object()
         limits = [
             {
                 'tech_name': limit,
-                'value': reduce(operator.add, map(get_value, rules), 0)
+                'value': value
             }
-            for limit, rules in settings.LIMITS_RULES.items()
+            for limit, value in merchant.limits.items()
         ]
 
         serializer = LimitSerializer(data=filter(lambda limit: limit['value'], limits), many=True)
@@ -155,6 +143,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
         if request.method == 'PATCH':
             try:
+                if type(request.data) != list:
+                    raise TypeError
                 cat_list = list(map(int, request.data))
             except (TypeError, ValueError):
                 raise BadRequest('Неверные данные')
@@ -167,6 +157,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
             if cats.count() < len(cat_list):
                 raise BadRequest('Не все ключи присутствуют в базе')
+
+            if len(cat_list) > merchant.limits.get('logo_categories', 0):
+                raise BadRequest('Превышены ограничения рекламных возможностей')
 
             merchant.logo_categories.set(cats)
 

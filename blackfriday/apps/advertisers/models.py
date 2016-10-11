@@ -4,10 +4,11 @@ import operator
 from functools import partial
 from functools import reduce
 
+from django.conf import settings
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 
-from apps.orders.models import InvoiceStatus
+from apps.orders.models import InvoiceStatus, InvoiceOption
 from apps.promo.models import Option
 from django.utils import timezone
 
@@ -128,6 +129,26 @@ class Merchant(models.Model):
         invoice = qs.order_by('-id').first()
         if invoice:
             return invoice.promo
+
+    @property
+    def limits(self):
+        options = {}
+
+        def get_options(qs):
+            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
+            return dict(qs.values_list('option__tech_name', 'option_sum'))
+
+        def get_value(rule):
+            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+
+        if self.promo:
+            options.update(get_options(self.promo.options))
+        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=self, invoice__is_paid=True)))
+
+        return {
+            limit: reduce(operator.add, map(get_value, rules), 0)
+            for limit, rules in settings.LIMITS_RULES.items()
+        }
 
     @property
     def promo(self):
