@@ -6,8 +6,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from rest_framework import mixins
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
@@ -15,10 +14,10 @@ from rest_framework.response import Response
 from libs.api.exceptions import ServiceUnavailable
 from libs.api.permissions import IsAdmin, IsAuthenticated, IsAdvertiser
 
-from apps.advertisers.api.serializers import AdvertiserSerializer
+from apps.advertisers.api.serializers.clients import AdvertiserSerializer
+from ..models import User, Token, TokenType
 
-from ..models import Token, TokenType
-from .serializers import User, UserSerializer, UserUpdateSerializer, RegistrationSerializer, SupportRequestSerializer
+from .serializers import UserSerializer, UserUpdateSerializer, RegistrationSerializer, SupportRequestSerializer
 
 
 def send_verification(request, user):

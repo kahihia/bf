@@ -1,39 +1,40 @@
 import json
 import datetime
+
+from django.db.models import Q
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils import timezone
-from rest_framework import viewsets, mixins
-from rest_framework import status
+
+from jsonschema import validate, ValidationError as JsonSchemaValidationError
+
+from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
-from jsonschema import validate, ValidationError as JsonSchemaValidationError
 
-from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 from libs.api.exceptions import BadRequest
+from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
 
-from apps.promo.models import Option
 from apps.advertisers.models import Merchant, ModerationStatus
+from ..models import Product, Category
 
-from .serializers import Category, CategorySerializer, ProductSerializer
-from apps.catalog.feeds.verifier import FeedParser
-from apps.catalog.feeds.generator import FeedGenerator
-from ..models import Product
+from ..feeds.verifier import FeedParser
+from ..feeds.generator import FeedGenerator
+
+from .serializers import CategorySerializer, ProductSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated & IsAdmin | ReadOnly]
+    permission_classes = [IsAuthenticated, IsAdmin | ReadOnly]
 
-    def perform_create(self, serializer):
-        super().perform_create(serializer)
-        Option.calculate_restrictions()
-
-    def perform_destroy(self, instance):
-        super().perform_destroy(instance)
-        Option.calculate_restrictions()
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.role == 'advertiser':
+            qs = qs.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+        return qs
 
 
 class ProductViewSet(
@@ -91,7 +92,11 @@ class ProductViewSet(
             })
         if failed:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
-        categories = {cat.name.lower(): cat.id for cat in Category.objects.all()}
+
+        cat_qs = Category.objects.all()
+        if request.user.role == 'advertiser':
+            cat_qs = cat_qs.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+        categories = {cat.name.lower(): cat.id for cat in cat_qs}
         qs = [
             Product(
                 category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
@@ -116,10 +121,15 @@ class ProductViewSet(
         if errors:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
         cleaned_data.pop('_id')
+
+        cat_qs = Category.objects.all()
+        if request.user.role == 'advertiser':
+            cat_qs = cat_qs.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+
         data = dict(
             cleaned_data,
             **{
-                'category': Category.objects.get(name=cleaned_data.get('category')),
+                'category': cat_qs.get(name=cleaned_data.get('category')),
                 'is_teaser': request.data.get('is_teaser', False),
                 'is_teaser_on_main': request.data.get('is_teaser_on_main', False),
             }
@@ -170,7 +180,11 @@ class YmlProductViewSet(viewsets.GenericViewSet):
         include_category_ids = request.GET.getlist('categories', [])
         include_merchants_id = request.GET.getlist('merchants', [])
 
-        categories = Category.objects.filter(
+        cat_qs = Category.objects.all()
+        if request.user.role == 'advertiser':
+            cat_qs = cat_qs.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+
+        categories = cat_qs.filter(
             **({'id__in': include_category_ids} if include_category_ids else {})
         ).exclude(
             id__in=request.GET.getlist('exclude_categories', [])

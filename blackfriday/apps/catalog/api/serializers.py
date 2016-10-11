@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 
-from apps.advertisers.api.serializers import MerchantTinySerializer
-from apps.advertisers.models import Merchant
-
 from libs.api.exceptions import BadRequest
+
+from apps.advertisers.models import Merchant
+from apps.advertisers.api.serializers.clients import MerchantTinySerializer
 
 from ..models import Category, Product
 
