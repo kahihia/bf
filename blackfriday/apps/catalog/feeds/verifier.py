@@ -19,6 +19,8 @@ def together(**cleaned_data):
 
 
 def old_price_gte_price(old_price, price):
+    if not old_price and not price:
+        return None
     return bool(price and old_price and price < old_price)
 
 
@@ -61,7 +63,7 @@ class ProductRow(Row):
     _columns = (
         Column(
             '_id', pipes=(float, int),
-            validators=(GenericValidator(message='Обязательное поле', rule=optional_required),)),
+            validators=(IsNumeric(), GenericValidator(message='Обязательное поле', rule=optional_required),)),
         Column(
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
