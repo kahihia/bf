@@ -15,7 +15,7 @@ from apps.advertisers.api.serializers import BannerSerializer
 from apps.catalog.api.serializers import CategorySerializer
 from apps.catalog.models import Category
 from libs.api.exceptions import BadRequest
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
+from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.banners.models import Partner
 from apps.orders.models import InvoiceOption
@@ -54,7 +54,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     queryset = Merchant.objects.all()
     permission_classes = [
         IsAuthenticated,
-        IsAdvertiser & IsOwner & action_permission(
+        IsValidAdvertiser & IsOwner & action_permission(
             'list', 'retrieve', 'create', 'update', 'partial_update',
             'moderation', 'limits', 'available_options', 'logo_categories'
         ) |
