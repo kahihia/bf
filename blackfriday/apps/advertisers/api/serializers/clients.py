@@ -83,7 +83,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated and user.role == 'advertiser':
             if value != ModerationStatus.waiting:
                 raise ValidationError('Неверный статус')
-            # ToDo: проверка, все ли материлы заполнены
+
         return value
 
     def validate(self, attrs):

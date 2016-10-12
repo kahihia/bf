@@ -1,9 +1,4 @@
-import operator
-
-from functools import reduce
-
-from django.conf import settings
-from django.db.models import Q, Sum
+from django.db.models import Q
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -18,7 +13,6 @@ from libs.api.permissions import (
 
 from apps.banners.models import Partner
 from apps.catalog.models import Category
-from apps.orders.models import InvoiceOption
 from apps.promo.models import Option
 from apps.users.models import User
 
