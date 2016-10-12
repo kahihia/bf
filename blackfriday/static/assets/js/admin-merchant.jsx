@@ -336,10 +336,12 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 						</div>
 					</div>
 
-					<MerchantPartnersSelect
-						id={id}
-						value={partners}
-						/>
+					{isAdmin ? (
+						<MerchantPartnersSelect
+							id={id}
+							value={partners}
+							/>
+					) : null}
 
 					<MerchantBannerList
 						{...{
