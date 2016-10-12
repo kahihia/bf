@@ -4,7 +4,8 @@
 import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
-import {hasRole, formatPrice, processErrors} from '../utils.js';
+import {TOKEN} from '../const.js';
+import {formatPrice, processErrors, getUrl} from '../utils.js';
 import PromoOptionList from './promo-option-list.jsx';
 import MerchantPromoSelect from './merchant-promo-select.jsx';
 
@@ -80,7 +81,8 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	processPromos(promos) {
-		const activePromoId = this.props.activePromoId || promos[0].id;
+		const isNew = this.props.activePromoId === null;
+		const activePromoId = isNew ? promos[0].id : this.props.activePromoId;
 		const data = {
 			id: activePromoId,
 			options: []
@@ -95,6 +97,9 @@ const MerchantEditPromoSelect = React.createClass({
 			promos.push(currentPromo);
 		} else {
 			const currentPromoPrice = currentPromo.price;
+			if (!isNew) {
+				priceOld = currentPromoPrice;
+			}
 			// Disable promos with price < current promo price
 			promos.forEach(promo => {
 				if (promo.price < currentPromoPrice) {
@@ -188,32 +193,43 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	requestFinal() {
-		const activeOptions = this.getActiveOptions();
-		const requestOptions = activeOptions.reduce((a, b) => {
-			const {id, value} = b;
-			a.push({id, value});
+		let activeOptions = this.getActiveOptions();
+		activeOptions = activeOptions.reduce((a, b) => {
+			const {id, value, price} = b;
+			a.push({id, value, price});
 			return a;
 		}, []);
 
+		let isValid = false;
+
+		const {activePromoId} = this.state;
+		const json = {merchantId: this.props.id};
+
+		if (activePromoId !== this.props.activePromoId) {
+			json.promoId = activePromoId;
+			isValid = true;
+		}
+
+		if (activeOptions.length) {
+			json.options = activeOptions;
+			isValid = true;
+		}
+
+		if (!isValid) {
+			return;
+		}
+
 		xhr({
-			url: `/admin/merchant/${this.props.id}/promo`,
-			method: 'PUT',
-			json: {
-				name: this.state.name,
-				url: this.state.url,
-				promo_id: this.state.activePromoId,
-				options: requestOptions
-			}
+			url: '/api/invoices/',
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
 		}, (err, resp, data) => {
 			switch (resp.statusCode) {
-				case 200: {
-					let pathname = '/admin/merchant/invoices';
-
-					if (hasRole('admin')) {
-						pathname = '/admin/invoice-list';
-					}
-
-					window.location.pathname = pathname;
+				case 201: {
+					window.location.pathname = getUrl('invoices');
 					break;
 				}
 				case 400: {
@@ -221,7 +237,7 @@ const MerchantEditPromoSelect = React.createClass({
 					break;
 				}
 				default: {
-					toastr.error(data);
+					toastr.error('Не удалось выставить счёт');
 					break;
 				}
 			}
@@ -248,15 +264,19 @@ const MerchantEditPromoSelect = React.createClass({
 						/>
 				) : null}
 
-				<h2>
-					{'Дополнительные опции'}
-				</h2>
+				{availableOptions.length ? (
+					<div>
+						<h2>
+							{'Дополнительные опции'}
+						</h2>
 
-				<PromoOptionList
-					options={availableOptions}
-					onChange={this.handleChangeOption}
-					onCheck={this.handleCheckOption}
-					/>
+						<PromoOptionList
+							options={availableOptions}
+							onChange={this.handleChangeOption}
+							onCheck={this.handleCheckOption}
+							/>
+					</div>
+				) : null}
 
 				<div className="add-shop-footer">
 					<div className="add-shop-footer__help">

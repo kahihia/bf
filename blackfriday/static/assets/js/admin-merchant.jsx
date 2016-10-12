@@ -30,7 +30,14 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 
 		componentWillMount() {
 			this.requestCategories();
-			this.setState({id: ENV.merchantId}, this.requestMerchant);
+			this.setState({id: ENV.merchantId}, () => {
+				this.requestMerchant();
+
+				const hash = window.location.hash;
+				if (/promo/.test(hash)) {
+					this.openPromoSelectModal();
+				}
+			});
 		},
 
 		requestMerchant() {
