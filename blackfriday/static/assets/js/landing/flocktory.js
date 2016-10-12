@@ -28,7 +28,15 @@ CreateFloctory.prototype = {
 	},
 
 	_build: function () {
-		this._$block = $(`<div class="i-flocktory" data-fl-user-name="${this.name}" data-fl-user-email="${this.email}"></div>`).appendTo('body');
+		let bl = '<div class="i-flocktory"';
+		if (this.name) {
+			bl += ` data-fl-user-name="${this.name}"`;
+		}
+		if (this.email) {
+			bl += ` data-fl-user-email="${this.email}"`;
+		}
+		bl += '></div>';
+		this._$block = $(bl).appendTo('body');
 	},
 
 	_buildMgm: function () {
@@ -42,12 +50,12 @@ CreateFloctory.prototype = {
 	_save: function (name, email) {
 		this._reset();
 
-		if (!name || !email) {
+		if (!name && !email) {
 			return false;
 		}
 
-		name = String(name).trim();
-		email = String(email).trim();
+		name = name === null ? '' : String(name).trim();
+		email = email === null ? '' : String(email).trim();
 
 		this.name = name;
 		this.email = email;
