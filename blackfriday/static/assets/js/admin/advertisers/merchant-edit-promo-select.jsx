@@ -229,7 +229,7 @@ const MerchantEditPromoSelect = React.createClass({
 		}, (err, resp, data) => {
 			switch (resp.statusCode) {
 				case 201: {
-					window.location.pathname = getUrl('invoices');
+					window.location = `${getUrl('invoices')}#invoice${data.id}`;
 					break;
 				}
 				case 400: {
