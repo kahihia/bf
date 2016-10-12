@@ -51,7 +51,7 @@ const PromoOptionListItem = React.createClass({
 		name: React.PropTypes.string,
 		value: React.PropTypes.number,
 		minValue: React.PropTypes.number,
-		available: React.PropTypes.number,
+		availableValue: React.PropTypes.number,
 		price: React.PropTypes.number,
 		image: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
@@ -97,7 +97,7 @@ const PromoOptionListItem = React.createClass({
 						<DecInc
 							value={this.props.value || 0}
 							min={this.props.minValue || 0}
-							max={this.props.available || 11}
+							max={this.props.availableValue || 11}
 							onChange={this.handleChange}
 							/>
 					)}

@@ -41,11 +41,11 @@ const VipPromo = React.createClass({
 					<Icon name="vip-promo-content"/>
 
 					<span className={b(className, 'desc')}>
-						{'Максимальный трафик, охват, брендинг на КП'}
+						{'Максимальный трафик, охват, брендинг'}
 					</span>
 
 					<button
-						className={'btn btn-success ' + b(className, 'link')}
+						className={'btn btn-primary ' + b(className, 'link')}
 						onClick={this.handleClick}
 						type="button"
 						>

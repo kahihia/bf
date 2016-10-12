@@ -38,8 +38,8 @@ const MerchantEditPromoSelect = React.createClass({
 		}, (err, resp, data) => {
 			switch (resp.statusCode) {
 				case 200: {
-					const promos = data;
-					this.requestOptions(promos);
+					this.processPromos(data);
+					this.requestOptions();
 					break;
 				}
 				case 400: {
@@ -54,7 +54,7 @@ const MerchantEditPromoSelect = React.createClass({
 		});
 	},
 
-	requestOptions(promos) {
+	requestOptions() {
 		xhr({
 			url: `/api/merchants/${this.props.id}/available-options/`,
 			method: 'GET',
@@ -62,8 +62,9 @@ const MerchantEditPromoSelect = React.createClass({
 		}, (err, resp, data) => {
 			switch (resp.statusCode) {
 				case 200: {
-					const options = data;
-					this.processData({promos, options});
+					let sorted = _.sortBy(data, 'name');
+					sorted = _.sortBy(sorted, 'price');
+					this.setState({availableOptions: sorted});
 					break;
 				}
 				case 400: {
@@ -78,18 +79,14 @@ const MerchantEditPromoSelect = React.createClass({
 		});
 	},
 
-	processData({promos, options}) {
+	processPromos(promos) {
+		const activePromoId = this.props.activePromoId || promos[0].id;
 		const data = {
-			id: promos[0].id || this.props.activePromoId,
+			id: activePromoId,
 			options: []
 		};
 
 		let priceOld = 0;
-		if (data.price) {
-			priceOld += data.price;
-		}
-
-		const activePromoId = data.id;
 		let currentPromo = _.find(promos, {id: activePromoId});
 		const isCustomPromo = !currentPromo;
 
@@ -104,61 +101,18 @@ const MerchantEditPromoSelect = React.createClass({
 					promo.disabled = true;
 				}
 			});
-
-			currentPromo.options = data.options;
-		}
-
-		const availableOptions = this.collectAvailableOptions(options, currentPromo.options);
-		// Collect active promo options
-		const activeOptions = [];
-		availableOptions.forEach(option => {
-			if (option.price && option.value) {
-				activeOptions.push({
-					id: option.id,
-					value: option.value
-				});
-				priceOld += (option.price * option.value);
-			}
-		});
-
-		// Activate active promo options in all promos and options
-		activeOptions.forEach(option => {
-			a(options, option);
-			_.forEach(promos, promo => {
-				if (!promo.options) {
-					return;
-				}
-				a(promo.options, option);
-			});
-		});
-
-		// Activate option in options
-		function a(options, option) {
-			const o = _.find(options, {id: option.id});
-			if (!o) {
-				return;
-			}
-			o.isActive = true;
-			o.required = true;
-			o.value = option.value;
-			o.minValue = option.value;
 		}
 
 		this.setState({
 			activePromoId,
 			isCustomPromo,
 			priceOld,
-			promos,
-			options,
-			availableOptions
+			promos
 		});
 	},
 
-	handleChangePromo(promoId) {
-		this.setState({
-			activePromoId: promoId,
-			availableOptions: this.getAvailableOptions(promoId)
-		});
+	handleChangePromo(activePromoId) {
+		this.setState({activePromoId});
 	},
 
 	handleChangeOption(optionId, value) {
@@ -190,20 +144,6 @@ const MerchantEditPromoSelect = React.createClass({
 
 	handleClickFinal() {
 		this.requestFinal();
-	},
-
-	getAvailableOptions(promoId) {
-		return this.collectAvailableOptions(this.state.options, this.getPromoOptions(promoId));
-	},
-
-	collectAvailableOptions(options, promoOptions) {
-		const availableOptions = promoOptions ? promoOptions.concat(options) : options;
-		const uniqAvailableOptions = _.uniqBy(availableOptions, 'id');
-		// Move 'По запросу' bottom
-		let sorted = _.sortBy(uniqAvailableOptions, 'name');
-		sorted = _.sortBy(sorted, 'price');
-
-		return sorted;
 	},
 
 	getPromoOptions(promoId) {
