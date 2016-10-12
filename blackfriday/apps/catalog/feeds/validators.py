@@ -6,7 +6,7 @@ class IsNumeric(BaseValidator):
 
     def validate(self, value, **kwargs):
         try:
-            float(value)
+            int(float(value))
         except:
             return False
         return True

@@ -1,6 +1,8 @@
 from django_filters import filterset, filters
 
-from .serializers import User, Merchant
+from apps.users.models import User
+
+from ..models import Merchant
 
 
 class AdvertiserFilter(filterset.FilterSet):

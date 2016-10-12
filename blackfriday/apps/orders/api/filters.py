@@ -8,8 +8,6 @@ from ..models import Invoice, InvoiceStatus
 
 
 class InvoiceFilter(filterset.FilterSet):
-    strict = filterset.STRICTNESS.RAISE_VALIDATION_ERROR
-
     advertiser = filters.ModelChoiceFilter(name='merchant__advertiser',
                                            queryset=User.objects.filter(profile__isnull=False))
     date = filters.DateFilter(name='created_datetime', lookup_expr='date')

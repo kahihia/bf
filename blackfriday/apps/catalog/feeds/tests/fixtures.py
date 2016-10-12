@@ -1,5 +1,7 @@
-from django.conf import settings
+import pytest
 
+from requests import Response
+from django.conf import settings
 
 SUCCESS_DATA = {
     'input': {
@@ -78,3 +80,11 @@ FAIL_DATA = {
         ]
     )
 }
+
+
+@pytest.fixture
+def fake_image_response():
+    fake_response = Response()
+    fake_response.status_code = 200
+    fake_response.headers = {'Content-Type': 'image/jpeg'}
+    return fake_response

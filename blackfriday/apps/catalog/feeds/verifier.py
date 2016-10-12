@@ -1,3 +1,6 @@
+import logging
+import requests
+
 from django.conf import settings
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
@@ -8,11 +11,16 @@ from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
 from apps.catalog.models import Category
 
 
+logger = logging.getLogger(__name__)
+
+
 def together(**cleaned_data):
     return all(cleaned_data.values()) or not any(cleaned_data.values())
 
 
 def old_price_gte_price(old_price, price):
+    if not old_price and not price:
+        return None
     return bool(price and old_price and price < old_price)
 
 
@@ -35,10 +43,27 @@ def clear_category(category, context):
 clear_category.null = True
 
 
+def optional_required(_id, context):
+    if context.get('_id_required', True):
+        return _id is not None
+    return True
+
+
+def is_image(image):
+    if image is None:
+        return None
+    try:
+        return requests.head(image).headers['Content-Type'] in ['image/jpeg', 'image/png']
+    except Exception as e:
+        logger.error(str(e))
+        return False
+
+
 class ProductRow(Row):
     _columns = (
         Column(
-            '_id', pipes=(float, int), validators=(Required(),)),
+            '_id', pipes=(float, int),
+            validators=(IsNumeric(), GenericValidator(message='Обязательное поле', rule=optional_required),)),
         Column(
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
@@ -79,7 +104,9 @@ class ProductRow(Row):
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
             'image', pipes=(str,),
-            validators=(Required(), Substring(rule=('http://', 'https://')))),
+            validators=(
+                Required(), Substring(rule=('http://', 'https://')),
+                GenericValidator(message='Данный формат не поддерживается', rule=is_image))),
     )
 
 
@@ -91,6 +118,8 @@ class FeedParser:
             'product_urls': set(),
             'categories': list(map(str.lower, Category.objects.values_list('name', flat=True)))
         }
+        for key, value in kwargs.items():
+            self.context[key] = value
 
     def __iter__(self):
         reader = self.get_reader()

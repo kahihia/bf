@@ -149,6 +149,12 @@ class User(AbstractBaseUser):
     def owner_id(self):
         return self.id
 
+    @property
+    def is_valid_advertiser(self):
+        if self.role == 'advertiser':
+            return self.name and self.profile.is_valid
+        return False
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'

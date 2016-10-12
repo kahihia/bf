@@ -3,7 +3,7 @@ import operator
 from functools import reduce
 
 from django.conf import settings
-from django.db.models import Sum
+from django.db.models import Q, Sum
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -11,20 +11,26 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from apps.advertisers.api.serializers import BannerSerializer
-from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager
-from apps.banners.api.serializers import PartnerTinySerializer
-from apps.banners.models import Partner
-from apps.orders.models import InvoiceOption
-from apps.promo.models import Option, PromoOption
-
-from ..models import Banner
-
-from .filters import AdvertiserFilter, MerchantFilter
-from .serializers import (
-    User, AdvertiserSerializer, Merchant, MerchantSerializer, MerchantListSerializer, MerchantCreateSerializer,
-    MerchantUpdateSerializer, MerchantModerationSerializer, LimitSerializer, AvailableOptionSerializer
+from libs.api.exceptions import BadRequest
+from libs.api.permissions import (
+    IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
 )
+
+from apps.banners.models import Partner
+from apps.catalog.models import Category
+from apps.orders.models import InvoiceOption
+from apps.promo.models import Option
+from apps.users.models import User
+
+from apps.banners.api.serializers import PartnerTinySerializer
+from apps.catalog.api.serializers import CategorySerializer
+
+from ..models import Banner, Merchant
+from .filters import AdvertiserFilter, MerchantFilter
+
+from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
+                                  MerchantCreateSerializer, MerchantUpdateSerializer, MerchantModerationSerializer)
+from .serializers.materials import AvailableOptionSerializer, LimitSerializer, BannerSerializer
 
 
 class AdvertiserViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
@@ -51,8 +57,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
     queryset = Merchant.objects.all()
     permission_classes = [
         IsAuthenticated,
-        IsAdvertiser & IsOwner & action_permission(
-            'list', 'retrieve', 'create', 'update', 'partial_update', 'moderation', 'limits', 'available_options'
+        IsValidAdvertiser & IsOwner & action_permission(
+            'list', 'retrieve', 'create', 'update', 'partial_update',
+            'moderation', 'limits', 'available_options', 'logo_categories'
         ) |
         IsManager & action_permission(
             'list', 'retrieve', 'moderation'
@@ -72,7 +79,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'list': MerchantListSerializer,
             'update': MerchantUpdateSerializer,
             'partial_update': MerchantUpdateSerializer,
-            'moderation': MerchantModerationSerializer
+            'moderation': MerchantModerationSerializer,
+            'logo_categories': CategorySerializer,
         }.get(self.action, MerchantSerializer)
 
     @detail_route(methods=['patch', 'put', 'get'])
@@ -102,25 +110,13 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'])
     def limits(self, request, *args, **kwargs):
-        merchant, options = self.get_object(), {}
-
-        def get_options(qs):
-            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
-            return dict(qs.values_list('option__tech_name', 'option_sum'))
-
-        def get_value(rule):
-            return rule if isinstance(rule, int) else int(options.get(rule, 0))
-
-        if merchant.promo:
-            options.update(get_options(merchant.promo.options))
-        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=merchant, invoice__is_paid=True)))
-
+        merchant = self.get_object()
         limits = [
             {
                 'tech_name': limit,
-                'value': reduce(operator.add, map(get_value, rules), 0)
+                'value': value
             }
-            for limit, rules in settings.LIMITS_RULES.items()
+            for limit, value in merchant.limits.items()
         ]
 
         serializer = LimitSerializer(data=filter(lambda limit: limit['value'], limits), many=True)
@@ -140,6 +136,36 @@ class MerchantViewSet(viewsets.ModelViewSet):
         serializer.is_valid()
         return Response(serializer.data)
 
+    @detail_route(methods=['get', 'patch'], url_path='logo-categories')
+    def logo_categories(self, request, *args, **kwargs):
+        merchant = self.get_object()
+        self.check_object_permissions(self.request, merchant)
+
+        if request.method == 'PATCH':
+            try:
+                if type(request.data) != list:
+                    raise TypeError
+                cat_list = list(map(int, request.data))
+            except (TypeError, ValueError):
+                raise BadRequest('Неверные данные')
+            if len(cat_list) > len(set(cat_list)):
+                raise BadRequest('Значения не должны повторяться')
+
+            cats = Category.objects.filter(id__in=cat_list)
+            if request.user.role == 'advertiser':
+                cats = cats.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+
+            if cats.count() < len(cat_list):
+                raise BadRequest('Не все ключи присутствуют в базе')
+
+            if len(cat_list) > merchant.limits.get('logo_categories', 0):
+                raise BadRequest('Превышены ограничения рекламных возможностей')
+
+            merchant.logo_categories.set(cats)
+
+        serializer = self.get_serializer(merchant.logo_categories.all(), many=True)
+        return Response(serializer.data)
+
 
 class BannerViewSet(viewsets.ModelViewSet):
     queryset = Banner.objects.all()
@@ -156,3 +182,9 @@ class BannerViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(merchant=self.get_parent())
+
+    def perform_destroy(self, instance):
+        instance.merchant.moderation_status = 0
+        instance.merchant.save()
+
+        super().perform_destroy(instance)

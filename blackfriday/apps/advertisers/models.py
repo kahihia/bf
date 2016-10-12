@@ -1,12 +1,14 @@
 import collections
 
 import operator
+from functools import partial
 from functools import reduce
 
+from django.conf import settings
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 
-from apps.orders.models import InvoiceStatus
+from apps.orders.models import InvoiceStatus, InvoiceOption
 from apps.promo.models import Option
 from django.utils import timezone
 
@@ -23,11 +25,25 @@ class HeadBasis:
     proxy = 1
 
 
+class InnerType:
+    AKIT = 'АКИТ'
+    ADMIT_AD = 'AdmitAd'
+    PARTNERS = 'Партнеры'
+
+
 class AdvertiserProfile(models.Model):
     HEAD_BASISES = (
         (HeadBasis.charter, 'На основании устава'),
         (HeadBasis.proxy, 'На основании доверенности')
     )
+
+    INNER_TYPES = (
+        (InnerType.AKIT, InnerType.AKIT),
+        (InnerType.ADMIT_AD, InnerType.ADMIT_AD),
+        (InnerType.PARTNERS, InnerType.PARTNERS)
+    )
+
+    inner = models.CharField(max_length=10, null=True, blank=True, choices=INNER_TYPES)
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
@@ -47,6 +63,13 @@ class AdvertiserProfile(models.Model):
     class Meta:
         verbose_name = 'Профиль рекламодателя'
         verbose_name_plural = 'Профили рекламодателей'
+
+    @property
+    def is_valid(self):
+        if self.inner:
+            return True
+        fields = filter(lambda field: field.name != 'inner', self._meta.fields)
+        return reduce(operator.__and__, map(lambda field: field.value_from_object(self), fields))
 
 
 class Merchant(models.Model):
@@ -73,6 +96,8 @@ class Merchant(models.Model):
     moderation_status = models.IntegerField(default=ModerationStatus.new, choices=MODERATION_STATUSES,
                                             verbose_name='Статус модерации')
     is_active = models.BooleanField(default=False, verbose_name='Активен')
+
+    logo_categories = models.ManyToManyField('catalog.Category', related_name='merchant_logos')
 
     class Meta:
         verbose_name = 'Магазин'
@@ -104,6 +129,26 @@ class Merchant(models.Model):
         invoice = qs.order_by('-id').first()
         if invoice:
             return invoice.promo
+
+    @property
+    def limits(self):
+        options = {}
+
+        def get_options(qs):
+            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
+            return dict(qs.values_list('option__tech_name', 'option_sum'))
+
+        def get_value(rule):
+            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+
+        if self.promo:
+            options.update(get_options(self.promo.options))
+        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=self, invoice__is_paid=True)))
+
+        return {
+            limit: reduce(operator.add, map(get_value, rules), 0)
+            for limit, rules in settings.LIMITS_RULES.items()
+        }
 
     @property
     def promo(self):
@@ -155,7 +200,11 @@ class Banner(models.Model):
     type = models.IntegerField(choices=TYPES)
     image = models.ForeignKey('mediafiles.Image', related_name='banners')
     url = models.URLField()
-    on_main = models.BooleanField(default=False)
-    in_mailing = models.BooleanField(default=False)
+    on_main = models.BooleanField()
+    in_mailing = models.BooleanField()
     categories = models.ManyToManyField('catalog.Category', related_name='banners')
     merchant = models.ForeignKey(Merchant, related_name='banners')
+
+    @property
+    def owner_id(self):
+        return self.merchant.owner_id

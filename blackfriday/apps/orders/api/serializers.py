@@ -1,17 +1,18 @@
-from math import ceil
-
 import operator
+
 from functools import reduce
+from math import ceil
 
 from django.conf import settings
 from django.utils import timezone
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.advertisers.models import Merchant
-from apps.advertisers.api.serializers import AdvertiserTinySerializer, MerchantTinySerializer
-
 from apps.promo.models import Option, Promo
+
+from apps.advertisers.api.serializers.clients import AdvertiserTinySerializer, MerchantTinySerializer
 from apps.promo.api.serializers import PromoTinySerializer
 
 from ..models import Invoice, InvoiceOption, InvoiceStatus

@@ -1,35 +1,26 @@
-from rest_framework import serializers
+import operator
+from functools import reduce
 
-from apps.catalog.api.serializers import CategorySerializer
-from apps.catalog.models import Category
+from rest_framework import serializers, validators
+from rest_framework.exceptions import ValidationError
+
+from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus
+from apps.mediafiles.models import Image
 from apps.users.models import User
 
-from apps.promo.models import Option
-from apps.promo.api.serializers import PromoTinySerializer
-from rest_framework.exceptions import ValidationError
-from rest_framework import validators
-
-from apps.mediafiles.models import Image
 from apps.mediafiles.api.serializers import ImageSerializer
-
-from ..models import AdvertiserProfile, Merchant, ModerationStatus, Banner
+from apps.promo.api.serializers import PromoTinySerializer
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    inn = serializers.CharField(
-        max_length=12, validators=[
-            validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')])
+    inn = serializers.CharField(max_length=12, validators=[
+        validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
+    ])
 
     class Meta:
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
-                  'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis')
-
-    def get_extra_kwargs(self):
-        kwargs = super().get_extra_kwargs()
-        for field in self.Meta.fields:
-            kwargs[field] = dict(kwargs.get(field, {}), allow_null=False, allow_blank=False)
-        return kwargs
+                  'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis', 'inner')
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -37,6 +28,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             self.instance = parent.instance.profile
         except AttributeError:
             pass
+
+    def validate(self, attrs):
+        inner = attrs.pop('inner', None)
+        if not inner:
+            if not reduce(operator.__and__, attrs.values()):
+                raise ValidationError('Все поля должны быть ненулевыми')
+        else:
+            attrs['inner'] = inner
+        return attrs
 
 
 class AdvertiserSerializer(serializers.ModelSerializer):
@@ -98,13 +98,11 @@ class MerchantSerializer(serializers.ModelSerializer):
     image = ImageSerializer()
 
     advertiser = AdvertiserTinySerializer()
-    # ToDo: импортировать apps.banners.api.serializers.BannerSerializer
-    # banners = BannerSerializer(many=True)
 
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
-                  'payment_status', 'promo', 'options_count', 'banners', 'is_active', 'is_previewable',
+                  'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
                   'moderation', 'preview_url')
 
     def get_moderation(self, obj):
@@ -196,50 +194,3 @@ class MerchantTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name')
-
-
-class LimitSerializer(serializers.Serializer):
-    tech_name = serializers.CharField()
-    value = serializers.IntegerField()
-
-
-class AvailableOptionSerializer(serializers.ModelSerializer):
-    available_value = serializers.IntegerField(source='count_available')
-
-    class Meta:
-        model = Option
-        fields = ('id', 'name', 'tech_name', 'price', 'available_value', 'is_boolean', 'image')
-
-
-class BannerDetailSerializer(serializers.ModelSerializer):
-    image = ImageSerializer()
-    categories = CategorySerializer(many=True)
-
-    class Meta:
-        model = Banner
-        fields = ('id', 'type', 'image', 'url', 'on_main', 'in_mailing', 'categories')
-
-
-class BannerSerializer(BannerDetailSerializer):
-    image = serializers.PrimaryKeyRelatedField(queryset=Image.objects.all())
-    categories = serializers.ListSerializer(child=serializers.PrimaryKeyRelatedField(queryset=Category.objects.all()))
-
-    class Meta(BannerDetailSerializer.Meta):
-        pass
-
-    def to_representation(self, instance):
-        return BannerDetailSerializer().to_representation(instance)
-
-    def save(self, **kwargs):
-        categories = self._validated_data.pop('categories', [])
-        instance = super().save(**kwargs)
-
-        instance.categories.clear()
-        for category in categories:
-            instance.categories.add(category)
-
-        instance.merchant.moderation_status = 0
-        instance.merchant.save()
-
-        return instance
-

@@ -16,12 +16,12 @@ class FeedGenerator:
         return product.url
 
     def get_category_url(self, product):
-        return '{}category/{}'.format(
+        return '{}/category/{}'.format(
             settings.SITE_URL, product.category.slug
         )
 
     def get_merchant_url(self, product):
-        return '{}merchant/{}'.format(
+        return '{}/merchant/{}'.format(
             settings.SITE_URL, product.merchant.url
         )
 
@@ -97,7 +97,7 @@ class FeedGenerator:
 
             if 'logo' not in self.excludes and product.image:
                 param_logo = SubElement(offer, 'param', {'name': 'logo'})
-                param_logo.text = "/".join((settings.SITE_URL, product.image.url))
+                param_logo.text = product.image
 
             if 'price2' not in self.excludes and product.start_price:
                 price2 = SubElement(offer, 'param', {'name': 'price2'})
@@ -107,7 +107,8 @@ class FeedGenerator:
                 bannerskidka = SubElement(offer, 'param', {'name': 'bannerskidka'})
                 bannerskidka.text = str(product.discount)
 
-            if 'legal_info' not in self.excludes and product.merchant.advertiser.profile:
+            if 'legal_info' not in self.excludes and (
+                    product.merchant.advertiser.profile and product.merchant.advertiser.profile.legal_address):
                 legal_info = SubElement(offer, 'legal_info')
                 legal_info.text = product.merchant.advertiser.profile.legal_address
 
@@ -121,16 +122,16 @@ class FeedGenerator:
                 product.category.id + settings.RETAIL_ROCKET_CAT_SHIFT)
 
             price = SubElement(offer, 'price')
-            price.text = str(product.price)
+            price.text = str(product.price or '')
 
             old_price = SubElement(offer, 'oldprice')
-            old_price.text = str(product.old_price)
+            old_price.text = str(product.old_price or '')
 
             currency = SubElement(offer, 'currencyId')
             currency.text = 'RUR'
 
             picture = SubElement(offer, 'picture')
-            picture.text = "/".join((settings.SITE_URL, product.image.url))
+            picture.text = product.image
 
             name = SubElement(offer, 'name')
             name.text = product.name
