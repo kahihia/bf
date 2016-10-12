@@ -25,8 +25,8 @@ class BannerSerializer(BannerDetailSerializer):
 
     class Meta(BannerDetailSerializer.Meta):
         extra_kwargs = {
-            'on_main': {'allow_null': False, 'allow_blank': False, 'required': True},
-            'in_mailing': {'allow_null': False, 'allow_blank': False, 'required': True},
+            'on_main': {'required': True},
+            'in_mailing': {'required': True},
         }
 
     def to_representation(self, instance):
