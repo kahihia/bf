@@ -88,7 +88,7 @@ class AdvertiserProfile(models.Model):
 
     @inner.setter
     def inner(self, value):
-        self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES)))[value]
+        self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES))).get(value)
 
 
 class Merchant(models.Model):
