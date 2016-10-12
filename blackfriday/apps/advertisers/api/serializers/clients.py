@@ -1,10 +1,12 @@
 import operator
 from functools import reduce
 
+from django.db.models import Q
+
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError
 
-from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus
+from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner
 from apps.mediafiles.models import Image
 from apps.users.models import User
 
@@ -83,12 +85,37 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated and user.role == 'advertiser':
             if value != ModerationStatus.waiting:
                 raise ValidationError('Неверный статус')
-
         return value
 
     def validate(self, attrs):
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
+
+        if not self.context['request'].user.is_admin:
+            unused_limits = [
+                {
+                    'tech_name': limit,
+                    'value': value
+                }
+                for limit, value in self.instance.limits.items() if limit != 'products' and value
+            ]
+            requirements = {
+                'name': self.instance.name,
+                'description': self.instance.description,
+                'slug': self.instance.slug,
+                'url': self.instance.url,
+                'image': self.instance.image,
+                'promo': self.instance.get_promo,
+                'limits': not unused_limits,
+                'utm_in_banners': self.instance.banners.filter(
+                    Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
+                ).count == self.instance.banners.count()
+            }
+            deficit = [key for key, value in requirements.items() if not value]
+
+            if deficit:
+                raise ValidationError({'deficit': deficit})
+
         return attrs
 
 
