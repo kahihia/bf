@@ -1,4 +1,5 @@
-/* global document jQuery _ toastr */
+/* global window document jQuery _ toastr */
+/* eslint-disable no-alert */
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
@@ -26,6 +27,8 @@ class MerchantBannerList extends React.Component {
 		this.handleCheckInMailing = this.handleCheckInMailing.bind(this);
 		this.handleChangeUrl = this.handleChangeUrl.bind(this);
 		this.handleChangeCategories = this.handleChangeCategories.bind(this);
+		this.handleClickDelete = this.handleClickDelete.bind(this);
+		this.handleUploadImage = this.handleUploadImage.bind(this);
 	}
 
 	componentWillMount() {
@@ -67,8 +70,9 @@ class MerchantBannerList extends React.Component {
 		const {id: merchantId} = this.props;
 
 		let banner = this.getBannerById(bannerId);
-		const json = _.pick(_.cloneDeep(banner), ['type', 'url', 'onMain', 'inMailing', 'categories']);
+		const json = _.pick(_.cloneDeep(banner), ['type', 'url', 'onMain', 'inMailing']);
 		json.image = banner.image.id;
+		json.categories = banner.categories.map(item => (item.id));
 		_.merge(json, props);
 
 		xhr({
@@ -94,6 +98,38 @@ class MerchantBannerList extends React.Component {
 				}
 				default: {
 					toastr.error('Не удалось изменить баннер');
+					break;
+				}
+			}
+		});
+	}
+
+	requestBannerDelete(bannerId) {
+		this.setState({isLoading: true});
+
+		const {id: merchantId} = this.props;
+
+		xhr({
+			url: `/api/merchants/${merchantId}/banners/${bannerId}/`,
+			method: 'DELETE',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json: true
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			switch (resp.statusCode) {
+				case 204: {
+					this.merchantBannerDelete(bannerId);
+					break;
+				}
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось удалить баннер');
 					break;
 				}
 			}
@@ -140,6 +176,16 @@ class MerchantBannerList extends React.Component {
 		this.requestBannerUpdate(id, {categories: value});
 	}
 
+	handleClickDelete(id) {
+		if (window.confirm('Удалить баннер?')) {
+			this.requestBannerDelete(id);
+		}
+	}
+
+	handleUploadImage(id, image) {
+		this.requestBannerUpdate(id, {image: image.id});
+	}
+
 	getBannerById(id) {
 		return _.find(this.state.banners, {id});
 	}
@@ -147,6 +193,15 @@ class MerchantBannerList extends React.Component {
 	merchantBannerAdd(data) {
 		this.setState(previousState => {
 			previousState.banners.push(data);
+			return previousState;
+		});
+	}
+
+	merchantBannerDelete(id) {
+		this.setState(previousState => {
+			_.remove(previousState.banners, banner => {
+				return banner.id === id;
+			});
 			return previousState;
 		});
 	}
@@ -186,6 +241,8 @@ class MerchantBannerList extends React.Component {
 												onCheckOnMain={this.handleCheckOnMain}
 												onCheckInMailing={this.handleCheckInMailing}
 												onChangeUrl={this.handleChangeUrl}
+												onClickDelete={this.handleClickDelete}
+												onUploadImage={this.handleUploadImage}
 												{...{
 													availableCategories
 												}}
