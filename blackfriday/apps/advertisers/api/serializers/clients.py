@@ -19,8 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
-    inner = serializers.SerializerMethodField()
-    is_supernova = serializers.SerializerMethodField()
+    inner = serializers.CharField()
+    is_supernova = serializers.BooleanField()
 
     class Meta:
         model = AdvertiserProfile
@@ -43,16 +43,28 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         request = self.context['request']
-        inner, is_supernova = attrs.pop('inner', None), attrs.pop('is_supernova', False)
 
-        if is_supernova and request.user.role == 'admin':
-            attrs['type'] = AdvertiserType.SUPERNOVA
-        elif inner:
-            attrs['type'] = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))[inner]
-        else:
-            attrs['type'] = AdvertiserType.REGULAR
-            if not all(map(lambda x: x not in ('', None), attrs.values())):
-                raise ValidationError('Все поля должны быть ненулевыми')
+        if request.user.role == 'admin':
+            if 'inner' in attrs:
+                inner_types = filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)
+                attrs['inner'] = dict(map(reversed, inner_types)).get(attrs['inner'])
+
+                if attrs['inner']:
+                    attrs['type'] = attrs['inner']
+                elif self.instance and self.instance.inner:
+                    attrs['type'] = AdvertiserType.REGULAR
+
+            if 'is_supernova' in attrs:
+                if attrs['is_supernova']:
+                    attrs['type'] = AdvertiserType.SUPERNOVA
+                elif self.instance and self.instance.is_supernova:
+                    attrs['type'] = AdvertiserType.REGULAR
+
+        attrs.pop('inner', None)
+        attrs.pop('is_supernova', None)
+
+        if request.user.role != 'admin' and not all(map(lambda x: x not in ('', None), attrs.values())):
+            raise ValidationError('Все поля должны быть ненулевыми')
 
         return attrs
 
