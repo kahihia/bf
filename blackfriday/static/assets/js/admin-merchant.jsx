@@ -22,12 +22,14 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 	const AdminMerchant = React.createClass({
 		getInitialState() {
 			return {
+				availableCategories: [],
 				data: {},
 				id: null
 			};
 		},
 
 		componentWillMount() {
+			this.requestCategories();
 			this.setState({id: ENV.merchantId}, this.requestMerchant);
 		},
 
@@ -43,6 +45,22 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 					}
 				} else {
 					toastr.error('Не удалось получить данные магазина');
+				}
+			});
+		},
+
+		requestCategories() {
+			xhr({
+				url: '/api/categories/',
+				method: 'GET',
+				json: true
+			}, (err, resp, data) => {
+				if (!err && resp.statusCode === 200) {
+					if (data) {
+						this.setState({availableCategories: data});
+					}
+				} else {
+					toastr.error('Не удалось получить список категорий');
 				}
 			});
 		},
@@ -141,9 +159,15 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 
 		render() {
 			const {
+				availableCategories,
 				data,
 				id
 			} = this.state;
+
+			if (id === null) {
+				return null;
+			}
+
 			const {
 				image,
 				isPreviewable,
@@ -238,7 +262,10 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 											/>
 
 										<MerchantLogoCategoriesSelect
-											id={id}
+											{...{
+												availableCategories,
+												id
+											}}
 											/>
 									</div>
 								</div>
@@ -253,6 +280,7 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 
 					<MerchantBannerList
 						{...{
+							availableCategories,
 							availableBannerTypes,
 							id
 						}}

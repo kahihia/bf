@@ -24,6 +24,7 @@ class MerchantBannerList extends React.Component {
 		this.handleCheckOnMain = this.handleCheckOnMain.bind(this);
 		this.handleCheckInMailing = this.handleCheckInMailing.bind(this);
 		this.handleChangeUrl = this.handleChangeUrl.bind(this);
+		this.handleChangeCategories = this.handleChangeCategories.bind(this);
 	}
 
 	componentWillMount() {
@@ -58,7 +59,7 @@ class MerchantBannerList extends React.Component {
 		const {id: merchantId} = this.props;
 
 		let banner = this.getBannerById(bannerId);
-		const json = _.pick(banner, ['type', 'url', 'onMain', 'inMailing', 'categories']);
+		const json = _.pick(_.cloneDeep(banner), ['type', 'url', 'onMain', 'inMailing', 'categories']);
 		json.image = banner.image.id;
 		_.merge(json, props);
 
@@ -120,6 +121,10 @@ class MerchantBannerList extends React.Component {
 		this.requestBannerUpdate(id, {url: value});
 	}
 
+	handleChangeCategories(id, value) {
+		this.requestBannerUpdate(id, {categories: value});
+	}
+
 	getBannerById(id) {
 		return _.find(this.state.banners, {id});
 	}
@@ -133,7 +138,10 @@ class MerchantBannerList extends React.Component {
 
 	render() {
 		const {banners} = this.state;
-		const {availableBannerTypes} = this.props;
+		const {
+			availableCategories,
+			availableBannerTypes
+		} = this.props;
 
 		return (
 			<div className="shop-edit-block">
@@ -159,9 +167,13 @@ class MerchantBannerList extends React.Component {
 											className={b(className, 'item')}
 											>
 											<MerchantBanner
+												onChangeCategories={this.handleChangeCategories}
 												onCheckOnMain={this.handleCheckOnMain}
 												onCheckInMailing={this.handleCheckInMailing}
 												onChangeUrl={this.handleChangeUrl}
+												{...{
+													availableCategories
+												}}
 												{...banner}
 												/>
 										</div>
@@ -176,6 +188,7 @@ class MerchantBannerList extends React.Component {
 	}
 }
 MerchantBannerList.propTypes = {
+	availableCategories: React.PropTypes.array.isRequired,
 	availableBannerTypes: React.PropTypes.array.isRequired,
 	id: React.PropTypes.number.isRequired
 };

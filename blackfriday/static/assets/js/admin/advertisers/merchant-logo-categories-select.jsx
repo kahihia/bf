@@ -12,7 +12,6 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		this.state = {
 			isDisabled: false,
 			isLoading: false,
-			categories: [],
 			value: []
 		};
 
@@ -20,37 +19,15 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 
 	componentWillMount() {
-		this.requestCategories();
-	}
-
-	componentWillReceiveProps(newProps) {
-		if (newProps.value) {
-			this.setState({value: newProps.value});
-			return;
-		}
-
 		this.requestMerchantCategories();
 	}
 
-	requestCategories() {
-		this.setState({isLoading: true});
+	componentWillReceiveProps(newProps) {
+		if (!newProps.value) {
+			return;
+		}
 
-		xhr({
-			url: '/api/categories/',
-			method: 'GET',
-			json: true
-		}, (err, resp, data) => {
-			this.setState({isLoading: false});
-
-			if (!err && resp.statusCode === 200) {
-				if (data) {
-					this.setState({categories: data});
-				}
-			} else {
-				this.setState({isDisabled: true});
-				toastr.error('Не удалось получить список категорий');
-			}
-		});
+		this.setState({value: newProps.value});
 	}
 
 	requestMerchantCategories() {
@@ -109,11 +86,13 @@ class MerchantLogoCategoriesSelect extends React.Component {
 
 	render() {
 		const {
-			categories,
 			isDisabled,
 			isLoading,
 			value
 		} = this.state;
+		const {
+			availableCategories
+		} = this.props;
 
 		return (
 			<MultiselectTwoSides
@@ -124,7 +103,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 				selectedHeader="Выбранные"
 				selectAllText="Выбрать все"
 				deselectAllText="Очистить"
-				options={categories}
+				options={availableCategories}
 				value={value}
 				labelKey="name"
 				valueKey="id"
@@ -135,6 +114,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 }
 MerchantLogoCategoriesSelect.propTypes = {
+	availableCategories: React.PropTypes.array,
 	id: React.PropTypes.number,
 	value: React.PropTypes.array
 };
