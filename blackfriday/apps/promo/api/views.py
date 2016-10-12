@@ -17,13 +17,14 @@ from .serializers import OptionSerializer, PromoSerializer, CustomPromoRequestSe
 
 
 class OptionViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Option.objects.all()
     serializer_class = OptionSerializer
     filter_class = OptionFilter
 
 
 class PromoViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
-    permission_classes = [ReadOnly | IsAuthenticated & IsAdmin]
+    permission_classes = [IsAuthenticated, ReadOnly | IsAdmin]
     queryset = Promo.objects.all()
     serializer_class = PromoSerializer
     filter_class = PromoFilter
