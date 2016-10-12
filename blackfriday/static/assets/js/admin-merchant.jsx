@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
-import {ENV, hasRole} from './admin/utils.js';
+import {ENV, hasRole, processErrors} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
@@ -39,12 +39,19 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
-				if (!err && resp.statusCode === 200) {
-					if (data) {
+				switch (resp.statusCode) {
+					case 200: {
 						this.setState({data});
+						break;
 					}
-				} else {
-					toastr.error('Не удалось получить данные магазина');
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось получить данные магазина');
+						break;
+					}
 				}
 			});
 		},
@@ -55,12 +62,19 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
-				if (!err && resp.statusCode === 200) {
-					if (data) {
+				switch (resp.statusCode) {
+					case 200: {
 						this.setState({availableCategories: data});
+						break;
 					}
-				} else {
-					toastr.error('Не удалось получить список категорий');
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось получить список категорий');
+						break;
+					}
 				}
 			});
 		},
@@ -76,12 +90,19 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 				},
 				json
 			}, (err, resp, data) => {
-				if (!err && resp.statusCode === 200) {
-					if (data) {
+				switch (resp.statusCode) {
+					case 200: {
 						this.setState({data});
+						break;
 					}
-				} else {
-					toastr.error('Не удалось загрузить логотип магазина');
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось загрузить логотип магазина');
+						break;
+					}
 				}
 			});
 		},
@@ -97,17 +118,26 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 				},
 				json
 			}, (err, resp, data) => {
-				if (resp.statusCode === 200) {
-					if (data) {
+				switch (resp.statusCode) {
+					case 200: {
 						this.setState(previousState => {
 							previousState.data.moderation = data;
 							return previousState;
 						});
+						break;
 					}
-				} else if (resp.statusCode === 409) {
-					toastr.warning('Не все материалы заполнены');
-				} else {
-					toastr.error('Не удалось отправить магазин на модерацию');
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					case 409: {
+						toastr.warning('Не все материалы заполнены');
+						break;
+					}
+					default: {
+						toastr.error('Не удалось отправить магазин на модерацию');
+						break;
+					}
 				}
 			});
 		},

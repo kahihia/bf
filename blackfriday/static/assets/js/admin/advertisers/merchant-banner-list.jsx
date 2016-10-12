@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import b from 'b_';
 import xhr from 'xhr';
 import {BANNER_TYPE, TOKEN} from '../const.js';
+import {processErrors} from '../utils.js';
 import ImageInfo from '../common/image-info.jsx';
 import MerchantBanner from './merchant-banner.jsx';
 import MerchantBannerAddForm from './merchant-banner-add-form.jsx';
@@ -43,12 +44,19 @@ class MerchantBannerList extends React.Component {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (!err && resp.statusCode === 200) {
-				if (data) {
+			switch (resp.statusCode) {
+				case 200: {
 					this.setState({banners: data});
+					break;
 				}
-			} else {
-				toastr.error('Не удалось получить список баннеров');
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось получить список баннеров');
+					break;
+				}
 			}
 		});
 	}
@@ -73,14 +81,21 @@ class MerchantBannerList extends React.Component {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (!err && resp.statusCode === 200) {
-				if (data) {
+			switch (resp.statusCode) {
+				case 200: {
 					banner = this.getBannerById(bannerId);
 					_.merge(banner, data);
 					this.forceUpdate();
+					break;
 				}
-			} else {
-				toastr.error('Не удалось изменить баннер');
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось изменить баннер');
+					break;
+				}
 			}
 		});
 	}

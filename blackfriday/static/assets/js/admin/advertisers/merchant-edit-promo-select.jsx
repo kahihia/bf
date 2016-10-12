@@ -4,7 +4,7 @@
 import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
-import {hasRole, formatPrice} from '../utils.js';
+import {hasRole, formatPrice, processErrors} from '../utils.js';
 import PromoOptionList from './promo-option-list.jsx';
 import MerchantPromoSelect from './merchant-promo-select.jsx';
 
@@ -36,11 +36,20 @@ const MerchantEditPromoSelect = React.createClass({
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
-			if (resp.statusCode === 200) {
-				const promos = data;
-				this.requestOptions(promos);
-			} else {
-				toastr.error('Не удалось получить список рекламных пакетов');
+			switch (resp.statusCode) {
+				case 200: {
+					const promos = data;
+					this.requestOptions(promos);
+					break;
+				}
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось получить список рекламных пакетов');
+					break;
+				}
 			}
 		});
 	},
@@ -51,11 +60,20 @@ const MerchantEditPromoSelect = React.createClass({
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
-			if (resp.statusCode === 200) {
-				const options = data;
-				this.processData({promos, options});
-			} else {
-				toastr.error('Не удалось получить список опций рекламных пакетов');
+			switch (resp.statusCode) {
+				case 200: {
+					const options = data;
+					this.processData({promos, options});
+					break;
+				}
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось получить список опций рекламных пакетов');
+					break;
+				}
 			}
 		});
 	},
@@ -247,16 +265,25 @@ const MerchantEditPromoSelect = React.createClass({
 				options: requestOptions
 			}
 		}, (err, resp, data) => {
-			if (!err && resp.statusCode === 200) {
-				let pathname = '/admin/merchant/invoices';
+			switch (resp.statusCode) {
+				case 200: {
+					let pathname = '/admin/merchant/invoices';
 
-				if (hasRole('admin')) {
-					pathname = '/admin/invoice-list';
+					if (hasRole('admin')) {
+						pathname = '/admin/invoice-list';
+					}
+
+					window.location.pathname = pathname;
+					break;
 				}
-
-				window.location.pathname = pathname;
-			} else {
-				toastr.error(data);
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error(data);
+					break;
+				}
 			}
 		});
 	},

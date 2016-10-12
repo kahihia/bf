@@ -4,6 +4,7 @@
 import React from 'react';
 import xhr from 'xhr';
 import {TOKEN} from '../const.js';
+import {processErrors} from '../utils.js';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 
 class MerchantLogoCategoriesSelect extends React.Component {
@@ -42,13 +43,20 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (!err && resp.statusCode === 200) {
-				if (data) {
+			switch (resp.statusCode) {
+				case 200: {
 					this.setState({value: data.map(item => (item.id))});
+					break;
 				}
-			} else {
-				this.setState({isDisabled: true});
-				toastr.error('Не удалось получить список категорий размещения логотипа');
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					this.setState({isDisabled: true});
+					toastr.error('Не удалось получить список категорий размещения логотипа');
+					break;
+				}
 			}
 		});
 	}
@@ -70,12 +78,19 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (!err && resp.statusCode === 200) {
-				if (data) {
+			switch (resp.statusCode) {
+				case 200: {
 					this.setState({value: data.map(item => (item.id))});
+					break;
 				}
-			} else {
-				toastr.error('Не удалось обновить список категорий размещения логотипа');
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось обновить список категорий размещения логотипа');
+					break;
+				}
 			}
 		});
 	}
