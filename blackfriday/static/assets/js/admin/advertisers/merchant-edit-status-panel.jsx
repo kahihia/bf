@@ -3,6 +3,7 @@
 import React from 'react';
 import b from 'b_';
 import {PAYMENT_STATUS, MODERATION_STATUS} from '../const.js';
+import {hasRole} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';
 
@@ -11,9 +12,14 @@ const className = 'merchant-edit-status-panel';
 class MerchantEditStatusPanel extends React.Component {
 	constructor(props) {
 		super(props);
+		this.handleClickDelete = this.handleClickDelete.bind(this);
 		this.handleClickModeration = this.handleClickModeration.bind(this);
 		this.handleClickPromoSelect = this.handleClickPromoSelect.bind(this);
 		this.handleClickPromoOptionsSelect = this.handleClickPromoOptionsSelect.bind(this);
+	}
+
+	handleClickDelete() {
+		this.props.onClickDelete();
 	}
 
 	handleClickModeration() {
@@ -39,6 +45,7 @@ class MerchantEditStatusPanel extends React.Component {
 			previewUrl,
 			promoName
 		} = this.props;
+		const isAdmin = hasRole('admin');
 
 		return (
 			<div className={className}>
@@ -117,6 +124,16 @@ class MerchantEditStatusPanel extends React.Component {
 				</div>
 
 				<div className={b(className, 'action')}>
+					{isAdmin ? (
+						<button
+							className="btn btn-danger"
+							onClick={this.handleClickDelete}
+							type="button"
+							>
+							{'Удалить'}
+						</button>
+					) : null}
+
 					{isPreviewable ? (
 						<a
 							className="btn btn-default"
@@ -146,6 +163,7 @@ MerchantEditStatusPanel.propTypes = {
 	isPreviewable: React.PropTypes.bool,
 	moderationComment: React.PropTypes.string,
 	moderationStatus: React.PropTypes.number,
+	onClickDelete: React.PropTypes.func,
 	onClickModeration: React.PropTypes.func.isRequired,
 	onClickPromoOptionsSelect: React.PropTypes.func.isRequired,
 	onClickPromoSelect: React.PropTypes.func.isRequired,

@@ -28,7 +28,8 @@
     <script>
     window.ENV.merchantId = {{ merchant.id }};
     window.ENV.urls = {
-        merchants: '/merchants/'
+        merchants: '/merchants/',
+        'admin-merchants': '{% url "advertisers:merchant-list" %}'
     };
     </script>
 

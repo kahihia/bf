@@ -1,4 +1,4 @@
-/* global document jQuery toastr */
+/* global window document jQuery toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -6,7 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
-import {ENV, hasRole, processErrors} from './admin/utils.js';
+import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
@@ -107,6 +107,32 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 			});
 		},
 
+		requestDelete() {
+			xhr({
+				url: `/api/merchants/${this.state.id}/`,
+				method: 'DELETE',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: true
+			}, (err, resp, data) => {
+				switch (resp.statusCode) {
+					case 204: {
+						window.location.pathname = getUrl('admin-merchants');
+						break;
+					}
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось удалить магазин');
+						break;
+					}
+				}
+			});
+		},
+
 		requestModeration() {
 			const json = {status: 1};
 
@@ -148,6 +174,12 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 
 		handleMerchantUpdate(data) {
 			this.setState({data});
+		},
+
+		handleClickDelete() {
+			if (window.confirm('Удалить магазин?')) {
+				this.requestDelete();
+			}
 		},
 
 		handleClickModeration() {
@@ -230,6 +262,7 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 			return (
 				<div className="">
 					<MerchantEditStatusPanel
+						onClickDelete={this.handleClickDelete}
 						onClickModeration={this.handleClickModeration}
 						onClickPromoSelect={this.handleClickPromoSelect}
 						onClickPromoOptionsSelect={this.handleClickPromoOptionsSelect}
