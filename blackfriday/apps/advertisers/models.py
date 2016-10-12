@@ -43,7 +43,7 @@ class AdvertiserProfile(models.Model):
         (AdvertiserType.REGULAR, 'Обычный'),
         (AdvertiserType.AKIT, 'АКИТ'),
         (AdvertiserType.ADMIT_AD, 'AdmitAd'),
-        (AdvertiserType.PARTNERS, 'Партнеры'),
+        (AdvertiserType.PARTNERS, 'Партнёры'),
         (AdvertiserType.SUPERNOVA, 'Сверхновая'),
     )
 
@@ -197,6 +197,9 @@ class Merchant(models.Model):
     @property
     def owner_id(self):
         return self.advertiser.id
+
+
+ADVERTISER_INNER_TYPES = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))
 
 
 class BannerType:
