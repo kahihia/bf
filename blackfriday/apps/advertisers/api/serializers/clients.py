@@ -6,7 +6,7 @@ from django.db.models import Q
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError
 
-from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner
+from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner, AdvertiserType
 from apps.mediafiles.models import Image
 from apps.users.models import User
 
@@ -19,10 +19,20 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
+    inner = serializers.SerializerMethodField()
+    is_supernova = serializers.SerializerMethodField()
+
     class Meta:
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
-                  'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis', 'inner')
+                  'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis',
+                  'inner', 'is_supernova')
+
+    def get_inner(self, obj):
+        return obj.inner
+
+    def get_is_supernova(self, obj):
+        return obj.is_supernova
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -32,12 +42,18 @@ class ProfileSerializer(serializers.ModelSerializer):
             pass
 
     def validate(self, attrs):
-        inner = attrs.pop('inner', None)
-        if not inner:
-            if not reduce(operator.__and__, attrs.values()):
-                raise ValidationError('Все поля должны быть ненулевыми')
+        request = self.context['request']
+        inner, is_supernova = attrs.pop('inner', None), attrs.pop('is_supernova', False)
+
+        if is_supernova and request.user.role == 'admin':
+            attrs['type'] = AdvertiserType.SUPERNOVA
+        elif inner:
+            attrs['type'] = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))[inner]
         else:
-            attrs['inner'] = inner
+            attrs['type'] = AdvertiserType.REGULAR
+            if not all(map(lambda x: x not in ('', None), attrs.values())):
+                raise ValidationError('Все поля должны быть ненулевыми')
+
         return attrs
 
 

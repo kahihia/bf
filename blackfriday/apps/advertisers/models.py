@@ -25,10 +25,12 @@ class HeadBasis:
     proxy = 1
 
 
-class InnerType:
-    AKIT = 'АКИТ'
-    ADMIT_AD = 'AdmitAd'
-    PARTNERS = 'Партнеры'
+class AdvertiserType:
+    REGULAR = 0
+    AKIT = 10
+    ADMIT_AD = 11
+    PARTNERS = 12
+    SUPERNOVA = 20
 
 
 class AdvertiserProfile(models.Model):
@@ -37,13 +39,15 @@ class AdvertiserProfile(models.Model):
         (HeadBasis.proxy, 'На основании доверенности')
     )
 
-    INNER_TYPES = (
-        (InnerType.AKIT, InnerType.AKIT),
-        (InnerType.ADMIT_AD, InnerType.ADMIT_AD),
-        (InnerType.PARTNERS, InnerType.PARTNERS)
+    TYPES = (
+        (AdvertiserType.REGULAR, 'Обычный'),
+        (AdvertiserType.AKIT, 'АКИТ'),
+        (AdvertiserType.ADMIT_AD, 'AdmitAd'),
+        (AdvertiserType.PARTNERS, 'Партнеры'),
+        (AdvertiserType.SUPERNOVA, 'Сверхновая'),
     )
 
-    inner = models.CharField(max_length=10, null=True, blank=True, choices=INNER_TYPES)
+    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR)
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
@@ -66,10 +70,25 @@ class AdvertiserProfile(models.Model):
 
     @property
     def is_valid(self):
-        if self.inner:
-            return True
-        fields = filter(lambda field: field.name != 'inner', self._meta.fields)
-        return all(map(lambda field: field.value_from_object(self), fields))
+        return (self.type > 0 or
+                all(map(lambda field: field.value_from_object(self) not in (None, ''), self._meta.fields)))
+
+    @property
+    def is_supernova(self):
+        return self.type == AdvertiserType.SUPERNOVA
+
+    @is_supernova.setter
+    def is_supernova(self, value):
+        self.type = AdvertiserType.SUPERNOVA & int(value)
+
+    @property
+    def inner(self):
+        if 10 <= self.type < 20:
+            return dict(self.TYPES).get(self.type)
+
+    @inner.setter
+    def inner(self, value):
+        self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES)))[value]
 
 
 class Merchant(models.Model):
