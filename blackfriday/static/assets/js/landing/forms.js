@@ -27,6 +27,11 @@ function showResponse(data) {
 	}
 
 	// Floctory
+	// Обновляет информацию блока для Floctory
+	var name = data.name || null;
+	var email = data.email || null;
+
+	createFloctory.update(name, email);
 	createFloctory.renderMgm();
 }
 

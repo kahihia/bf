@@ -9,7 +9,9 @@ var CreateFloctory = function () {
 	this._$block = null;
 	this._$blockMgm = null;
 
-	// if (this._load()) this._build();
+	if (this._load()) {
+		this._build();
+	}
 };
 
 CreateFloctory.prototype = {
@@ -19,7 +21,6 @@ CreateFloctory.prototype = {
 		}
 
 		this._build();
-		this._buildMgm();
 	},
 
 	renderMgm: function () {
