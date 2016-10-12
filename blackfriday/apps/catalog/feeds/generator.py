@@ -22,7 +22,7 @@ class FeedGenerator:
 
     def get_merchant_url(self, product):
         return '{}/merchant/{}'.format(
-            settings.SITE_URL, product.merchant.url
+            settings.SITE_URL, product.merchant.slug
         )
 
     def build_url(self, url):
