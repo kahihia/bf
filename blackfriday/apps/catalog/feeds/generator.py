@@ -34,15 +34,18 @@ class FeedGenerator:
             split_result.scheme, split_result.netloc, split_result.path, result_query, split_result.fragment
         ))
 
-    def get_url(self, url_tag, product):
-        func = {
-            'url': self.get_product_url,
+    def get_binding(self, url_tag):
+        binding_funcs = {
+            'url': self.get_merchant_url,
             'url_cat': self.get_category_url,
             'url_shop': self.get_merchant_url
-        }.get(self.url_bindings.get(url_tag, url_tag))
-        if func is None:
-            return ''
-        return func(product)
+        }
+        if self.url_bindings.get(url_tag) in binding_funcs:
+            return binding_funcs[self.url_bindings[url_tag]]
+        return binding_funcs[url_tag]
+
+    def get_url(self, url_tag, product):
+        return self.get_binding(url_tag)(product)
 
     def generate(self, products, categories):
         catalog = Element('yml_catalog')
