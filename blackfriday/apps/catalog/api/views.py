@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils import timezone
+from django.http.response import BadHeaderError
 
 from jsonschema import validate, ValidationError as JsonSchemaValidationError
 
@@ -177,8 +178,8 @@ class YmlProductViewSet(viewsets.GenericViewSet):
 
     @list_route(['get'])
     def yml(self, request, **kwargs):
-        include_category_ids = request.GET.getlist('categories', [])
-        include_merchants_id = request.GET.getlist('merchants', [])
+        include_category_ids = list(filter(str.isdigit, request.GET.getlist('categories', [])))
+        include_merchants_id = list(filter(str.isdigit, request.GET.getlist('merchants', [])))
 
         cat_qs = Category.objects.all()
         if request.user.role == 'advertiser':
@@ -187,12 +188,12 @@ class YmlProductViewSet(viewsets.GenericViewSet):
         categories = cat_qs.filter(
             **({'id__in': include_category_ids} if include_category_ids else {})
         ).exclude(
-            id__in=request.GET.getlist('exclude_categories', [])
+            id__in=filter(str.isdigit, request.GET.getlist('exclude_categories', []))
         )
         merchants = Merchant.objects.filter(
             **({'id__in': include_merchants_id} if include_merchants_id else {})
         ).exclude(
-            id__in=request.GET.getlist('exclude_merchants', [])
+            id__in=filter(str.isdigit, request.GET.getlist('exclude_merchants', []))
         )
         products = Product.objects.filter(
             merchant__in=merchants, category__in=categories, merchant__moderation_status=ModerationStatus.confirmed)
@@ -205,18 +206,20 @@ class YmlProductViewSet(viewsets.GenericViewSet):
             },
             'excludes': request.GET.getlist('excludes', []),
             'url_bindings': {
-                'url_cat': request.GET.get('bind_url_cat', 'url_cat'),
+                'url_cat': request.GET.get('bind_url_cat'),
                 'url_shop': request.GET.get('bind_url_shop', 'url_shop'),
                 'url': request.GET.get('bind_url', 'url'),
             },
             'show_teaser_cat': json.loads(request.GET.get('show_teaser_cat', 'false'))
         }
-        filename = request.GET.get(
-            'filename', 'blackfriday feed {}'.format(
-                datetime.datetime.strftime(timezone.now(), '%d-%m-%Y %H:%M')))
 
         yml = FeedGenerator(controls).generate(products, categories)
         response = HttpResponse(content_type='application/xml')
         yml.write(response)
-        response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(filename)
+        try:
+            response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(request.GET.get('filename'))
+        except BadHeaderError as e:
+            response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(
+                'blackfriday feed {}'.format(
+                    datetime.datetime.strftime(timezone.now(), '%d-%m-%Y %H:%M')))
         return response
