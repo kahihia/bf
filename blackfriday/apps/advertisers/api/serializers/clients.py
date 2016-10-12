@@ -42,9 +42,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             pass
 
     def validate(self, attrs):
+        request = self.context['request']
         inner, is_supernova = attrs.pop('inner', None), attrs.pop('is_supernova', False)
 
-        if is_supernova:
+        if is_supernova and request.user.role == 'admin':
             attrs['type'] = AdvertiserType.SUPERNOVA
         elif inner:
             attrs['type'] = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))[inner]
