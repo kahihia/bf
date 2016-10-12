@@ -192,7 +192,9 @@ class Merchant(models.Model):
 
     @property
     def options_count(self):
-        return Option.objects.filter(in_invoices__invoice__is_paid=True).distinct().count()
+        return (Option.objects
+                .filter(in_invoices__invoice__is_paid=True, in_invoices__invoice__merchant=self)
+                .distinct().count())
 
     @property
     def owner_id(self):
