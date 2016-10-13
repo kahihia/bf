@@ -10,6 +10,7 @@ import {TOKEN} from '../const.js';
 import {processErrors} from '../utils.js';
 import MerchantProductsAddForm from './merchant-products-add-form.jsx';
 import ProductsTable from './products-table.jsx';
+import ProductsNewTable from './products-new-table.jsx';
 
 const className = 'merchant-product-list';
 
@@ -17,8 +18,10 @@ class MerchantProductList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			allowedCategories: [],
 			isLoading: false,
-			products: []
+			products: [],
+			productsNew: []
 		};
 
 		this.handleClickProductsAdd = this.handleClickProductsAdd.bind(this);
@@ -125,13 +128,20 @@ class MerchantProductList extends React.Component {
 
 	merchantProductsAdd(data) {
 		this.setState(previousState => {
-			previousState.banners = data;
+			previousState.productsNew = data;
 			return previousState;
 		});
 	}
 
 	render() {
-		const {products} = this.state;
+		const {
+			allowedCategories,
+			products,
+			productsNew
+		} = this.state;
+		const {
+			id
+		} = this.props;
 
 		return (
 			<div className="shop-edit-block">
@@ -155,11 +165,24 @@ class MerchantProductList extends React.Component {
 							</button>
 						</p>
 
-						<ProductsTable
-							{...{
-								products
-							}}
-							/>
+						{productsNew.length ? (
+							<ProductsNewTable
+								products={productsNew}
+								merchantId={id}
+								{...{
+									allowedCategories
+								}}
+								/>
+						) : null}
+
+						{products.length ? (
+							<ProductsTable
+								{...{
+									allowedCategories,
+									products
+								}}
+								/>
+						) : null}
 					</div>
 				</div>
 			</div>

@@ -10,6 +10,7 @@ class EditableCell extends React.Component {
 			isActive: false,
 			values: _.cloneDeep(props.values)
 		};
+
 		this.handleClick = this.handleClick.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSave = this.handleSave.bind(this);
@@ -54,26 +55,34 @@ class EditableCell extends React.Component {
 	}
 
 	getStateValueByName(name) {
-		return _.find(this.state.values, {name: name});
+		return _.find(this.state.values, {name});
 	}
 
 	render() {
+		const {isActive} = this.state;
+		const {
+			children,
+			values
+		} = this.props;
+
 		return (
 			<div className="editable-cell">
-				{this.props.children}
-				<a
+				{children}
+
+				<span
 					className="editable-cell__btn"
-					href="#"
 					onClick={this.handleClick}
 					title="Отредактировать"
 					>
 					<Glyphicon name="pencil"/>
-				</a>
-				{this.state.isActive ? (
+				</span>
+
+				{isActive ? (
 					<div className="popover top">
 						<div className="arrow"/>
+
 						<div className="popover-content">
-							{this.props.values.map(item => {
+							{values.map(item => {
 								return (
 									<p key={item.name}>
 										{item.type === 'textarea' ? (
@@ -97,20 +106,22 @@ class EditableCell extends React.Component {
 									</p>
 								);
 							})}
+
 							<p className="text-right">
 								<button
 									className="btn btn-danger"
 									type="button"
 									onClick={this.handleCancel}
 									>
-									Cancel
+									{'Отмена'}
 								</button>
+
 								<button
 									className="btn btn-success"
 									type="button"
 									onClick={this.handleSave}
 									>
-									Ok
+									{'Сохранить'}
 								</button>
 							</p>
 						</div>
