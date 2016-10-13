@@ -1,6 +1,10 @@
+import datetime
 import urllib.parse
+
 from xml.etree.ElementTree import Element, SubElement, ElementTree
+
 from django.conf import settings
+from django.utils import timezone
 
 
 class FeedGenerator:
@@ -48,7 +52,7 @@ class FeedGenerator:
         return self.get_binding(url_tag)(product)
 
     def generate(self, products, categories):
-        catalog = Element('yml_catalog')
+        catalog = Element('yml_catalog', {'date': datetime.datetime.strftime(timezone.now(), '%Y-%d-%m %H:%M')})
         shop = SubElement(catalog, 'shop')
 
         name = SubElement(shop, 'name')
