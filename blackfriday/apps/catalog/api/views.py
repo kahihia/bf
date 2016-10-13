@@ -217,8 +217,8 @@ class YmlProductViewSet(viewsets.GenericViewSet):
         response = HttpResponse(content_type='application/xml')
         yml.write(response)
         try:
-            response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(request.GET.get('filename'))
-        except BadHeaderError as e:
+            response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(request.GET['filename'])
+        except (BadHeaderError, KeyError) as e:
             response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(
                 'blackfriday feed {}'.format(
                     datetime.datetime.strftime(timezone.now(), '%d-%m-%Y %H:%M')))
