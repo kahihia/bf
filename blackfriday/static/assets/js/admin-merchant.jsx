@@ -15,6 +15,7 @@ import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-pa
 import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
 import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-categories-select.jsx';
 import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
+import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 (function () {
 	'use strict';
@@ -354,6 +355,12 @@ import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 						{...{
 							availableCategories,
 							availableBannerTypes,
+							id
+						}}
+						/>
+
+					<MerchantProductList
+						{...{
 							id
 						}}
 						/>
