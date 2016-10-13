@@ -74,6 +74,7 @@ module.exports = {
 		'admin-partners': path.resolve(PATH_SRC, 'js/admin-partners.jsx'),
 		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
+		'admin-feed-maker': path.resolve(PATH_SRC, 'js/admin-feed-maker.jsx'),
 		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
 		app: path.resolve(PATH_SRC, 'js/app.jsx'),
 		auth: path.resolve(PATH_SRC, 'js/auth.jsx'),
