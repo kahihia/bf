@@ -53,7 +53,7 @@ import ReactDOM from 'react-dom';
 
 	const feedMaker = document.getElementById('feed-maker');
 	if (feedMaker) {
-		let FeedMaker = require('./admin/administrator/feed-maker');
+		let FeedMaker = require('./admin/catalog/feed-maker');
 		ReactDOM.render(<FeedMaker/>, feedMaker);
 	}
 
