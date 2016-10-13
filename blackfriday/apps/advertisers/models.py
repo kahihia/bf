@@ -184,7 +184,7 @@ class Merchant(models.Model):
 
     @property
     def payment_status(self):
-        new = self.invoices.filter(is_paid=False, expired_datetime__lte=timezone.now()).exists()
+        new = self.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists()
         paid = self.invoices.filter(is_paid=True).exists()
         if not new and paid:
             return InvoiceStatus.paid
