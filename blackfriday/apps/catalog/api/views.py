@@ -50,7 +50,7 @@ class ProductViewSet(
         return get_object_or_404(Merchant, pk=self.kwargs.get('merchant_pk'))
 
     def delete(self, request, *args, **kwargs):
-        self.queryset.filter(merchant_id=self.get_merchant().id).delete()
+        self.queryset.filter(merchant=self.get_merchant()).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def validate_schema(self, data, in_list=True):
@@ -102,7 +102,7 @@ class ProductViewSet(
         qs = [
             Product(
                 category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
-                merchant_id=merchant,
+                merchant=merchant,
                 **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
         ]
