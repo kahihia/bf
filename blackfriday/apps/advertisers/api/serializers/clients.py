@@ -123,13 +123,6 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated and user.role == 'advertiser':
             if value != ModerationStatus.waiting:
                 raise ValidationError('Неверный статус')
-        return value
-
-    def validate(self, attrs):
-        if attrs['moderation_status'] < ModerationStatus.confirmed:
-            attrs.pop('moderation_comment', None)
-
-        if not self.context['request'].user.is_admin:
             unused_limits = [
                 {
                     'tech_name': limit,
@@ -153,7 +146,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
 
             if deficit:
                 raise ValidationError({'deficit': deficit})
+        return value
 
+    def validate(self, attrs):
+        if attrs['moderation_status'] < ModerationStatus.confirmed:
+            attrs.pop('moderation_comment', None)
         return attrs
 
 
