@@ -4,9 +4,10 @@ from functools import reduce
 from django.db.models import Q
 
 from rest_framework import serializers, validators
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 
-from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner, AdvertiserType
+from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner, AdvertiserType, \
+    ADVERTISER_INNER_TYPES
 from apps.mediafiles.models import Image
 from apps.users.models import User
 
@@ -15,7 +16,7 @@ from apps.promo.api.serializers import PromoTinySerializer
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    inn = serializers.CharField(max_length=12, validators=[
+    inn = serializers.CharField(max_length=12, allow_blank=True, allow_null=True, validators=[
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
@@ -41,14 +42,17 @@ class ProfileSerializer(serializers.ModelSerializer):
         except AttributeError:
             pass
 
+    def validate_inner(self, value):
+        if value and value not in ADVERTISER_INNER_TYPES.keys():
+            raise ValidationError('Недопустимое значение')
+        return value
+
     def validate(self, attrs):
         request = self.context['request']
 
         if request.user.role == 'admin':
             if 'inner' in attrs:
-                inner_types = filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)
-                attrs['inner'] = dict(map(reversed, inner_types)).get(attrs['inner'])
-
+                attrs['inner'] = ADVERTISER_INNER_TYPES.get(attrs['inner'])
                 if attrs['inner']:
                     attrs['type'] = attrs['inner']
                 elif self.instance and self.instance.inner:
@@ -60,10 +64,16 @@ class ProfileSerializer(serializers.ModelSerializer):
                 elif self.instance and self.instance.is_supernova:
                     attrs['type'] = AdvertiserType.REGULAR
 
-        attrs.pop('inner', None)
-        attrs.pop('is_supernova', None)
+            attrs.pop('inner', None)
+            attrs.pop('is_supernova', None)
 
-        if request.user.role != 'admin' and not all(map(lambda x: x not in ('', None), attrs.values())):
+        elif 'inner' in attrs or 'is_supernova' in attrs:
+            raise PermissionDenied('Только администратору доступны эти параметры')
+
+        if 'type' not in attrs:
+            attrs['type'] = self.instance.type if self.instance else AdvertiserType.REGULAR
+
+        if attrs.get('type') == AdvertiserType.REGULAR and any(map(lambda x: x in ('', None), attrs.values())):
             raise ValidationError('Все поля должны быть ненулевыми')
 
         return attrs
