@@ -1,16 +1,24 @@
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
+import Price from 'react-price';
+import {formatPrice} from '../utils.js';
+import SortHeaderCell from '../components/sort-header-cell.jsx';
+import EditableCell from './editable-cell.jsx';
 
 class ProductsTable extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			colSortDirs: {}
+		};
 
 		this.handleSelectAllProducts = this.handleSelectAllProducts.bind(this);
 		this.handleSortChange = this.handleSortChange.bind(this);
 		this.handleSelectProduct = this.handleSelectProduct.bind(this);
 		this.handleChangeProduct = this.handleChangeProduct.bind(this);
+		this.handleChangeProductTeaser = this.handleChangeProductTeaser.bind(this);
+		this.handleChangeProductOnMain = this.handleChangeProductOnMain.bind(this);
 	}
 
 	handleSelectAllProducts() {
@@ -25,7 +33,22 @@ class ProductsTable extends React.Component {
 	handleChangeProduct() {
 	}
 
+	handleChangeProductTeaser() {
+	}
+
+	handleChangeProductOnMain() {
+	}
+
+	isAllSelected() {
+		const isFalse = Boolean(this.props.products.filter(product => !product.isSelected).length);
+		return !isFalse;
+	}
+
 	render() {
+		const {colSortDirs} = this.state;
+		const {products} = this.props;
+		const isAllSelected = this.isAllSelected();
+
 		return (
 			<div className="">
 				<table className="table products-table">
@@ -44,7 +67,7 @@ class ProductsTable extends React.Component {
 								<SortHeaderCell
 									onSortChange={this.handleSortChange}
 									columnKey="name"
-									sortDir={this.state.colSortDirs.name}
+									sortDir={colSortDirs.name}
 									>
 									{'Название'}
 								</SortHeaderCell>
@@ -103,18 +126,18 @@ class ProductsTable extends React.Component {
 					</thead>
 
 					<tbody>
-						{this.props.products.map(product => {
-							return (
-								<ProductsTableRow
-									key={product.id}
-									id={product.id}
-									data={product}
-									isSelected={product.isSelected}
-									onSelect={this.handleSelectProduct}
-									onChange={this.handleChangeProduct}
-									/>
-							);
-						})}
+						{products.map(product => (
+							<ProductsTableRow
+								key={product.data._id}
+								id={product.data._id}
+								data={product.data}
+								isSelected={product.isSelected}
+								onSelect={this.handleSelectProduct}
+								onChange={this.handleChangeProduct}
+								onChangeTeaser={this.handleChangeProductTeaser}
+								onChangeTeaserOnMain={this.handleChangeProductOnMain}
+								/>
+						))}
 					</tbody>
 				</table>
 			</div>
@@ -136,6 +159,8 @@ class ProductsTableRow extends React.Component {
 
 		this.handleSelect = this.handleSelect.bind(this);
 		this.handleChangeCell = this.handleChangeCell.bind(this);
+		this.handleChangeTeaser = this.handleChangeTeaser.bind(this);
+		this.handleChangeTeaserOnMain = this.handleChangeTeaserOnMain.bind(this);
 	}
 
 	handleSelect() {
@@ -146,7 +171,7 @@ class ProductsTableRow extends React.Component {
 		const firstValueName = values[0].name;
 		if (firstValueName === 'discount') {
 			values.push({
-				name: 'oldprice',
+				name: 'oldPrice',
 				value: null
 			});
 			values.push({
@@ -154,10 +179,10 @@ class ProductsTableRow extends React.Component {
 				value: null
 			});
 			values.push({
-				name: 'startprice',
+				name: 'startPrice',
 				value: false
 			});
-		} else if (firstValueName === 'oldprice' || firstValueName === 'price') {
+		} else if (firstValueName === 'oldPrice' || firstValueName === 'price') {
 			values.push({
 				name: 'discount',
 				value: null
@@ -176,9 +201,17 @@ class ProductsTableRow extends React.Component {
 
 	handleChangeStartprice() {
 		this.props.onChange(this.props.id, [{
-			name: 'startprice',
-			value: !this.props.data.startprice
+			name: 'startPrice',
+			value: !this.props.data.startPrice
 		}]);
+	}
+
+	handleChangeTeaser() {
+		this.props.onChangeTeaser(this.props.id);
+	}
+
+	handleChangeTeaserOnMain() {
+		this.props.onChangeTeaserOnMain(this.props.id);
 	}
 
 	render() {
@@ -229,26 +262,26 @@ class ProductsTableRow extends React.Component {
 					</EditableCell>
 				</td>
 				<td>
-					{(data.price || data.price === 0) && (data.oldprice || data.oldprice === 0) ? (
+					{(data.price || data.price === 0) && (data.oldPrice || data.oldPrice === 0) ? (
 						<input
 							type="checkbox"
 							onChange={this.handleChangeStartprice}
-							checked={data.startprice}
+							checked={data.startPrice}
 							/>
 					) : null}
 				</td>
 				<td>
 					<EditableCell
 						values={[{
-							name: 'oldprice',
-							value: data.oldprice
+							name: 'oldPrice',
+							value: data.oldPrice
 						}]}
 						onChange={this.handleChangeCell}
 						>
-						{data.startprice ? 'от ' : null}
-						{data.oldprice || data.oldprice === 0 ? (
+						{data.startPrice ? 'от ' : null}
+						{data.oldPrice || data.oldPrice === 0 ? (
 							<Price
-								cost={formatPrice(data.oldprice)}
+								cost={formatPrice(data.oldPrice)}
 								type="old"
 								currency="₽"
 								/>
@@ -263,7 +296,7 @@ class ProductsTableRow extends React.Component {
 						}]}
 						onChange={this.handleChangeCell}
 						>
-						{data.startprice ? 'от ' : null}
+						{data.startPrice ? 'от ' : null}
 						{data.price || data.price === 0 ? (
 							<strong>
 								<Price
@@ -316,11 +349,7 @@ class ProductsTableRow extends React.Component {
 						/>
 				</td>
 				<td>
-					<Select
-						options={this.props.allowedCategories}
-						selected={data.categoryId}
-						onChange={this.handleChangeCategory}
-						/>
+					{data.category}
 				</td>
 				<td>
 					<EditableCell
@@ -350,12 +379,11 @@ class ProductsTableRow extends React.Component {
 ProductsTableRow.propTypes = {
 	id: React.PropTypes.number.isRequired,
 	data: React.PropTypes.object.isRequired,
-	allowedCategories: React.PropTypes.array.isRequired,
 	isSelected: React.PropTypes.bool,
 	onSelect: React.PropTypes.func.isRequired,
 	onChange: React.PropTypes.func.isRequired,
 	onChangeTeaser: React.PropTypes.func.isRequired,
-	onChangeTeaserAtMain: React.PropTypes.func.isRequired
+	onChangeTeaserOnMain: React.PropTypes.func.isRequired
 };
 ProductsTableRow.defaultProps = {
 };

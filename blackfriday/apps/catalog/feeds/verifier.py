@@ -35,7 +35,7 @@ def duplicate_product_urls(url, context):
 
 
 def clear_category(category, context):
-    if category not in context['categories']:
+    if not category or category.lower() not in context['categories']:
         return settings.DEFAULT_CATEGORY_NAME
     return category
 

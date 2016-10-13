@@ -1,12 +1,12 @@
-/* global document, jQuery, toastr, _ */
+/* global toastr, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
-import MultiselectControls from './multiselect-controls.jsx';
+import MultiselectTwoSides from 'react-multiselect-two-sides';
 
 const FeedMaker = React.createClass({
-	basePath: '/yml/download',
+	basePath: '/api/products/yml/',
 
 	getInitialState() {
 		const initialData = {
@@ -38,12 +38,12 @@ const FeedMaker = React.createClass({
 	componentDidMount() {
 		let self = this;
 
-		xhr.get('/admin/merchants-with-categories', {json: true}, (err, resp, data) => {
+		xhr.get('/api/merchants/', {json: true}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
 				this.setState({
 					merchantList: data
 				}, function () {
-					xhr.get('/admin/categories-with-merchants', {json: true}, (err, resp, data) => {
+					xhr.get('/api/categories/', {json: true}, (err, resp, data) => {
 						if (!err && resp.statusCode === 200) {
 							self.setState({
 								categoryList: data,
@@ -67,79 +67,6 @@ const FeedMaker = React.createClass({
 					toastr.error('Не удалось получить список магазинов.');
 				});
 			}
-		});
-
-		jQuery(document).ready(function ($) {
-			$('select[id$="-multiselect"]').each(function (i, select) {
-				const $select = $(select);
-				const prefix = $select.data('prefix');
-				const filterId = `#${$select.data('filter-id')}`;
-
-				function _updateMerchants($toSelect, dataField) {
-					const idList = $toSelect.find('option').map(function (i, option) {
-						return parseInt(option.value, 10);
-					}).get();
-					let newData = {};
-
-					newData[dataField] = idList;
-
-					self.setState({
-						data: Object.assign({}, self.state.data, newData)
-					}, self.buildLink);
-
-					_filters(dataField);
-				}
-
-				function _filters(dataField) {
-					const selectListName = (dataField === 'merchants' || dataField === 'merchantExcludes') ? 'merchantList' : 'categoryList';
-					const filterListName = (dataField === 'merchants' || dataField === 'merchantExcludes') ? 'category' : 'merchants';
-					const selectId = self.state.data[dataField];
-
-					const selected = [...document.querySelector(filterId)]
-						.map(({value}) => Number(value))
-						.filter(id => {
-							return self.state[selectListName]
-								.filter(({id}) => {
-									return selectId.indexOf(id) !== -1;
-								})
-								.reduce((previousValue, {[filterListName]: currentValue}) => {
-									return previousValue.concat(currentValue);
-								}, []).indexOf(id) !== -1;
-						});
-
-					if (selected.length) {
-						$(`${filterId} option`).hide();
-						selected
-							.forEach(value => {
-								$(`${filterId} [value=${value}]`).show();
-							});
-					} else {
-						$(`${filterId} option`).show();
-					}
-				}
-
-				$select.multiselect({
-					right: '#' + prefix + '-multiselect-to',
-
-					rightAll: '#' + prefix + '-multiselect-right-all',
-					rightSelected: '#' + prefix + '-multiselect-right-selected',
-					leftAll: '#' + prefix + '-multiselect-left-all',
-					leftSelected: '#' + prefix + '-multiselect-left-selected',
-
-					afterMoveOneToRight: function ($fromSelect, $toSelect) {
-						_updateMerchants($toSelect, prefix);
-					},
-					afterMoveAllToRight: function ($fromSelect, $toSelect) {
-						_updateMerchants($toSelect, prefix);
-					},
-					afterMoveOneToLeft: function ($fromSelect, $toSelect) {
-						_updateMerchants($toSelect, prefix);
-					},
-					afterMoveAllToLeft: function ($fromSelect, $toSelect) {
-						_updateMerchants($toSelect, prefix);
-					}
-				});
-			});
 		});
 	},
 
@@ -197,6 +124,30 @@ const FeedMaker = React.createClass({
 		}, this.buildLink);
 	},
 
+	handleChangeMerchants(value) {
+		this.setState({
+			data: Object.assign({}, this.state.data, {merchants: value})
+		}, this.buildLink);
+	},
+
+	handleChangeMerchantExcludes(value) {
+		this.setState({
+			data: Object.assign({}, this.state.data, {merchantExcludes: value})
+		}, this.buildLink);
+	},
+
+	handleChangeCategories(value) {
+		this.setState({
+			data: Object.assign({}, this.state.data, {categories: value})
+		}, this.buildLink);
+	},
+
+	handleChangeCategoryExcludes(value) {
+		this.setState({
+			data: Object.assign({}, this.state.data, {categoryExcludes: value})
+		}, this.buildLink);
+	},
+
 	buildLink() {
 		let params = {};
 		let link;
@@ -206,23 +157,23 @@ const FeedMaker = React.createClass({
 		}
 
 		if (this.state.data.merchants.length) {
-			params['merchants[]'] = this.state.data.merchants;
+			params.merchants = this.state.data.merchants;
 		}
 
 		if (this.state.data.categories.length) {
-			params['categories[]'] = this.state.data.categories;
+			params.categories = this.state.data.categories;
 		}
 
 		if (this.state.data.merchantExcludes.length) {
-			params['exclude_merchants[]'] = this.state.data.merchantExcludes;
+			params.exclude_merchants = this.state.data.merchantExcludes;
 		}
 
 		if (this.state.data.categoryExcludes.length) {
-			params['exclude_categories[]'] = this.state.data.categoryExcludes;
+			params.exclude_categories = this.state.data.categoryExcludes;
 		}
 
 		if (this.state.data.excludes.length) {
-			params['excludes[]'] = this.state.data.excludes;
+			params.excludes = this.state.data.excludes;
 		}
 
 		if (this.state.data.bindUrl) {
@@ -294,7 +245,7 @@ const FeedMaker = React.createClass({
 				</div>
 
 				<div className="col-sm-12">
-					<div className="h2">1. Мерчанты и категории</div>
+					<div className="h2">1. Магазины и категории</div>
 					<div className="row">
 						<div className="col-sm-12">
 							<p>
@@ -306,147 +257,75 @@ const FeedMaker = React.createClass({
 						<div className="col-sm-6">
 							<div className="h3">Включить</div>
 							<div className="form-group">
-								<label>Мерчанты</label>
-								<div className="row">
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="merchants-multiselect"
-											multiple
-											data-prefix="merchants"
-											data-filter-id="categories-multiselect"
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											>
-											{this.state.merchantList.map(merchant => {
-												return (
-													<option value={merchant.id} key={merchant.id}>{merchant.name}</option>
-												);
-											})}
-										</select>
-									</div>
-									<div className="col-sm-2">
-										<MultiselectControls
-											prefix="merchants"
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											/>
-									</div>
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="merchants-multiselect-to"
-											multiple
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											/>
-									</div>
-								</div>
+								<label>Магазины</label>
+								<MultiselectTwoSides
+									disabled={this.state.isLoading || !this.state.merchantList.length}
+									onChange={this.handleChangeMerchants}
+									clearFilterText="Очистить"
+									availableHeader="Доступные"
+									selectedHeader="Выбранные"
+									selectAllText="Выбрать все"
+									deselectAllText="Очистить"
+									options={this.state.merchantList}
+									value={this.state.data.merchants}
+									labelKey="name"
+									valueKey="id"
+									showControls
+									/>
 							</div>
 							<div className="form-group">
 								<label>Категории</label>
-								<div className="row">
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="categories-multiselect"
-											multiple
-											data-prefix="categories"
-											data-filter-id="merchants-multiselect"
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											>
-											{this.state.categoryList.map(category => {
-												return (
-													<option value={category.id} key={category.id}>{category.name}</option>
-												);
-											})}
-										</select>
-									</div>
-									<div className="col-sm-2">
-										<MultiselectControls
-											prefix="categories"
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											/>
-									</div>
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="categories-multiselect-to"
-											multiple
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											/>
-									</div>
-								</div>
+								<MultiselectTwoSides
+									disabled={this.state.isLoading || !this.state.categoryList.length}
+									onChange={this.handleChangeCategories}
+									clearFilterText="Очистить"
+									availableHeader="Доступные"
+									selectedHeader="Выбранные"
+									selectAllText="Выбрать все"
+									deselectAllText="Очистить"
+									options={this.state.categoryList}
+									value={this.state.data.categories}
+									labelKey="name"
+									valueKey="id"
+									showControls
+									/>
 							</div>
 						</div>
 						<div className="col-sm-6">
 							<div className="h3">Исключить</div>
 							<div className="form-group">
-								<label>Мерчанты</label>
-								<div className="row">
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="merchantExcludes-multiselect"
-											multiple
-											data-prefix="merchantExcludes"
-											data-filter-id="categoryExcludes-multiselect"
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											>
-											{this.state.merchantList.map(merchant => {
-												return (
-													<option value={merchant.id} key={merchant.id}>{merchant.name}</option>
-												);
-											})}
-										</select>
-									</div>
-									<div className="col-sm-2">
-										<MultiselectControls
-											prefix="merchantExcludes"
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											/>
-									</div>
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="merchantExcludes-multiselect-to"
-											multiple
-											disabled={this.state.isLoading || !this.state.merchantList.length}
-											/>
-									</div>
-								</div>
+								<label>Магазины</label>
+								<MultiselectTwoSides
+									disabled={this.state.isLoading || !this.state.merchantList.length}
+									onChange={this.handleChangeMerchantExcludes}
+									clearFilterText="Очистить"
+									availableHeader="Доступные"
+									selectedHeader="Выбранные"
+									selectAllText="Выбрать все"
+									deselectAllText="Очистить"
+									options={this.state.merchantList}
+									value={this.state.data.merchantExcludes}
+									labelKey="name"
+									valueKey="id"
+									showControls
+									/>
 							</div>
 							<div className="form-group">
 								<label>Категории</label>
-								<div className="row">
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="categoryExcludes-multiselect"
-											multiple
-											data-prefix="categoryExcludes"
-											data-filter-id="merchantExcludes-multiselect"
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											>
-											{this.state.categoryList.map(category => {
-												return (
-													<option value={category.id} key={category.id}>{category.name}</option>
-												);
-											})}
-										</select>
-									</div>
-									<div className="col-sm-2">
-										<MultiselectControls
-											prefix="categoryExcludes"
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											/>
-									</div>
-									<div className="col-sm-5">
-										<select
-											className="form-control"
-											id="categoryExcludes-multiselect-to"
-											multiple
-											disabled={this.state.isLoading || !this.state.categoryList.length}
-											/>
-									</div>
-								</div>
+								<MultiselectTwoSides
+									disabled={this.state.isLoading || !this.state.categoryList.length}
+									onChange={this.handleChangeCategoryExcludes}
+									clearFilterText="Очистить"
+									availableHeader="Доступные"
+									selectedHeader="Выбранные"
+									selectAllText="Выбрать все"
+									deselectAllText="Очистить"
+									options={this.state.categoryList}
+									value={this.state.data.categoryExcludes}
+									labelKey="name"
+									valueKey="id"
+									showControls
+									/>
 							</div>
 						</div>
 					</div>
@@ -602,9 +481,9 @@ const FeedMaker = React.createClass({
 									disabled={this.state.isLoading}
 									onChange={this.handleChangeBindUrl}
 									>
-									<option value="url">url товара на сайте мерчанта</option>
-									<option value="url_cat">url категории на cmonday</option>
-									<option value="url_shop">url мерчанта на cmonday</option>
+									<option value="url">url товара на сайте магазина</option>
+									<option value="url_cat">url категории на realblackfriday</option>
+									<option value="url_shop">url магазина на realblackfriday</option>
 								</select>
 							</div>
 						</div>
@@ -617,9 +496,9 @@ const FeedMaker = React.createClass({
 									disabled={this.state.isLoading}
 									onChange={this.handleChangeBindUrlCat}
 									>
-									<option value="url">url товара на сайте мерчанта</option>
-									<option value="url_cat">url категории на cmonday</option>
-									<option value="url_shop">url мерчанта на cmonday</option>
+									<option value="url">url товара на сайте магазина</option>
+									<option value="url_cat">url категории на realblackfriday</option>
+									<option value="url_shop">url магазина на realblackfriday</option>
 								</select>
 							</div>
 						</div>
@@ -632,9 +511,9 @@ const FeedMaker = React.createClass({
 									disabled={this.state.isLoading}
 									onChange={this.handleChangeBindUrlShop}
 									>
-									<option value="url">url товара на сайте мерчанта</option>
-									<option value="url_cat">url категории на cmonday</option>
-									<option value="url_shop">url мерчанта на cmonday</option>
+									<option value="url">url товара на сайте магазина</option>
+									<option value="url_cat">url категории на realblackfriday</option>
+									<option value="url_shop">url магазина на realblackfriday</option>
 								</select>
 							</div>
 						</div>

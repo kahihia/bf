@@ -23,22 +23,6 @@ import ReactDOM from 'react-dom';
 		ReactDOM.render(<PageMerchantProfile userId={ENV.userId}/>, pageMerchantProfile);
 	}
 
-	// Рендер таблицы загруженных товаров
-	const shopGoodsControl = document.getElementById('shop-goods-control');
-	if (shopGoodsControl) {
-		let ShopGoodsControl = require('./admin/advertiser/shop-goods-control');
-		ReactDOM.render(<ShopGoodsControl/>, shopGoodsControl);
-	}
-
-	// Рендер таблицы загрузки товаров
-	const shopUploadedGoods = document.getElementById('shop-uploaded-goods');
-	if (shopUploadedGoods) {
-		let ShopUploadedGoods = require('./admin/advertiser/shop-uploaded-goods');
-		window.renderShopUploadedGoods = function (data) {
-			ReactDOM.render(<ShopUploadedGoods data={data}/>, shopUploadedGoods);
-		};
-	}
-
 	// Рендер кастомных фонов
 	const customBackground = document.getElementById('custom-background');
 	if (customBackground) {
@@ -69,7 +53,7 @@ import ReactDOM from 'react-dom';
 
 	const feedMaker = document.getElementById('feed-maker');
 	if (feedMaker) {
-		let FeedMaker = require('./admin/administrator/feed-maker');
+		let FeedMaker = require('./admin/catalog/feed-maker');
 		ReactDOM.render(<FeedMaker/>, feedMaker);
 	}
 
