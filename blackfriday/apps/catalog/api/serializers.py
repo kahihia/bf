@@ -18,7 +18,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    merchant = serializers.PrimaryKeyRelatedField(queryset=Merchant.objects.all(), allow_null=True)
+    merchant = serializers.PrimaryKeyRelatedField(queryset=Merchant.objects.all(), allow_null=True, required=False)
 
     class Meta(CategoryDetailSerializer.Meta):
         pass
