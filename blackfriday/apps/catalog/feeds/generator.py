@@ -36,7 +36,7 @@ class FeedGenerator:
 
     def get_binding(self, url_tag):
         binding_funcs = {
-            'url': self.get_merchant_url,
+            'url': self.get_product_url,
             'url_cat': self.get_category_url,
             'url_shop': self.get_merchant_url
         }
