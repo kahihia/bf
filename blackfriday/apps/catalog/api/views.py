@@ -215,7 +215,7 @@ class YmlProductViewSet(viewsets.GenericViewSet):
 
         yml = FeedGenerator(controls).generate(products, categories)
         response = HttpResponse(content_type='application/xml')
-        yml.write(response)
+        yml.write(response, xml_declaration=True, method='xml', encoding='utf-8')
         try:
             response['Content-Disposition'] = 'attachment; filename="{}.xml"'.format(request.GET['filename'])
         except (BadHeaderError, KeyError) as e:
