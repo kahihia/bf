@@ -116,10 +116,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
                     raise ValidationError('Нельзя назначить уже купленный пакет')
 
         if options:
-            if not merchant.promo:
+            if promo:
+                available_options = promo.available_options.all()
+            elif merchant.promo:
+                available_options = merchant.promo.available_options.all()
+            else:
                 raise ValidationError('Нет назначенного пакета')
 
-            available_options = merchant.promo.available_options.all()
             for option in options:
                 if option['option'] not in available_options:
                     raise ValidationError('Не все опции доступны для покупки')
