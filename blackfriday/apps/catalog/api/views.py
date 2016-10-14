@@ -24,6 +24,7 @@ from ..models import Product, Category
 from ..feeds.verifier import FeedParser
 from ..feeds.generator import FeedGenerator
 
+from .filters import CategoryFilter
 from .serializers import CategorySerializer, ProductSerializer
 
 
@@ -31,6 +32,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated, IsAdmin | ReadOnly]
+    filter_class = CategoryFilter
 
     def get_queryset(self):
         qs = super().get_queryset()
