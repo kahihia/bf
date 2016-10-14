@@ -120,32 +120,33 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
 
     def validate_status(self, value):
         user = self.context['request'].user
-        if user and user.is_authenticated and user.role == 'advertiser':
-            if value != ModerationStatus.waiting:
+        if user and user.is_authenticated:
+            if user.role == 'advertiser' and value != ModerationStatus.waiting:
                 raise ValidationError('Неверный статус')
-            unused_limits = [
-                {
-                    'tech_name': limit,
-                    'value': value
+            if user.role in ['manager', 'advertiser']:
+                unused_limits = [
+                    {
+                        'tech_name': limit,
+                        'value': value
+                    }
+                    for limit, value in self.instance.limits.items() if limit != 'products' and value
+                ]
+                requirements = {
+                    'name': self.instance.name,
+                    'description': self.instance.description,
+                    'slug': self.instance.slug,
+                    'url': self.instance.url,
+                    'image': self.instance.image,
+                    'promo': self.instance.get_promo,
+                    'limits': not unused_limits,
+                    'utm_in_banners': self.instance.banners.filter(
+                        Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
+                    ).count == self.instance.banners.count()
                 }
-                for limit, value in self.instance.limits.items() if limit != 'products' and value
-            ]
-            requirements = {
-                'name': self.instance.name,
-                'description': self.instance.description,
-                'slug': self.instance.slug,
-                'url': self.instance.url,
-                'image': self.instance.image,
-                'promo': self.instance.get_promo,
-                'limits': not unused_limits,
-                'utm_in_banners': self.instance.banners.filter(
-                    Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
-                ).count == self.instance.banners.count()
-            }
-            deficit = [key for key, value in requirements.items() if not value]
+                deficit = [key for key, value in requirements.items() if not value]
 
-            if deficit:
-                raise ValidationError({'deficit': deficit})
+                if deficit:
+                    raise ValidationError({'deficit': deficit})
         return value
 
     def validate(self, attrs):
