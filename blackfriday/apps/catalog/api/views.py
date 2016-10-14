@@ -48,6 +48,9 @@ class ProductViewSet(
     permission_classes = [IsAuthenticated, IsAdvertiser & IsOwner | IsAdmin]
     serializer_class = ProductSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().filter(merchant=self.get_merchant())
+
     def get_merchant(self):
         return get_object_or_404(Merchant, pk=self.kwargs.get('merchant_pk'))
 
