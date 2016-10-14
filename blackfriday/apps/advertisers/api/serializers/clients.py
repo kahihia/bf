@@ -123,7 +123,10 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         if user and user.is_authenticated:
             if user.role == 'advertiser' and value != ModerationStatus.waiting:
                 raise ValidationError('Неверный статус')
-            if user.role in ['manager', 'advertiser']:
+            if (
+                user.role in ['manager', 'advertiser'] and
+                value in [ModerationStatus.waiting, ModerationStatus.confirmed]
+            ):
                 unused_limits = [
                     {
                         'tech_name': limit,
