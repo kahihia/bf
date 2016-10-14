@@ -11,5 +11,5 @@ def default_category():
 
 
 @pytest.fixture
-def product_with_default_cat(default_category):
-    return ProductFactory.create(category=default_category)
+def product_with_default_cat(default_category, merchant):
+    return ProductFactory.create(category=default_category, merchant=merchant)
