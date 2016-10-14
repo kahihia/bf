@@ -6,6 +6,7 @@
 import React from 'react';
 import xhr from 'xhr';
 import Price from 'react-price';
+import {TOKEN} from '../const.js';
 import {formatPrice} from '../utils.js';
 import PreDefinedPromoTable from './pre-defined-promo-table.jsx';
 import PromoActions from './promo-actions.js';
@@ -18,7 +19,8 @@ export class PromoMaker extends React.Component {
 		super();
 		this.state = {
 			newPromo: {
-				options: []
+				options: [],
+				extraOptions: []
 			},
 			preDefinedPromos: [],
 			regularOptions: [],
@@ -57,11 +59,19 @@ export class PromoMaker extends React.Component {
 	onOptionExcluded(option, callback) {
 		callback = callback || this.updateTotal;
 
-		const optionList = _.reject(this.state.newPromo.options, {id: option.id});
+		if (option.isRequired) {
+			const optionList = _.reject(this.state.newPromo.options, {id: option.id});
 
-		this.setState({
-			newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
-		}, callback);
+			this.setState({
+				newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
+			}, callback);
+		} else {
+			const optionList = _.reject(this.state.newPromo.extraOptions, {id: option.id});
+
+			this.setState({
+				newPromo: Object.assign({}, this.state.newPromo, {extraOptions: optionList})
+			}, callback);
+		}
 	}
 
 	onOptionIncluded(option) {
@@ -72,54 +82,79 @@ export class PromoMaker extends React.Component {
 
 		this.onOptionExcluded(option, () => {
 			if (optionExists) {
-				const optionList = _.unionBy(this.state.newPromo.options, [option], 'id');
+				if (option.isRequired) {
+					const optionList = _.unionBy(this.state.newPromo.options, [option], 'id');
 
-				this.setState({
-					newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
-				}, this.updateTotal);
+					this.setState({
+						newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
+					}, this.updateTotal);
+				} else {
+					const optionList = _.unionBy(this.state.newPromo.extraOptions, [option], 'id');
+
+					this.setState({
+						newPromo: Object.assign({}, this.state.newPromo, {extraOptions: optionList})
+					}, this.updateTotal);
+				}
 			}
 		});
 	}
 
 	onOptionChanged(option) {
-		let optionIndex = _.findIndex(
-			this.state.newPromo.options,
-			{id: option.id}
-		);
+		if (option.isRequired) {
+			let optionIndex = _.findIndex(
+				this.state.newPromo.options,
+				{id: option.id}
+			);
 
-		if (optionIndex >= 0) {
-			let optionList = _.clone(this.state.newPromo.options);
+			if (optionIndex >= 0) {
+				let optionList = _.clone(this.state.newPromo.options);
 
-			optionList[optionIndex] = option;
+				optionList[optionIndex] = option;
 
-			this.setState({
-				newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
-			}, this.updateTotal);
+				this.setState({
+					newPromo: Object.assign({}, this.state.newPromo, {options: optionList})
+				}, this.updateTotal);
+			}
+		} else {
+			let optionIndex = _.findIndex(
+				this.state.newPromo.extraOptions,
+				{id: option.id}
+			);
+
+			if (optionIndex >= 0) {
+				let optionList = _.clone(this.state.newPromo.extraOptions);
+
+				optionList[optionIndex] = option;
+
+				this.setState({
+					newPromo: Object.assign({}, this.state.newPromo, {extraOptions: optionList})
+				}, this.updateTotal);
+			}
 		}
 	}
 
 	componentDidMount() {
-		xhr.get('/promo/?custom=0&details=1', {json: true}, (err, resp, data) => {
+		xhr.get('/api/promos/?is_custom=0', {json: true}, (err, resp, data) => {
 			if (!err && resp.statusCode === 200) {
 				this.setState({
-					preDefinedPromos: data
+					preDefinedPromos: _.sortBy(data, 'id')
 				}, () => {
-					xhr.get('/promo/options?required=1', {json: true}, (err, resp, data) => {
+					xhr.get('/api/options/?is_required=1', {json: true}, (err, resp, data) => {
 						if (!err && resp.statusCode === 200) {
 							this.setState({
-								regularOptions: data
+								regularOptions: _.sortBy(data, 'id')
 							}, () => {
-								xhr.get('/promo/options?required=0', {json: true}, (err, resp, data) => {
+								xhr.get('/api/options/?is_required=0', {json: true}, (err, resp, data) => {
 									if (!err && resp.statusCode === 200) {
 										this.setState({
-											extraOptions: data
+											extraOptions: _.sortBy(data, 'id')
 										}, () => {
-											xhr.get('/admin/merchants', {json: true}, (err, resp, data) => {
+											xhr.get('/api/merchants/', {json: true}, (err, resp, data) => {
 												if (!err && resp.statusCode === 200) {
 													this.setState({
-														merchants: data,
+														merchants: _.sortBy(data, 'name'),
 														newPromo: Object.assign({}, this.state.newPromo, {
-															merchant_id: _.get(_.first(data), 'id', null)
+															merchantId: _.get(_.first(data), 'id', null)
 														}),
 														isLoading: false
 													});
@@ -167,9 +202,16 @@ export class PromoMaker extends React.Component {
 	updateTotal() {
 		const price = this.state.newPromo.price || 0;
 		const discount = (this.state.newPromo.discount || 0) / 100;
-		const sum = _.reduce(this.state.newPromo.options, (result, option) => {
-			return result + (option.price || 0);
-		}, 0);
+		const sum = _.reduce(
+			_.union(
+				this.state.newPromo.options,
+				this.state.newPromo.extraOptions
+			),
+			(result, option) => {
+				return result + ((option.price || 0) * option.value);
+			},
+			0
+		);
 
 		this.setState({
 			total: _.round((price + sum) * (1 - discount))
@@ -178,7 +220,7 @@ export class PromoMaker extends React.Component {
 
 	handleChangeMerchant(event) {
 		this.setState({
-			newPromo: Object.assign({}, this.state.newPromo, {merchant_id: parseInt(event.target.value, 10)})
+			newPromo: Object.assign({}, this.state.newPromo, {merchantId: parseInt(event.target.value, 10)})
 		});
 	}
 
@@ -209,22 +251,43 @@ export class PromoMaker extends React.Component {
 			this.setState({
 				isLoading: true
 			}, () => {
-				let promoData = _.omit(this.state.newPromo, 'merchant_id', 'discount');
+				let promoData = _.omit(this.state.newPromo, 'merchantId', 'discount', 'extraOptions');
 
-				xhr.post('/promo/', {json: promoData}, (err, resp, data) => {
+				xhr.post('/api/promos/', {
+					json: promoData,
+					headers: {
+						'X-CSRFToken': TOKEN.csrftoken
+					}
+				}, (err, resp, data) => {
 					if (!err && resp.statusCode === 201) {
 						const promoId = data.id;
-						const bindingData = _.assign(
-							_.pick(this.state.newPromo, 'discount', 'options'),
-							{promo_id: promoId}
+						const merchantId = this.state.newPromo.merchantId;
+						const invoiceData = _.assign(
+							_.pick(this.state.newPromo, 'merchantId', 'discount'),
+							{
+								promoId: data.id,
+								options: _.map(this.state.newPromo.extraOptions, opt => {
+									return _.pick(opt, 'id', 'value', 'price');
+								})
+							}
 						);
-						const url = '/admin/merchant/' + this.state.newPromo.merchant_id + '/promo';
 
-						xhr.put(url, {json: bindingData}, (err, resp) => {
-							if (!err && resp.statusCode === 200) {
-								window.location.href = '/admin/promo-list';
+						xhr.post('/api/invoices/', {
+							json: invoiceData,
+							headers: {
+								'X-CSRFToken': TOKEN.csrftoken
+							}
+						}, (err, resp) => {
+							if (!err && resp.statusCode === 201) {
+								window.location.href = `/admin/merchants/${merchantId}/`;
 							} else {
-								xhr.del('/promo/' + promoId, () => {
+								const url = `/api/promos/${promoId}/`;
+
+								xhr.del(url, {
+									headers: {
+										'X-CSRFToken': TOKEN.csrftoken
+									}
+								}, () => {
 									this.setState({
 										isLoading: false
 									}, () => {
@@ -248,7 +311,7 @@ export class PromoMaker extends React.Component {
 	validate() {
 		const newPromo = this.state.newPromo;
 
-		if (!_.isNumber(newPromo.merchant_id)) {
+		if (!_.isNumber(newPromo.merchantId)) {
 			return false;
 		}
 
@@ -264,8 +327,8 @@ export class PromoMaker extends React.Component {
 			return false;
 		}
 
-		const optionsValid = _.every(newPromo.options, option => {
-			return _.isNumber(option.id) && (_.isBoolean(option.value) || _.isNumber(option.value));
+		const optionsValid = _.every(_.union(newPromo.options, newPromo.extraOptions), option => {
+			return _.isNumber(option.id) && _.isNumber(option.value);
 		});
 
 		if (!optionsValid) {
@@ -276,7 +339,7 @@ export class PromoMaker extends React.Component {
 	}
 
 	render() {
-		const rowHeight = 47;
+		const rowHeight = 57;
 		const submitDisabled = this.state.isLoading || !this.validate();
 
 		return (
@@ -287,7 +350,7 @@ export class PromoMaker extends React.Component {
 						<select
 							id="promo-maker-merchant"
 							className="form-control"
-							value={this.state.newPromo.merchant_id}
+							value={this.state.newPromo.merchantId}
 							disabled={this.state.isLoading}
 							onChange={this.handleChangeMerchant}
 							>
@@ -297,7 +360,7 @@ export class PromoMaker extends React.Component {
 										value={merchant.id}
 										key={merchant.id}
 										>
-										{merchant.merchant_name}
+										{merchant.name}
 									</option>
 								);
 							})}
@@ -363,7 +426,9 @@ export class PromoMaker extends React.Component {
 						</colgroup>
 						<thead>
 							<tr>
-								<th colSpan="4">Доп. опции</th>
+								<th colSpan="2">Доп. опции</th>
+								<th>Кол-во</th>
+								<th>Цена, ₽</th>
 							</tr>
 						</thead>
 						<tbody>

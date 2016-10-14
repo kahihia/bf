@@ -2,7 +2,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import PromoActions from './promo-actions.js';
+import PromoActions from './../promo/promo-actions.js';
 import PromoItem from './promo-item.jsx';
 import MakeManyInvoicesBtn from './make-many-invoices-btn.jsx';
 
