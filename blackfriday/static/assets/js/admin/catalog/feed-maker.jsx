@@ -339,25 +339,12 @@ const FeedMaker = React.createClass({
 								<label>
 									<input
 										type="checkbox"
-										name="discount"
-										checked={this.state.data.excludes.indexOf('discount') >= 0}
-										disabled={this.state.isLoading}
-										onChange={this.handleChangeExcludes}
-										/>
-									Discount
-								</label>
-							</div>
-
-							<div className="checkbox">
-								<label>
-									<input
-										type="checkbox"
 										name="url"
 										checked={this.state.data.excludes.indexOf('url') >= 0}
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									url
+									{'<url>'}
 								</label>
 							</div>
 
@@ -370,7 +357,7 @@ const FeedMaker = React.createClass({
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									url_cat
+									{'<url_cat>'}
 								</label>
 							</div>
 
@@ -383,7 +370,7 @@ const FeedMaker = React.createClass({
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									url_shop
+									{'<url_shop>'}
 								</label>
 							</div>
 
@@ -396,7 +383,7 @@ const FeedMaker = React.createClass({
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									legal_info
+									{'<legal_info>'}
 								</label>
 							</div>
 						</div>
@@ -405,25 +392,12 @@ const FeedMaker = React.createClass({
 								<label>
 									<input
 										type="checkbox"
-										name="logo_tag"
-										checked={this.state.data.excludes.indexOf('logo_tag') >= 0}
+										name="logo"
+										checked={this.state.data.excludes.indexOf('logo') >= 0}
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									logo
-								</label>
-							</div>
-
-							<div className="checkbox">
-								<label>
-									<input
-										type="checkbox"
-										name="startprice"
-										checked={this.state.data.excludes.indexOf('startprice') >= 0}
-										disabled={this.state.isLoading}
-										onChange={this.handleChangeExcludes}
-										/>
-									startprice
+									{'<param name="logo">'}
 								</label>
 							</div>
 
@@ -436,7 +410,7 @@ const FeedMaker = React.createClass({
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									param name="price2"
+									{'<param name="price2">'}
 								</label>
 							</div>
 
@@ -449,20 +423,7 @@ const FeedMaker = React.createClass({
 										disabled={this.state.isLoading}
 										onChange={this.handleChangeExcludes}
 										/>
-									param name="bannerskidka"
-								</label>
-							</div>
-
-							<div className="checkbox">
-								<label>
-									<input
-										type="checkbox"
-										name="logo"
-										checked={this.state.data.excludes.indexOf('logo') >= 0}
-										disabled={this.state.isLoading}
-										onChange={this.handleChangeExcludes}
-										/>
-									param name="logo"
+									{'<param name="bannerskidka">'}
 								</label>
 							</div>
 						</div>
