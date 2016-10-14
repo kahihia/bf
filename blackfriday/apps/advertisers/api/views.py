@@ -145,9 +145,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             if len(cat_list) > len(set(cat_list)):
                 raise BadRequest('Значения не должны повторяться')
 
-            cats = Category.objects.filter(id__in=cat_list)
-            if request.user.role == 'advertiser':
-                cats = cats.filter(Q(merchant__isnull=True) | Q(merchant__advertiser=self.request.user))
+            cats = Category.objects.filter(Q(merchant__isnull=True) | Q(merchant=merchant), id__in=cat_list)
 
             if cats.count() < len(cat_list):
                 raise BadRequest('Не все ключи присутствуют в базе')

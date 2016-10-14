@@ -34,10 +34,9 @@ class BannerSerializer(BannerDetailSerializer):
 
     def validate_categories(self, value):
         request = self.context['request']
-        if request.user.role == 'advertiser':
-            for cat in value:
-                if cat.merchant and cat.merchant != request.user:
-                    raise ValidationError('Категория недоступна')
+        for cat in value:
+            if cat.merchant and cat.merchant.advertiser != request.user:
+                raise ValidationError('Категория недоступна')
         return value
 
     def save(self, **kwargs):
