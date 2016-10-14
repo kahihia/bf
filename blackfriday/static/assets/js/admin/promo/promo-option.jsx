@@ -1,3 +1,4 @@
+/* global _ */
 /* eslint no-useless-escape: 0 */
 /* eslint react/require-optimization: 0 */
 
@@ -23,32 +24,33 @@ export default class PromoOption extends React.Component {
 			included: !this.state.included
 		}, function () {
 			if (this.state.included) {
-				let optionToInclude;
+				let optionToInclude = {
+					id: this.state.data.id,
+					isRequired: this.props.isRegular,
+					price: parseInt(this.state.data.value, 10) || null
+				};
 
 				if (this.props.isRegular) {
-					if (this.state.data.type === 'Boolean') {
-						optionToInclude = {
-							id: this.state.data.id,
-							value: true,
-							price: null
-						};
+					if (this.state.data.isBoolean) {
+						_.assign(optionToInclude, {
+							value: 1
+						});
 					} else {
-						optionToInclude = {
-							id: this.state.data.id,
-							value: parseInt(this.state.data.value, 10) || null,
-							price: parseInt(this.state.data.value, 10) || null
-						};
+						_.assign(optionToInclude, {
+							value: parseInt(this.state.data.value, 10) || null
+						});
 					}
 				} else {
-					optionToInclude = {
-						id: this.state.data.id,
-						value: (this.state.data.type === 'Boolean') || parseInt(this.state.data.value, 10) || null,
-						price: parseInt(this.state.data.value, 10) || null
-					};
+					_.assign(optionToInclude, {
+						value: parseInt(this.state.data.value, 10) || null
+					});
 				}
 				promoActions.optionIncluded(optionToInclude);
 			} else {
-				promoActions.optionExcluded({id: this.state.data.id});
+				promoActions.optionExcluded({
+					id: this.state.data.id,
+					isRequired: this.props.isRegular
+				});
 			}
 		});
 	}
@@ -70,7 +72,8 @@ export default class PromoOption extends React.Component {
 			promoActions.optionChanged({
 				id: this.state.data.id,
 				value: this.state.data.value,
-				price: price
+				price: price,
+				isRequired: this.props.isRegular
 			});
 		});
 	}
@@ -92,7 +95,7 @@ export default class PromoOption extends React.Component {
 	render() {
 		let display;
 
-		if (this.state.data.type === 'Boolean') {
+		if (this.state.data.isBoolean) {
 			display = this.state.included ? (<i className="text-success glyphicon glyphicon-ok"/>) : '–';
 		} else {
 			display = (
@@ -102,7 +105,7 @@ export default class PromoOption extends React.Component {
 					style={{fontSize: 14}}
 					value={this.state.data.value}
 					min="0"
-					max={this.state.data.available}
+					max={this.state.data.maxValue}
 					disabled={!this.state.included}
 					onChange={this.handleChangeValue}
 					/>
@@ -132,7 +135,7 @@ export default class PromoOption extends React.Component {
 					{display}
 				</td>
 				<td className="">
-					{(this.state.data.type === 'Boolean' || this.props.isRegular) ? null : priceInput}
+					{(this.state.data.isBoolean || this.props.isRegular) ? null : priceInput}
 				</td>
 			</tr>
 		);

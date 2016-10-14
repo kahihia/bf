@@ -47,7 +47,7 @@ import ReactDOM from 'react-dom';
 
 	const promoMaker = document.getElementById('promo-maker');
 	if (promoMaker) {
-		let PromoMaker = require('./admin/administrator/promo-maker').PromoMaker;
+		let PromoMaker = require('./admin/promo/promo-maker').PromoMaker;
 		ReactDOM.render(<PromoMaker/>, promoMaker);
 	}
 
