@@ -104,6 +104,7 @@ def test_post_given_valid_list_expect_201_product_created(
 
 def test_put_given_invalid_data_expect_400(
         admin_logged_client, merchant, product_with_default_cat, fake_image_response):
+
     with patch('requests.head', return_value=fake_image_response):
         response = admin_logged_client.put(
             reverse('api:catalog:products-detail', args=(merchant.id, product_with_default_cat.id)),

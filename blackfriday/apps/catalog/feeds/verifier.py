@@ -68,17 +68,19 @@ class ProductRow(Row):
             'name', pipes=(str,),
             validators=(Required(), Length(rule=255))),
         Grouped(
-            [
+            columns=(
+                Column(
+                    'old_price', pipes=(float, int),
+                    validators=(IsNumeric(),)),
+                Column(
+                    'price', pipes=(float, int),
+                    validators=(IsNumeric(),)),
+            ),
+            validators=(
                 GenericValidator(message='Оба поля должны быть валидны', rule=together),
                 GenericValidator(
                     message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
-            ],
-            Column(
-                'old_price', pipes=(float, int),
-                validators=(IsNumeric(),)),
-            Column(
-                'price', pipes=(float, int),
-                validators=(IsNumeric(),)),
+            ),
         ),
         Column(
             'discount', pipes=(float, int),
