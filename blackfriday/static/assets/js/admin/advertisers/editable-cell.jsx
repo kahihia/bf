@@ -82,30 +82,28 @@ class EditableCell extends React.Component {
 						<div className="arrow"/>
 
 						<div className="popover-content">
-							{values.map(item => {
-								return (
-									<p key={item.name}>
-										{item.type === 'textarea' ? (
-											<textarea
-												value={this.getStateValueByName(item.name).value}
-												className="form-control"
-												name={item.name}
-												onChange={this.handleChange}
-												rows="6"
-												/>
-										) : (
-											<input
-												value={this.getStateValueByName(item.name).value}
-												className="form-control"
-												type={item.type || 'text'}
-												name={item.name}
-												onChange={this.handleChange}
-												onKeyUp={this.handleKeyUp}
-												/>
-										)}
-									</p>
-								);
-							})}
+							{values.map(item => (
+								<p key={item.name}>
+									{item.type === 'textarea' ? (
+										<textarea
+											value={this.getStateValueByName(item.name).value || ''}
+											className="form-control"
+											name={item.name}
+											onChange={this.handleChange}
+											rows="6"
+											/>
+									) : (
+										<input
+											value={this.getStateValueByName(item.name).value || ''}
+											className="form-control"
+											type={item.type || 'text'}
+											name={item.name}
+											onChange={this.handleChange}
+											onKeyUp={this.handleKeyUp}
+											/>
+									)}
+								</p>
+							))}
 
 							<p className="text-right">
 								<button

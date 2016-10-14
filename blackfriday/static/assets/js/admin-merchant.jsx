@@ -361,6 +361,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 					<MerchantProductList
 						{...{
+							availableCategories,
 							id
 						}}
 						/>

@@ -238,7 +238,7 @@ class ShopUploadedGoods extends React.Component {
 				}
 			} else {
 				toastr.error('Не удалось загрузить товары');
-				jQuery('.modal-goods-uploading-waiting').modal('hide');
+				jQuery('.products-uploading-waiting-modal').modal('hide');
 			}
 		});
 	}
@@ -361,7 +361,7 @@ class ShopUploadedGoods extends React.Component {
 						onClick={this.handleClickGoodsSave}
 						disabled={isInvalid || this.state.isUploading}
 						data-toggle="modal"
-						data-target=".modal-goods-uploading-waiting"
+						data-target=".products-uploading-waiting-modal"
 						>
 						{this.state.isUploading ? 'Загрузка...' : 'Подтвердить'}
 					</button>

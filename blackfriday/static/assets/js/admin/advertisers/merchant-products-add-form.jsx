@@ -5,6 +5,7 @@ import React from 'react';
 import xhr from 'xhr';
 import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
+import IsLoadingProgressBar from '../components/is-loading-progress-bar.jsx';
 
 class MerchantProductsAddForm extends Form {
 	constructor(props) {
@@ -74,6 +75,11 @@ class MerchantProductsAddForm extends Form {
 	}
 
 	render() {
+		const {
+			isLoading
+		} = this.state;
+		const disabled = isLoading || !this.validate();
+
 		const form = ref => {
 			this.form = ref;
 		};
@@ -88,12 +94,15 @@ class MerchantProductsAddForm extends Form {
 						>
 						{this.buildRow('file')}
 					</form>
+
+					{isLoading ? <IsLoadingProgressBar/> : null}
 				</div>
 
 				<div className="modal-footer">
 					<button
 						className="btn btn-default"
 						data-dismiss="modal"
+						disabled={disabled}
 						type="button"
 						>
 						{'Отмена'}
@@ -102,7 +111,7 @@ class MerchantProductsAddForm extends Form {
 					<button
 						className="btn btn-primary"
 						onClick={this.handleClickSubmit}
-						disabled={this.state.isLoading || !this.validate()}
+						disabled={disabled}
 						type="button"
 						>
 						{'Загрузить'}

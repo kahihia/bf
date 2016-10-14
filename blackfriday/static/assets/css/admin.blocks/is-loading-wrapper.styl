@@ -1,0 +1,19 @@
+.is-loading-wrapper
+	position: relative
+
+	&__indicator
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		left: 0
+		background-color: #fff
+		visibility: hidden
+		opacity: 0
+		transition: opacity ease 0.15s, visibility ease 0.15s
+
+	&_loading
+		.is-loading-wrapper
+			&__indicator
+				visibility: visible
+				opacity: 0.5

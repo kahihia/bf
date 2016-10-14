@@ -38,3 +38,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def owner_id(self):
+        return self.merchant.advertiser_id

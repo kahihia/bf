@@ -1,57 +1,222 @@
+/* global toastr _ */
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import Price from 'react-price';
-import {formatPrice} from '../utils.js';
+import xhr from 'xhr';
+import {TOKEN, SORT_TYPES} from '../const.js';
+import {formatPrice, processErrors} from '../utils.js';
+import Select from '../components/select.jsx';
 import SortHeaderCell from '../components/sort-header-cell.jsx';
 import EditableCell from './editable-cell.jsx';
+import IsLoadingWrapper from '../components/is-loading-wrapper.jsx';
 
 class ProductsTable extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
-			colSortDirs: {}
+			colSortDirs: {},
+			isLoading: false,
+			products: props.products,
+			queue: 0
 		};
 
 		this.handleSelectAllProducts = this.handleSelectAllProducts.bind(this);
 		this.handleSortChange = this.handleSortChange.bind(this);
 		this.handleSelectProduct = this.handleSelectProduct.bind(this);
 		this.handleChangeProduct = this.handleChangeProduct.bind(this);
-		this.handleChangeProductTeaser = this.handleChangeProductTeaser.bind(this);
-		this.handleChangeProductOnMain = this.handleChangeProductOnMain.bind(this);
+		this.handleChangeGroupCategory = this.handleChangeGroupCategory.bind(this);
+	}
+
+	componentWillReceiveProps(newProps) {
+		this.setState({products: newProps.products});
 	}
 
 	handleSelectAllProducts() {
+		const isAllSelected = !this.isAllSelected();
+		this.state.products.forEach(product => {
+			product.isSelected = isAllSelected;
+		});
+		this.forceUpdate();
 	}
 
-	handleSortChange() {
+	handleSortChange(columnKey, sortDir) {
+		const {products} = this.state;
+
+		products.sort((indexA, indexB) => {
+			const valueA = indexA[columnKey];
+			const valueB = indexB[columnKey];
+			let sortVal = 0;
+			if (valueA > valueB) {
+				sortVal = 1;
+			}
+			if (valueA < valueB) {
+				sortVal = -1;
+			}
+			if (sortVal !== 0 && sortDir === SORT_TYPES.ASC) {
+				sortVal *= -1;
+			}
+
+			return sortVal;
+		});
+
+		this.setState({
+			colSortDirs: {
+				[columnKey]: sortDir
+			},
+			products
+		});
 	}
 
-	handleSelectProduct() {
+	handleSelectProduct(productId, isSelected) {
+		this.getProductById(productId).isSelected = isSelected;
+		this.forceUpdate();
 	}
 
-	handleChangeProduct() {
+	handleChangeProduct(productId, productData) {
+		this.requestChangeProduct(productId, productData);
 	}
 
-	handleChangeProductTeaser() {
+	handleChangeGroupCategory(categoryName) {
+		const selectedProducts = this.state.products.reduce((a, b) => {
+			if (b.isSelected) {
+				a.push(b.id);
+			}
+			return a;
+		}, []);
+
+		this.requestChangeGroupCategory(selectedProducts, categoryName);
 	}
 
-	handleChangeProductOnMain() {
+	requestChangeProduct(productId, productData) {
+		if (!this.state.isLoading) {
+			this.setState({isLoading: true});
+		}
+
+		const item = this.getProductById(productId);
+		const reducedProduct = _.pick(item, [
+			'name',
+			'image',
+			'price',
+			'startPrice',
+			'oldPrice',
+			'discount',
+			'country',
+			'brand',
+			'url',
+			'currency',
+			'isTeaser',
+			'isTeaserOnMain'
+		]);
+		reducedProduct.category = item.category.name;
+		reducedProduct.currency = 'rur';
+		productData.forEach(data => {
+			reducedProduct[data.name] = data.value;
+		});
+
+		const {merchantId} = this.props;
+		const json = reducedProduct;
+
+		xhr({
+			url: `/api/merchants/${merchantId}/products/${productId}/`,
+			method: 'PUT',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			const {queue} = this.state;
+			const newQueue = queue ? queue - 1 : queue;
+
+			this.setState({
+				isLoading: false,
+				queue: newQueue
+			});
+
+			switch (resp.statusCode) {
+				case 200: {
+					this.productUpdate(data, Boolean(newQueue));
+					break;
+				}
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось обновить товар');
+					break;
+				}
+			}
+		});
+	}
+
+	requestChangeGroupCategory(productIds, categoryName) {
+		this.setState({
+			queue: productIds.length
+		}, () => {
+			productIds.forEach(productId => {
+				this.requestChangeProduct(productId, [{
+					name: 'category',
+					value: categoryName
+				}]);
+			});
+		});
+	}
+
+	getProductById(id) {
+		return _.find(this.state.products, {id});
+	}
+
+	productUpdate(product, silent) {
+		const {products} = this.state;
+		const item = _.find(products, {id: product.id});
+		const index = _.findIndex(products, item);
+		products.splice(index, 1, product);
+
+		if (silent) {
+			return;
+		}
+		this.forceUpdate();
 	}
 
 	isAllSelected() {
-		const isFalse = Boolean(this.props.products.filter(product => !product.isSelected).length);
+		const isFalse = Boolean(this.state.products.filter(product => !product.isSelected).length);
 		return !isFalse;
 	}
 
+	isAnySelected() {
+		return Boolean(_.find(this.state.products, {isSelected: true}));
+	}
+
 	render() {
-		const {colSortDirs} = this.state;
-		const {products} = this.props;
+		const {
+			colSortDirs,
+			isLoading,
+			products,
+			queue
+		} = this.state;
+		const {
+			availableCategories
+		} = this.props;
 		const isAllSelected = this.isAllSelected();
+		const isAnySelected = this.isAnySelected();
+		const isWaiting = isLoading || Boolean(queue);
+
+		const availableCategoryOptions = availableCategories.reduce((a, b) => {
+			a[b.name] = b.name;
+			return a;
+		}, {none: ''});
 
 		return (
-			<div className="">
-				<table className="table products-table">
+			<IsLoadingWrapper isLoading={isWaiting}>
+				<CategoryChanger
+					availableCategories={availableCategoryOptions}
+					onChange={this.handleChangeGroupCategory}
+					disabled={!isAnySelected}
+					/>
+
+				<table className="table table-hover products-table">
 					<thead>
 						<tr>
 							<th>
@@ -71,11 +236,6 @@ class ProductsTable extends React.Component {
 									>
 									{'Название'}
 								</SortHeaderCell>
-							</th>
-							<th>
-								<span>
-									{'Описание'}
-								</span>
 							</th>
 							<th>
 								<span>
@@ -128,26 +288,28 @@ class ProductsTable extends React.Component {
 					<tbody>
 						{products.map(product => (
 							<ProductsTableRow
-								key={product.data._id}
-								id={product.data._id}
-								data={product.data}
+								key={product.id}
+								id={product.id}
+								data={product}
 								isSelected={product.isSelected}
+								availableCategories={availableCategoryOptions}
 								onSelect={this.handleSelectProduct}
 								onChange={this.handleChangeProduct}
-								onChangeTeaser={this.handleChangeProductTeaser}
-								onChangeTeaserOnMain={this.handleChangeProductOnMain}
 								/>
 						))}
 					</tbody>
 				</table>
-			</div>
+			</IsLoadingWrapper>
 		);
 	}
 }
 ProductsTable.propTypes = {
+	merchantId: React.PropTypes.number,
+	availableCategories: React.PropTypes.array,
 	products: React.PropTypes.array
 };
 ProductsTable.defaultProps = {
+	availableCategories: []
 };
 
 export default ProductsTable;
@@ -159,6 +321,7 @@ class ProductsTableRow extends React.Component {
 
 		this.handleSelect = this.handleSelect.bind(this);
 		this.handleChangeCell = this.handleChangeCell.bind(this);
+		this.handleChangeCategory = this.handleChangeCategory.bind(this);
 		this.handleChangeTeaser = this.handleChangeTeaser.bind(this);
 		this.handleChangeTeaserOnMain = this.handleChangeTeaserOnMain.bind(this);
 	}
@@ -180,7 +343,7 @@ class ProductsTableRow extends React.Component {
 			});
 			values.push({
 				name: 'startPrice',
-				value: false
+				value: null
 			});
 		} else if (firstValueName === 'oldPrice' || firstValueName === 'price') {
 			values.push({
@@ -194,35 +357,38 @@ class ProductsTableRow extends React.Component {
 
 	handleChangeCategory(value) {
 		this.props.onChange(this.props.id, [{
-			name: 'categoryId',
-			value: value
-		}]);
-	}
-
-	handleChangeStartprice() {
-		this.props.onChange(this.props.id, [{
-			name: 'startPrice',
-			value: !this.props.data.startPrice
+			name: 'category',
+			value
 		}]);
 	}
 
 	handleChangeTeaser() {
-		this.props.onChangeTeaser(this.props.id);
+		this.props.onChange(this.props.id, [{
+			name: 'isTeaser',
+			value: !this.props.data.isTeaser
+		}]);
 	}
 
 	handleChangeTeaserOnMain() {
-		this.props.onChangeTeaserOnMain(this.props.id);
+		this.props.onChange(this.props.id, [{
+			name: 'isTeaserOnMain',
+			value: !this.props.data.isTeaserOnMain
+		}]);
 	}
 
 	render() {
-		const data = this.props.data;
+		const {
+			availableCategories,
+			data,
+			isSelected
+		} = this.props;
 
 		return (
 			<tr>
 				<td>
 					<input
 						type="checkbox"
-						checked={this.props.isSelected}
+						checked={isSelected}
 						onChange={this.handleSelect}
 						/>
 				</td>
@@ -252,23 +418,18 @@ class ProductsTableRow extends React.Component {
 				<td>
 					<EditableCell
 						values={[{
-							name: 'description',
-							value: data.description,
-							type: 'textarea'
+							name: 'startPrice',
+							value: data.startPrice
 						}]}
 						onChange={this.handleChangeCell}
 						>
-						{data.description}
+						{data.startPrice || data.startPrice === 0 ? (
+							<Price
+								cost={formatPrice(data.startPrice)}
+								currency="₽"
+								/>
+						) : null}
 					</EditableCell>
-				</td>
-				<td>
-					{(data.price || data.price === 0) && (data.oldPrice || data.oldPrice === 0) ? (
-						<input
-							type="checkbox"
-							onChange={this.handleChangeStartprice}
-							checked={data.startPrice}
-							/>
-					) : null}
 				</td>
 				<td>
 					<EditableCell
@@ -278,7 +439,6 @@ class ProductsTableRow extends React.Component {
 						}]}
 						onChange={this.handleChangeCell}
 						>
-						{data.startPrice ? 'от ' : null}
 						{data.oldPrice || data.oldPrice === 0 ? (
 							<Price
 								cost={formatPrice(data.oldPrice)}
@@ -296,7 +456,6 @@ class ProductsTableRow extends React.Component {
 						}]}
 						onChange={this.handleChangeCell}
 						>
-						{data.startPrice ? 'от ' : null}
 						{data.price || data.price === 0 ? (
 							<strong>
 								<Price
@@ -318,6 +477,7 @@ class ProductsTableRow extends React.Component {
 						<strong>
 							{data.discount}
 						</strong>
+
 						{data.discount ? ' %' : null}
 					</EditableCell>
 				</td>
@@ -349,7 +509,11 @@ class ProductsTableRow extends React.Component {
 						/>
 				</td>
 				<td>
-					{data.category}
+					<Select
+						options={availableCategories}
+						selected={data.category.name}
+						onChange={this.handleChangeCategory}
+						/>
 				</td>
 				<td>
 					<EditableCell
@@ -380,10 +544,91 @@ ProductsTableRow.propTypes = {
 	id: React.PropTypes.number.isRequired,
 	data: React.PropTypes.object.isRequired,
 	isSelected: React.PropTypes.bool,
+	availableCategories: React.PropTypes.object,
 	onSelect: React.PropTypes.func.isRequired,
-	onChange: React.PropTypes.func.isRequired,
-	onChangeTeaser: React.PropTypes.func.isRequired,
-	onChangeTeaserOnMain: React.PropTypes.func.isRequired
+	onChange: React.PropTypes.func.isRequired
 };
 ProductsTableRow.defaultProps = {
+	isSelected: false
 };
+
+const CategoryChanger = React.createClass({
+	propTypes: {
+		availableCategories: React.PropTypes.object.isRequired,
+		onChange: React.PropTypes.func.isRequired,
+		disabled: React.PropTypes.bool
+	},
+
+	getDefaultProps() {
+		return {
+			disabled: true
+		};
+	},
+
+	getInitialState() {
+		return {
+			categoryId: 'none'
+		};
+	},
+
+	componentWillReceiveProps(newProps) {
+		if (this.state.categoryId === 'none') {
+			const firstCategory = newProps.availableCategories[0];
+			if (firstCategory) {
+				this.setState({categoryId: firstCategory.id});
+			}
+		}
+	},
+
+	handleChangeCategory(categoryId) {
+		this.setState({categoryId});
+	},
+
+	handleClickChange() {
+		this.props.onChange(this.state.categoryId);
+	},
+
+	render() {
+		const {
+			categoryId
+		} = this.state;
+		const {
+			availableCategories,
+			disabled
+		} = this.props;
+
+		return (
+			<div className="form-inline">
+				<div
+					className="form-group"
+					style={{paddingTop: 7}}
+					>
+					<span
+						className="control-label"
+						style={{marginRight: 5}}
+						>
+						{'Изменить категорию для выбранных товаров'}
+					</span>
+
+					<Select
+						className="form-control"
+						style={{marginRight: 5}}
+						options={availableCategories}
+						selected={categoryId}
+						onChange={this.handleChangeCategory}
+						disabled={disabled}
+						/>
+
+					<button
+						onClick={this.handleClickChange}
+						className="btn btn-primary"
+						type="button"
+						disabled={disabled || categoryId === 'none'}
+						>
+						{'Изменить'}
+					</button>
+				</div>
+			</div>
+		);
+	}
+});

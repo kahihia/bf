@@ -18,14 +18,14 @@ class MerchantProductList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			allowedCategories: [],
 			isLoading: false,
 			products: [],
 			productsNew: []
 		};
 
 		this.handleClickProductsAdd = this.handleClickProductsAdd.bind(this);
-		this.handleClickDelete = this.handleClickDelete.bind(this);
+		this.handleClickProductsDelete = this.handleClickProductsDelete.bind(this);
+		this.handleSubmitProductsNew = this.handleSubmitProductsNew.bind(this);
 	}
 
 	componentWillMount() {
@@ -46,7 +46,7 @@ class MerchantProductList extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					this.setState({products: data});
+					this.setState({products: _.sortBy(data, 'id')});
 					break;
 				}
 				case 400: {
@@ -116,10 +116,17 @@ class MerchantProductList extends React.Component {
 		this.openMerchantProductsAddModal();
 	}
 
-	handleClickDelete() {
+	handleClickProductsDelete() {
 		if (window.confirm('Удалить товары?')) {
 			this.requestProductsDelete();
 		}
+	}
+
+	handleSubmitProductsNew(products) {
+		this.setState({
+			productsNew: [],
+			products
+		});
 	}
 
 	getProductById(id) {
@@ -135,11 +142,12 @@ class MerchantProductList extends React.Component {
 
 	render() {
 		const {
-			allowedCategories,
+			isLoading,
 			products,
 			productsNew
 		} = this.state;
 		const {
+			availableCategories,
 			id
 		} = this.props;
 
@@ -159,26 +167,44 @@ class MerchantProductList extends React.Component {
 							<button
 								className="btn btn-default"
 								onClick={this.handleClickProductsAdd}
+								disabled={isLoading}
 								type="button"
 								>
 								{'Загрузить'}
 							</button>
+
+							{products.length ? (
+								<span>
+									{' '}
+
+									<button
+										className="btn btn-danger"
+										onClick={this.handleClickProductsDelete}
+										disabled={isLoading}
+										type="button"
+										>
+										{'Удалить'}
+									</button>
+								</span>
+							) : null}
 						</p>
 
 						{productsNew.length ? (
 							<ProductsNewTable
 								products={productsNew}
 								merchantId={id}
+								onSubmit={this.handleSubmitProductsNew}
 								{...{
-									allowedCategories
+									availableCategories
 								}}
 								/>
 						) : null}
 
 						{products.length ? (
 							<ProductsTable
+								merchantId={id}
 								{...{
-									allowedCategories,
+									availableCategories,
 									products
 								}}
 								/>
@@ -190,6 +216,7 @@ class MerchantProductList extends React.Component {
 	}
 }
 MerchantProductList.propTypes = {
+	availableCategories: React.PropTypes.array,
 	id: React.PropTypes.number.isRequired
 };
 MerchantProductList.defaultProps = {
