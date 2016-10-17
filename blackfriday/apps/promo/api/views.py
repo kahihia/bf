@@ -31,8 +31,8 @@ class PromoViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.R
     filter_class = PromoFilter
 
     def perform_destroy(self, instance):
-        if instance.is_custom and not instance.invoices.exists():
-            super().perform_destroy(instance)
+        if instance.is_custom and not instance.invoice_set.exists():
+            return super().perform_destroy(instance)
         raise PermissionDenied
 
 
