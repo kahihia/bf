@@ -89,7 +89,7 @@ class ProductViewSet(
         result = []
         failed = False
         for row in request.data:
-            cleaned_data, errors, warnings = FeedParser().parse_feed(row)
+            cleaned_data, errors, warnings = FeedParser(merchant_id=self.get_merchant().id).parse_feed(row)
             if errors and not failed:
                 failed = True
             result.append({
@@ -117,7 +117,10 @@ class ProductViewSet(
     def update(self, request, *args, **kwargs):
         self.validate_schema(request.data, in_list=False)
         instance = self.get_object()
-        cleaned_data, errors, warnings = FeedParser(_id_required=False).parse_feed(request.data)
+        cleaned_data, errors, warnings = FeedParser(
+            merchant_id=self.get_merchant().id,
+            id_required=False
+        ).parse_feed(request.data)
         result = {
             'id': instance.id,
             'data': cleaned_data,
@@ -154,7 +157,7 @@ class ProductViewSet(
         if f is None:
             raise BadRequest('file is required')
         result = []
-        for counter, row in enumerate(FeedParser(f)):
+        for counter, row in enumerate(FeedParser(merchant_id=self.get_merchant().id)):
             cleaned_data, errors, warnings = row
             result.append({
                 'data': cleaned_data,
@@ -170,7 +173,7 @@ class ProductViewSet(
         for row in request.data:
             # in this case we get data from frontend, it could be parsed data on client side,
             # so we need save given identifiers
-            cleaned_data, errors, warnings = FeedParser().parse_feed(row)
+            cleaned_data, errors, warnings = FeedParser(merchant_id=self.get_merchant().id).parse_feed(row)
             result.append({
                 'data': cleaned_data,
                 'errors': errors,
