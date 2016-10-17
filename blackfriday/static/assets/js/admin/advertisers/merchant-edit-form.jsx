@@ -6,6 +6,7 @@ import xhr from 'xhr';
 import {TOKEN} from '../const.js';
 import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
+import MerchantDescriptionEditor from './merchant-description-editor.jsx';
 
 const className = 'merchant-edit-form';
 
@@ -141,6 +142,8 @@ class MerchantEditForm extends Form {
 					{this.buildRow('slug')}
 					{this.buildRow('description')}
 					{this.buildRow('promocode')}
+
+					<MerchantDescriptionEditor/>
 				</form>
 			</div>
 		);
