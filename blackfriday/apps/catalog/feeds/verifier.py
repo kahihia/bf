@@ -38,7 +38,12 @@ def duplicate_product_urls(url, context):
 
 def clear_category(category, context):
     merchant_id = context.get('merchant_id')
-    if not (category, merchant_id) or (category.lower(), merchant_id) not in context['categories']:
+    if not category or any(
+        map(
+            lambda x: x not in context['categories'],
+            [(category, merchant_id), (category.lower(), merchant_id)]
+        )
+    ):
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
