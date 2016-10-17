@@ -21,6 +21,8 @@ def together(**cleaned_data):
 def old_price_gte_price(old_price, price):
     if not old_price and not price:
         return None
+    if not isinstance(old_price, int) or not isinstance(price, int):
+        return False
     return bool(price and old_price and price < old_price)
 
 
@@ -35,7 +37,13 @@ def duplicate_product_urls(url, context):
 
 
 def clear_category(category, context):
-    if not category or category.lower() not in context['categories']:
+    merchant_id = context.get('merchant_id')
+    if not category or any(
+        map(
+            lambda x: x not in context['categories'],
+            [(category, merchant_id), (category.lower(), merchant_id)]
+        )
+    ):
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
@@ -118,7 +126,12 @@ class FeedParser:
         self.attach = attach
         self.context = {
             'product_urls': set(),
-            'categories': list(map(str.lower, Category.objects.values_list('name', flat=True)))
+            'categories': list(
+                map(
+                    lambda c: (str.lower(c.name), c.merchant_id),
+                    Category.objects.all()
+                )
+            )
         }
         for key, value in kwargs.items():
             self.context[key] = value

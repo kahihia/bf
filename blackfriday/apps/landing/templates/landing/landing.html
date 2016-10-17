@@ -972,7 +972,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="bxslider-multi">
                 {% for partner in partner_list %}
                     <div class="new-59-partners__slide">
-                        <img src="{{ SITE_URL }}{{ partner.image.url }}" alt="">
+                        <a href="{{ partner.url }}" target="_blank" class="partners-section__link">
+                            <img src="{{ SITE_URL }}{{ partner.image.url }}" alt="">
+                        </a>
                     </div>
                 {% endfor %}
             </div>

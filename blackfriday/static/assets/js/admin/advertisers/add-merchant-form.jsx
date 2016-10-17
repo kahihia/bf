@@ -21,7 +21,7 @@ class AddMerchantForm extends Form {
 			url: {
 				label: 'Ссылка',
 				value: null,
-				defaultValue: null
+				required: true
 			}
 		};
 

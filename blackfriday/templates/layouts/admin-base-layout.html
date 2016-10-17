@@ -127,6 +127,11 @@
                                     Конструктор пакетов
                                 </a>
                             </li>
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'specials:special-list' %}">
+                                    Предложения партнёров
+                                </a>
+                            </li>
 
                         {# Manager Menu #}
                         {% elif user.role == 'manager' %}
@@ -161,6 +166,11 @@
                             <li class="simple-menu__item">
                                 <a class="simple-menu__link" href="{% url 'advertisers:profile' %}">
                                     Реквизиты
+                                </a>
+                            </li>
+                            <li class="simple-menu__item">
+                                <a class="simple-menu__link" href="{% url 'specials:special-list' %}">
+                                    Предложения партнёров
                                 </a>
                             </li>
 
