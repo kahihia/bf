@@ -4,12 +4,15 @@
 import React from 'react';
 import Price from 'react-price';
 import xhr from 'xhr';
+import b from 'b_';
 import {TOKEN, SORT_TYPES} from '../const.js';
 import {formatPrice, processErrors} from '../utils.js';
 import Select from '../components/select.jsx';
 import SortHeaderCell from '../components/sort-header-cell.jsx';
 import EditableCell from './editable-cell.jsx';
 import IsLoadingWrapper from '../components/is-loading-wrapper.jsx';
+
+const className = 'products-table';
 
 class ProductsTable extends React.Component {
 	constructor(props) {
@@ -216,10 +219,10 @@ class ProductsTable extends React.Component {
 					disabled={!isAnySelected}
 					/>
 
-				<table className="table table-hover products-table">
+				<table className={'table table-hover ' + b(className, 'table')}>
 					<thead>
 						<tr>
-							<th>
+							<th className={b(className, 'table-th', {name: 'select'})}>
 								<span>
 									<input
 										type="checkbox"
@@ -228,7 +231,8 @@ class ProductsTable extends React.Component {
 										/>
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'name'})}>
 								<SortHeaderCell
 									onSortChange={this.handleSortChange}
 									columnKey="name"
@@ -237,47 +241,56 @@ class ProductsTable extends React.Component {
 									{'Название'}
 								</SortHeaderCell>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'startprice'})}>
 								<span>
 									{'Цена от'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'oldprice'})}>
 								<span>
 									{'Старая цена'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'price'})}>
 								<span>
 									{'Цена'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'discount'})}>
 								<span>
 									{'Скидка'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'country'})}>
 								<span>
 									{'Страна производства'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'teaser'})}>
 								<span>
 									{'Товар на главной'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
 								<span>
 									{'Тизер на первом экране'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'category'})}>
 								<span>
 									{'Категория'}
 								</span>
 							</th>
-							<th>
+
+							<th className={b(className, 'table-th', {name: 'image'})}>
 								<span>
 									{'Картинка'}
 								</span>
@@ -304,8 +317,8 @@ class ProductsTable extends React.Component {
 	}
 }
 ProductsTable.propTypes = {
-	merchantId: React.PropTypes.number,
 	availableCategories: React.PropTypes.array,
+	merchantId: React.PropTypes.number,
 	products: React.PropTypes.array
 };
 ProductsTable.defaultProps = {
@@ -385,14 +398,15 @@ class ProductsTableRow extends React.Component {
 
 		return (
 			<tr>
-				<td>
+				<td className={b(className, 'table-td', {name: 'select'})}>
 					<input
 						type="checkbox"
 						checked={isSelected}
 						onChange={this.handleSelect}
 						/>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'name'})}>
 					<EditableCell
 						values={[
 							{
@@ -415,7 +429,8 @@ class ProductsTableRow extends React.Component {
 						</a>
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'startprice'})}>
 					<EditableCell
 						values={[{
 							name: 'startPrice',
@@ -431,7 +446,8 @@ class ProductsTableRow extends React.Component {
 						) : null}
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'oldprice'})}>
 					<EditableCell
 						values={[{
 							name: 'oldPrice',
@@ -448,7 +464,8 @@ class ProductsTableRow extends React.Component {
 						) : null}
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'price'})}>
 					<EditableCell
 						values={[{
 							name: 'price',
@@ -466,7 +483,8 @@ class ProductsTableRow extends React.Component {
 						) : null}
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'discount'})}>
 					<EditableCell
 						values={[{
 							name: 'discount',
@@ -481,7 +499,8 @@ class ProductsTableRow extends React.Component {
 						{data.discount ? ' %' : null}
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'country'})}>
 					<EditableCell
 						values={[{
 							name: 'country',
@@ -492,7 +511,8 @@ class ProductsTableRow extends React.Component {
 						{data.country}
 					</EditableCell>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'teaser'})}>
 					<input
 						type="checkbox"
 						name="isTeaser"
@@ -500,7 +520,8 @@ class ProductsTableRow extends React.Component {
 						onChange={this.handleChangeTeaser}
 						/>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'teaser-on-main'})}>
 					<input
 						type="checkbox"
 						name="isTeaserOnMain"
@@ -508,14 +529,16 @@ class ProductsTableRow extends React.Component {
 						onChange={this.handleChangeTeaserOnMain}
 						/>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'category'})}>
 					<Select
 						options={availableCategories}
 						selected={data.category.name}
 						onChange={this.handleChangeCategory}
 						/>
 				</td>
-				<td>
+
+				<td className={b(className, 'table-td', {name: 'image'})}>
 					<EditableCell
 						values={[
 							{
@@ -528,10 +551,7 @@ class ProductsTableRow extends React.Component {
 						{data.image ? (
 							<img
 								src={data.image}
-								className="img-thumbnail"
 								alt=""
-								width="50"
-								height="50"
 								/>
 						) : null}
 					</EditableCell>
@@ -598,7 +618,7 @@ const CategoryChanger = React.createClass({
 		} = this.props;
 
 		return (
-			<div className="form-inline">
+			<div className="form-inline category-changer">
 				<div
 					className="form-group"
 					style={{paddingTop: 7}}
