@@ -3,28 +3,15 @@
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
+import Price from 'react-price';
 import xhr from 'xhr';
 import b from 'b_';
-import Price from 'react-price';
-import {TOKEN} from '../const.js';
+import {FEED_CELL, TOKEN} from '../const.js';
 import {formatPrice, processErrors} from '../utils.js';
 import Select from '../components/select.jsx';
 import EditableCell from './editable-cell.jsx';
-import Popover from '../components/popover.jsx';
-import Glyphicon from '../components/glyphicon.jsx';
-
-const FEED_CELL = {
-	name: 'Название',
-	url: 'URL',
-	startPrice: 'Цена от',
-	oldPrice: 'Старая цена',
-	price: 'Цена',
-	discount: 'Скидка',
-	country: 'Страна производства',
-	brand: 'Производитель',
-	category: 'Категория',
-	image: 'Картинка'
-};
+import ProductsTableCell from './products-table-cell.jsx';
+import IsLoadingWrapper from '../components/is-loading-wrapper.jsx';
 
 const className = 'products-table';
 
@@ -34,6 +21,7 @@ class ProductsNewTable extends React.Component {
 
 		this.state = {
 			products: props.products,
+			isLoading: false,
 			isUploading: false
 		};
 
@@ -57,14 +45,17 @@ class ProductsNewTable extends React.Component {
 	}
 
 	requestChangeProduct(productId, productData) {
-		const reducedProducts = this.state.products.map(product => product.data);
-		const item = _.find(reducedProducts, {_id: productId});
-		const index = _.findIndex(reducedProducts, item);
-		const clonedProducts = _.cloneDeep(reducedProducts);
-		clonedProducts.splice(index, 1, productData);
+		this.setState({isLoading: true});
+
+		const clonedProduct = _.cloneDeep(productData);
+		_.forEach(clonedProduct, (i, k) => {
+			if (clonedProduct[k] === '') {
+				clonedProduct[k] = null;
+			}
+		});
 
 		const {merchantId} = this.props;
-		const json = clonedProducts;
+		const json = [clonedProduct];
 
 		xhr({
 			url: `/api/merchants/${merchantId}/products/verify/`,
@@ -74,9 +65,10 @@ class ProductsNewTable extends React.Component {
 			},
 			json
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
 			switch (resp.statusCode) {
 				case 200: {
-					this.setState({products: data});
+					this.productUpdate(productId, data[0]);
 					break;
 				}
 				case 400: {
@@ -130,6 +122,18 @@ class ProductsNewTable extends React.Component {
 		return _.find(this.state.products, product => product.data._id === id);
 	}
 
+	productUpdate(productId, productData) {
+		const {
+			products
+		} = this.state;
+
+		const product = this.getProductById(productId);
+		const index = _.findIndex(products, product);
+		products.splice(index, 1, productData);
+
+		this.forceUpdate();
+	}
+
 	isInvalid() {
 		let isInvalid = false;
 		_.forEach(this.state.products, product => {
@@ -144,6 +148,7 @@ class ProductsNewTable extends React.Component {
 
 	render() {
 		const {
+			isLoading,
 			isUploading,
 			products
 		} = this.state;
@@ -151,6 +156,7 @@ class ProductsNewTable extends React.Component {
 			availableCategories
 		} = this.props;
 		const isInvalid = this.isInvalid();
+		const isWaiting = isLoading;
 
 		const availableCategoryOptions = availableCategories.reduce((a, b) => {
 			a[b.name] = b.name;
@@ -182,83 +188,85 @@ class ProductsNewTable extends React.Component {
 
 		return (
 			<div className="goods-control">
-				{uploadPanel}
+				<IsLoadingWrapper isLoading={isWaiting}>
+					{uploadPanel}
 
-				<table className={'table table-hover ' + b(className, 'table')}>
-					<thead>
-						<tr>
-							<th className={b(className, 'table-th', {name: 'name'})}>
-								<span>
-									{FEED_CELL.name}
-								</span>
-							</th>
+					<table className={'table table-hover ' + b(className, 'table')}>
+						<thead>
+							<tr>
+								<th className={b(className, 'table-th', {name: 'name'})}>
+									<span>
+										{FEED_CELL.name}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'startprice'})}>
-								<span>
-									{FEED_CELL.startPrice}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'startprice'})}>
+									<span>
+										{FEED_CELL.startPrice}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'oldprice'})}>
-								<span>
-									{FEED_CELL.oldPrice}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'oldprice'})}>
+									<span>
+										{FEED_CELL.oldPrice}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'price'})}>
-								<span>
-									{FEED_CELL.price}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'price'})}>
+									<span>
+										{FEED_CELL.price}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'discount'})}>
-								<span>
-									{FEED_CELL.discount}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'discount'})}>
+									<span>
+										{FEED_CELL.discount}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'country'})}>
-								<span>
-									{FEED_CELL.country}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'country'})}>
+									<span>
+										{FEED_CELL.country}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'brand'})}>
-								<span>
-									{FEED_CELL.brand}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'brand'})}>
+									<span>
+										{FEED_CELL.brand}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'category'})}>
-								<span>
-									{FEED_CELL.category}
-								</span>
-							</th>
+								<th className={b(className, 'table-th', {name: 'category'})}>
+									<span>
+										{FEED_CELL.category}
+									</span>
+								</th>
 
-							<th className={b(className, 'table-th', {name: 'image'})}>
-								<span>
-									{FEED_CELL.image}
-								</span>
-							</th>
-						</tr>
-					</thead>
+								<th className={b(className, 'table-th', {name: 'image'})}>
+									<span>
+										{FEED_CELL.image}
+									</span>
+								</th>
+							</tr>
+						</thead>
 
-					<tbody>
-						{products.map(product => (
-							<ProductsNewTableRow
-								key={product.data._id}
-								id={product.data._id}
-								data={product.data}
-								errors={product.errors}
-								warnings={product.warnings}
-								availableCategories={availableCategoryOptions}
-								onChange={this.handleChangeProduct}
-								/>
-						))}
-					</tbody>
-				</table>
+						<tbody>
+							{products.map(product => (
+								<ProductsNewTableRow
+									key={product.data._id}
+									id={product.data._id}
+									data={product.data}
+									errors={product.errors}
+									warnings={product.warnings}
+									availableCategories={availableCategoryOptions}
+									onChange={this.handleChangeProduct}
+									/>
+							))}
+						</tbody>
+					</table>
 
-				{uploadPanel}
+					{uploadPanel}
+				</IsLoadingWrapper>
 			</div>
 		);
 	}
@@ -299,7 +307,7 @@ class ProductsNewTableRow extends React.Component {
 	handleChangeCell(values) {
 		const data = _.cloneDeep(this.props.data);
 		values.forEach(item => {
-			data[item.name] = item.value;
+			data[item.name] = item.value === '' ? null : item.value;
 		});
 		this.props.onChange(this.props.id, data);
 	}
@@ -352,19 +360,11 @@ class ProductsNewTableRow extends React.Component {
 
 		return (
 			<tr>
-				<td className={(this.getClassName('name') || this.getClassName('url')) + ' ' + b(className, 'table-td', {name: 'name'})}>
-					<ErrorNotification
-						name="name"
-						errors={errors}
-						warnings={warnings}
-						/>
-
-					<ErrorNotification
-						name="url"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['name', 'url']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[
 							{
@@ -386,14 +386,13 @@ class ProductsNewTableRow extends React.Component {
 							{data.name}
 						</a>
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('startPrice') + ' ' + b(className, 'table-td', {name: 'startprice'})}>
-					<ErrorNotification
-						name="startPrice"
-						errors={errors}
-						warnings={warnings}
-						/>
+				<ProductsTableCell
+					names={['startPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'startPrice',
@@ -408,15 +407,13 @@ class ProductsNewTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('oldPrice') + ' ' + b(className, 'table-td', {name: 'oldprice'})}>
-					<ErrorNotification
-						name="oldPrice"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['oldPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'oldPrice',
@@ -432,15 +429,13 @@ class ProductsNewTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('price') + ' ' + b(className, 'table-td', {name: 'price'})}>
-					<ErrorNotification
-						name="price"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['price']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'price',
@@ -457,15 +452,13 @@ class ProductsNewTableRow extends React.Component {
 							</strong>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('discount') + ' ' + b(className, 'table-td', {name: 'discount'})}>
-					<ErrorNotification
-						name="discount"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['discount']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'discount',
@@ -479,15 +472,13 @@ class ProductsNewTableRow extends React.Component {
 
 						{data.discount ? ' %' : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('country') + ' ' + b(className, 'table-td', {name: 'country'})}>
-					<ErrorNotification
-						name="country"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['country']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'country',
@@ -497,15 +488,13 @@ class ProductsNewTableRow extends React.Component {
 						>
 						{data.country}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('brand') + ' ' + b(className, 'table-td', {name: 'brand'})}>
-					<ErrorNotification
-						name="brand"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['brand']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'brand',
@@ -515,29 +504,25 @@ class ProductsNewTableRow extends React.Component {
 						>
 						{data.brand}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('category') + ' ' + b(className, 'table-td', {name: 'category'})}>
-					<ErrorNotification
-						name="category"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['category']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<Select
 						options={availableCategories}
 						selected={data.category}
 						onChange={this.handleChangeCategory}
 						/>
-				</td>
+				</ProductsTableCell>
 
-				<td className={this.getClassName('image') + ' ' + b(className, 'table-td', {name: 'image'})}>
-					<ErrorNotification
-						name="image"
-						errors={errors}
-						warnings={warnings}
-						/>
-
+				<ProductsTableCell
+					names={['image']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[
 							{
@@ -554,79 +539,20 @@ class ProductsNewTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 			</tr>
 		);
 	}
 }
 ProductsNewTableRow.propTypes = {
-	id: React.PropTypes.number,
+	availableCategories: React.PropTypes.object,
 	data: React.PropTypes.object,
 	errors: React.PropTypes.array,
-	warnings: React.PropTypes.array,
-	availableCategories: React.PropTypes.object,
-	onChange: React.PropTypes.func
+	id: React.PropTypes.number,
+	onChange: React.PropTypes.func,
+	warnings: React.PropTypes.array
 };
 ProductsNewTableRow.defaultProps = {
 	errors: [],
 	warnings: []
 };
-
-class ErrorNotification extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
-
-	render() {
-		const {
-			errors,
-			warnings,
-			name
-		} = this.props;
-
-		if (!errors[name] && !warnings[name]) {
-			return null;
-		}
-
-		return (
-			<span>
-				{errors[name] && errors[name].length ? (
-					<Popover
-						className="text-danger"
-						placement="top"
-						html="true"
-						content={errorNotificationList(errors[name])}
-						>
-						<Glyphicon name="ban-circle"/>
-					</Popover>
-				) : null}
-
-				{warnings[name] && warnings[name].length ? (
-					<Popover
-						className="text-warning"
-						placement="top"
-						html="true"
-						content={errorNotificationList(warnings[name])}
-						>
-						<Glyphicon name="warning-sign"/>
-					</Popover>
-				) : null}
-			</span>
-		);
-	}
-}
-ErrorNotification.propTypes = {
-	name: React.PropTypes.string,
-	errors: React.PropTypes.object,
-	warnings: React.PropTypes.object
-};
-ErrorNotification.defaultProps = {
-};
-
-function errorNotificationList(errors) {
-	let list = '<ul><li>';
-	list += errors.join('</li><li>');
-	list += '</li></ul>';
-	return list;
-}

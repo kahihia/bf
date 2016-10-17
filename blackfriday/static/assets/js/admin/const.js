@@ -84,3 +84,18 @@ export const SORT_TYPES = {
 	ASC: 'ASC',
 	DESC: 'DESC'
 };
+
+export const FEED_CELL = {
+	brand: 'Производитель',
+	category: 'Категория',
+	country: 'Страна производства',
+	discount: 'Скидка',
+	image: 'Картинка',
+	name: 'Название',
+	oldPrice: 'Старая цена',
+	price: 'Цена',
+	startPrice: 'Цена от',
+	teaser: 'Товар на главной',
+	teaserOnMain: 'Тизер на первом экране',
+	url: 'URL'
+};

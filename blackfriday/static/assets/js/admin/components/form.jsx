@@ -81,12 +81,17 @@ class Form extends React.Component {
 	}
 
 	buildRow(name) {
-		const field = this.state.fields[name];
+		const {
+			fields,
+			isLoading
+		} = this.state;
+		const field = fields[name];
 
 		return (
 			<FormRow
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
+				disabled={isLoading}
 				{...{name}}
 				{...field}
 				/>
@@ -94,13 +99,18 @@ class Form extends React.Component {
 	}
 
 	buildCol(name) {
-		const field = this.state.fields[name];
+		const {
+			fields,
+			isLoading
+		} = this.state;
+		const field = fields[name];
 
 		return (
 			<FormCol
 				className="col-xs-6"
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
+				disabled={isLoading}
 				{...{name}}
 				{...field}
 				/>

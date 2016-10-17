@@ -5,11 +5,12 @@ import React from 'react';
 import Price from 'react-price';
 import xhr from 'xhr';
 import b from 'b_';
-import {TOKEN, SORT_TYPES} from '../const.js';
-import {formatPrice, processErrors} from '../utils.js';
+import {FEED_CELL, TOKEN, SORT_TYPES} from '../const.js';
+import {formatPrice} from '../utils.js';
 import Select from '../components/select.jsx';
 import SortHeaderCell from '../components/sort-header-cell.jsx';
 import EditableCell from './editable-cell.jsx';
+import ProductsTableCell from './products-table-cell.jsx';
 import IsLoadingWrapper from '../components/is-loading-wrapper.jsx';
 
 const className = 'products-table';
@@ -22,6 +23,8 @@ class ProductsTable extends React.Component {
 			colSortDirs: {},
 			isLoading: false,
 			products: props.products,
+			errors: {},
+			warnings: {},
 			queue: 0
 		};
 
@@ -117,6 +120,11 @@ class ProductsTable extends React.Component {
 		productData.forEach(data => {
 			reducedProduct[data.name] = data.value;
 		});
+		for (let key in reducedProduct) {
+			if (reducedProduct[key] === '') {
+				reducedProduct[key] = null;
+			}
+		}
 
 		const {merchantId} = this.props;
 		const json = reducedProduct;
@@ -143,7 +151,7 @@ class ProductsTable extends React.Component {
 					break;
 				}
 				case 400: {
-					processErrors(data);
+					this.productUpdateErrors(productId, data, reducedProduct, Boolean(newQueue));
 					break;
 				}
 				default: {
@@ -172,10 +180,46 @@ class ProductsTable extends React.Component {
 	}
 
 	productUpdate(product, silent) {
-		const {products} = this.state;
+		const {
+			products,
+			errors,
+			warnings
+		} = this.state;
+
 		const item = _.find(products, {id: product.id});
 		const index = _.findIndex(products, item);
 		products.splice(index, 1, product);
+
+		errors[product.id] = null;
+		warnings[product.id] = null;
+
+		if (silent) {
+			return;
+		}
+		this.forceUpdate();
+	}
+
+	productUpdateErrors(productId, data, productsChanged, silent) {
+		const {
+			products,
+			errors,
+			warnings
+		} = this.state;
+
+		const item = _.find(products, {id: productId});
+		_.forEach(item, (i, k) => {
+			if (k === 'id') {
+				return;
+			}
+			if (k === 'category') {
+				item[k].name = productsChanged[k];
+				return;
+			}
+			item[k] = productsChanged[k];
+		});
+
+		errors[productId] = data.errors;
+		warnings[productId] = data.warnings;
 
 		if (silent) {
 			return;
@@ -195,9 +239,11 @@ class ProductsTable extends React.Component {
 	render() {
 		const {
 			colSortDirs,
+			errors,
 			isLoading,
 			products,
-			queue
+			queue,
+			warnings
 		} = this.state;
 		const {
 			availableCategories
@@ -238,61 +284,67 @@ class ProductsTable extends React.Component {
 									columnKey="name"
 									sortDir={colSortDirs.name}
 									>
-									{'Название'}
+									{FEED_CELL.name}
 								</SortHeaderCell>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'startprice'})}>
 								<span>
-									{'Цена от'}
+									{FEED_CELL.startPrice}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'oldprice'})}>
 								<span>
-									{'Старая цена'}
+									{FEED_CELL.oldPrice}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'price'})}>
 								<span>
-									{'Цена'}
+									{FEED_CELL.price}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'discount'})}>
 								<span>
-									{'Скидка'}
+									{FEED_CELL.discount}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'country'})}>
 								<span>
-									{'Страна производства'}
+									{FEED_CELL.country}
+								</span>
+							</th>
+
+							<th className={b(className, 'table-th', {name: 'brand'})}>
+								<span>
+									{FEED_CELL.brand}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'teaser'})}>
 								<span>
-									{'Товар на главной'}
+									{FEED_CELL.teaser}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
 								<span>
-									{'Тизер на первом экране'}
+									{FEED_CELL.teaserOnMain}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'category'})}>
 								<span>
-									{'Категория'}
+									{FEED_CELL.category}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'image'})}>
 								<span>
-									{'Картинка'}
+									{FEED_CELL.image}
 								</span>
 							</th>
 						</tr>
@@ -304,6 +356,8 @@ class ProductsTable extends React.Component {
 								key={product.id}
 								id={product.id}
 								data={product}
+								errors={errors[product.id]}
+								warnings={warnings[product.id]}
 								isSelected={product.isSelected}
 								availableCategories={availableCategoryOptions}
 								onSelect={this.handleSelectProduct}
@@ -330,13 +384,63 @@ export default ProductsTable;
 class ProductsTableRow extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		const {errors, warnings} = props;
+		this.state = {
+			errors: this.processErrors(errors),
+			warnings: this.processErrors(warnings)
+		};
 
 		this.handleSelect = this.handleSelect.bind(this);
 		this.handleChangeCell = this.handleChangeCell.bind(this);
 		this.handleChangeCategory = this.handleChangeCategory.bind(this);
 		this.handleChangeTeaser = this.handleChangeTeaser.bind(this);
 		this.handleChangeTeaserOnMain = this.handleChangeTeaserOnMain.bind(this);
+	}
+
+	componentWillReceiveProps(newProps) {
+		const {errors, warnings} = newProps;
+		this.setState({
+			errors: this.processErrors(errors),
+			warnings: this.processErrors(warnings)
+		});
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		let isChanged = false;
+
+		if (JSON.stringify(this.state.errors) !== JSON.stringify(nextState.errors)) {
+			isChanged = true;
+		}
+
+		if (JSON.stringify(this.state.warnings) !== JSON.stringify(nextState.warnings)) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(this.props.availableCategories, nextProps.availableCategories)) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(this.props.errors, nextProps.errors)) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(this.props.warnings, nextProps.warnings)) {
+			isChanged = true;
+		}
+
+		if (this.props.isSelected !== nextProps.isSelected) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(this.props.data, nextProps.data)) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(this.props.data.category, nextProps.data.category)) {
+			isChanged = true;
+		}
+
+		return isChanged;
 	}
 
 	handleSelect() {
@@ -389,7 +493,23 @@ class ProductsTableRow extends React.Component {
 		}]);
 	}
 
+	processErrors(errors) {
+		if (!errors) {
+			return {};
+		}
+
+		return errors.reduce((a, b) => {
+			if (!a[b.field]) {
+				a[b.field] = [];
+			}
+			a[b.field].push(b.message);
+
+			return a;
+		}, {});
+	}
+
 	render() {
+		const {errors, warnings} = this.state;
 		const {
 			availableCategories,
 			data,
@@ -406,7 +526,11 @@ class ProductsTableRow extends React.Component {
 						/>
 				</td>
 
-				<td className={b(className, 'table-td', {name: 'name'})}>
+				<ProductsTableCell
+					names={['name', 'url']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[
 							{
@@ -428,9 +552,13 @@ class ProductsTableRow extends React.Component {
 							{data.name}
 						</a>
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'startprice'})}>
+				<ProductsTableCell
+					names={['startPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'startPrice',
@@ -445,9 +573,13 @@ class ProductsTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'oldprice'})}>
+				<ProductsTableCell
+					names={['oldPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'oldPrice',
@@ -463,9 +595,13 @@ class ProductsTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'price'})}>
+				<ProductsTableCell
+					names={['price']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'price',
@@ -482,9 +618,13 @@ class ProductsTableRow extends React.Component {
 							</strong>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'discount'})}>
+				<ProductsTableCell
+					names={['discount']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'discount',
@@ -498,9 +638,13 @@ class ProductsTableRow extends React.Component {
 
 						{data.discount ? ' %' : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'country'})}>
+				<ProductsTableCell
+					names={['country']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[{
 							name: 'country',
@@ -510,7 +654,23 @@ class ProductsTableRow extends React.Component {
 						>
 						{data.country}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
+
+				<ProductsTableCell
+					names={['brand']}
+					errors={errors}
+					warnings={warnings}
+					>
+					<EditableCell
+						values={[{
+							name: 'brand',
+							value: data.brand
+						}]}
+						onChange={this.handleChangeCell}
+						>
+						{data.brand}
+					</EditableCell>
+				</ProductsTableCell>
 
 				<td className={b(className, 'table-td', {name: 'teaser'})}>
 					<input
@@ -530,15 +690,23 @@ class ProductsTableRow extends React.Component {
 						/>
 				</td>
 
-				<td className={b(className, 'table-td', {name: 'category'})}>
+				<ProductsTableCell
+					names={['category']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<Select
 						options={availableCategories}
 						selected={data.category.name}
 						onChange={this.handleChangeCategory}
 						/>
-				</td>
+				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'image'})}>
+				<ProductsTableCell
+					names={['image']}
+					errors={errors}
+					warnings={warnings}
+					>
 					<EditableCell
 						values={[
 							{
@@ -555,18 +723,20 @@ class ProductsTableRow extends React.Component {
 								/>
 						) : null}
 					</EditableCell>
-				</td>
+				</ProductsTableCell>
 			</tr>
 		);
 	}
 }
 ProductsTableRow.propTypes = {
-	id: React.PropTypes.number.isRequired,
-	data: React.PropTypes.object.isRequired,
-	isSelected: React.PropTypes.bool,
 	availableCategories: React.PropTypes.object,
+	data: React.PropTypes.object.isRequired,
+	errors: React.PropTypes.array,
+	id: React.PropTypes.number.isRequired,
+	isSelected: React.PropTypes.bool,
+	onChange: React.PropTypes.func.isRequired,
 	onSelect: React.PropTypes.func.isRequired,
-	onChange: React.PropTypes.func.isRequired
+	warnings: React.PropTypes.array
 };
 ProductsTableRow.defaultProps = {
 	isSelected: false

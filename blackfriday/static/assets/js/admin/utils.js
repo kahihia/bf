@@ -42,10 +42,10 @@ export function processErrors(errors) {
 }
 
 function process(errors) {
-	if (_.isObject(errors)) {
-		processObject(errors);
-	} else if (_.isArray(errors)) {
+	if (_.isArray(errors)) {
 		processArray(errors);
+	} else if (_.isObject(errors)) {
+		processObject(errors);
 	} else if (_.isString(errors)) {
 		processString(errors);
 	}
