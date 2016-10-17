@@ -47,13 +47,13 @@ import ReactDOM from 'react-dom';
 
 	const promoMaker = document.getElementById('promo-maker');
 	if (promoMaker) {
-		let PromoMaker = require('./admin/administrator/promo-maker').PromoMaker;
+		let PromoMaker = require('./admin/promo/promo-maker').PromoMaker;
 		ReactDOM.render(<PromoMaker/>, promoMaker);
 	}
 
 	const feedMaker = document.getElementById('feed-maker');
 	if (feedMaker) {
-		let FeedMaker = require('./admin/administrator/feed-maker');
+		let FeedMaker = require('./admin/catalog/feed-maker');
 		ReactDOM.render(<FeedMaker/>, feedMaker);
 	}
 

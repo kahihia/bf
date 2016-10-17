@@ -24,12 +24,12 @@ export default class PreDefinedPromoTable extends React.Component {
 						return (
 							<tr style={{height: self.props.rowHeight}} key={option.id}>
 								{self.props.promoList.map(function (promo) {
-									const opt = _.find(promo.items, o => {
-										return o.option === option.option;
+									const opt = _.find(promo.options, o => {
+										return o.id === option.id;
 									});
 									let displayValue;
 
-									if (opt.type === 'Boolean') {
+									if (opt.isBoolean) {
 										displayValue = opt.value ?
 											(<i className="text-success glyphicon glyphicon-ok"/>) :
 											'–';

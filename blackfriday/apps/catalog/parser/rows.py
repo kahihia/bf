@@ -1,14 +1,21 @@
 import inspect
+from apps.catalog.parser.utils import camelcase_error_output
 
 
 class Column(object):
-    def __init__(self, field, pipes=None, validators=None):
+    def __init__(self, field, pipes=None, validators=None, error_output=None):
         self.pipes = pipes or []
         self.validators = validators or []
         self.field = field
+        self._error_output = error_output
 
     def __str__(self):
         return self.field
+
+    def error_output(self, field, message):
+        if self._error_output:
+            return self._error_output(field, message)
+        return camelcase_error_output(field, message)
 
     def clean_value(self, value, context):
         if value is None and not (self.pipes and hasattr(self.pipes[0], 'null') and self.pipes[0].null):
@@ -39,18 +46,21 @@ class Column(object):
                 kwargs['context'] = context
 
             if validator(**kwargs) is False:
-                result = {
-                    'field': self.field,
-                    'message': validator.message
-                }
+                result = self.error_output(self.field, validator.message)
                 warnings.append(result) if validator.is_warning else errors.append(result)
         return {self.field: value}, errors, warnings
 
 
 class Grouped(object):
-    def __init__(self, validators=None, *columns):
+    def __init__(self, columns, validators=None, error_output=None):
         self.columns = columns
         self.validators = validators or []
+        self._error_output = error_output
+
+    def error_output(self, field, message):
+        if self._error_output:
+            return self._error_output(field, message)
+        return camelcase_error_output(field, message)
 
     def validate(self, row, context):
         errors = []
@@ -63,12 +73,7 @@ class Grouped(object):
             cleaned_data.update(data)
         for validator in self.validators:
             if validator(**cleaned_data, context=context) is False:
-                result = [
-                    {
-                        'field': col.field,
-                        'message': validator.message
-                    } for col in self.columns
-                ]
+                result = [self.error_output(col.field, validator.message) for col in self.columns]
                 warnings.extend(result) if validator.is_warning else errors.extend(result)
 
         return cleaned_data, errors, warnings

@@ -13,6 +13,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
 
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAdmin, IsAuthenticated, ReadOnly, IsAdvertiser, IsOwner
@@ -23,6 +24,7 @@ from ..models import Product, Category
 from ..feeds.verifier import FeedParser
 from ..feeds.generator import FeedGenerator
 
+from .filters import CategoryFilter
 from .serializers import CategorySerializer, ProductSerializer
 
 
@@ -30,6 +32,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated, IsAdmin | ReadOnly]
+    filter_class = CategoryFilter
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -45,12 +48,14 @@ class ProductViewSet(
     permission_classes = [IsAuthenticated, IsAdvertiser & IsOwner | IsAdmin]
     serializer_class = ProductSerializer
 
-    def dispatch(self, request, *args, **kwargs):
-        self.merchant = Merchant.objects.get(id=kwargs.get('merchant_pk'))
-        return super().dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        return super().get_queryset().filter(merchant=self.get_merchant())
+
+    def get_merchant(self):
+        return get_object_or_404(Merchant, pk=self.kwargs.get('merchant_pk'))
 
     def delete(self, request, *args, **kwargs):
-        self.queryset.filter(merchant_id=self.merchant.id).delete()
+        self.queryset.filter(merchant=self.get_merchant()).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def validate_schema(self, data, in_list=True):
@@ -79,6 +84,7 @@ class ProductViewSet(
             raise ValidationError('invalid schema')
 
     def create(self, request, *args, **kwargs):
+        merchant = self.get_merchant()
         self.validate_schema(request.data)
         result = []
         failed = False
@@ -101,7 +107,7 @@ class ProductViewSet(
         qs = [
             Product(
                 category_id=categories[str.lower(row['data'].get('category', settings.DEFAULT_CATEGORY_NAME))],
-                merchant_id=self.merchant.id,
+                merchant=merchant,
                 **{key: value for key, value in row['data'].items() if key not in ['category', '_id']},
             ) for row in result
         ]
