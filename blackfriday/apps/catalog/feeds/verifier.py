@@ -2,6 +2,7 @@ import logging
 import requests
 
 from django.conf import settings
+from django.db.models import Q
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
     Length, Required, UtmRequired
@@ -35,8 +36,7 @@ def duplicate_product_urls(url, context):
 
 
 def clear_category(category, context):
-    merchant_id = context.get('merchant_id')
-    if not (category, merchant_id) or (category.lower(), merchant_id) not in context['categories']:
+    if category not in context['categories']:
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
@@ -121,8 +121,10 @@ class FeedParser:
             'product_urls': set(),
             'categories': list(
                 map(
-                    lambda c: (str.lower(c.name), c.merchant_id),
-                    Category.objects.all()
+                    str.lower,
+                    Category.objects.filter(
+                        Q(merchant_id=kwargs.get('merchant_id')) | Q(merchant__isnull=True)
+                    ).values_list('name', flat=True)
                 )
             )
         }
