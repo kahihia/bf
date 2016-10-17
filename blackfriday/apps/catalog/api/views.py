@@ -157,7 +157,7 @@ class ProductViewSet(
         if f is None:
             raise BadRequest('file is required')
         result = []
-        for counter, row in enumerate(FeedParser(merchant_id=self.get_merchant().id)):
+        for counter, row in enumerate(FeedParser(f, merchant_id=self.get_merchant().id)):
             cleaned_data, errors, warnings = row
             result.append({
                 'data': cleaned_data,
