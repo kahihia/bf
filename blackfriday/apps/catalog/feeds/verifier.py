@@ -35,7 +35,8 @@ def duplicate_product_urls(url, context):
 
 
 def clear_category(category, context):
-    if not category or category.lower() not in context['categories']:
+    merchant_id = context.get('merchant_id')
+    if not (category, merchant_id) or (category.lower(), merchant_id) not in context['categories']:
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
@@ -118,7 +119,12 @@ class FeedParser:
         self.attach = attach
         self.context = {
             'product_urls': set(),
-            'categories': list(map(str.lower, Category.objects.values_list('name', flat=True)))
+            'categories': list(
+                map(
+                    lambda c: (str.lower(c.name), c.merchant_id),
+                    Category.objects.all()
+                )
+            )
         }
         for key, value in kwargs.items():
             self.context[key] = value
