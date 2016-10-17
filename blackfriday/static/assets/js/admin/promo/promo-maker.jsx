@@ -277,10 +277,18 @@ export class PromoMaker extends React.Component {
 							headers: {
 								'X-CSRFToken': TOKEN.csrftoken
 							}
-						}, (err, resp) => {
+						}, (err, resp, data) => {
 							if (!err && resp.statusCode === 201) {
 								window.location.href = `/admin/merchants/${merchantId}/`;
 							} else {
+								if ((resp.statusCode === 400) && ('nonFieldErrors' in data)) {
+									this.setState({
+										isLoading: false
+									}, () => {
+										toastr.error(`Не удалось создать рекламный пакет. ${data.nonFieldErrors}`);
+									});
+								}
+
 								const url = `/api/promos/${promoId}/`;
 
 								xhr.del(url, {
@@ -296,6 +304,18 @@ export class PromoMaker extends React.Component {
 								});
 							}
 						});
+					} else if ((resp.statusCode === 400) && ('name' in data)) {
+						this.setState({
+							isLoading: false
+						}, () => {
+							toastr.error('Не удалось создать рекламный пакет. Пакет с таким названием уже существует.');
+						});
+					} else if ((resp.statusCode === 400) && ('nonFieldErrors' in data)) {
+						this.setState({
+							isLoading: false
+						}, () => {
+							toastr.error(`Не удалось создать рекламный пакет. ${data.nonFieldErrors}`);
+						});
 					} else {
 						this.setState({
 							isLoading: false
@@ -309,13 +329,21 @@ export class PromoMaker extends React.Component {
 	}
 
 	validate() {
+		function validatePrice(price) {
+			return (
+				_.isNull(price) ||
+				(_.isNumber(price) && (price >= 0)) ||
+				(_.isString(price) && /^\d+$/.test(price))
+			);
+		}
+
 		const newPromo = this.state.newPromo;
 
 		if (!_.isNumber(newPromo.merchantId)) {
 			return false;
 		}
 
-		if (!newPromo.price) {
+		if (!newPromo.price || !validatePrice(newPromo.price)) {
 			return false;
 		}
 
@@ -328,7 +356,7 @@ export class PromoMaker extends React.Component {
 		}
 
 		const optionsValid = _.every(_.union(newPromo.options, newPromo.extraOptions), option => {
-			return _.isNumber(option.id) && _.isNumber(option.value);
+			return _.isNumber(option.id) && _.isNumber(option.value) && validatePrice(option.price);
 		});
 
 		if (!optionsValid) {
