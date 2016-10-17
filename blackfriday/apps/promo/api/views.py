@@ -5,6 +5,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 from rest_framework import viewsets, mixins
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
 from libs.api.permissions import ReadOnly, IsAuthenticated, IsAdmin, IsAdvertiser
@@ -23,11 +24,16 @@ class OptionViewSet(viewsets.ReadOnlyModelViewSet):
     filter_class = OptionFilter
 
 
-class PromoViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
+class PromoViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated, ReadOnly | IsAdmin]
     queryset = Promo.objects.all()
     serializer_class = PromoSerializer
     filter_class = PromoFilter
+
+    def perform_destroy(self, instance):
+        if instance.is_custom and not instance.invoice_set.exists():
+            return super().perform_destroy(instance)
+        raise PermissionDenied
 
 
 class CustomPromoRequestsViewSet(viewsets.GenericViewSet):
