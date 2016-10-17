@@ -21,6 +21,8 @@ def together(**cleaned_data):
 def old_price_gte_price(old_price, price):
     if not old_price and not price:
         return None
+    if not isinstance(old_price, int) or not isinstance(price, int):
+        return False
     return bool(price and old_price and price < old_price)
 
 
