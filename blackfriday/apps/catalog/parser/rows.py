@@ -67,8 +67,8 @@ class Grouped(object):
         warnings = []
         cleaned_data = {}
         for col in self.columns:
-            data, errors, warnings = col.validate(row, context=context)
-            errors.extend(errors)
+            data, _errors, warnings = col.validate(row, context=context)
+            errors.extend(_errors)
             warnings.extend(warnings)
             cleaned_data.update(data)
         for validator in self.validators:
