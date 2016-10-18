@@ -97,9 +97,11 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
 
 class AdvertiserTinySerializer(serializers.ModelSerializer):
+    is_supernova = serializers.BooleanField()
+
     class Meta:
         model = User
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'is_supernova')
 
 
 class MerchantModerationSerializer(serializers.ModelSerializer):
