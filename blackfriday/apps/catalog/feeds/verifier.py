@@ -98,7 +98,7 @@ class ProductRow(Row):
             'brand', pipes=(str,),
             validators=(Required(),)),
         Column(
-            'category', pipes=(clear_category,), validators=(Required(is_warning=True),)),
+            'category', pipes=(str, str.lower, clear_category,), validators=(Required(is_warning=True),)),
         Column(
             'country', pipes=(str, str.lower),
             validators=(Required(), Length(rule=255))),
