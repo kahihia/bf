@@ -55,6 +55,10 @@ const CategoryList = React.createClass({
 								{'Ссылка'}
 							</th>
 
+							<th className={b(className, 'table-th', {name: 'merchant'})}>
+								{'Для магазина'}
+							</th>
+
 							<th className={b(className, 'table-th', {name: 'edit'})}/>
 						</tr>
 					</thead>
@@ -83,6 +87,7 @@ const CategoryListItem = React.createClass({
 		id: React.PropTypes.number,
 		name: React.PropTypes.string,
 		slug: React.PropTypes.string,
+		merchant: React.PropTypes.object,
 		onClickEdit: React.PropTypes.func
 	},
 
@@ -96,6 +101,7 @@ const CategoryListItem = React.createClass({
 
 	render() {
 		const {id, name, slug} = this.props;
+		const merchantNameOrMdash = this.props.merchant ? this.props.merchant.name : '—';
 		const link = `${getFullUrl('categories')}${slug}/`;
 		const className = 'category-list';
 
@@ -113,6 +119,10 @@ const CategoryListItem = React.createClass({
 					<a href={link}>
 						{link}
 					</a>
+				</td>
+
+				<td className={b(className, 'table-td', {name: 'merchant'})}>
+					{merchantNameOrMdash}
 				</td>
 
 				<td className={b(className, 'table-td', {name: 'edit'})}>
