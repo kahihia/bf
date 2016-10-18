@@ -97,7 +97,7 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
 
 class AdvertiserTinySerializer(serializers.ModelSerializer):
-    is_supernova = serializers.BooleanField()
+    is_supernova = serializers.BooleanField(source='profile.is_supernova')
 
     class Meta:
         model = User
