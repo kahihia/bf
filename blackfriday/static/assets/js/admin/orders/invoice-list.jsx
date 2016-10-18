@@ -55,7 +55,7 @@ export class InvoiceList extends React.Component {
 
 	requestInvoices() {
 		xhr({
-			url: '/api/invoices/',
+			url: '/api/invoices/?exclude_supervova=1',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
