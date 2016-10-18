@@ -102,7 +102,7 @@ class AdvertiserTinySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'is_supernova')
+        fields = ('id', 'name', 'is_supernova', 'inner')
 
 
 class MerchantModerationSerializer(serializers.ModelSerializer):
