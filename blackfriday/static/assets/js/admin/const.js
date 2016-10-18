@@ -101,3 +101,5 @@ export const FEED_CELL = {
 };
 
 export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;
+
+export const SILVER_PROMO_ID = 2;
