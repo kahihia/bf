@@ -55,4 +55,4 @@ def test_clear_category_given_unregognizable_category_expect_default_category():
 
 
 def test_clear_category_given_existing_category_expect_category():
-    assert clear_category('foo', {'categories': [('foo', None)]}) == 'foo'
+    assert clear_category('foo', {'categories': ['foo']}) == 'foo'
