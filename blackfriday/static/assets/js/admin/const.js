@@ -99,3 +99,5 @@ export const FEED_CELL = {
 	teaserOnMain: 'Тизер на первом экране',
 	url: 'URL'
 };
+
+export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;

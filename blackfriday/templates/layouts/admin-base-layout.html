@@ -302,6 +302,7 @@ window.ENV = {
     imgStaticBaseUrl: '/',
     userId: {{ user.id }},
     userRoles: ['{{ user.role }}'],
+    advertiserIsSupernova: {% if user.profile and user.profile.is_supernova %}true{% else %}false{% endif %},
     siteUrl: '{{ SITE_URL }}'
 };
 </script>

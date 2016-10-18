@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {TOKEN} from './admin/const.js';
+import {TOKEN, ADVERTISER_IS_SUPERNOVA} from './admin/const.js';
 import {hasRole} from './admin/utils.js';
 import MerchantListFilter from './admin/advertisers/merchant-list-filter.jsx';
 import ViewSwitcher from './admin/advertisers/view-switcher.jsx';
@@ -270,7 +270,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 
 			return (
 				<div>
-					{isAdmin || isAdvertiser ? (
+					{isAdmin || (isAdvertiser && !ADVERTISER_IS_SUPERNOVA) ? (
 						<div>
 							<button
 								className="btn btn-success"
