@@ -22,6 +22,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 		getInitialState() {
 			return {
 				merchants: [],
+				isLoading: false,
 				filterByName: '',
 				filterByStatus: '',
 				filterByDate: 'ASC',
@@ -37,11 +38,15 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 		},
 
 		requestMerchants() {
+			this.setState({isLoading: true});
+
 			xhr({
 				url: '/api/merchants/',
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
 				if (!err && resp.statusCode === 200) {
 					if (data) {
 						const merchants = _.sortBy(data, 'id');
@@ -351,6 +356,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 					{view === 'list' ? (
 						<MerchantList
 							merchants={filteredMerchants}
+							isLoading={this.state.isLoading}
 							onClickMerchantDelete={this.handleClickMerchantDelete}
 							onClickMerchantHide={this.handleClickMerchantHide}
 							/>

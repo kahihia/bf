@@ -21,8 +21,29 @@ class MerchantList extends React.Component {
 	}
 
 	render() {
-		const {merchants} = this.props;
+		const {merchants, isLoading} = this.props;
 		const className = 'merchant-list';
+
+		let listStatus = null;
+
+		if (!merchants.length) {
+			if (isLoading) {
+				listStatus = 'Загрузка...';
+			} else {
+				listStatus = 'Магазины отсутствуют';
+			}
+		}
+
+		const statusRow = (
+			<tr>
+				<td
+					colSpan="5"
+					className="text-center text-muted"
+					>
+					{listStatus}
+				</td>
+			</tr>
+		);
 
 		return (
 			<div className={b(className)}>
@@ -60,6 +81,8 @@ class MerchantList extends React.Component {
 									/>
 							);
 						})}
+
+						{listStatus ? statusRow : null}
 					</tbody>
 				</table>
 			</div>
@@ -68,6 +91,7 @@ class MerchantList extends React.Component {
 }
 MerchantList.propTypes = {
 	merchants: React.PropTypes.array,
+	isLoading: React.PropTypes.bool,
 	onClickMerchantDelete: React.PropTypes.func,
 	onClickMerchantHide: React.PropTypes.func
 };
