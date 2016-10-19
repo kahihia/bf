@@ -57,7 +57,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                     attrs['type'] = attrs['inner']
                 elif self.instance and self.instance.inner:
                     attrs['type'] = AdvertiserType.REGULAR
-                print(attrs)
 
             if 'is_supernova' in attrs:
                 if attrs['is_supernova']:
