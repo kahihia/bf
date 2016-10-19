@@ -3,8 +3,10 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {HEAD_BASIS, TOKEN} from '../const.js';
+import {HEAD_BASIS, TOKEN, ADVERTISER_INNER, ADVERTISER_IS_SUPERNOVA, ADVERTISER_INNER_VALUES} from '../const.js';
+import {hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
+import Checkbox from '../components/checkbox.jsx';
 
 const PHONE_MASK = '+7 (111) 111-11-11';
 const DEFAULT_BASIS = 0;
@@ -12,6 +14,18 @@ const DEFAULT_BASIS = 0;
 class MerchantProfileForm extends Form {
 	constructor(props) {
 		super(props);
+
+		const isSpecialAdvertiser = ADVERTISER_INNER || ADVERTISER_IS_SUPERNOVA;
+		const innerOptions = _.union(
+			[{id: '', name: '- нет -'}],
+			_.map(ADVERTISER_INNER_VALUES, inner => {
+				return {
+					id: inner,
+					name: inner
+				};
+			})
+		);
+
 		this.state = {
 			isLoading: false,
 			profileId: '',
@@ -19,22 +33,26 @@ class MerchantProfileForm extends Form {
 				account: {
 					label: 'Расчётный счёт',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				address: {
 					label: 'Фактический адрес',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				bank: {
 					label: 'Наименование банка',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				bik: {
 					label: 'БИК',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				contactName: {
 					label: 'ФИО ответственного лица',
@@ -50,7 +68,8 @@ class MerchantProfileForm extends Form {
 				headAppointment: {
 					label: 'Должность руководителя',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				headBasis: {
 					label: 'На основании чего действует руководитель',
@@ -59,43 +78,66 @@ class MerchantProfileForm extends Form {
 					valueType: 'Number',
 					options: HEAD_BASIS,
 					type: 'select',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				headName: {
 					label: 'ФИО руководителя',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				inn: {
 					label: 'ИНН',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				korr: {
 					label: 'Корр. счёт',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				kpp: {
 					label: 'КПП',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				legalAddress: {
 					label: 'Юридический адрес',
 					value: '',
-					required: true
+					required: true,
+					excluded: isSpecialAdvertiser
 				},
 				name: {
 					label: 'Наименование юридического лица',
 					value: '',
 					required: true,
 					excluded: true
+				},
+				inner: {
+					label: 'Особый признак',
+					value: null,
+					defaultValue: null,
+					type: 'select',
+					options: innerOptions,
+					required: false,
+					excluded: isSpecialAdvertiser
+				},
+				isSupernova: {
+					text: '«Сверхновая»',
+					value: false,
+					type: 'checkbox',
+					excluded: isSpecialAdvertiser
 				}
 			}
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+		this.handleChangeInner = this.handleChangeInner.bind(this);
+		this.handleChangeIsSupernova = this.handleChangeIsSupernova.bind(this);
 	}
 
 	componentDidMount() {
@@ -190,6 +232,10 @@ class MerchantProfileForm extends Form {
 			profile: this.serialize()
 		};
 
+		if (!json.profile.inner) {
+			json.profile.inner = null;
+		}
+
 		xhr({
 			url: `/api/advertisers/${this.state.profileId}/`,
 			method: 'PATCH',
@@ -227,6 +273,10 @@ class MerchantProfileForm extends Form {
 			profile: this.serialize()
 		};
 
+		if (!json.profile.inner) {
+			json.profile.inner = null;
+		}
+
 		xhr({
 			url: `/api/advertisers/${this.props.userId}/`,
 			method: 'PATCH',
@@ -250,6 +300,50 @@ class MerchantProfileForm extends Form {
 		});
 	}
 
+	handleChangeInner(value) {
+		const untouchableFields = ['name', 'contactName', 'contactPhone', 'isSupernova'];
+
+		this.setState(prevState => {
+			prevState.fields.isSupernova.value = false;
+			prevState.fields.inner.value = value;
+
+			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
+				if (!_.includes(untouchableFields, field)) {
+					conf.required = !value;
+				}
+				return conf;
+			});
+
+			return prevState;
+		});
+	}
+
+	handleChangeIsSupernova(value) {
+		const untouchableFields = ['name', 'contactName', 'contactPhone', 'inner'];
+
+		this.setState(prevState => {
+			prevState.fields.isSupernova.value = value;
+			prevState.fields.inner.value = null;
+
+			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
+				if (!_.includes(untouchableFields, field)) {
+					conf.required = !value;
+				}
+				return conf;
+			});
+
+			return prevState;
+		});
+	}
+
+	updateData(name, value) {
+		super.updateData(name, value);
+
+		if (name === 'inner') {
+			this.handleChangeInner(value);
+		}
+	}
+
 	handleClickSubmit(e) {
 		e.preventDefault();
 
@@ -264,6 +358,9 @@ class MerchantProfileForm extends Form {
 		const {profileId, isLoading} = this.state;
 		const {userId, readOnly} = this.props;
 		const isValid = this.validate();
+		const isAdmin = hasRole('admin');
+		const isSpecialAdvertiser = ADVERTISER_INNER || ADVERTISER_IS_SUPERNOVA;
+		const showField = !(isSpecialAdvertiser || this.state.fields.inner.value || this.state.fields.isSupernova.value);
 
 		return (
 			<form
@@ -279,31 +376,48 @@ class MerchantProfileForm extends Form {
 
 				{this.buildRow('name')}
 
-				<div className="form-group">
-					<div className="row">
-						{this.buildCol('bik')}
-						{this.buildCol('inn')}
+				{(isAdmin && !this.state.fields.isSupernova.value) ? this.buildRow('inner') : null}
+
+				{(isAdmin && !this.state.fields.inner.value) ? (
+					<div className="form-group">
+						<Checkbox
+							text={this.state.fields.isSupernova.text}
+							isChecked={this.state.fields.isSupernova.value}
+							onChange={this.handleChangeIsSupernova}
+							/>
 					</div>
-				</div>
+				) : null}
 
-				<div className="form-group">
-					<div className="row">
-						{this.buildCol('kpp')}
-						{this.buildCol('korr')}
+				{showField ? (
+					<div className="form-group">
+						<div className="row">
+							{this.buildCol('bik')}
+							{this.buildCol('inn')}
+						</div>
 					</div>
-				</div>
+				) : null}
 
-				{this.buildRow('account')}
-				{this.buildRow('bank')}
+				{showField ? (
+					<div className="form-group">
+						<div className="row">
+							{this.buildCol('kpp')}
+							{this.buildCol('korr')}
+						</div>
+					</div>
+				) : null}
 
-				{this.buildRow('address')}
-				{this.buildRow('legalAddress')}
+				{showField ? this.buildRow('account') : null}
+				{showField ? this.buildRow('bank') : null}
+
+				{showField ? this.buildRow('address') : null}
+				{showField ? this.buildRow('legalAddress') : null}
+
 				{this.buildRow('contactName')}
 				{this.buildRow('contactPhone')}
 
-				{this.buildRow('headName')}
-				{this.buildRow('headAppointment')}
-				{this.buildRow('headBasis')}
+				{showField ? this.buildRow('headName') : null}
+				{showField ? this.buildRow('headAppointment') : null}
+				{showField ? this.buildRow('headBasis') : null}
 
 				{readOnly ? null : (
 					<div className="form-group">

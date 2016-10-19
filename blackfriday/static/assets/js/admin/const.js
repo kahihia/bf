@@ -100,6 +100,8 @@ export const FEED_CELL = {
 	url: 'URL'
 };
 
+export const ADVERTISER_INNER = ENV.advertiserInner;
+
 export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;
 
 export const SILVER_PROMO_ID = 2;
