@@ -20,7 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
-    inner = serializers.CharField()
+    inner = serializers.CharField(allow_null=True)
     is_supernova = serializers.BooleanField()
 
     class Meta:
