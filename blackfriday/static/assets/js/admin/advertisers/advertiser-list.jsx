@@ -181,6 +181,10 @@ const AdvertiserList = React.createClass({
 									{'Подтверждён'}
 								</th>
 
+								<th className={b(className, 'table-th', {name: 'special'})}>
+									{'Особый признак'}
+								</th>
+
 								{isAdmin ? (
 									<th className={b(className, 'table-th', {name: 'edit'})}/>
 								) : null}
@@ -189,11 +193,14 @@ const AdvertiserList = React.createClass({
 
 						<tbody>
 							{filteredMerchants.map(item => {
+								const special = item.profile.inner || (item.profile.isSupernova && '«Сверхновая»') || '—';
+
 								return (
 									<AdvertiserListItem
 										key={item.id}
 										onClickEdit={this.handleClickItemEdit}
 										isAdmin={isAdmin}
+										special={special}
 										{...item}
 										/>
 								);
@@ -216,6 +223,7 @@ const AdvertiserListItem = React.createClass({
 		name: React.PropTypes.string,
 		email: React.PropTypes.string,
 		isActive: React.PropTypes.bool,
+		special: React.PropTypes.string,
 		onClickEdit: React.PropTypes.func,
 		isAdmin: React.PropTypes.bool
 	},
@@ -234,7 +242,7 @@ const AdvertiserListItem = React.createClass({
 	},
 
 	render() {
-		const {id, name, email, isActive} = this.props;
+		const {id, name, email, isActive, special} = this.props;
 		const className = 'advertiser-list';
 
 		return (
@@ -271,6 +279,10 @@ const AdvertiserListItem = React.createClass({
 							className="text-danger"
 							/>
 					)}
+				</td>
+
+				<td className={b(className, 'table-td', {name: 'special'})}>
+					{special}
 				</td>
 
 				{this.props.isAdmin ? (
