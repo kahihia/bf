@@ -254,7 +254,7 @@ class AdminLanding extends React.Component {
 					disabled={isLoading}
 					type="button"
 					>
-					{'Добавить'}
+					{'Добавить логотип'}
 				</button>
 
 				{' '}
