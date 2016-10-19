@@ -86,7 +86,7 @@ class MerchantProps extends React.Component {
 					</span>
 				</li>
 
-				{isCanceled || (!optionsCount && optionsCount !== 0) ? null : (
+				{isCanceled || optionsCount ? (
 					<li className="props__item">
 						<span className="props__label">
 							{'Доп. опции:'}
@@ -100,7 +100,7 @@ class MerchantProps extends React.Component {
 							) : optionsCount}
 						</span>
 					</li>
-				)}
+				) : null}
 
 				<li className="props__item">
 					<span className="props__label">

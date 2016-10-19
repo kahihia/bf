@@ -20,10 +20,10 @@ const AdvertiserList = React.createClass({
 	},
 
 	componentDidMount() {
-		this.requestMerchants();
+		this.requestAdvertisers();
 	},
 
-	requestMerchants() {
+	requestAdvertisers() {
 		xhr({
 			url: '/api/advertisers/',
 			method: 'GET',
@@ -102,7 +102,7 @@ const AdvertiserList = React.createClass({
 			if (isLoading) {
 				listStatus = 'Загрузка...';
 			} else {
-				listStatus = 'Магазины отсутствуют';
+				listStatus = 'Рекламодатели отсутствуют';
 			}
 		}
 
@@ -110,7 +110,7 @@ const AdvertiserList = React.createClass({
 		const statusRow = (
 			<tr>
 				<td
-					colSpan={isAdmin ? 5 : 4}
+					colSpan={isAdmin ? 6 : 5}
 					className="text-center text-muted"
 					>
 					{listStatus}

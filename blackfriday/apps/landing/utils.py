@@ -24,6 +24,7 @@ def render_landing(raise_exception=True):
                         'SITE_URL': settings.SITE_URL,
                         'partner_list': Partner.objects.all(),
                         'logo_list': LandingLogo.objects.all(),
+                        'logo_stubs': '*' * (5 - LandingLogo.objects.count() % 5)
                     }
                 )
             )

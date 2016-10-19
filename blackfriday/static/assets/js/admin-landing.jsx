@@ -100,7 +100,7 @@ class AdminLanding extends React.Component {
 			if (!err && resp.statusCode === 200) {
 				toastr.success('Лэндинг успешно сгенерирован');
 			} else {
-				toastr.error('Не удалось сгенерировать лэндинг');
+				toastr.error('Не удалось сгенерировать лэндинг. Проверьте, что загружены партнёры и логотипы');
 			}
 		});
 	}
@@ -254,7 +254,7 @@ class AdminLanding extends React.Component {
 					disabled={isLoading}
 					type="button"
 					>
-					{'Добавить'}
+					{'Добавить логотип'}
 				</button>
 
 				{' '}
