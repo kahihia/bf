@@ -1,6 +1,7 @@
 import React from 'react';
 import b from 'b_';
 import {hasRole} from '../utils.js';
+import {ADVERTISER_IS_SUPERNOVA} from '../const.js';
 import Icon from '../components/icon.jsx';
 import SimpleShopCard from './simple-shop-card.jsx';
 
@@ -34,7 +35,7 @@ class MerchantList extends React.Component {
 
 		return (
 			<div className={b('merchant-shop-card-list')}>
-				{isAdmin || isAdvertiser ? (
+				{isAdmin || (isAdvertiser && !ADVERTISER_IS_SUPERNOVA) ? (
 					<div className={b('merchant-shop-card-list', 'item')}>
 						<button
 							className={b('merchant-add-shop')}

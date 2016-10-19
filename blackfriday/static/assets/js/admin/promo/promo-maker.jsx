@@ -149,7 +149,7 @@ export class PromoMaker extends React.Component {
 										this.setState({
 											extraOptions: _.sortBy(data, 'id')
 										}, () => {
-											xhr.get('/api/merchants/', {json: true}, (err, resp, data) => {
+											xhr.get('/api/merchants/?exclude_supernova=1', {json: true}, (err, resp, data) => {
 												if (!err && resp.statusCode === 200) {
 													this.setState({
 														merchants: _.sortBy(data, 'name'),

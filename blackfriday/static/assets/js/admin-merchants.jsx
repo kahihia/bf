@@ -5,7 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {TOKEN} from './admin/const.js';
+import {TOKEN, ADVERTISER_IS_SUPERNOVA} from './admin/const.js';
 import {hasRole} from './admin/utils.js';
 import MerchantListFilter from './admin/advertisers/merchant-list-filter.jsx';
 import ViewSwitcher from './admin/advertisers/view-switcher.jsx';
@@ -26,6 +26,8 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 				filterByStatus: '',
 				filterByDate: 'ASC',
 				filterByPromo: 0,
+				filterBySupernovaAdvertiser: false,
+				filterByInnerAdvertiser: '',
 				view: CURRENT_VIEW
 			};
 		},
@@ -157,6 +159,14 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			this.setState({filterByPromo: value});
 		},
 
+		handleFilterBySupernovaAdvertiser(value) {
+			this.setState({filterBySupernovaAdvertiser: value});
+		},
+
+		handleFilterByInnerAdvertiser(value) {
+			this.setState({filterByInnerAdvertiser: value});
+		},
+
 		filterByName(merchants) {
 			const {filterByName} = this.state;
 			if (!filterByName) {
@@ -213,6 +223,30 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			});
 		},
 
+		filterBySupernovaAdvertiser(merchants) {
+			const {filterBySupernovaAdvertiser} = this.state;
+
+			if (!filterBySupernovaAdvertiser) {
+				return merchants;
+			}
+
+			return _.filter(merchants, item => {
+				return item.advertiser.isSupernova === true;
+			});
+		},
+
+		filterByInnerAdvertiser(merchants) {
+			const {filterByInnerAdvertiser} = this.state;
+
+			if (!filterByInnerAdvertiser) {
+				return merchants;
+			}
+
+			return _.filter(merchants, item => {
+				return item.advertiser.inner === filterByInnerAdvertiser;
+			});
+		},
+
 		handleClickMerchantAdd() {
 			const $modal = jQuery('#add-merchant-modal');
 			$modal.modal('show');
@@ -254,6 +288,8 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 				filterByName,
 				filterByPromo,
 				filterByStatus,
+				filterBySupernovaAdvertiser,
+				filterByInnerAdvertiser,
 				merchants,
 				view
 			} = this.state;
@@ -263,6 +299,8 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			filteredMerchants = this.filterByStatus(filteredMerchants);
 			filteredMerchants = this.filterByDate(filteredMerchants);
 			filteredMerchants = this.filterByPromo(filteredMerchants);
+			filteredMerchants = this.filterBySupernovaAdvertiser(filteredMerchants);
+			filteredMerchants = this.filterByInnerAdvertiser(filteredMerchants);
 
 			const isAdmin = hasRole('admin');
 			const isAdvertiser = hasRole('advertiser');
@@ -270,7 +308,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 
 			return (
 				<div>
-					{isAdmin || isAdvertiser ? (
+					{isAdmin || (isAdvertiser && !ADVERTISER_IS_SUPERNOVA) ? (
 						<div>
 							<button
 								className="btn btn-success"
@@ -290,11 +328,15 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							onFilterByName={this.handleFilterByName}
 							onFilterByPromo={this.handleFilterByPromo}
 							onFilterByStatus={this.handleFilterByStatus}
+							onFilterBySupernovaAdvertiser={this.handleFilterBySupernovaAdvertiser}
+							onFilterByInnerAdvertiser={this.handleFilterByInnerAdvertiser}
 							{...{
 								filterByDate,
 								filterByName,
 								filterByPromo,
-								filterByStatus
+								filterByStatus,
+								filterBySupernovaAdvertiser,
+								filterByInnerAdvertiser
 							}}
 							/>
 					) : null}

@@ -99,3 +99,15 @@ export const FEED_CELL = {
 	teaserOnMain: 'Тизер на первом экране',
 	url: 'URL'
 };
+
+export const ADVERTISER_INNER = ENV.advertiserInner;
+
+export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;
+
+export const SILVER_PROMO_ID = 2;
+
+export const ADVERTISER_INNER_VALUES = [
+	'АКИТ',
+	'AdmitAd',
+	'Партнёры'
+];
