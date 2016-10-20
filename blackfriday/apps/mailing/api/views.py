@@ -22,7 +22,6 @@ class MailingViewSet(viewsets.GenericViewSet):
     def logos(self, request, *args, **kwargs):
         data = {}
         if request.method == 'POST':
-            print('3')
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             data = serializer.data
