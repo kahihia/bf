@@ -51,21 +51,21 @@ class ProfileSerializer(serializers.ModelSerializer):
         request = self.context['request']
 
         if request.user.role == 'admin':
+            if 'inner' in attrs and 'is_supernova' in attrs:
+                raise ValidationError('Нельзя одновременно изменить эти поля')
+
             if 'inner' in attrs:
-                attrs['inner'] = ADVERTISER_INNER_TYPES.get(attrs['inner'])
-                if attrs['inner']:
-                    attrs['type'] = attrs['inner']
+                inner = ADVERTISER_INNER_TYPES.get(attrs.pop('inner'))
+                if inner:
+                    attrs['type'] = inner
                 elif self.instance and self.instance.inner:
                     attrs['type'] = AdvertiserType.REGULAR
 
             if 'is_supernova' in attrs:
-                if attrs['is_supernova']:
+                if attrs.pop('is_supernova'):
                     attrs['type'] = AdvertiserType.SUPERNOVA
                 elif self.instance and self.instance.is_supernova:
                     attrs['type'] = AdvertiserType.REGULAR
-
-            attrs.pop('inner', None)
-            attrs.pop('is_supernova', None)
 
         elif 'inner' in attrs or 'is_supernova' in attrs:
             raise PermissionDenied('Только администратору доступны эти параметры')
