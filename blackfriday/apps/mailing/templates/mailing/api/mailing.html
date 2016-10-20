@@ -2,101 +2,121 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
 
     <title></title>
 
 
-  </head>
+</head>
 
-  <body style="background: url({% static 'mailing/img/pattern.gif' %}); font-family: 'Arial'">
-    <div id="main_wrap" style="width: 640px; margin: 0 auto">
-      <div style="height: 150px">
+<body style="background: url({% static 'mailing/img/pattern.gif' %}); font-family: 'Arial'">
+<div id="main_wrap" style="width: 640px; margin: 0 auto">
+    <div style="height: 150px">
         <img src="{% static 'mailing/img/header.png' %}" alt="">
-      </div>
+    </div>
 
-      <div style="background-color: #fff; padding: 25px 0 30px">
+    <div style="background-color: #fff; padding: 25px 0 30px">
         <div style="width: 570px; margin: 0 auto">
-          <img src="{% static 'mailing/img/main_banner.png' %}" alt="">
+            {% if top_banner %}
+                <a href="{{ top_banner.url }}">
+                    <img src="{{ top_banner.image }}" alt="">
+                </a>
+            {% else %}
+                <img src="{% static 'mailing/img/main_banner.png' %}" alt="">
+            {% endif %}
 
-          <h3>Посетите все распродажи за один день, не выходя из дома!</h3>
+            {% if top_text %}
+                {{ top_text|safe }}
+            {% else %}
+                <h3>Посетите все распродажи за один день, не выходя из дома!</h3>
 
-          <p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном сайте.</p>
+                <p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном
+                    сайте.</p>
 
-          <p style="line-height: 1.4;">
-            Только 25 января 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -
+                <p style="line-height: 1.4;">
+                    Только 25 января 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -
 
-            <span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>
-          </p>
+                    <span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>
+                </p>
 
-          <p>
-            <b>Проведите лучший понедельник года с пользой!</b>
-          </p>
+                <p>
+                    <b>Проведите лучший понедельник года с пользой!</b>
+                </p>
 
-          <div>
-            <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
+                <div>
+                    <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
 
-            <a href="" style="text-decoration: none;">
-              <img style="margin-left: 15px;" src="{% static 'mailing/img/akit-logo.png' %}" alt="">
-            </a>
+                    <a href="" style="text-decoration: none;">
+                        <img style="margin-left: 15px;" src="{% static 'mailing/img/akit-logo.png' %}" alt="">
+                    </a>
 
-            <a href="" style="text-decoration: none;">
-              <img style="margin-left: 15px;" src="{% static 'mailing/img/mnogo-logo.png' %}" alt="">
-            </a>
+                    <a href="" style="text-decoration: none;">
+                        <img style="margin-left: 15px;" src="{% static 'mailing/img/mnogo-logo.png' %}" alt="">
+                    </a>
 
-            <a href="" style="text-decoration: none;">
-              <img style="margin-left: 15px;" src="{% static 'mailing/img/bonus-cmonday.png' %}" alt="">
-            </a>
-          </div>
+                    <a href="" style="text-decoration: none;">
+                        <img style="margin-left: 15px;" src="{% static 'mailing/img/bonus-cmonday.png' %}" alt="">
+                    </a>
+                </div>
+            {% endif %}
 
-          <h2>
-            Лучшие предложения
+            <h2>
+                Лучшие предложения
 
-            <br>
+                <br>
 
-            от участников Черной пятницы
-          </h2>
+                от участников Черной пятницы
+            </h2>
+            {% for logo in logos|slice:":9" %}
+                <a href="{{ logo.url }}" style="float: left; margin-bottom: 20px">
+                    <img src="{{ logo.image }}" alt="">
+                </a>
+                {% cycle False False True as newrow silent %}
+                {% if newrow and not forloop.last %}
+                    <div style="clear: both"></div>
+                {% endif %}
+            {% endfor %}
 
-          <a href="" style="float: left; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_1.png' %}" alt="">
-          </a>
+            <div style="clear: both"></div>
 
-          <a href="" style="float: right; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_2.png' %}" alt="">
-          </a>
-
-          <a href="" style="float: left; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_3.png' %}" alt="">
-          </a>
-
-          <a href="" style="float: right; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_4.png' %}" alt="">
-          </a>
-
-          <div style="clear: both"></div>
         </div>
 
-        <a href="" style="margin: 0 auto; display: block; width: 620px">
-          <img src="{% static 'mailing/img/banner_big.png' %}" alt="">
-        </a>
-
+        {% if middle_banner %}
+            <a href="{{ middle_banner.url }}" style="margin: 0 auto; display: block; width: 620px">
+                <img src="{{ middle_banner.image }}" alt="">
+            </a>
+        {% else %}
+            <a href="" style="margin: 0 auto; display: block; width: 620px">
+                <img src="{% static 'mailing/img/banner_big.png' %}" alt="">
+            </a>
+        {% endif %}
         <div style="width: 570px; margin: 0 auto">
-          <a href="" style="float: left; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_5.png' %}" alt="">
-          </a>
 
-          <a href="" style="float: right; margin-bottom: 20px">
-            <img src="{% static 'mailing/img/banner_6.png' %}" alt="">
-          </a>
+            {% for logo in logos|slice:"9:" %}
+                <a href="{{ logo.url }}" style="float: left; margin-bottom: 20px">
+                    <img src="{{ logo.image }}" alt="">
+                </a>
+                {% cycle False False True as newrow silent %}
+                {% if newrow and not forloop.last %}
+                    <div style="clear: both"></div>
+                {% endif %}
+            {% endfor %}
 
-          <div style="clear: both"></div>
+            <div style="clear: both"></div>
         </div>
 
-        <a href="" style="margin: 0 auto; display: block; width: 570px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">Посмотреть все предложения</a>
-      </div>
+        {% if bottom_text %}
+            <a href="{{ bottom_text.url }}"
+               style="margin: 0 auto; display: block; width: 570px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">{{ bottom_text.text }}</a>
+        {% else %}
+            <a href=""
+               style="margin: 0 auto; display: block; width: 570px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">Посмотреть
+                все предложения</a>
+        {% endif %}
+    </div>
 
-      <div style="padding: 20px 10px; color: #fff; font-size: 12px; position: relative">
+    <div style="padding: 20px 10px; color: #fff; font-size: 12px; position: relative">
         Вы получили это письмо т.к. подписаны на новости
 
         <a href="" style="color:white;font-weight: bold;">BlackFridaySale.ru</a>
@@ -112,7 +132,7 @@
         <br>
 
         <a href="" style="text-decoration:none;color:white;font-weight: bold;">Отписаться от рассылки</a>
-      </div>
     </div>
-  </body>
+</div>
+</body>
 </html>
