@@ -43,23 +43,23 @@
                 <p>
                     <b>Проведите лучший понедельник года с пользой!</b>
                 </p>
-
-                <div>
-                    <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
-
-                    <a href="" style="text-decoration: none;">
-                        <img style="margin-left: 15px;" src="{% static 'mailing/img/akit-logo.png' %}" alt="">
-                    </a>
-
-                    <a href="" style="text-decoration: none;">
-                        <img style="margin-left: 15px;" src="{% static 'mailing/img/mnogo-logo.png' %}" alt="">
-                    </a>
-
-                    <a href="" style="text-decoration: none;">
-                        <img style="margin-left: 15px;" src="{% static 'mailing/img/bonus-cmonday.png' %}" alt="">
-                    </a>
-                </div>
             {% endif %}
+
+            <div>
+                <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
+
+                <a href="" style="text-decoration: none;">
+                    <img style="margin-left: 15px;" src="{% static 'mailing/img/akit-logo.png' %}" alt="">
+                </a>
+
+                <a href="" style="text-decoration: none;">
+                    <img style="margin-left: 15px;" src="{% static 'mailing/img/mnogo-logo.png' %}" alt="">
+                </a>
+
+                <a href="" style="text-decoration: none;">
+                    <img style="margin-left: 15px;" src="{% static 'mailing/img/bonus-cmonday.png' %}" alt="">
+                </a>
+            </div>
 
             <h2>
                 Лучшие предложения
@@ -70,7 +70,7 @@
             </h2>
             {% for logo in logos|slice:":9" %}
                 <a href="{{ logo.url }}" style="float: left; margin-bottom: 20px">
-                    <img src="{{ logo.image }}" alt="">
+                    <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="">
                 </a>
                 {% cycle False False True as newrow silent %}
                 {% if newrow and not forloop.last %}

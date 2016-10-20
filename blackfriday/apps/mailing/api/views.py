@@ -18,8 +18,12 @@ class MailingViewSet(viewsets.GenericViewSet):
     def banners(self, request, *args, **kwargs):
         return Response({}, template_name='mailing/api/mailing.html')
 
-    @list_route(methods=['post'], renderer_classes=[TemplateHTMLRenderer])
+    @list_route(methods=['get', 'post'], renderer_classes=[TemplateHTMLRenderer])
     def logos(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, template_name='mailing/api/mailing.html')
+        data = {}
+        if request.method == 'POST':
+            print('3')
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.data
+        return Response(data, template_name='mailing/api/mailing.html')
