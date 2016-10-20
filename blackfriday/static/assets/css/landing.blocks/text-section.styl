@@ -1,0 +1,55 @@
+.text-section
+	padding-top: 85px
+	padding-bottom: 20px
+	line-height: 1.2
+
+	&__title
+		text-align: center
+		font-weight: bold
+		font-size: 31px
+		color: #f4f4f4
+		margin-right: auto
+		margin-left: auto
+		margin-bottom: 35px
+		line-height: 1.2
+
+	&__text
+		margin-bottom: 32px
+
+	p
+		font-size: 17px
+
+	strong
+		color: $brand-primary
+
+	&__subtitle
+		display: block
+		font-size: 22px
+		margin-bottom: 12px
+
+	&__subtext
+		font-size: 17px
+		padding: 10px 0 15px 44px
+
+		a
+			border-bottom: 1px dotted
+
+		ul
+			padding-left: 0
+
+		li
+			list-style-position: inside
+
+	&__collapse-icon
+		display: inline-block
+		vertical-align: middle
+		margin-right: 8px
+		width: 18px
+		height: 18px
+		background: url(/static/images/landing/text-section__collapse-icon_collapse.png) 0 0 no-repeat
+
+		.collapsed &
+			background-image: url(/static/images/landing/text-section__collapse-icon_expand.png)
+
+	&__collapse-text
+		border-bottom: 1px dotted

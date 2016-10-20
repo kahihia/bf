@@ -14,16 +14,18 @@ def render_landing(raise_exception=True):
     os.makedirs(path, exist_ok=True)
     if raise_exception and not (LandingLogo.objects.exists() and Partner.objects.exists()):
         raise NoContent
-    with open(os.path.join(path, 'index.html'), 'w') as f:
-        f.seek(0)
-        f.write(
-            render_to_string(
-                'landing/landing.html',
-                {
-                    'SITE_URL': settings.SITE_URL,
-                    'partner_list': Partner.objects.all(),
-                    'logo_list': LandingLogo.objects.all(),
-                }
+    for filename, template in [('index.html', 'landing/landing.html'), ('index-cn.html', 'landing/landing-cn.html')]:
+        with open(os.path.join(path, filename), 'w') as f:
+            f.seek(0)
+            f.write(
+                render_to_string(
+                    template,
+                    {
+                        'SITE_URL': settings.SITE_URL,
+                        'partner_list': Partner.objects.all(),
+                        'logo_list': LandingLogo.objects.all(),
+                        'logo_stubs': '*' * (5 - LandingLogo.objects.count() % 5)
+                    }
+                )
             )
-        )
-        f.truncate()
+            f.truncate()

@@ -1,7 +1,7 @@
 import pytest
-
 import json
 
+from unittest.mock import patch
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from rest_framework.exceptions import ValidationError
@@ -32,6 +32,7 @@ FAIL_SAMPLE = {
     },
     'output': {
         'data': {
+            "_id": 23,
             "category": settings.DEFAULT_CATEGORY_NAME,
             "name": "name",
             "image": "image.com",
@@ -60,6 +61,7 @@ FAIL_SAMPLE = {
 
 
 SUCCESS_SAMPLE = {
+    "_id": 23,
     "category": "correct_category_name",
     "name": "name",
     "image": "http://image.com",
@@ -79,38 +81,45 @@ def test_validate_schema():
         ProductViewSet().validate_schema([[]])
 
 
-def test_post_given_invalid_data_expect_400(admin_logged_client, merchant):
-    response = admin_logged_client.post(
-        reverse('api:catalog:products-list', args=(merchant.id,)),
-        data=json.dumps([FAIL_SAMPLE['input']]), content_type='application/json')
-    assert response.status_code == 400
-    assert lists_of_dicts_equalled(response.data[0]['warnings'], FAIL_SAMPLE['output']['warnings'])
-    assert lists_of_dicts_equalled(response.data[0]['errors'], FAIL_SAMPLE['output']['errors'])
-    assert frozenset(response.data[0]['data'].items()) == frozenset(FAIL_SAMPLE['output']['data'].items())
+def test_post_given_invalid_data_expect_400(admin_logged_client, merchant, fake_image_response):
+    with patch('requests.head', return_value=fake_image_response):
+        response = admin_logged_client.post(
+            reverse('api:catalog:products-list', args=(merchant.id,)),
+            data=json.dumps([FAIL_SAMPLE['input']]), content_type='application/json')
+        assert response.status_code == 400
+        assert lists_of_dicts_equalled(response.data[0]['warnings'], FAIL_SAMPLE['output']['warnings'])
+        assert lists_of_dicts_equalled(response.data[0]['errors'], FAIL_SAMPLE['output']['errors'])
+        assert frozenset(response.data[0]['data'].items()) == frozenset(FAIL_SAMPLE['output']['data'].items())
 
 
-def test_post_given_valid_list_expect_201_product_created(admin_logged_client, merchant, default_category):
-    response = admin_logged_client.post(
-        reverse('api:catalog:products-list', args=(merchant.id,)),
-        data=json.dumps([SUCCESS_SAMPLE]), content_type='application/json')
-    assert response.status_code == 201
-    assert Product.objects.filter(name=SUCCESS_SAMPLE['name'], category=default_category).exists()
+def test_post_given_valid_list_expect_201_product_created(
+        admin_logged_client, merchant, default_category, fake_image_response):
+    with patch('requests.head', return_value=fake_image_response):
+        response = admin_logged_client.post(
+            reverse('api:catalog:products-list', args=(merchant.id,)),
+            data=json.dumps([SUCCESS_SAMPLE]), content_type='application/json')
+        assert response.status_code == 201
+        assert Product.objects.filter(name=SUCCESS_SAMPLE['name'], category=default_category).exists()
 
 
-def test_put_given_invalid_data_expect_400(admin_logged_client, merchant, product_with_default_cat):
-    response = admin_logged_client.put(
-        reverse('api:catalog:products-detail', args=(merchant.id, product_with_default_cat.id)),
-        data=json.dumps(FAIL_SAMPLE['input']), content_type='application/json')
-    assert response.status_code == 400
-    assert lists_of_dicts_equalled(response.data['warnings'], FAIL_SAMPLE['output']['warnings'])
-    assert lists_of_dicts_equalled(response.data['errors'], FAIL_SAMPLE['output']['errors'])
+def test_put_given_invalid_data_expect_400(
+        admin_logged_client, merchant, product_with_default_cat, fake_image_response):
 
-    assert frozenset(response.data['data'].items()) == frozenset(FAIL_SAMPLE['output']['data'].items())
+    with patch('requests.head', return_value=fake_image_response):
+        response = admin_logged_client.put(
+            reverse('api:catalog:products-detail', args=(merchant.id, product_with_default_cat.id)),
+            data=json.dumps(FAIL_SAMPLE['input']), content_type='application/json')
+        assert response.status_code == 400
+        assert lists_of_dicts_equalled(response.data['warnings'], FAIL_SAMPLE['output']['warnings'])
+        assert lists_of_dicts_equalled(response.data['errors'], FAIL_SAMPLE['output']['errors'])
+        assert frozenset(response.data['data'].items()) == frozenset(FAIL_SAMPLE['output']['data'].items())
 
 
-def test_put_given_valid_data_expect_200_product_changed(admin_logged_client, merchant, product_with_default_cat):
-    response = admin_logged_client.put(
-        reverse('api:catalog:products-detail', args=(merchant.id, product_with_default_cat.id)),
-        data=json.dumps(SUCCESS_SAMPLE), content_type='application/json')
-    assert response.status_code == 200
-    assert Product.objects.get(id=product_with_default_cat.id).name == SUCCESS_SAMPLE['name']
+def test_put_given_valid_data_expect_200_product_changed(
+        admin_logged_client, merchant, product_with_default_cat, fake_image_response):
+    with patch('requests.head', return_value=fake_image_response):
+        response = admin_logged_client.put(
+            reverse('api:catalog:products-detail', args=(merchant.id, product_with_default_cat.id)),
+            data=json.dumps(SUCCESS_SAMPLE), content_type='application/json')
+        assert response.status_code == 200
+        assert Product.objects.get(id=product_with_default_cat.id).name == SUCCESS_SAMPLE['name']

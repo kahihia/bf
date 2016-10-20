@@ -13,9 +13,11 @@ urlpatterns = [
         url(r'^', include('apps.orders.urls', namespace='orders')),
         url(r'^', include('apps.banners.urls', namespace='banners')),
         url(r'^', include('apps.landing.urls', namespace='landing')),
+        url(r'^', include('apps.specials.urls', namespace='specials')),
+        url(r'^', include('apps.mailing.urls', namespace='mailing')),
     ])),
     url(r'^api/', include('api', namespace='api')),
-    
+
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^django-rq/', include('django_rq.urls')),
 ]

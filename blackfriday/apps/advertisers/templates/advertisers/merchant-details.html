@@ -1,0 +1,40 @@
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        {{ merchant.name }}
+
+        <small>
+            <a href="{{ merchant.url }}" target="_blank">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                URL
+            </a>
+        </small>
+    </h1>
+</div>
+
+<div id="admin-merchant"></div>
+
+{% include "advertisers/includes/promo-select-modal.html" %}
+{% include "advertisers/includes/custom-promo-request-modal.html" %}
+{% include "advertisers/includes/merchant-banner-add-modal.html" %}
+{% include "advertisers/includes/merchant-products-add-modal.html" %}
+{% include "advertisers/includes/products-uploading-waiting-modal.html" %}
+{% include "includes/images-upload-modal.html" %}
+{% endblock content %}
+
+{% block js %}
+    <script>
+    window.ENV.merchantId = {{ merchant.id }};
+    window.ENV.urls = {
+        merchants: '/merchants/',
+        'admin-merchants': '{% url "advertisers:merchant-list" %}',
+        invoices: '{% url "orders:invoice-list" %}'
+    };
+    </script>
+
+    {% render_bundle 'admin-merchant' 'js' %}
+{% endblock js %}

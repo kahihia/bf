@@ -1,17 +1,18 @@
-from math import ceil
-
 import operator
+
 from functools import reduce
+from math import ceil
 
 from django.conf import settings
 from django.utils import timezone
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from apps.advertisers.models import Merchant
-from apps.advertisers.api.serializers import AdvertiserTinySerializer, MerchantTinySerializer
-
 from apps.promo.models import Option, Promo
+
+from apps.advertisers.api.serializers.clients import AdvertiserTinySerializer, MerchantTinySerializer
 from apps.promo.api.serializers import PromoTinySerializer
 
 from ..models import Invoice, InvoiceOption, InvoiceStatus
@@ -31,8 +32,13 @@ class InvoiceOptionSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         user = self.context['request'].user
+
         if not attrs.get('price') or user.role == 'advertiser':
             attrs['price'] = attrs['option'].price
+
+        if attrs['price'] == 0 and user.role != 'admin':
+            raise ValidationError('Обратитесь к менеджеру')
+
         return attrs
 
 
@@ -81,20 +87,27 @@ class InvoiceSerializer(serializers.ModelSerializer):
             raise ValidationError('Неверный магазин')
         return value
 
+    def validate_promo_id(self, value):
+        user = self.context['request'].user
+        if user.role != 'admin' and value.is_custom:
+            raise ValidationError('Разрешено только для администратора')
+        return value
+
     def validate_discount(self, value):
         return value or 0
 
     def validate(self, attrs):
-        merchant = attrs['merchant'] = attrs.pop('merchant_id', None)
-        promo = attrs['promo'] = attrs.pop('promo_id', None)
+        merchant = attrs['merchant'] = attrs.pop('merchant_id')
 
-        if not (promo or attrs.get('options')):
+        promo = attrs['promo'] = attrs.pop('promo_id', None)
+        options = attrs.get('options', [])
+
+        if not (promo or options):
             raise ValidationError('Нет ни пакета, ни опций')
 
         if promo:
-            if merchant.invoices.filter(
-                promo__isnull=False, is_paid=False, expired_datetime__gt=timezone.now()
-            ).exists():
+            unpaid = merchant.invoices.filter(promo__isnull=False, is_paid=False, expired_datetime__gt=timezone.now())
+            if unpaid.exists():
                 raise ValidationError('У вас есть неоплаченный пакет')
             if merchant.promo:
                 if merchant.promo.price > promo.price:
@@ -102,8 +115,21 @@ class InvoiceSerializer(serializers.ModelSerializer):
                 if merchant.promo == promo:
                     raise ValidationError('Нельзя назначить уже купленный пакет')
 
-        if reduce(operator.__or__, map(lambda x: x['option'].is_required, attrs.get('options', [])), False):
-            raise ValidationError('Нельзя заказать пакетную опцию')
+        if options:
+            promo = promo or merchant.promo
+
+            if promo:
+                available_options = promo.available_options.all()
+            else:
+                raise ValidationError('Нет назначенного пакета')
+
+            if not promo.is_custom:
+                for option in options:
+                    if option['option'] not in available_options:
+                        raise ValidationError('Не все опции доступны для покупки')
+
+            if reduce(operator.__or__, map(lambda x: x['option'].is_required, options), False):
+                raise ValidationError('Нельзя заказать пакетную опцию')
 
         count = merchant.invoices.filter(expired_datetime__gt=timezone.now(), is_paid=False).count()
         if count >= settings.INVOICE_NEW_LIMIT:

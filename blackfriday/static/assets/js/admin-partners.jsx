@@ -1,4 +1,5 @@
-/* global document toastr _ jQuery */
+/* global window document toastr _ jQuery */
+/* eslint-disable no-alert */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -14,7 +15,7 @@ import PartnerList from './admin/banners/partner-list.jsx';
 	const AdminPartners = React.createClass({
 		getInitialState() {
 			return {
-				isLoading: false,
+				isLoading: true,
 				partners: []
 			};
 		},
@@ -29,6 +30,8 @@ import PartnerList from './admin/banners/partner-list.jsx';
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
 				if (!err && resp.statusCode === 200) {
 					if (data) {
 						this.setState({partners: _.sortBy(data, 'id')});
@@ -55,7 +58,32 @@ import PartnerList from './admin/banners/partner-list.jsx';
 				if (!err && resp.statusCode === 200) {
 					toastr.success('Лэндинг успешно сгенерирован');
 				} else {
-					toastr.error('Не удалось сгенерировать лэндинг');
+					toastr.error('Не удалось сгенерировать лэндинг. Проверьте, что загружены партнёры и логотипы');
+				}
+			});
+		},
+
+		requestPartnerDelete(id) {
+			this.setState({isLoading: true});
+
+			xhr({
+				url: `/api/partners/${id}/`,
+				method: 'DELETE',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: true
+			}, (err, resp) => {
+				this.setState({isLoading: false});
+
+				if (!err && resp.statusCode === 204) {
+					this.setState(previousState => {
+						const partner = this.getPartnerById(id);
+						previousState.partners = _.without(previousState.partners, partner);
+						return previousState;
+					});
+				} else {
+					toastr.error('Не удалось удалить партнёра');
 				}
 			});
 		},
@@ -84,6 +112,12 @@ import PartnerList from './admin/banners/partner-list.jsx';
 				previousState.partners.push(partner);
 				return previousState;
 			});
+		},
+
+		handleClickPartnerDelete(id) {
+			if (window.confirm('Удалить партнёра?')) {
+				this.requestPartnerDelete(id);
+			}
 		},
 
 		handleSubmitEdit(data) {
@@ -135,6 +169,8 @@ import PartnerList from './admin/banners/partner-list.jsx';
 
 					<PartnerList
 						partners={this.state.partners}
+						isLoading={isLoading}
+						onClickPartnerDelete={this.handleClickPartnerDelete}
 						onSubmitEdit={this.handleSubmitEdit}
 						/>
 				</div>

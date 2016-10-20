@@ -9,11 +9,17 @@ import EditPartnerForm from './edit-partner-form.jsx';
 const PartnerList = React.createClass({
 	propTypes: {
 		partners: React.PropTypes.array,
+		isLoading: React.PropTypes.bool,
+		onClickPartnerDelete: React.PropTypes.func,
 		onSubmitEdit: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
+	},
+
+	handleClickDelete(id) {
+		this.props.onClickPartnerDelete(id);
 	},
 
 	handleClickEdit(partnerId) {
@@ -36,8 +42,29 @@ const PartnerList = React.createClass({
 	},
 
 	render() {
-		const {partners} = this.props;
+		const {partners, isLoading} = this.props;
 		const className = 'partner-list';
+
+		let listStatus = null;
+
+		if (!partners.length) {
+			if (isLoading) {
+				listStatus = 'Загрузка...';
+			} else {
+				listStatus = 'Партнёры отсутствуют';
+			}
+		}
+
+		const statusRow = (
+			<tr>
+				<td
+					colSpan="4"
+					className="text-center text-muted"
+					>
+					{listStatus}
+				</td>
+			</tr>
+		);
 
 		return (
 			<div className={b(className)}>
@@ -66,10 +93,13 @@ const PartnerList = React.createClass({
 								<PartnerListItem
 									key={item.id}
 									onClickEdit={this.handleClickEdit}
+									onClickDelete={this.handleClickDelete}
 									{...item}
 									/>
 							);
 						})}
+
+						{listStatus ? statusRow : null}
 					</tbody>
 				</table>
 			</div>
@@ -85,11 +115,16 @@ const PartnerListItem = React.createClass({
 		image: React.PropTypes.string,
 		name: React.PropTypes.string,
 		url: React.PropTypes.string,
+		onClickDelete: React.PropTypes.func,
 		onClickEdit: React.PropTypes.func
 	},
 
 	getDefaultProps() {
 		return {};
+	},
+
+	handleClickDelete() {
+		this.props.onClickDelete(this.props.id);
 	},
 
 	handleClickEdit() {
@@ -125,11 +160,19 @@ const PartnerListItem = React.createClass({
 
 				<td className={b(className, 'table-td', {name: 'edit'})}>
 					<button
-						className="btn btn-sm btn-default"
+						className="btn btn-sm btn-block btn-default"
 						onClick={this.handleClickEdit}
 						type="button"
 						>
 						{'Редактировать'}
+					</button>
+
+					<button
+						className="btn btn-sm btn-block btn-danger"
+						onClick={this.handleClickDelete}
+						type="button"
+						>
+						{'Удалить'}
 					</button>
 				</td>
 			</tr>

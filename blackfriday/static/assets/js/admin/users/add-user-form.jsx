@@ -23,8 +23,7 @@ class AddUser extends Form {
 				},
 				name: {
 					label: 'Имя/Название',
-					value: '',
-					required: false
+					value: ''
 				},
 				password: {
 					label: 'Пароль',
@@ -168,7 +167,7 @@ class AddUser extends Form {
 				<div className="modal-body">
 					<form
 						action=""
-						onClick={this.handleClickSubmit}
+						onSubmit={this.handleClickSubmit}
 						>
 						{this.buildRow('email')}
 						{this.buildRow('name')}

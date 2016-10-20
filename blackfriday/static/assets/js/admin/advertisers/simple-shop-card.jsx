@@ -71,7 +71,7 @@ const SimpleShopCard = React.createClass({
 
 				<div className={b(className, 'action-list')}>
 					<div className={b('action-list')}>
-						{isAdvertiser ? (
+						{isAdmin || isAdvertiser ? (
 							<a
 								className={b('action-list', 'item')}
 								href={editUrl}

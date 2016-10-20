@@ -8,8 +8,8 @@ import ControlLabel from '../components/control-label.jsx';
 import FormHorizontalRow from '../components/form-horizontal-row.jsx';
 import Select from '../components/select.jsx';
 import {hasRole, formatPrice} from '../utils.js';
-import PlanOptionList from './plan-option-list.jsx';
-import ShopPlanSelect from './shop-plan-select.jsx';
+import PlanOptionList from '../advertisers/promo-option-list.jsx';
+import ShopPlanSelect from '../advertisers/merchant-promo-select.jsx';
 
 const PageAddShop = React.createClass({
 	getInitialState() {

@@ -1,12 +1,14 @@
 import collections
 
 import operator
+from functools import partial
 from functools import reduce
 
+from django.conf import settings
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 
-from apps.orders.models import InvoiceStatus
+from apps.orders.models import InvoiceStatus, InvoiceOption
 from apps.promo.models import Option
 from django.utils import timezone
 
@@ -23,11 +25,29 @@ class HeadBasis:
     proxy = 1
 
 
+class AdvertiserType:
+    REGULAR = 0
+    AKIT = 10
+    ADMIT_AD = 11
+    PARTNERS = 12
+    SUPERNOVA = 20
+
+
 class AdvertiserProfile(models.Model):
     HEAD_BASISES = (
         (HeadBasis.charter, 'На основании устава'),
         (HeadBasis.proxy, 'На основании доверенности')
     )
+
+    TYPES = (
+        (AdvertiserType.REGULAR, 'Обычный'),
+        (AdvertiserType.AKIT, 'АКИТ'),
+        (AdvertiserType.ADMIT_AD, 'AdmitAd'),
+        (AdvertiserType.PARTNERS, 'Партнёры'),
+        (AdvertiserType.SUPERNOVA, 'Сверхновая'),
+    )
+
+    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR)
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
@@ -47,6 +67,28 @@ class AdvertiserProfile(models.Model):
     class Meta:
         verbose_name = 'Профиль рекламодателя'
         verbose_name_plural = 'Профили рекламодателей'
+
+    @property
+    def is_valid(self):
+        return (self.type > 0 or
+                all(map(lambda field: field.value_from_object(self) not in (None, ''), self._meta.fields)))
+
+    @property
+    def is_supernova(self):
+        return self.type == AdvertiserType.SUPERNOVA
+
+    @is_supernova.setter
+    def is_supernova(self, value):
+        self.type = AdvertiserType.SUPERNOVA & int(value)
+
+    @property
+    def inner(self):
+        if 10 <= self.type < 20:
+            return dict(self.TYPES).get(self.type)
+
+    @inner.setter
+    def inner(self, value):
+        self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES))).get(value)
 
 
 class Merchant(models.Model):
@@ -73,6 +115,8 @@ class Merchant(models.Model):
     moderation_status = models.IntegerField(default=ModerationStatus.new, choices=MODERATION_STATUSES,
                                             verbose_name='Статус модерации')
     is_active = models.BooleanField(default=False, verbose_name='Активен')
+
+    logo_categories = models.ManyToManyField('catalog.Category', related_name='merchant_logos')
 
     class Meta:
         verbose_name = 'Магазин'
@@ -106,9 +150,24 @@ class Merchant(models.Model):
             return invoice.promo
 
     @property
-    def banners(self):
-        # ToDo: Когда будет релейтед нейм на banners.Banner, убрать
-        return []
+    def limits(self):
+        options = {}
+
+        def get_options(qs):
+            qs = qs.values('option__tech_name').annotate(option_sum=Sum('value'))
+            return dict(qs.values_list('option__tech_name', 'option_sum'))
+
+        def get_value(rule):
+            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+
+        if self.promo:
+            options.update(get_options(self.promo.options))
+        options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=self, invoice__is_paid=True)))
+
+        return {
+            limit: reduce(operator.add, map(get_value, rules), 0)
+            for limit, rules in settings.LIMITS_RULES.items()
+        }
 
     @property
     def promo(self):
@@ -125,7 +184,7 @@ class Merchant(models.Model):
 
     @property
     def payment_status(self):
-        new = self.invoices.filter(is_paid=False, expired_datetime__lte=timezone.now()).exists()
+        new = self.invoices.filter(is_paid=False, expired_datetime__gt=timezone.now()).exists()
         paid = self.invoices.filter(is_paid=True).exists()
         if not new and paid:
             return InvoiceStatus.paid
@@ -133,8 +192,43 @@ class Merchant(models.Model):
 
     @property
     def options_count(self):
-        return Option.objects.filter(in_invoices__invoice__is_paid=True).distinct().count()
+        return (Option.objects
+                .filter(in_invoices__invoice__is_paid=True, in_invoices__invoice__merchant=self)
+                .distinct().count())
 
     @property
     def owner_id(self):
         return self.advertiser.id
+
+
+ADVERTISER_INNER_TYPES = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))
+
+
+class BannerType:
+    SUPER = 0
+    ACTION = 10
+    VERTICAL = 20
+    BG_LEFT = 30
+    BG_RIGHT = 40
+
+
+class Banner(models.Model):
+    TYPES = (
+        (BannerType.SUPER, 'Супербаннер'),
+        (BannerType.ACTION, 'Акционный баннер'),
+        (BannerType.VERTICAL, 'Вертикальный баннер'),
+        (BannerType.BG_LEFT, 'Фон слева'),
+        (BannerType.BG_RIGHT, 'Фон справа'),
+    )
+
+    type = models.IntegerField(choices=TYPES)
+    image = models.ForeignKey('mediafiles.Image', related_name='banners')
+    url = models.URLField()
+    on_main = models.BooleanField()
+    in_mailing = models.BooleanField()
+    categories = models.ManyToManyField('catalog.Category', related_name='banners')
+    merchant = models.ForeignKey(Merchant, related_name='banners')
+
+    @property
+    def owner_id(self):
+        return self.merchant.owner_id

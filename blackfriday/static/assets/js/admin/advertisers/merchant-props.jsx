@@ -27,9 +27,9 @@ class MerchantProps extends React.Component {
 
 		const isCanceled = paymentStatus === 2;
 
-		const promoName = promo && promo.name;
-		const isAllowPlanSelect = (!promoName || isCanceled) && (isAdmin || isAdvertiser);
-		const planName = isAllowPlanSelect ? 'Выберите пакет' : promoName;
+		let promoName = promo && promo.name;
+		const isAllowPromoSelect = (!promoName || isCanceled) && (isAdmin || isAdvertiser);
+		promoName = isAllowPromoSelect ? 'Выберите пакет' : promoName;
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
 
@@ -42,13 +42,13 @@ class MerchantProps extends React.Component {
 
 					<span
 						className="props__value"
-						title={planName}
+						title={promoName}
 						>
-						{isAllowPlanSelect ? (
-							<a href={`${editUrl}#plan`}>
-								{planName}
+						{isAllowPromoSelect ? (
+							<a href={`${editUrl}#promo`}>
+								{promoName}
 							</a>
-						) : planName || 'Не выбран'}
+						) : promoName || 'Не выбран'}
 					</span>
 				</li>
 
@@ -86,7 +86,7 @@ class MerchantProps extends React.Component {
 					</span>
 				</li>
 
-				{isCanceled || (!optionsCount && optionsCount !== 0) ? null : (
+				{isCanceled || optionsCount ? (
 					<li className="props__item">
 						<span className="props__label">
 							{'Доп. опции:'}
@@ -94,13 +94,13 @@ class MerchantProps extends React.Component {
 
 						<span className="props__value">
 							{isCanceled ? (
-								<a href={`${editUrl}#plan`}>
+								<a href={`${editUrl}#promo`}>
 									{optionsCount}
 								</a>
 							) : optionsCount}
 						</span>
 					</li>
-				)}
+				) : null}
 
 				<li className="props__item">
 					<span className="props__label">

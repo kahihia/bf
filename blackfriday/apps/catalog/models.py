@@ -4,6 +4,7 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
+    merchant = models.ForeignKey('advertisers.Merchant', blank=True, null=True, related_name='categories')
 
     class Meta:
         verbose_name = 'Категория'
@@ -28,7 +29,7 @@ class Product(models.Model):
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
     url = models.CharField(verbose_name='Ссылка', max_length=255)
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    image = models.FileField(upload_to='products', verbose_name='Изображение')
+    image = models.URLField()
     currency = models.CharField(max_length=10)
 
     class Meta:
@@ -37,3 +38,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def owner_id(self):
+        return self.merchant.advertiser_id

@@ -6,8 +6,10 @@ const Popover = React.createClass({
 	propTypes: {
 		children: React.PropTypes.node,
 		className: React.PropTypes.string,
-		title: React.PropTypes.string,
-		content: React.PropTypes.string
+		content: React.PropTypes.string,
+		html: React.PropTypes.string,
+		placement: React.PropTypes.string,
+		title: React.PropTypes.string
 	},
 
 	componentDidMount() {
@@ -19,6 +21,14 @@ const Popover = React.createClass({
 	},
 
 	render() {
+		const {
+			children,
+			className,
+			content,
+			html,
+			placement,
+			title
+		} = this.props;
 		const popover = ref => {
 			this.popover = ref;
 		};
@@ -26,13 +36,15 @@ const Popover = React.createClass({
 		return (
 			<span
 				ref={popover}
-				className={this.props.className}
-				title={this.props.title}
-				data-content={this.props.content}
+				className={className}
+				title={title}
+				data-content={content}
+				data-html={html}
+				data-placement={placement}
 				data-toggle="popover"
 				data-trigger="hover"
 				>
-				{this.props.children}
+				{children}
 			</span>
 		);
 	}

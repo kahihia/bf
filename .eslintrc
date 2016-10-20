@@ -2,5 +2,9 @@
   "extends": [
     "xo",
     "xo-react"
-  ]
+  ],
+  "rules": {
+    "handle-callback-err": "off",
+    "complexity": "off"
+  }
 }

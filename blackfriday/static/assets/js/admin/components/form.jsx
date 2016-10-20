@@ -9,6 +9,7 @@ class Form extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isChanged: false,
 			isLoading: false,
 			fields: {
 			}
@@ -37,13 +38,21 @@ class Form extends React.Component {
 
 		const {fields} = this.state;
 		_.forEach(fields, field => {
-			const {required, value, label} = field;
+			const {pattern, required, value, label} = field;
 			if (required && (_.isUndefined(value) || _.isNull(value) || value === '')) {
 				isValid = false;
 				if (warnings) {
 					toastr.warning(`Заполните поле "${label}"`);
 				}
 				return false;
+			} else if (pattern) {
+				let test = new RegExp(pattern);
+				if (!test.test(value)) {
+					isValid = false;
+					if (warnings) {
+						toastr.warning(`Неверный формат поля "${label}"`);
+					}
+				}
 			}
 		});
 
@@ -57,6 +66,7 @@ class Form extends React.Component {
 
 	updateData(name, value) {
 		this.setState(previousState => {
+			previousState.isChanged = true;
 			const fields = previousState.fields;
 			const field = fields[name];
 			field.value = value;
@@ -71,12 +81,17 @@ class Form extends React.Component {
 	}
 
 	buildRow(name) {
-		const field = this.state.fields[name];
+		const {
+			fields,
+			isLoading
+		} = this.state;
+		const field = fields[name];
 
 		return (
 			<FormRow
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
+				disabled={isLoading}
 				{...{name}}
 				{...field}
 				/>
@@ -84,13 +99,18 @@ class Form extends React.Component {
 	}
 
 	buildCol(name) {
-		const field = this.state.fields[name];
+		const {
+			fields,
+			isLoading
+		} = this.state;
+		const field = fields[name];
 
 		return (
 			<FormCol
 				className="col-xs-6"
 				onChange={this.handleChange}
 				readOnly={this.props.readOnly}
+				disabled={isLoading}
 				{...{name}}
 				{...field}
 				/>

@@ -1,8 +1,12 @@
+/* global _ */
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
+import {ADVERTISER_INNER_VALUES} from '../const.js';
 import FormRow from '../components/form-row.jsx';
 import Radio from '../components/radio.jsx';
+import Checkbox from '../components/checkbox.jsx';
+import Select from '../components/select.jsx';
 import PromoSelect from './promo-select.jsx';
 
 class MerchantListFilter extends React.Component {
@@ -13,6 +17,8 @@ class MerchantListFilter extends React.Component {
 		this.handleFilterByName = this.handleFilterByName.bind(this);
 		this.handleFilterByPromo = this.handleFilterByPromo.bind(this);
 		this.handleFilterByStatus = this.handleFilterByStatus.bind(this);
+		this.handleFilterBySupernovaAdvertiser = this.handleFilterBySupernovaAdvertiser.bind(this);
+		this.handleFilterByInnerAdvertiser = this.handleFilterByInnerAdvertiser.bind(this);
 	}
 
 	handleFilterByDate(value) {
@@ -31,13 +37,32 @@ class MerchantListFilter extends React.Component {
 		this.props.onFilterByStatus(value);
 	}
 
+	handleFilterBySupernovaAdvertiser(value) {
+		this.props.onFilterBySupernovaAdvertiser(value);
+	}
+
+	handleFilterByInnerAdvertiser(value) {
+		this.props.onFilterByInnerAdvertiser(value);
+	}
+
 	render() {
 		const {
 			filterByDate,
 			filterByName,
 			filterByPromo,
-			filterByStatus
+			filterByStatus,
+			filterBySupernovaAdvertiser,
+			filterByInnerAdvertiser
 		} = this.props;
+		const advertiserInnerOptions = _.union(
+			[{id: '', name: '- особый признак -'}],
+			_.map(ADVERTISER_INNER_VALUES, value => {
+				return {
+					id: value,
+					name: value
+				};
+			})
+		);
 
 		return (
 			<div className="form">
@@ -114,6 +139,27 @@ class MerchantListFilter extends React.Component {
 						</div>
 					</div>
 				</div>
+				<div className="row">
+					<div className="col-sm-3">
+						<div className="form-group">
+							<Select
+								options={advertiserInnerOptions}
+								selected={filterByInnerAdvertiser}
+								onChange={this.handleFilterByInnerAdvertiser}
+								/>
+						</div>
+					</div>
+
+					<div className="col-sm-3">
+						<div className="form-group">
+							<Checkbox
+								text="Только «Сверхновая»"
+								isChecked={filterBySupernovaAdvertiser}
+								onChange={this.handleFilterBySupernovaAdvertiser}
+								/>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -126,16 +172,22 @@ MerchantListFilter.propTypes = {
 		React.PropTypes.string,
 		React.PropTypes.number
 	]),
+	filterBySupernovaAdvertiser: React.PropTypes.bool,
+	filterByInnerAdvertiser: React.PropTypes.string,
 	onFilterByDate: React.PropTypes.func,
 	onFilterByName: React.PropTypes.func,
 	onFilterByPromo: React.PropTypes.func,
-	onFilterByStatus: React.PropTypes.func
+	onFilterByStatus: React.PropTypes.func,
+	onFilterBySupernovaAdvertiser: React.PropTypes.func,
+	onFilterByInnerAdvertiser: React.PropTypes.func
 };
 MerchantListFilter.defaultProps = {
 	filterByDate: 'ASC',
 	filterByName: '',
 	filterByPromo: '',
-	filterByStatus: ''
+	filterByStatus: '',
+	filterBySupernovaAdvertiser: false,
+	filterByInnerAdvertiser: null
 };
 
 export default MerchantListFilter;

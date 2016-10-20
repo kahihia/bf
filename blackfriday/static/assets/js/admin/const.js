@@ -41,6 +41,34 @@ export const APPLICATION_STATUS = {
 	30: 'Отказ'
 };
 
+export const BANNER_TYPE = {
+	0: {
+		name: 'Супербаннер',
+		width: 900,
+		height: 275
+	},
+	10: {
+		name: 'Акционный баннер',
+		width: 435,
+		height: 250
+	},
+	20: {
+		name: 'Вертикальный баннер',
+		width: 240,
+		height: 400
+	},
+	30: {
+		name: 'Фон слева',
+		width: 500,
+		height: 2000
+	},
+	40: {
+		name: 'Фон справа',
+		width: 500,
+		height: 2000
+	}
+};
+
 export const HELP_TEXT = {
 	password: 'Не менее 8 симв., латинские буквы или цифры.'
 };
@@ -55,4 +83,45 @@ export const SITE_URL = ENV.siteUrl;
 export const SORT_TYPES = {
 	ASC: 'ASC',
 	DESC: 'DESC'
+};
+
+export const FEED_CELL = {
+	brand: 'Производитель',
+	category: 'Категория',
+	country: 'Страна производства',
+	discount: 'Скидка',
+	image: 'Картинка',
+	name: 'Название',
+	oldPrice: 'Старая цена',
+	price: 'Цена',
+	startPrice: 'Цена от',
+	teaser: 'Товар на главной',
+	teaserOnMain: 'Тизер на первом экране',
+	url: 'URL'
+};
+
+export const ADVERTISER_INNER = ENV.advertiserInner;
+
+export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;
+
+export const SILVER_PROMO_ID = 2;
+
+export const ADVERTISER_INNER_VALUES = [
+	'АКИТ',
+	'AdmitAd',
+	'Партнёры'
+];
+
+export const BANNER_LIMIT_ALIAS = {
+	0: 'superbanner',
+	10: 'banner',
+	20: 'vertical_banner',
+	30: [
+		'main_background',
+		'category_background'
+	],
+	40: [
+		'main_background',
+		'category_background'
+	]
 };

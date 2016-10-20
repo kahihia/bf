@@ -1,0 +1,37 @@
+.merchant-edit-status-panel
+	display: flex
+	align-items: center
+	background-color: #f9f9fc
+	padding: 20px
+	margin: 0 -20px 15px
+
+	&__data
+		flex: 1
+
+		.props
+			font-size: 15px
+
+			&__item
+				display: inline-block
+
+				+ .props__item
+					margin-left: 17px
+
+			&__label
+				color: #818181
+
+			&__value
+				font-weight: bold
+				color: #4b4b4b
+
+			&__link
+				color: $link-color
+				cursor: pointer
+				margin-left: 0.25em
+
+	&__action
+		padding-left: 15px
+
+		.btn
+			+ .btn
+				margin-left: 15px

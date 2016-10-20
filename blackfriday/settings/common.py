@@ -86,6 +86,8 @@ INSTALLED_APPS = [
     'apps.leads',
     'apps.orders',
     'apps.mediafiles',
+    'apps.specials',
+    'apps.mailing',
 
     'webpack_loader',
     'django_rq',
@@ -157,3 +159,24 @@ RQ_QUEUES = {
         'DB': 0
     }
 }
+
+LIMITS_RULES = {
+    'banner_on_main': ['banner_on_main'],
+    'banner_positions': ['banner_at_cat', 'additional_banner_at_cat'],
+    'banners': [4],
+    'categories': ['cats_num'],
+    'category_backgrounds': ['cat_background'],
+    'extra_banner_categories': ['additional_banner_at_cat'],
+    'logo_categories': ['logo_at_cat', 'additional_logo_cat'],
+    'main_backgrounds': ['main_background'],
+    'products': ['products', 'additional_products'],
+    'superbanner_categories': ['superbanner_at_cat', 'additional_superbanner_at_cat'],
+    'superbanner_in_mailing': ['superbanner_at_mailing'],
+    'superbanner_on_main': ['superbanner_on_main'],
+    'superbanners': [1, 'superbanner_at_mailing'],
+    'teasers': ['teaser', 'additional_teaser'],
+    'teasers_on_main': ['teaser_on_main'],
+    'vertical_banners': ['vertical_banner_on_main'],
+}
+SPECIAL_SUPPORTED_FORMATS = ['pdf']
+RETAIL_ROCKET_CAT_SHIFT = 100
