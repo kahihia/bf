@@ -21,6 +21,10 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	'use strict';
 
 	const AdminMerchant = React.createClass({
+		propTypes: {
+			merchantId: React.PropTypes.number.isRequired
+		},
+
 		getInitialState() {
 			return {
 				banners: [],
@@ -29,7 +33,6 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				data: {},
 				limits: {},
 				logoCategories: [],
-				merchantId: null,
 				products: [],
 				productsNew: []
 			};
@@ -37,20 +40,18 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		componentWillMount() {
 			this.requestCategories();
-			this.setState({merchantId: ENV.merchantId}, () => {
-				this.requestLimits();
-				this.requestMerchant();
+			this.requestLimits();
+			this.requestMerchant();
 
-				const hash = window.location.hash;
-				if (/promo/.test(hash)) {
-					this.openPromoSelectModal();
-				}
-			});
+			const hash = window.location.hash;
+			if (/promo/.test(hash)) {
+				this.openPromoSelectModal();
+			}
 		},
 
 		requestMerchant() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -73,7 +74,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestLimits() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/limits/`,
+				url: `/api/merchants/${this.props.merchantId}/limits/`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -128,7 +129,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {image};
 
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -154,7 +155,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestDelete() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'DELETE',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -182,7 +183,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {status: 1};
 
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/moderation/`,
+				url: `/api/merchants/${this.props.merchantId}/moderation/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -260,9 +261,11 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		openPromoSelectModal() {
 			jQuery('#promo-select-modal').modal('show');
 			const {
-				data,
-				merchantId
+				data
 			} = this.state;
+			const {
+				merchantId
+			} = this.props;
 			const {
 				paymentStatus,
 				promo
@@ -356,13 +359,11 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		render() {
 			const {
 				data,
-				limits,
-				merchantId
+				limits
 			} = this.state;
-
-			if (merchantId === null) {
-				return null;
-			}
+			const {
+				merchantId
+			} = this.props;
 
 			const categoriesSelected = this.collectCategoriesSelected();
 			const categoriesAvailable = this.collectCategoriesAvailable(categoriesSelected);
@@ -503,5 +504,5 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	});
 
 	const block = document.getElementById('admin-merchant');
-	ReactDOM.render(<AdminMerchant/>, block);
+	ReactDOM.render(<AdminMerchant merchantId={ENV.merchantId}/>, block);
 })();

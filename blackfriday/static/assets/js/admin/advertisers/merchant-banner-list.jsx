@@ -278,8 +278,6 @@ class MerchantBannerList extends React.Component {
 						return null;
 					}
 
-					console.log(bannerType, limits);
-
 					return (
 						<div
 							key={bannerType}

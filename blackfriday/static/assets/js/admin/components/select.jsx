@@ -39,32 +39,28 @@ const Select = React.createClass({
 
 		let o = options;
 		if (!Array.isArray(options)) {
-			o = Object.keys(options).map(key => {
-				return {
-					id: key,
-					name: options[key]
-				};
-			});
+			o = Object.keys(options).map(key => ({
+				id: key,
+				name: options[key]
+			}));
 		}
 
 		return (
 			<select
 				className="form-control"
 				onChange={this.handleChange}
-				value={selected}
+				value={String(selected)}
 				disabled={disabled}
 				style={props.style}
 				>
-				{o.map(option => {
-					return (
-						<option
-							key={option.id}
-							value={option.id}
-							>
-							{option.name}
-						</option>
-					);
-				})}
+				{o.map(option => (
+					<option
+						key={option.id}
+						value={option.id}
+						>
+						{option.name}
+					</option>
+				))}
 			</select>
 		);
 	}

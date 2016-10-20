@@ -128,8 +128,11 @@ class MerchantProductList extends React.Component {
 		}
 	}
 
-	handleSubmitProductsNew(products) {
+	handleSubmitProductsNew(newProducts) {
+		const {products: previousProducts} = this.state;
 		const productsNew = [];
+		const products = previousProducts.concat(newProducts);
+
 		this.setState({
 			productsNew,
 			products
@@ -159,6 +162,15 @@ class MerchantProductList extends React.Component {
 			limits,
 			merchantId
 		} = this.props;
+
+		if (!limits.products && !products.length) {
+			return null;
+		}
+
+		let productsCountAvailable = limits.products - (products.length + productsNew.length);
+		if (isNaN(productsCountAvailable) || productsCountAvailable < 0) {
+			productsCountAvailable = 0;
+		}
 
 		return (
 			<div className="shop-edit-block">
@@ -204,7 +216,7 @@ class MerchantProductList extends React.Component {
 								{'Доступно '}
 
 								<strong>
-									{String(limits.products - (products.length + productsNew.length))}
+									{productsCountAvailable}
 								</strong>
 
 								{' из '}
@@ -230,6 +242,7 @@ class MerchantProductList extends React.Component {
 							<ProductsTable
 								{...{
 									categoriesAvailable,
+									limits,
 									merchantId,
 									products
 								}}
