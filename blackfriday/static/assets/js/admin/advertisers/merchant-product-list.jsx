@@ -35,10 +35,10 @@ class MerchantProductList extends React.Component {
 	requestProducts() {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 
 		xhr({
-			url: `/api/merchants/${id}/products/`,
+			url: `/api/merchants/${merchantId}/products/`,
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -46,7 +46,10 @@ class MerchantProductList extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					this.setState({products: _.sortBy(data, 'id')});
+					const products = _.sortBy(data, 'id');
+					this.setState({products}, () => {
+						this.props.onChange({products});
+					});
 					break;
 				}
 				case 400: {
@@ -64,10 +67,10 @@ class MerchantProductList extends React.Component {
 	requestProductsDelete() {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 
 		xhr({
-			url: `/api/merchants/${id}/products/`,
+			url: `/api/merchants/${merchantId}/products/`,
 			method: 'DELETE',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -78,7 +81,10 @@ class MerchantProductList extends React.Component {
 
 			switch (resp.statusCode) {
 				case 204: {
-					this.setState({products: []});
+					const products = [];
+					this.setState({products}, () => {
+						this.props.onChange({products});
+					});
 					break;
 				}
 				case 400: {
@@ -95,7 +101,7 @@ class MerchantProductList extends React.Component {
 
 	openMerchantProductsAddModal() {
 		jQuery('#merchant-products-add-modal').modal('show');
-		const {id} = this.props;
+		const {merchantId} = this.props;
 		const onSubmit = data => {
 			jQuery('#merchant-products-add-modal').modal('hide');
 			this.merchantProductsAdd(data);
@@ -103,7 +109,7 @@ class MerchantProductList extends React.Component {
 		ReactDOM.render(
 			<MerchantProductsAddForm
 				{...{
-					id,
+					merchantId,
 					onSubmit
 				}}
 				/>
@@ -117,15 +123,18 @@ class MerchantProductList extends React.Component {
 	}
 
 	handleClickProductsDelete() {
-		if (window.confirm('Удалить товары?')) {
+		if (window.confirm('Удалить все товары?')) {
 			this.requestProductsDelete();
 		}
 	}
 
 	handleSubmitProductsNew(products) {
+		const productsNew = [];
 		this.setState({
-			productsNew: [],
+			productsNew,
 			products
+		}, () => {
+			this.props.onChange({products, productsNew});
 		});
 	}
 
@@ -133,10 +142,9 @@ class MerchantProductList extends React.Component {
 		return _.find(this.state.products, {id});
 	}
 
-	merchantProductsAdd(data) {
-		this.setState(previousState => {
-			previousState.productsNew = data;
-			return previousState;
+	merchantProductsAdd(productsNew) {
+		this.setState({productsNew}, () => {
+			this.props.onChange({productsNew});
 		});
 	}
 
@@ -147,8 +155,9 @@ class MerchantProductList extends React.Component {
 			productsNew
 		} = this.state;
 		const {
-			availableCategories,
-			id
+			categoriesAvailable,
+			limits,
+			merchantId
 		} = this.props;
 
 		return (
@@ -183,28 +192,45 @@ class MerchantProductList extends React.Component {
 										disabled={isLoading}
 										type="button"
 										>
-										{'Удалить'}
+										{'Удалить все товары'}
 									</button>
 								</span>
 							) : null}
+
+							<span
+								className="text-muted"
+								style={{marginLeft: '22px'}}
+								>
+								{'Доступно '}
+
+								<strong>
+									{String(limits.products - (products.length + productsNew.length))}
+								</strong>
+
+								{' из '}
+
+								<strong>
+									{limits.products}
+								</strong>
+							</span>
 						</p>
 
 						{productsNew.length ? (
 							<ProductsNewTable
 								products={productsNew}
-								merchantId={id}
 								onSubmit={this.handleSubmitProductsNew}
 								{...{
-									availableCategories
+									categoriesAvailable,
+									merchantId
 								}}
 								/>
 						) : null}
 
 						{products.length ? (
 							<ProductsTable
-								merchantId={id}
 								{...{
-									availableCategories,
+									categoriesAvailable,
+									merchantId,
 									products
 								}}
 								/>
@@ -216,8 +242,10 @@ class MerchantProductList extends React.Component {
 	}
 }
 MerchantProductList.propTypes = {
-	availableCategories: React.PropTypes.array,
-	id: React.PropTypes.number.isRequired
+	categoriesAvailable: React.PropTypes.array,
+	limits: React.PropTypes.object,
+	merchantId: React.PropTypes.number.isRequired,
+	onChange: React.PropTypes.func
 };
 MerchantProductList.defaultProps = {
 };

@@ -246,13 +246,13 @@ class ProductsTable extends React.Component {
 			warnings
 		} = this.state;
 		const {
-			availableCategories
+			categoriesAvailable
 		} = this.props;
 		const isAllSelected = this.isAllSelected();
 		const isAnySelected = this.isAnySelected();
 		const isWaiting = isLoading || Boolean(queue);
 
-		const availableCategoryOptions = availableCategories.reduce((a, b) => {
+		const categoriesAvailableOptions = categoriesAvailable.reduce((a, b) => {
 			a[b.name] = b.name;
 			return a;
 		}, {none: ''});
@@ -260,7 +260,7 @@ class ProductsTable extends React.Component {
 		return (
 			<IsLoadingWrapper isLoading={isWaiting}>
 				<CategoryChanger
-					availableCategories={availableCategoryOptions}
+					categoriesAvailable={categoriesAvailableOptions}
 					onChange={this.handleChangeGroupCategory}
 					disabled={!isAnySelected}
 					/>
@@ -359,7 +359,7 @@ class ProductsTable extends React.Component {
 								errors={errors[product.id]}
 								warnings={warnings[product.id]}
 								isSelected={product.isSelected}
-								availableCategories={availableCategoryOptions}
+								categoriesAvailable={categoriesAvailableOptions}
 								onSelect={this.handleSelectProduct}
 								onChange={this.handleChangeProduct}
 								/>
@@ -371,12 +371,12 @@ class ProductsTable extends React.Component {
 	}
 }
 ProductsTable.propTypes = {
-	availableCategories: React.PropTypes.array,
+	categoriesAvailable: React.PropTypes.array,
 	merchantId: React.PropTypes.number,
 	products: React.PropTypes.array
 };
 ProductsTable.defaultProps = {
-	availableCategories: []
+	categoriesAvailable: []
 };
 
 export default ProductsTable;
@@ -416,7 +416,7 @@ class ProductsTableRow extends React.Component {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.availableCategories, nextProps.availableCategories)) {
+		if (!_.isEqual(this.props.categoriesAvailable, nextProps.categoriesAvailable)) {
 			isChanged = true;
 		}
 
@@ -511,7 +511,7 @@ class ProductsTableRow extends React.Component {
 	render() {
 		const {errors, warnings} = this.state;
 		const {
-			availableCategories,
+			categoriesAvailable,
 			data,
 			isSelected
 		} = this.props;
@@ -696,7 +696,7 @@ class ProductsTableRow extends React.Component {
 					warnings={warnings}
 					>
 					<Select
-						options={availableCategories}
+						options={categoriesAvailable}
 						selected={data.category.name}
 						onChange={this.handleChangeCategory}
 						/>
@@ -729,7 +729,7 @@ class ProductsTableRow extends React.Component {
 	}
 }
 ProductsTableRow.propTypes = {
-	availableCategories: React.PropTypes.object,
+	categoriesAvailable: React.PropTypes.object,
 	data: React.PropTypes.object.isRequired,
 	errors: React.PropTypes.array,
 	id: React.PropTypes.number.isRequired,
@@ -744,7 +744,7 @@ ProductsTableRow.defaultProps = {
 
 const CategoryChanger = React.createClass({
 	propTypes: {
-		availableCategories: React.PropTypes.object.isRequired,
+		categoriesAvailable: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func.isRequired,
 		disabled: React.PropTypes.bool
 	},
@@ -763,7 +763,7 @@ const CategoryChanger = React.createClass({
 
 	componentWillReceiveProps(newProps) {
 		if (this.state.categoryId === 'none') {
-			const firstCategory = newProps.availableCategories[0];
+			const firstCategory = newProps.categoriesAvailable[0];
 			if (firstCategory) {
 				this.setState({categoryId: firstCategory.id});
 			}
@@ -783,7 +783,7 @@ const CategoryChanger = React.createClass({
 			categoryId
 		} = this.state;
 		const {
-			availableCategories,
+			categoriesAvailable,
 			disabled
 		} = this.props;
 
@@ -803,7 +803,7 @@ const CategoryChanger = React.createClass({
 					<Select
 						className="form-control"
 						style={{marginRight: 5}}
-						options={availableCategories}
+						options={categoriesAvailable}
 						selected={categoryId}
 						onChange={this.handleChangeCategory}
 						disabled={disabled}

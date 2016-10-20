@@ -56,10 +56,10 @@ class MerchantPartnersSelect extends React.Component {
 	requestMerchantPartners() {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 
 		xhr({
-			url: `/api/merchants/${id}/partners/`,
+			url: `/api/merchants/${merchantId}/partners/`,
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -67,7 +67,7 @@ class MerchantPartnersSelect extends React.Component {
 
 			if (!err && resp.statusCode === 200) {
 				if (data) {
-					this.setState({value: data.map(item => (item.id))});
+					this.setState({value: data.map(item => item.id)});
 				}
 			} else {
 				this.setState({isDisabled: true});
@@ -79,12 +79,12 @@ class MerchantPartnersSelect extends React.Component {
 	requestMerchantPartnersUpdate(value) {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 
 		const json = value;
 
 		xhr({
-			url: `/api/merchants/${id}/partners/`,
+			url: `/api/merchants/${merchantId}/partners/`,
 			method: 'PATCH',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -95,7 +95,7 @@ class MerchantPartnersSelect extends React.Component {
 
 			if (!err && resp.statusCode === 200) {
 				if (data) {
-					this.setState({value: data.map(item => (item.id))});
+					this.setState({value: data.map(item => item.id)});
 				}
 			} else {
 				toastr.error('Не удалось обновить список партнёров');
@@ -149,7 +149,7 @@ class MerchantPartnersSelect extends React.Component {
 	}
 }
 MerchantPartnersSelect.propTypes = {
-	id: React.PropTypes.number,
+	merchantId: React.PropTypes.number,
 	value: React.PropTypes.array
 };
 MerchantPartnersSelect.defaultProps = {

@@ -153,12 +153,12 @@ class ProductsNewTable extends React.Component {
 			products
 		} = this.state;
 		const {
-			availableCategories
+			categoriesAvailable
 		} = this.props;
 		const isInvalid = this.isInvalid();
 		const isWaiting = isLoading;
 
-		const availableCategoryOptions = availableCategories.reduce((a, b) => {
+		const categoriesAvailableOptions = categoriesAvailable.reduce((a, b) => {
 			a[b.name] = b.name;
 			return a;
 		}, {});
@@ -258,7 +258,7 @@ class ProductsNewTable extends React.Component {
 									data={product.data}
 									errors={product.errors}
 									warnings={product.warnings}
-									availableCategories={availableCategoryOptions}
+									categoriesAvailable={categoriesAvailableOptions}
 									onChange={this.handleChangeProduct}
 									/>
 							))}
@@ -272,13 +272,13 @@ class ProductsNewTable extends React.Component {
 	}
 }
 ProductsNewTable.propTypes = {
-	availableCategories: React.PropTypes.array,
+	categoriesAvailable: React.PropTypes.array,
 	merchantId: React.PropTypes.number,
 	onSubmit: React.PropTypes.func,
 	products: React.PropTypes.array
 };
 ProductsNewTable.defaultProps = {
-	availableCategories: []
+	categoriesAvailable: []
 };
 
 export default ProductsNewTable;
@@ -354,7 +354,7 @@ class ProductsNewTableRow extends React.Component {
 	render() {
 		const {errors, warnings} = this.state;
 		const {
-			availableCategories,
+			categoriesAvailable,
 			data
 		} = this.props;
 
@@ -512,7 +512,7 @@ class ProductsNewTableRow extends React.Component {
 					warnings={warnings}
 					>
 					<Select
-						options={availableCategories}
+						options={categoriesAvailable}
 						selected={data.category}
 						onChange={this.handleChangeCategory}
 						/>
@@ -545,7 +545,7 @@ class ProductsNewTableRow extends React.Component {
 	}
 }
 ProductsNewTableRow.propTypes = {
-	availableCategories: React.PropTypes.object,
+	categoriesAvailable: React.PropTypes.object,
 	data: React.PropTypes.object,
 	errors: React.PropTypes.array,
 	id: React.PropTypes.number,

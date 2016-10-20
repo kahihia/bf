@@ -10,18 +10,19 @@ import ImageInfo from '../common/image-info.jsx';
 import ImagesUpload from '../common/images-upload.jsx';
 import Radio from '../components/radio.jsx';
 
-const DEFAULT_BANNER_TYPE = 0;
-
 class MerchantBannerAddForm extends Form {
 	constructor(props) {
 		super(props);
+		const {availableBannerTypes} = props;
+		const defaultBannerType = availableBannerTypes[0];
+
 		this.state = {
 			isLoading: false,
 			fields: {
 				type: {
 					label: 'Размер',
-					value: DEFAULT_BANNER_TYPE,
-					defaultValue: DEFAULT_BANNER_TYPE,
+					value: defaultBannerType,
+					defaultValue: defaultBannerType,
 					required: true
 				},
 				image: {
@@ -59,6 +60,18 @@ class MerchantBannerAddForm extends Form {
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		const {availableBannerTypes} = nextProps;
+		const defaultBannerType = availableBannerTypes[0];
+
+		this.setState(previousState => {
+			const type = previousState.fields.type;
+			type.value = defaultBannerType;
+			type.defaultValue = defaultBannerType;
+			return previousState;
+		});
+	}
+
 	requestMerchantBannerAdd() {
 		if (!this.validate(true)) {
 			return;
@@ -66,11 +79,11 @@ class MerchantBannerAddForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 		const json = this.serialize();
 
 		xhr({
-			url: `/api/merchants/${id}/banners/`,
+			url: `/api/merchants/${merchantId}/banners/`,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -79,31 +92,25 @@ class MerchantBannerAddForm extends Form {
 		}, (err, resp, data) => {
 			this.setState({isLoading: false});
 
-			if (data) {
-				switch (resp.statusCode) {
-					case 201: {
-						this.resetForm();
+			switch (resp.statusCode) {
+				case 201: {
+					this.resetForm();
 
-						if (this.props.onSubmit) {
-							this.props.onSubmit(data);
-						}
+					if (this.props.onSubmit) {
+						this.props.onSubmit(data);
+					}
 
-						break;
-					}
-					case 400: {
-						this.processErrors(data);
-						break;
-					}
-					default: {
-						toastr.error('Не удалось загрузить баннер');
-						break;
-					}
+					break;
 				}
-
-				return;
+				case 400: {
+					this.processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось загрузить баннер');
+					break;
+				}
 			}
-
-			toastr.error('Не удалось загрузить баннер ');
 		});
 	}
 
@@ -162,14 +169,14 @@ class MerchantBannerAddForm extends Form {
 						>
 						{this.buildRow('url')}
 
-						{availableBannerTypes.map(item => (
+						{availableBannerTypes.length > 1 ? availableBannerTypes.map(item => (
 							<BannerTypeRadio
 								key={item}
 								type={item}
 								isChecked={bannerType === item}
 								onChange={this.handleChangeType}
 								/>
-						))}
+						)) : null}
 
 						{bannerTypeImageUrl ? (
 							<img
@@ -213,7 +220,7 @@ class MerchantBannerAddForm extends Form {
 }
 MerchantBannerAddForm.propTypes = {
 	availableBannerTypes: React.PropTypes.array.isRequired,
-	id: React.PropTypes.number.isRequired
+	merchantId: React.PropTypes.number.isRequired
 };
 MerchantBannerAddForm.defaultProps = {
 };

@@ -9,7 +9,13 @@
     </h1>
 </div>
 
-<div id="admin-merchants"></div>
+{% if user.role == 'advertiser' and not user.is_valid_advertiser %}
+    <p>
+        Чтобы добавить магазины, необходимо <a href="{% url 'advertisers:profile' %}">заполнить реквизиты</a>.
+    </p>
+{% else %}
+    <div id="admin-merchants"></div>
+{% endif %}
 
 {% include "advertisers/includes/add-merchant-modal.html" %}
 {% endblock content %}

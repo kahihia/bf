@@ -9,20 +9,6 @@ import ReactDOM from 'react-dom';
 (function () {
 	'use strict';
 
-	const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
-
-	const pageAddShop = document.getElementById('page-add-shop');
-	if (pageAddShop) {
-		let PageAddShop = require('./admin/advertiser/page-add-shop');
-		ReactDOM.render(<PageAddShop/>, pageAddShop);
-	}
-
-	const pageMerchantProfile = document.getElementById('page-merchant-profile');
-	if (pageMerchantProfile) {
-		let PageMerchantProfile = require('./admin/advertiser/page-merchant-profile');
-		ReactDOM.render(<PageMerchantProfile userId={ENV.userId}/>, pageMerchantProfile);
-	}
-
 	// Рендер кастомных фонов
 	const customBackground = document.getElementById('custom-background');
 	if (customBackground) {

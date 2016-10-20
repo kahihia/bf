@@ -6,6 +6,7 @@ import xhr from 'xhr';
 import {TOKEN} from '../const.js';
 import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
+import MerchantDescriptionEditor from './merchant-description-editor.jsx';
 
 const className = 'merchant-edit-form';
 
@@ -82,11 +83,11 @@ class MerchantEditForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const id = this.props.id;
+		const {merchantId} = this.props;
 		const json = this.serialize();
 
 		xhr({
-			url: `/api/merchants/${id}/`,
+			url: `/api/merchants/${merchantId}/`,
 			method: 'PATCH',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -141,6 +142,8 @@ class MerchantEditForm extends Form {
 					{this.buildRow('slug')}
 					{this.buildRow('description')}
 					{this.buildRow('promocode')}
+
+					<MerchantDescriptionEditor/>
 				</form>
 			</div>
 		);
@@ -148,7 +151,7 @@ class MerchantEditForm extends Form {
 }
 MerchantEditForm.propTypes = {
 	data: React.PropTypes.object,
-	id: React.PropTypes.number
+	merchantId: React.PropTypes.number.isRequired
 };
 MerchantEditForm.defaultProps = {
 	data: {}
