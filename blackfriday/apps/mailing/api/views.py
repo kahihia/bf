@@ -5,6 +5,8 @@ from rest_framework.response import Response
 
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
+from apps.landing.models import LandingLogo
+
 from .serializers import LogoMailingSerializer
 
 
@@ -20,7 +22,9 @@ class MailingViewSet(viewsets.GenericViewSet):
 
     @list_route(methods=['get', 'post'], renderer_classes=[TemplateHTMLRenderer])
     def logos(self, request, *args, **kwargs):
-        data = {}
+        data = {
+            'logos': LandingLogo.objects.all()
+        }
         if request.method == 'POST':
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
