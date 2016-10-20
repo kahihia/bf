@@ -15,7 +15,7 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('id', 'form_url', 'invoice_id')
+        fields = ('form_url', 'invoice_id')
 
 
 class PaymentSerializer(serializers.ModelSerializer):
@@ -24,4 +24,4 @@ class PaymentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Payment
-        fields = ('id', 'status', 'message')
+        fields = ('invoice_id', 'status', 'message')

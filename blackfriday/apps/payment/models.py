@@ -21,42 +21,46 @@ class PaymentServiceStatus:
 
 
 class Payment(models.Model):
+    _message = None
+    _status = None
 
     _form_url = None
     auth = requests.auth.HTTPBasicAuth(settings.PAYMENT_SERVICE['login'], settings.PAYMENT_SERVICE['password'])
 
     external_id = models.IntegerField(null=True)
-    invoice = models.ForeignKey('orders.Invoice')
+    invoice = models.OneToOneField('orders.Invoice')
 
     def __str__(self):
         return self.invoice_id
 
     def build_url(self, endpoint):
         return '{url}{module}/{endpoint}/{pk}?requestor={requestor}'.format(
-            **settings.PAYMENT_SERVICE, endpoint=endpoint, pk=self.pk,
+            **settings.PAYMENT_SERVICE, endpoint=endpoint, pk=self.invoice_id,
         )
+
+    def get_remote_data(self):
+        try:
+            response = requests.get(
+                self.build_url(PaymentServiceEndpoint.status),
+                auth=self.auth
+            )
+            self._status = response.json()['status']
+            self._message = response.json()['message']
+        except Exception as e:
+            logger.error(str(e))
+            raise ServiceUnavailable
 
     @property
     def status(self):
-        try:
-            return requests.get(
-                self.build_url(PaymentServiceEndpoint.status),
-                auth=self.auth
-            ).json()['status']
-        except Exception as e:
-            logger.error(str(e))
-            raise ServiceUnavailable
+        if self._status is None:
+            self.get_remote_data()
+        return self._status
 
     @property
     def message(self):
-        try:
-            return requests.get(
-                self.build_url(PaymentServiceEndpoint.status),
-                auth=self.auth
-            ).json()['message']
-        except Exception as e:
-            logger.error(str(e))
-            raise ServiceUnavailable
+        if self._message is None:
+            self.get_remote_data()
+        return self._message
 
     @property
     def form_url(self):
@@ -76,8 +80,8 @@ class Payment(models.Model):
                 },
                 auth=self.auth
             )
-            self._form_url = response.json()['fromUrl']
-            self.external_id = response.json()['orderId']
+            self._form_url = response.json()['extra']['formUrl']
+            self.external_id = response.json()['order_id']
             self.save()
         except Exception as e:
             logger.error(str(e))
