@@ -1,4 +1,4 @@
-/* global toastr */
+/* global toastr, _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
@@ -24,11 +24,53 @@ class AddCategoryForm extends Form {
 					label: 'Ссылка',
 					value: '',
 					required: true
+				},
+				merchant: {
+					label: 'Магазин',
+					value: null,
+					defaultValue: null,
+					options: [],
+					type: 'select',
+					required: false
 				}
 			}
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+	}
+
+	componentWillMount() {
+		this.requestMerchants();
+	}
+
+	requestMerchants() {
+		xhr({
+			url: '/api/merchants/',
+			method: 'GET',
+			json: true
+		}, (err, resp, data) => {
+			if (!err && resp.statusCode === 200) {
+				if (data) {
+					const merchantOptions = _.map(
+						_.union(
+							[{id: null, name: '- Выберите магазин -'}],
+							_.sortBy(data, 'id')
+						),
+						m => {
+							return {id: m.id, name: m.name};
+						}
+					);
+
+					let newState = _.clone(this.state);
+
+					newState.fields.merchant.options = merchantOptions;
+
+					this.setState(newState);
+				}
+			} else {
+				toastr.error('Не удалось получить список магазинов');
+			}
+		});
 	}
 
 	requestAddCategory() {
@@ -93,6 +135,7 @@ class AddCategoryForm extends Form {
 						>
 						{this.buildRow('name')}
 						{this.buildRow('slug')}
+						{this.buildRow('merchant')}
 					</form>
 				</div>
 

@@ -55,7 +55,7 @@ export class InvoiceList extends React.Component {
 
 	requestInvoices() {
 		xhr({
-			url: '/api/invoices/',
+			url: '/api/invoices/?exclude_supervova=1',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -478,6 +478,27 @@ export class InvoiceList extends React.Component {
 				break;
 		}
 
+		let listStatus = null;
+
+		if (!sortedData.length) {
+			if (isLoading) {
+				listStatus = 'Загрузка...';
+			} else {
+				listStatus = 'Счета отсутствуют';
+			}
+		}
+
+		const statusRow = (
+			<tr>
+				<td
+					colSpan="9"
+					className="text-center text-muted"
+					>
+					{listStatus}
+				</td>
+			</tr>
+		);
+
 		return (
 			<div>
 				<div className="panel panel-default">
@@ -633,6 +654,7 @@ export class InvoiceList extends React.Component {
 								<input
 									type="checkbox"
 									checked={allSelected}
+									disabled={!sortedData.length}
 									onChange={this.handleSelectAll}
 									/>
 							</th>
@@ -692,19 +714,23 @@ export class InvoiceList extends React.Component {
 									/>
 							);
 						})}
+
+						{listStatus ? statusRow : null}
 					</tbody>
 				</table>
 
-				<InvoiceListSelectedAction
-					onChangeNewStatus={this.handleChangeNewStatus}
-					onClickChangeStatuses={this.handleClickChangeStatuses}
-					selectedItemsIds={filteredSelectedItemsIds}
-					{...{
-						isLoading,
-						newStatus,
-						noSelectedItems
-					}}
-					/>
+				{(sortedData.length >= 10) ? (
+					<InvoiceListSelectedAction
+						onChangeNewStatus={this.handleChangeNewStatus}
+						onClickChangeStatuses={this.handleClickChangeStatuses}
+						selectedItemsIds={filteredSelectedItemsIds}
+						{...{
+							isLoading,
+							newStatus,
+							noSelectedItems
+						}}
+						/>
+				) : null}
 			</div>
 		);
 	}

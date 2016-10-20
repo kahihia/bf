@@ -23,6 +23,9 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta(CategoryDetailSerializer.Meta):
         pass
 
+    def to_representation(self, instance):
+        return CategoryDetailSerializer().to_representation(instance)
+
     def validate(self, attrs):
         if attrs.get('merchant'):
             cat, name = self.instance, attrs.get('name')

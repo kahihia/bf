@@ -28,7 +28,7 @@ import CategoryList from './admin/catalog/category-list.jsx';
 			}, (err, resp, data) => {
 				if (!err && resp.statusCode === 200) {
 					if (data) {
-						this.setState({categories: _.sortBy(data, 'id')});
+						this.setState({categories: _.sortBy(data, '-merchant', 'id')});
 					}
 				} else {
 					toastr.error('Не удалось получить список категорий');

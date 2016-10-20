@@ -20,7 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
-    inner = serializers.CharField()
+    inner = serializers.CharField(allow_null=True)
     is_supernova = serializers.BooleanField()
 
     class Meta:
@@ -97,9 +97,12 @@ class AdvertiserSerializer(serializers.ModelSerializer):
 
 
 class AdvertiserTinySerializer(serializers.ModelSerializer):
+    is_supernova = serializers.BooleanField(source='profile.is_supernova')
+    inner = serializers.CharField(source='profile.inner')
+
     class Meta:
         model = User
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'is_supernova', 'inner')
 
 
 class MerchantModerationSerializer(serializers.ModelSerializer):

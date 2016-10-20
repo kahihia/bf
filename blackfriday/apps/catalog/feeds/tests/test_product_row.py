@@ -12,7 +12,7 @@ from .fixtures import FAIL_DATA, SUCCESS_DATA
 def context_fixture():
     return {
         'product_urls': set(),
-        'categories': [('correct_category_name', None)]
+        'categories': ['correct_category_name']
     }
 
 

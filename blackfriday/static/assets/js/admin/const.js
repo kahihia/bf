@@ -100,6 +100,18 @@ export const FEED_CELL = {
 	url: 'URL'
 };
 
+export const ADVERTISER_INNER = ENV.advertiserInner;
+
+export const ADVERTISER_IS_SUPERNOVA = ENV.advertiserIsSupernova;
+
+export const SILVER_PROMO_ID = 2;
+
+export const ADVERTISER_INNER_VALUES = [
+	'АКИТ',
+	'AdmitAd',
+	'Партнёры'
+];
+
 export const BANNER_LIMIT_ALIAS = {
 	0: 'superbanner',
 	10: 'banner',

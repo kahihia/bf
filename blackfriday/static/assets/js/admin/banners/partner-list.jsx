@@ -9,6 +9,7 @@ import EditPartnerForm from './edit-partner-form.jsx';
 const PartnerList = React.createClass({
 	propTypes: {
 		partners: React.PropTypes.array,
+		isLoading: React.PropTypes.bool,
 		onClickPartnerDelete: React.PropTypes.func,
 		onSubmitEdit: React.PropTypes.func
 	},
@@ -41,8 +42,29 @@ const PartnerList = React.createClass({
 	},
 
 	render() {
-		const {partners} = this.props;
+		const {partners, isLoading} = this.props;
 		const className = 'partner-list';
+
+		let listStatus = null;
+
+		if (!partners.length) {
+			if (isLoading) {
+				listStatus = 'Загрузка...';
+			} else {
+				listStatus = 'Партнёры отсутствуют';
+			}
+		}
+
+		const statusRow = (
+			<tr>
+				<td
+					colSpan="4"
+					className="text-center text-muted"
+					>
+					{listStatus}
+				</td>
+			</tr>
+		);
 
 		return (
 			<div className={b(className)}>
@@ -76,6 +98,8 @@ const PartnerList = React.createClass({
 									/>
 							);
 						})}
+
+						{listStatus ? statusRow : null}
 					</tbody>
 				</table>
 			</div>

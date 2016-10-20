@@ -15,7 +15,7 @@ import PartnerList from './admin/banners/partner-list.jsx';
 	const AdminPartners = React.createClass({
 		getInitialState() {
 			return {
-				isLoading: false,
+				isLoading: true,
 				partners: []
 			};
 		},
@@ -30,6 +30,8 @@ import PartnerList from './admin/banners/partner-list.jsx';
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
 				if (!err && resp.statusCode === 200) {
 					if (data) {
 						this.setState({partners: _.sortBy(data, 'id')});
@@ -56,7 +58,7 @@ import PartnerList from './admin/banners/partner-list.jsx';
 				if (!err && resp.statusCode === 200) {
 					toastr.success('Лэндинг успешно сгенерирован');
 				} else {
-					toastr.error('Не удалось сгенерировать лэндинг');
+					toastr.error('Не удалось сгенерировать лэндинг. Проверьте, что загружены партнёры и логотипы');
 				}
 			});
 		},
@@ -167,6 +169,7 @@ import PartnerList from './admin/banners/partner-list.jsx';
 
 					<PartnerList
 						partners={this.state.partners}
+						isLoading={isLoading}
 						onClickPartnerDelete={this.handleClickPartnerDelete}
 						onSubmitEdit={this.handleSubmitEdit}
 						/>

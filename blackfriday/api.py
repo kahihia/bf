@@ -11,4 +11,5 @@ urlpatterns = [
     url('^', include('apps.mediafiles.api.urls', namespace='mediafiles')),
     url('^', include('apps.landing.api.urls', namespace='landing')),
     url('^', include('apps.specials.api.urls', namespace='special')),
+    url('^', include('apps.mailing.api.urls', namespace='mailing')),
 ]
