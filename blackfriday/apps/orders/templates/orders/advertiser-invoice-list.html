@@ -9,7 +9,13 @@
     </h1>
 </div>
 
-<div id="admin-invoices"></div>
+{% if user.role == 'advertiser' and not user.is_valid_advertiser %}
+    <p>
+        Чтобы управлять счетами, необходимо <a href="{% url 'advertisers:profile' %}">заполнить реквизиты</a>.
+    </p>
+{% else %}
+    <div id="admin-invoices"></div>
+{% endif %}
 {% endblock content %}
 
 {% block js %}
