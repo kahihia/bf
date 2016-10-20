@@ -26,10 +26,44 @@ class MerchantProfileForm extends Form {
 			})
 		);
 
+		this.untouchableFields = ['name', 'contactName', 'contactPhone', 'inner', 'isSupernova'];
+
 		this.state = {
 			isLoading: false,
 			profileId: '',
 			fields: {
+				name: {
+					label: 'Наименование юридического лица',
+					value: '',
+					required: true,
+					excluded: true
+				},
+				contactName: {
+					label: 'ФИО ответственного лица',
+					value: '',
+					required: true
+				},
+				contactPhone: {
+					label: 'Сотовый тел. отв. лица',
+					value: '',
+					required: true,
+					mask: PHONE_MASK
+				},
+				inner: {
+					label: 'Особый признак',
+					value: null,
+					defaultValue: null,
+					type: 'select',
+					options: innerOptions,
+					required: false,
+					excluded: isSpecialAdvertiser
+				},
+				isSupernova: {
+					text: '«Сверхновая»',
+					value: false,
+					type: 'checkbox',
+					excluded: isSpecialAdvertiser
+				},
 				account: {
 					label: 'Расчётный счёт',
 					value: '',
@@ -53,17 +87,6 @@ class MerchantProfileForm extends Form {
 					value: '',
 					required: true,
 					excluded: isSpecialAdvertiser
-				},
-				contactName: {
-					label: 'ФИО ответственного лица',
-					value: '',
-					required: true
-				},
-				contactPhone: {
-					label: 'Сотовый тел. отв. лица',
-					value: '',
-					required: true,
-					mask: PHONE_MASK
 				},
 				headAppointment: {
 					label: 'Должность руководителя',
@@ -109,27 +132,6 @@ class MerchantProfileForm extends Form {
 					label: 'Юридический адрес',
 					value: '',
 					required: true,
-					excluded: isSpecialAdvertiser
-				},
-				name: {
-					label: 'Наименование юридического лица',
-					value: '',
-					required: true,
-					excluded: true
-				},
-				inner: {
-					label: 'Особый признак',
-					value: null,
-					defaultValue: null,
-					type: 'select',
-					options: innerOptions,
-					required: false,
-					excluded: isSpecialAdvertiser
-				},
-				isSupernova: {
-					text: '«Сверхновая»',
-					value: false,
-					type: 'checkbox',
 					excluded: isSpecialAdvertiser
 				}
 			}
@@ -203,6 +205,14 @@ class MerchantProfileForm extends Form {
 								}
 							}
 							field.value = value;
+
+							const advertiserIsSpecial = data.profile.inner || data.profile.isSupernova;
+							const fieldIsNullable = !_.includes(this.untouchableFields, key);
+
+							if (advertiserIsSpecial && fieldIsNullable) {
+								field.required = false;
+								field.excluded = true;
+							}
 						});
 					}
 
@@ -232,7 +242,7 @@ class MerchantProfileForm extends Form {
 			profile: this.serialize()
 		};
 
-		if (!json.profile.inner) {
+		if (json.profile.inner === '') {
 			json.profile.inner = null;
 		}
 
@@ -273,7 +283,7 @@ class MerchantProfileForm extends Form {
 			profile: this.serialize()
 		};
 
-		if (!json.profile.inner) {
+		if (json.profile.inner === '') {
 			json.profile.inner = null;
 		}
 
@@ -301,15 +311,20 @@ class MerchantProfileForm extends Form {
 	}
 
 	handleChangeInner(value) {
-		const untouchableFields = ['name', 'contactName', 'contactPhone', 'isSupernova'];
-
 		this.setState(prevState => {
-			prevState.fields.isSupernova.value = false;
 			prevState.fields.inner.value = value;
 
+			prevState.fields.isSupernova.value = false;
+			prevState.fields.isSupernova.excluded = true;
+
+			if (value) {
+				prevState.fields.inner.excluded = false;
+			}
+
 			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
-				if (!_.includes(untouchableFields, field)) {
+				if (!_.includes(this.untouchableFields, field)) {
 					conf.required = !value;
+					conf.excluded = Boolean(value);
 				}
 				return conf;
 			});
@@ -319,15 +334,20 @@ class MerchantProfileForm extends Form {
 	}
 
 	handleChangeIsSupernova(value) {
-		const untouchableFields = ['name', 'contactName', 'contactPhone', 'inner'];
-
 		this.setState(prevState => {
 			prevState.fields.isSupernova.value = value;
+
 			prevState.fields.inner.value = null;
+			prevState.fields.inner.excluded = true;
+
+			if (value) {
+				prevState.fields.isSupernova.excluded = false;
+			}
 
 			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
-				if (!_.includes(untouchableFields, field)) {
+				if (!_.includes(this.untouchableFields, field)) {
 					conf.required = !value;
+					conf.excluded = value;
 				}
 				return conf;
 			});
