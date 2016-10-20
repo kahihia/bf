@@ -12,7 +12,7 @@ import MerchantPromoSelect from './merchant-promo-select.jsx';
 const MerchantEditPromoSelect = React.createClass({
 	propTypes: {
 		activePromoId: React.PropTypes.number,
-		id: React.PropTypes.number,
+		merchantId: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number
 	},
 
@@ -57,7 +57,7 @@ const MerchantEditPromoSelect = React.createClass({
 
 	requestOptions() {
 		xhr({
-			url: `/api/merchants/${this.props.id}/available-options/`,
+			url: `/api/merchants/${this.props.merchantId}/available-options/`,
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -143,8 +143,8 @@ const MerchantEditPromoSelect = React.createClass({
 		this.forceUpdate();
 	},
 
-	getAvailableOptionById(optionId) {
-		return _.find(this.state.availableOptions, {id: optionId});
+	getAvailableOptionById(id) {
+		return _.find(this.state.availableOptions, {id});
 	},
 
 	handleClickFinal() {
@@ -203,7 +203,7 @@ const MerchantEditPromoSelect = React.createClass({
 		let isValid = false;
 
 		const {activePromoId} = this.state;
-		const json = {merchantId: this.props.id};
+		const json = {merchantId: this.props.merchantId};
 
 		if (activePromoId !== this.props.activePromoId) {
 			json.promoId = activePromoId;

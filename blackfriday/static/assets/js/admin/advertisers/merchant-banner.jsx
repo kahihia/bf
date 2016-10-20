@@ -4,7 +4,6 @@ import React from 'react';
 import b from 'b_';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
 import {BANNER_TYPE} from '../const.js';
-import ImageInfo from '../common/image-info.jsx';
 import ControlLabel from '../components/control-label.jsx';
 import Checkbox from '../components/checkbox.jsx';
 import FormHorizontalRow from '../components/form-horizontal-row.jsx';
@@ -52,27 +51,26 @@ class MerchantBanner extends React.Component {
 
 	render() {
 		const {
-			availableCategories,
+			categoriesAvailable,
 			categories,
 			image,
 			inMailing,
+			limits,
 			onMain,
 			type,
 			url
 		} = this.props;
 		const banner = BANNER_TYPE[type];
-		const selectedCategories = categories.map(item => (item.id));
+		const selectedCategories = categories.map(item => item.id);
+
+		const showInMailing = limits.inMailing || limits.inMailing === 0;
+		const disabledInMailing = limits.inMailing === 0 && !inMailing;
+
+		const showOnMain = limits.onMain || limits.onMain === 0;
+		const disabledOnMain = limits.onMain === 0 && !onMain;
 
 		return (
 			<div className={className}>
-				<div className={b(className, 'heading')}>
-					<ImageInfo
-						label={banner.name}
-						width={banner.width}
-						height={banner.height}
-						/>
-				</div>
-
 				<div className={b(className, 'content')}>
 					<div className="row">
 						<div className="col-xs-4">
@@ -102,23 +100,27 @@ class MerchantBanner extends React.Component {
 						</div>
 
 						<div className="col-xs-2">
-							<ControlLabel
-								name="Показывать"
-								/>
+							<ControlLabel name="Показывать"/>
 
-							<Checkbox
-								name="onMain"
-								text="На главной"
-								isChecked={onMain}
-								onChange={this.handleCheckOnMain}
-								/>
+							{showOnMain ? (
+								<Checkbox
+									name="onMain"
+									text="На главной"
+									isChecked={onMain}
+									onChange={this.handleCheckOnMain}
+									disabled={disabledOnMain}
+									/>
+							) : null}
 
-							<Checkbox
-								name="inMailing"
-								text="В рассылке"
-								isChecked={inMailing}
-								onChange={this.handleCheckInMailing}
-								/>
+							{showInMailing ? (
+								<Checkbox
+									name="inMailing"
+									text="В рассылке"
+									isChecked={inMailing}
+									onChange={this.handleCheckInMailing}
+									disabled={disabledInMailing}
+									/>
+							) : null}
 						</div>
 
 						<div className="col-xs-6">
@@ -129,8 +131,9 @@ class MerchantBanner extends React.Component {
 								selectedHeader="Выбранные"
 								selectAllText="Выбрать все"
 								deselectAllText="Очистить"
-								options={availableCategories}
+								options={categoriesAvailable}
 								value={selectedCategories}
+								limit={limits.categories}
 								labelKey="name"
 								valueKey="id"
 								showControls
@@ -162,18 +165,19 @@ class MerchantBanner extends React.Component {
 	}
 }
 MerchantBanner.propTypes = {
-	availableCategories: React.PropTypes.array,
 	categories: React.PropTypes.array,
+	categoriesAvailable: React.PropTypes.array,
 	id: React.PropTypes.number,
 	image: React.PropTypes.object,
 	inMailing: React.PropTypes.bool,
+	limits: React.PropTypes.object,
 	onChangeCategories: React.PropTypes.func,
 	onChangeUrl: React.PropTypes.func,
 	onCheckInMailing: React.PropTypes.func,
 	onCheckOnMain: React.PropTypes.func,
 	onClickDelete: React.PropTypes.func,
-	onUploadImage: React.PropTypes.func,
 	onMain: React.PropTypes.bool,
+	onUploadImage: React.PropTypes.func,
 	type: React.PropTypes.number,
 	url: React.PropTypes.string
 };

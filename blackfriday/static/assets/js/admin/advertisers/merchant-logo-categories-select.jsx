@@ -20,24 +20,16 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 
 	componentWillMount() {
-		this.requestMerchantCategories();
+		this.requestMerchantLogoCategories();
 	}
 
-	componentWillReceiveProps(newProps) {
-		if (!newProps.value) {
-			return;
-		}
-
-		this.setState({value: newProps.value});
-	}
-
-	requestMerchantCategories() {
+	requestMerchantLogoCategories() {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 
 		xhr({
-			url: `/api/merchants/${id}/logo-categories/`,
+			url: `/api/merchants/${merchantId}/logo-categories/`,
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -45,7 +37,10 @@ class MerchantLogoCategoriesSelect extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					this.setState({value: data.map(item => (item.id))});
+					const value = data.map(item => item.id);
+					this.setState({value}, () => {
+						this.props.onChange(value);
+					});
 					break;
 				}
 				case 400: {
@@ -61,15 +56,14 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		});
 	}
 
-	requestMerchantCategoriesUpdate(value) {
+	requestMerchantLogoCategoriesUpdate(value) {
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
-
+		const {merchantId} = this.props;
 		const json = value;
 
 		xhr({
-			url: `/api/merchants/${id}/logo-categories/`,
+			url: `/api/merchants/${merchantId}/logo-categories/`,
 			method: 'PATCH',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -80,7 +74,10 @@ class MerchantLogoCategoriesSelect extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					this.setState({value: data.map(item => (item.id))});
+					const value = data.map(item => item.id);
+					this.setState({value}, () => {
+						this.props.onChange(value);
+					});
 					break;
 				}
 				case 400: {
@@ -96,7 +93,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 
 	handleChange(value) {
-		this.requestMerchantCategoriesUpdate(value);
+		this.requestMerchantLogoCategoriesUpdate(value);
 	}
 
 	render() {
@@ -106,7 +103,8 @@ class MerchantLogoCategoriesSelect extends React.Component {
 			value
 		} = this.state;
 		const {
-			availableCategories
+			categories,
+			limit
 		} = this.props;
 
 		return (
@@ -118,8 +116,9 @@ class MerchantLogoCategoriesSelect extends React.Component {
 				selectedHeader="Выбранные"
 				selectAllText="Выбрать все"
 				deselectAllText="Очистить"
-				options={availableCategories}
+				options={categories}
 				value={value}
+				limit={limit}
 				labelKey="name"
 				valueKey="id"
 				showControls
@@ -129,9 +128,10 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 }
 MerchantLogoCategoriesSelect.propTypes = {
-	availableCategories: React.PropTypes.array,
-	id: React.PropTypes.number,
-	value: React.PropTypes.array
+	categories: React.PropTypes.array,
+	limit: React.PropTypes.number,
+	merchantId: React.PropTypes.number,
+	onChange: React.PropTypes.func
 };
 MerchantLogoCategoriesSelect.defaultProps = {
 };

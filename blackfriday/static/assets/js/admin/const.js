@@ -99,3 +99,17 @@ export const FEED_CELL = {
 	teaserOnMain: 'Тизер на первом экране',
 	url: 'URL'
 };
+
+export const BANNER_LIMIT_ALIAS = {
+	0: 'superbanner',
+	10: 'banner',
+	20: 'vertical_banner',
+	30: [
+		'main_background',
+		'category_background'
+	],
+	40: [
+		'main_background',
+		'category_background'
+	]
+};

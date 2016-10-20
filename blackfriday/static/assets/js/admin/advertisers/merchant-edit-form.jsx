@@ -83,11 +83,11 @@ class MerchantEditForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const id = this.props.id;
+		const {merchantId} = this.props;
 		const json = this.serialize();
 
 		xhr({
-			url: `/api/merchants/${id}/`,
+			url: `/api/merchants/${merchantId}/`,
 			method: 'PATCH',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -151,7 +151,7 @@ class MerchantEditForm extends Form {
 }
 MerchantEditForm.propTypes = {
 	data: React.PropTypes.object,
-	id: React.PropTypes.number
+	merchantId: React.PropTypes.number.isRequired
 };
 MerchantEditForm.defaultProps = {
 	data: {}

@@ -34,11 +34,11 @@ class MerchantProductsAddForm extends Form {
 
 		this.setState({isLoading: true});
 
-		const {id} = this.props;
+		const {merchantId} = this.props;
 		const body = new FormData(this.form);
 
 		xhr({
-			url: `/api/merchants/${id}/products/parse/`,
+			url: `/api/merchants/${merchantId}/products/parse/`,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
@@ -122,7 +122,7 @@ class MerchantProductsAddForm extends Form {
 	}
 }
 MerchantProductsAddForm.propTypes = {
-	id: React.PropTypes.number.isRequired
+	merchantId: React.PropTypes.number.isRequired
 };
 MerchantProductsAddForm.defaultProps = {
 };

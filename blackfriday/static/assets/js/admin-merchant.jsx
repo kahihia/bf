@@ -1,4 +1,4 @@
-/* global window document jQuery toastr */
+/* global window document jQuery toastr _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
 /* eslint-disable no-alert */
 
@@ -23,15 +23,22 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	const AdminMerchant = React.createClass({
 		getInitialState() {
 			return {
-				availableCategories: [],
+				banners: [],
+				categories: [],
+				categoriesLimit: 0,
 				data: {},
-				id: null
+				limits: {},
+				logoCategories: [],
+				merchantId: null,
+				products: [],
+				productsNew: []
 			};
 		},
 
 		componentWillMount() {
 			this.requestCategories();
-			this.setState({id: ENV.merchantId}, () => {
+			this.setState({merchantId: ENV.merchantId}, () => {
+				this.requestLimits();
 				this.requestMerchant();
 
 				const hash = window.location.hash;
@@ -43,7 +50,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestMerchant() {
 			xhr({
-				url: `/api/merchants/${this.state.id}/`,
+				url: `/api/merchants/${this.state.merchantId}/`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -64,6 +71,36 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			});
 		},
 
+		requestLimits() {
+			xhr({
+				url: `/api/merchants/${this.state.merchantId}/limits/`,
+				method: 'GET',
+				json: true
+			}, (err, resp, data) => {
+				switch (resp.statusCode) {
+					case 200: {
+						const limits = data.reduce((a, b) => {
+							a[b.techName] = b.value;
+							return a;
+						}, {});
+						this.setState({
+							categoriesLimit: limits.categories || 0,
+							limits
+						});
+						break;
+					}
+					case 400: {
+						processErrors(data);
+						break;
+					}
+					default: {
+						toastr.error('Не удалось получить данные рекламных возможностей');
+						break;
+					}
+				}
+			});
+		},
+
 		requestCategories() {
 			xhr({
 				url: '/api/categories/',
@@ -72,7 +109,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			}, (err, resp, data) => {
 				switch (resp.statusCode) {
 					case 200: {
-						this.setState({availableCategories: data});
+						this.setState({categories: data});
 						break;
 					}
 					case 400: {
@@ -91,7 +128,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {image};
 
 			xhr({
-				url: `/api/merchants/${this.state.id}/`,
+				url: `/api/merchants/${this.state.merchantId}/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -117,7 +154,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestDelete() {
 			xhr({
-				url: `/api/merchants/${this.state.id}/`,
+				url: `/api/merchants/${this.state.merchantId}/`,
 				method: 'DELETE',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -145,7 +182,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {status: 1};
 
 			xhr({
-				url: `/api/merchants/${this.state.id}/moderation/`,
+				url: `/api/merchants/${this.state.merchantId}/moderation/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -177,7 +214,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		},
 
 		handleImagesUploadUpload(data) {
-			this.requestMerchantUploadLogo(data.id);
+			this.requestMerchantUploadLogo(data.merchantId);
 		},
 
 		handleMerchantUpdate(data) {
@@ -202,11 +239,29 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			this.openPromoSelectModal();
 		},
 
+		handleChangeLogoCategories(logoCategories) {
+			this.setState({logoCategories});
+		},
+
+		handleChangeBanners(banners) {
+			this.setState({banners});
+		},
+
+		handleChangeProducts({products, productsNew}) {
+			if (!products) {
+				products = this.state.products;
+			}
+			if (!productsNew) {
+				productsNew = this.state.productsNew;
+			}
+			this.setState({products, productsNew});
+		},
+
 		openPromoSelectModal() {
 			jQuery('#promo-select-modal').modal('show');
 			const {
 				data,
-				id
+				merchantId
 			} = this.state;
 			const {
 				paymentStatus,
@@ -218,7 +273,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				<MerchantEditPromoSelect
 					{...{
 						activePromoId,
-						id,
+						merchantId,
 						paymentStatus
 					}}
 					/>
@@ -227,16 +282,90 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			);
 		},
 
-		render() {
+		collectCategoriesSelected() {
 			const {
-				availableCategories,
-				data,
-				id
+				banners,
+				logoCategories,
+				products,
+				productsNew
 			} = this.state;
 
-			if (id === null) {
+			const selected = [];
+
+			_.forEach(banners, item => {
+				_.forEach(item.categories, item => {
+					if (selected.indexOf(item.id) > -1) {
+						return;
+					}
+					selected.push(item.id);
+				});
+			});
+
+			_.forEach(logoCategories, item => {
+				if (selected.indexOf(item) > -1) {
+					return;
+				}
+				selected.push(item);
+			});
+
+			_.forEach(products, item => {
+				if (!item.category) {
+					return;
+				}
+				if (selected.indexOf(item.category.id) > -1) {
+					return;
+				}
+				selected.push(item.category.id);
+			});
+
+			// TODO: category name aliasing
+			_.forEach(productsNew, item => {
+				_.forEach(item.categories, item => {
+					if (selected.indexOf(item.id) > -1) {
+						return;
+					}
+					selected.push(item.id);
+				});
+			});
+
+			selected.sort();
+
+			return selected;
+		},
+
+		collectCategoriesAvailable(categoriesSelected) {
+			const {
+				categories,
+				categoriesLimit
+			} = this.state;
+
+			if (categoriesSelected.length < categoriesLimit) {
+				return categories;
+			}
+
+			const categoriesAvailable = categories.reduce((a, b) => {
+				if (categoriesSelected.indexOf(b.id) > -1) {
+					a.push(b);
+				}
+				return a;
+			}, []);
+
+			return categoriesAvailable;
+		},
+
+		render() {
+			const {
+				data,
+				limits,
+				merchantId
+			} = this.state;
+
+			if (merchantId === null) {
 				return null;
 			}
+
+			const categoriesSelected = this.collectCategoriesSelected();
+			const categoriesAvailable = this.collectCategoriesAvailable(categoriesSelected);
 
 			const {
 				image,
@@ -265,10 +394,8 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				}
 			}
 
-			const availableBannerTypes = [0, 10, 20];
-
 			return (
-				<div className="">
+				<div>
 					<MerchantEditStatusPanel
 						onClickDelete={this.handleClickDelete}
 						onClickModeration={this.handleClickModeration}
@@ -297,17 +424,15 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 									onSubmit={this.handleMerchantUpdate}
 									{...{
 										data,
-										id
+										merchantId
 									}}
 									/>
 
 								<div className="form-group">
 									<div className="col-xs-5">
-										<ControlLabel
-											name="Логотип"
-											/>
+										<ControlLabel name="Логотип"/>
 
-										<div className="">
+										<div>
 											<p>
 												{image ? (
 													<img
@@ -327,18 +452,20 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 										</div>
 									</div>
 
-									<div className="col-xs-7">
-										<ControlLabel
-											name="Категории размещения логотипа"
-											/>
+									{limits.logo_categories ? (
+										<div className="col-xs-7">
+											<ControlLabel name="Категории размещения логотипа"/>
 
-										<MerchantLogoCategoriesSelect
-											{...{
-												availableCategories,
-												id
-											}}
-											/>
-									</div>
+											<MerchantLogoCategoriesSelect
+												categories={categoriesAvailable}
+												limit={limits.logo_categories}
+												onChange={this.handleChangeLogoCategories}
+												{...{
+													merchantId
+												}}
+												/>
+										</div>
+									) : null}
 								</div>
 							</div>
 						</div>
@@ -346,23 +473,28 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 					{isAdmin ? (
 						<MerchantPartnersSelect
-							id={id}
 							value={partners}
+							{...{
+								merchantId
+							}}
 							/>
 					) : null}
 
 					<MerchantBannerList
+						onChange={this.handleChangeBanners}
 						{...{
-							availableCategories,
-							availableBannerTypes,
-							id
+							categoriesAvailable,
+							limits,
+							merchantId
 						}}
 						/>
 
 					<MerchantProductList
+						onChange={this.handleChangeProducts}
 						{...{
-							availableCategories,
-							id
+							categoriesAvailable,
+							limits,
+							merchantId
 						}}
 						/>
 				</div>
