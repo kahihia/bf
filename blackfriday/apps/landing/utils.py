@@ -10,11 +10,13 @@ from .exceptions import NoContent
 
 
 def get_landing_context():
+    remainder = LandingLogo.objects.count() % 5
+
     return {
         'SITE_URL': settings.SITE_URL,
         'partner_list': Partner.objects.all(),
         'logo_list': LandingLogo.objects.all(),
-        'logo_stubs': '*' * (5 - LandingLogo.objects.count() % 5)
+        'logo_stubs': ('*' * (5 - remainder)) if remainder else ''
     }
 
 
