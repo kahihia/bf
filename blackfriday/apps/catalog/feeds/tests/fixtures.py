@@ -74,8 +74,8 @@ FAIL_DATA = {
             {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"}
         ],
         [
-            {'field': 'price', 'message': 'Старая цена больше новой'},
-            {'field': 'old_price', 'message': 'Старая цена больше новой'},
+            {'field': 'price', 'message': 'Старая цена должна быть больше новой'},
+            {'field': 'old_price', 'message': 'Старая цена должна быть больше новой'},
             {'field': 'url', 'message': 'Отсутствуют utm метки'}
         ]
     )
