@@ -14,7 +14,7 @@
 			<a href="" role="tab">Создать макет логотипной рассылки</a>
 		</li>
 		<li role="presentation">
-			<a href="{% url 'mailing:banners' %}" role="tab">Создать макет баннерной рассылки</a>
+			<a href="{#% url 'mailing:banners' %#}" role="tab">Создать макет баннерной рассылки</a>
 		</li>
 	</ul>
 
@@ -24,10 +24,9 @@
 	{% include "specials/includes/add-special-modal.html"  %}
 	{% include "specials/includes/edit-special-modal.html"  %}
 	{% endcomment %}
+	{% include "includes/images-upload-modal.html" %}
 {% endblock content %}
 
-{% comment %}
 {% block js %}
-	{% render_bundle 'admin-mailing' 'js' %}
+	{% render_bundle 'admin-mailing-logos' 'js' %}
 {% endblock js %}
-{% endcomment %}
