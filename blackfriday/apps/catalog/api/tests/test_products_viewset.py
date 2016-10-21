@@ -46,8 +46,8 @@ FAIL_SAMPLE = {
             "currency": "bar"
         },
         'warnings': [
-            {'field': 'price', 'message': 'Старая цена больше новой'},
-            {'field': 'old_price', 'message': 'Старая цена больше новой'},
+            {'field': 'price', 'message': 'Старая цена должна быть больше новой'},
+            {'field': 'old_price', 'message': 'Старая цена должна быть больше новой'},
             {'field': 'url', 'message': 'Отсутствуют utm метки'}
         ],
         'errors': [
