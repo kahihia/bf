@@ -20,11 +20,11 @@ def together(**cleaned_data):
 
 
 def old_price_gte_price(old_price, price):
-    if not old_price and not price:
+    if old_price is None and price is None:
         return None
     if not isinstance(old_price, int) or not isinstance(price, int):
-        return False
-    return bool(price and old_price and price < old_price)
+        return None
+    return bool(price < old_price)
 
 
 def duplicate_product_urls(url, context):
@@ -56,7 +56,9 @@ def is_image(image):
     if image is None:
         return None
     try:
-        return requests.head(image).headers['Content-Type'] in ['image/jpeg', 'image/png']
+        return requests.head(image).headers['Content-Type'] in [
+            'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
+        ]
     except Exception as e:
         logger.error(str(e))
         return False
@@ -82,7 +84,7 @@ class ProductRow(Row):
             validators=(
                 GenericValidator(message='Оба поля должны быть валидны', rule=together),
                 GenericValidator(
-                    message='Старая цена больше новой', rule=old_price_gte_price, is_warning=True)
+                    message='Старая цена должна быть больше новой', rule=old_price_gte_price, is_warning=True)
             ),
         ),
         Column(
