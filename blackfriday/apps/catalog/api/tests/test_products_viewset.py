@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from rest_framework.exceptions import ValidationError
@@ -46,8 +46,8 @@ FAIL_SAMPLE = {
             "currency": "bar"
         },
         'warnings': [
-            {'field': 'price', 'message': 'Старая цена больше новой'},
-            {'field': 'old_price', 'message': 'Старая цена больше новой'},
+            {'field': 'price', 'message': 'Старая цена должна быть больше новой'},
+            {'field': 'old_price', 'message': 'Старая цена должна быть больше новой'},
             {'field': 'url', 'message': 'Отсутствуют utm метки'}
         ],
         'errors': [
@@ -95,11 +95,26 @@ def test_post_given_invalid_data_expect_400(admin_logged_client, merchant, fake_
 def test_post_given_valid_list_expect_201_product_created(
         admin_logged_client, merchant, default_category, fake_image_response):
     with patch('requests.head', return_value=fake_image_response):
-        response = admin_logged_client.post(
-            reverse('api:catalog:products-list', args=(merchant.id,)),
-            data=json.dumps([SUCCESS_SAMPLE]), content_type='application/json')
-        assert response.status_code == 201
-        assert Product.objects.filter(name=SUCCESS_SAMPLE['name'], category=default_category).exists()
+        with patch('apps.advertisers.models.Merchant.limits', new_callable=PropertyMock) as fake_limits:
+            fake_limits.return_value = {'products': 2}
+            response = admin_logged_client.post(
+                reverse('api:catalog:products-list', args=(merchant.id,)),
+                data=json.dumps([SUCCESS_SAMPLE]), content_type='application/json')
+            assert response.status_code == 201
+            assert Product.objects.filter(name=SUCCESS_SAMPLE['name'], category=default_category).exists()
+
+
+def test_post_given_valid_list_expect_400_out_of_limit(
+        admin_logged_client, merchant, default_category, fake_image_response):
+    with patch('requests.head', return_value=fake_image_response):
+        with patch('apps.advertisers.models.Merchant.limits', new_callable=PropertyMock) as fake_limits:
+            fake_limits.return_value = {'products': 0}
+            response = admin_logged_client.post(
+                reverse('api:catalog:products-list', args=(merchant.id,)),
+                data=json.dumps([SUCCESS_SAMPLE]), content_type='application/json')
+            assert response.status_code == 400
+            assert response.data['detail'] == 'out_of_limit'
+            assert not Product.objects.filter(name=SUCCESS_SAMPLE['name'], category=default_category).exists()
 
 
 def test_put_given_invalid_data_expect_400(

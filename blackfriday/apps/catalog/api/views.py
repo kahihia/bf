@@ -81,7 +81,7 @@ class ProductViewSet(
         try:
             validate(data, schema)
         except JsonSchemaValidationError:
-            raise ValidationError('invalid schema')
+            raise ValidationError({'detail': 'invalid schema'})
 
     def create(self, request, *args, **kwargs):
         merchant = self.get_merchant()
@@ -99,6 +99,8 @@ class ProductViewSet(
             })
         if failed:
             return Response(result, status=status.HTTP_400_BAD_REQUEST)
+        if len(result) + merchant.product_set.count() > merchant.limits['products']:
+            raise ValidationError({'detail': 'out_of_limit'})
 
         cat_qs = Category.objects.all()
         if request.user.role == 'advertiser':

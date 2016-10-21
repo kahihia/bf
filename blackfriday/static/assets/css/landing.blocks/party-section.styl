@@ -9,7 +9,45 @@
 
 	&__text
 		font-size: 13px
-		opacity: 0.5
+		color: #a5a5a5
+		margin-bottom: 25px
+
+		a
+			border-bottom: 1px dotted
+
+	&__supernova
+		font-weight: bold
+		font-size: 13px
+		color: #000
+		background-color: #a9e100
+		border-radius: 22px
+		display: inline-block
+		height: 44px
+		line-height: 44px
+		padding: 0 22px
+		margin-left: -0.5em
+		position: relative
+
+		&:hover
+		&:focus
+			color: #000
+			outline: 0
+
+		&::before
+			content: ''
+			display: block
+			position: absolute
+			box-shadow: 0 0 15px 9px rgba(255, 255, 255, .7)
+			width: 84px
+			top: 21px
+			left: 24px
+
+		strong
+			font-size: 14px
+			position: relative
+
+		span
+			border-bottom: 1px dotted
 
 	&__form
 		textarea

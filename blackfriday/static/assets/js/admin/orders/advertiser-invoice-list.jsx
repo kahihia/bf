@@ -16,6 +16,7 @@ const AdvertiserInvoiceList = React.createClass({
 	getInitialState() {
 		return {
 			invoices: [],
+			isLoading: true,
 			activeInvoiceId: null
 		};
 	},
@@ -26,6 +27,8 @@ const AdvertiserInvoiceList = React.createClass({
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
 			if (!err && resp.statusCode === 200) {
 				if (data && Array.isArray(data)) {
 					const invoices = _.sortBy(data, 'id').reverse();
@@ -88,6 +91,22 @@ const AdvertiserInvoiceList = React.createClass({
 	},
 
 	render() {
+		let listStatus = null;
+
+		if (!this.state.invoices.length) {
+			if (this.state.isLoading) {
+				listStatus = 'Загрузка...';
+			} else {
+				listStatus = 'Счета отсутствуют';
+			}
+		}
+
+		const statusBlock = (
+			<div className="text-muted">
+				{listStatus}
+			</div>
+		);
+
 		return (
 			<div>
 				{this.state.invoices.map(invoice => {
@@ -107,6 +126,8 @@ const AdvertiserInvoiceList = React.createClass({
 							/>
 					);
 				})}
+
+				{listStatus ? statusBlock : null}
 			</div>
 		);
 	}

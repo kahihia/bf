@@ -8,7 +8,11 @@ class InvoiceListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
     allowed_roles = ['manager', 'admin', 'advertiser']
 
     def test_func(self):
-        return super().test_func() and not (self.request.user.role == 'advertiser' and self.request.user.profile.inner)
+        user_is_special_advertiser = \
+            (self.request.user.role == 'advertiser') and \
+            (self.request.user.profile.inner or self.request.user.profile.is_supernova)
+
+        return super().test_func() and not user_is_special_advertiser
 
     def get_template_names(self):
         if self.request.user.role == 'advertiser':

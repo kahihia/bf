@@ -9,6 +9,17 @@ from .models import LandingLogo
 from .exceptions import NoContent
 
 
+def get_landing_context():
+    remainder = LandingLogo.objects.count() % 5
+
+    return {
+        'SITE_URL': settings.SITE_URL,
+        'partner_list': Partner.objects.all(),
+        'logo_list': LandingLogo.objects.all(),
+        'logo_stubs': ('*' * (5 - remainder)) if remainder else ''
+    }
+
+
 def render_landing(raise_exception=True):
     path = os.path.join(settings.PROJECT_ROOT, 'landing')
     os.makedirs(path, exist_ok=True)
@@ -20,12 +31,7 @@ def render_landing(raise_exception=True):
             f.write(
                 render_to_string(
                     template,
-                    {
-                        'SITE_URL': settings.SITE_URL,
-                        'partner_list': Partner.objects.all(),
-                        'logo_list': LandingLogo.objects.all(),
-                        'logo_stubs': '*' * (5 - LandingLogo.objects.count() % 5)
-                    }
+                    get_landing_context()
                 )
             )
             f.truncate()
