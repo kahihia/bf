@@ -6,7 +6,8 @@ const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export const REGEXP = {
 	password: /^[A-Za-z0-9]{8,}$/,
-	email: /\S@\S+\.\S{2,}/
+	email: /\S@\S+\.\S{2,}/,
+	url: /^https?:\/\/\S+\.\S/
 };
 
 export const USER_ROLE = {

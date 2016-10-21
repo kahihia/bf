@@ -22,7 +22,8 @@ class ProductsNewTable extends React.Component {
 		this.state = {
 			products: props.products,
 			isLoading: false,
-			isUploading: false
+			isUploading: false,
+			categoriesAvailableOptions: this.processCategoriesAvailableOptions(props.categoriesAvailable)
 		};
 
 		this.handleChangeProduct = this.handleChangeProduct.bind(this);
@@ -32,8 +33,21 @@ class ProductsNewTable extends React.Component {
 	componentWillReceiveProps(newProps) {
 		this.setState({
 			products: newProps.products,
-			isUploading: false
+			isUploading: false,
+			categoriesAvailableOptions: this.processCategoriesAvailableOptions(newProps.categoriesAvailable)
 		});
+	}
+
+	processCategoriesAvailableOptions(categoriesAvailable) {
+		const categoriesAvailableOptions = categoriesAvailable.map(category => ({
+			id: String(category.name).toLowerCase(),
+			name: category.name
+		}));
+		categoriesAvailableOptions.unshift({
+			id: '',
+			name: ''
+		});
+		return categoriesAvailableOptions;
 	}
 
 	handleChangeProduct(productId, productData) {
@@ -107,7 +121,13 @@ class ProductsNewTable extends React.Component {
 					break;
 				}
 				case 400: {
-					processErrors(data);
+					if (data.detail) {
+						if (data.detail === 'out_of_limit') {
+							toastr.warning('Превышен лимит');
+						}
+					} else {
+						processErrors(data);
+					}
 					break;
 				}
 				default: {
@@ -148,20 +168,13 @@ class ProductsNewTable extends React.Component {
 
 	render() {
 		const {
+			categoriesAvailableOptions,
 			isLoading,
 			isUploading,
 			products
 		} = this.state;
-		const {
-			categoriesAvailable
-		} = this.props;
 		const isInvalid = this.isInvalid();
 		const isWaiting = isLoading;
-
-		const categoriesAvailableOptions = categoriesAvailable.reduce((a, b) => {
-			a[b.name] = b.name;
-			return a;
-		}, {});
 
 		const uploadPanel = (
 			<p className="text-right">
@@ -545,7 +558,7 @@ class ProductsNewTableRow extends React.Component {
 	}
 }
 ProductsNewTableRow.propTypes = {
-	categoriesAvailable: React.PropTypes.object,
+	categoriesAvailable: React.PropTypes.array,
 	data: React.PropTypes.object,
 	errors: React.PropTypes.array,
 	id: React.PropTypes.number,

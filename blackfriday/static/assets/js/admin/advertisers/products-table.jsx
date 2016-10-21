@@ -236,6 +236,27 @@ class ProductsTable extends React.Component {
 		return Boolean(_.find(this.state.products, {isSelected: true}));
 	}
 
+	collectLimits() {
+		const {limits} = this.props;
+		const {products} = this.state;
+		let isTeaser = limits.teasers || 0;
+		let isTeaserOnMain = limits.teasers_on_main || 0;
+
+		products.forEach(product => {
+			if (product.isTeaser) {
+				isTeaser -= 1;
+			}
+			if (product.isTeaserOnMain) {
+				isTeaserOnMain -= 1;
+			}
+		});
+
+		return {
+			isTeaser,
+			isTeaserOnMain
+		};
+	}
+
 	render() {
 		const {
 			colSortDirs,
@@ -246,7 +267,8 @@ class ProductsTable extends React.Component {
 			warnings
 		} = this.state;
 		const {
-			categoriesAvailable
+			categoriesAvailable,
+			limits
 		} = this.props;
 		const isAllSelected = this.isAllSelected();
 		const isAnySelected = this.isAnySelected();
@@ -256,6 +278,10 @@ class ProductsTable extends React.Component {
 			a[b.name] = b.name;
 			return a;
 		}, {none: ''});
+
+		const limitsAvailable = this.collectLimits();
+		const showIsTeaser = Boolean(limits.teasers);
+		const showIsTeaserOnMain = Boolean(limits.teasers_on_main);
 
 		return (
 			<IsLoadingWrapper isLoading={isWaiting}>
@@ -324,17 +350,21 @@ class ProductsTable extends React.Component {
 								</span>
 							</th>
 
-							<th className={b(className, 'table-th', {name: 'teaser'})}>
-								<span>
-									{FEED_CELL.teaser}
-								</span>
-							</th>
+							{showIsTeaser ? (
+								<th className={b(className, 'table-th', {name: 'teaser'})}>
+									<span>
+										{FEED_CELL.teaser}
+									</span>
+								</th>
+							) : null}
 
-							<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
-								<span>
-									{FEED_CELL.teaserOnMain}
-								</span>
-							</th>
+							{showIsTeaserOnMain ? (
+								<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
+									<span>
+										{FEED_CELL.teaserOnMain}
+									</span>
+								</th>
+							) : null}
 
 							<th className={b(className, 'table-th', {name: 'category'})}>
 								<span>
@@ -362,6 +392,11 @@ class ProductsTable extends React.Component {
 								categoriesAvailable={categoriesAvailableOptions}
 								onSelect={this.handleSelectProduct}
 								onChange={this.handleChangeProduct}
+								limits={limitsAvailable}
+								{...{
+									showIsTeaser,
+									showIsTeaserOnMain
+								}}
 								/>
 						))}
 					</tbody>
@@ -372,6 +407,7 @@ class ProductsTable extends React.Component {
 }
 ProductsTable.propTypes = {
 	categoriesAvailable: React.PropTypes.array,
+	limits: React.PropTypes.object,
 	merchantId: React.PropTypes.number,
 	products: React.PropTypes.array
 };
@@ -407,36 +443,50 @@ class ProductsTableRow extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		let isChanged = false;
+		const previousProps = this.props;
+		const previousState = this.state;
 
-		if (JSON.stringify(this.state.errors) !== JSON.stringify(nextState.errors)) {
+		if (JSON.stringify(previousState.errors) !== JSON.stringify(nextState.errors)) {
 			isChanged = true;
 		}
 
-		if (JSON.stringify(this.state.warnings) !== JSON.stringify(nextState.warnings)) {
+		if (JSON.stringify(previousState.warnings) !== JSON.stringify(nextState.warnings)) {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.categoriesAvailable, nextProps.categoriesAvailable)) {
+		if (!_.isEqual(previousProps.categoriesAvailable, nextProps.categoriesAvailable)) {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.errors, nextProps.errors)) {
+		if (!_.isEqual(previousProps.errors, nextProps.errors)) {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.warnings, nextProps.warnings)) {
+		if (!_.isEqual(previousProps.warnings, nextProps.warnings)) {
 			isChanged = true;
 		}
 
-		if (this.props.isSelected !== nextProps.isSelected) {
+		if (previousProps.isSelected !== nextProps.isSelected) {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.data, nextProps.data)) {
+		if (!_.isEqual(previousProps.data, nextProps.data)) {
 			isChanged = true;
 		}
 
-		if (!_.isEqual(this.props.data.category, nextProps.data.category)) {
+		if (!_.isEqual(previousProps.data.category, nextProps.data.category)) {
+			isChanged = true;
+		}
+
+		if (!_.isEqual(previousProps.limits, nextProps.limits)) {
+			isChanged = true;
+		}
+
+		if (previousProps.showIsTeaser !== nextProps.showIsTeaser) {
+			isChanged = true;
+		}
+
+		if (previousProps.showIsTeaserOnMain !== nextProps.showIsTeaserOnMain) {
 			isChanged = true;
 		}
 
@@ -509,12 +559,21 @@ class ProductsTableRow extends React.Component {
 	}
 
 	render() {
-		const {errors, warnings} = this.state;
+		const {
+			errors,
+			warnings
+		} = this.state;
 		const {
 			categoriesAvailable,
 			data,
-			isSelected
+			isSelected,
+			limits,
+			showIsTeaser,
+			showIsTeaserOnMain
 		} = this.props;
+
+		const disabledIsTeaser = limits.isTeaser === 0 && !data.isTeaser;
+		const disabledIsTeaserOnMain = limits.isTeaserOnMain === 0 && !data.isTeaserOnMain;
 
 		return (
 			<tr>
@@ -672,23 +731,29 @@ class ProductsTableRow extends React.Component {
 					</EditableCell>
 				</ProductsTableCell>
 
-				<td className={b(className, 'table-td', {name: 'teaser'})}>
-					<input
-						type="checkbox"
-						name="isTeaser"
-						checked={data.isTeaser}
-						onChange={this.handleChangeTeaser}
-						/>
-				</td>
+				{showIsTeaser ? (
+					<td className={b(className, 'table-td', {name: 'teaser'})}>
+						<input
+							type="checkbox"
+							name="isTeaser"
+							checked={data.isTeaser}
+							onChange={this.handleChangeTeaser}
+							disabled={disabledIsTeaser}
+							/>
+					</td>
+				) : null}
 
-				<td className={b(className, 'table-td', {name: 'teaser-on-main'})}>
-					<input
-						type="checkbox"
-						name="isTeaserOnMain"
-						checked={data.isTeaserOnMain}
-						onChange={this.handleChangeTeaserOnMain}
-						/>
-				</td>
+				{showIsTeaserOnMain ? (
+					<td className={b(className, 'table-td', {name: 'teaser-on-main'})}>
+						<input
+							type="checkbox"
+							name="isTeaserOnMain"
+							checked={data.isTeaserOnMain}
+							onChange={this.handleChangeTeaserOnMain}
+							disabled={disabledIsTeaserOnMain}
+							/>
+					</td>
+				) : null}
 
 				<ProductsTableCell
 					names={['category']}
@@ -734,8 +799,11 @@ ProductsTableRow.propTypes = {
 	errors: React.PropTypes.array,
 	id: React.PropTypes.number.isRequired,
 	isSelected: React.PropTypes.bool,
+	limits: React.PropTypes.object,
 	onChange: React.PropTypes.func.isRequired,
 	onSelect: React.PropTypes.func.isRequired,
+	showIsTeaser: React.PropTypes.bool,
+	showIsTeaserOnMain: React.PropTypes.bool,
 	warnings: React.PropTypes.array
 };
 ProductsTableRow.defaultProps = {

@@ -21,6 +21,10 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	'use strict';
 
 	const AdminMerchant = React.createClass({
+		propTypes: {
+			merchantId: React.PropTypes.number.isRequired
+		},
+
 		getInitialState() {
 			return {
 				banners: [],
@@ -29,7 +33,6 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				data: {},
 				limits: {},
 				logoCategories: [],
-				merchantId: null,
 				products: [],
 				productsNew: []
 			};
@@ -37,20 +40,18 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		componentWillMount() {
 			this.requestCategories();
-			this.setState({merchantId: ENV.merchantId}, () => {
-				this.requestLimits();
-				this.requestMerchant();
+			this.requestLimits();
+			this.requestMerchant();
 
-				const hash = window.location.hash;
-				if (/promo/.test(hash)) {
-					this.openPromoSelectModal();
-				}
-			});
+			const hash = window.location.hash;
+			if (/promo/.test(hash)) {
+				this.openPromoSelectModal();
+			}
 		},
 
 		requestMerchant() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -73,7 +74,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestLimits() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/limits/`,
+				url: `/api/merchants/${this.props.merchantId}/limits/`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -128,7 +129,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {image};
 
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -154,7 +155,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestDelete() {
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/`,
+				url: `/api/merchants/${this.props.merchantId}/`,
 				method: 'DELETE',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -182,7 +183,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const json = {status: 1};
 
 			xhr({
-				url: `/api/merchants/${this.state.merchantId}/moderation/`,
+				url: `/api/merchants/${this.props.merchantId}/moderation/`,
 				method: 'PATCH',
 				headers: {
 					'X-CSRFToken': TOKEN.csrftoken
@@ -198,7 +199,19 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 						break;
 					}
 					case 400: {
-						processErrors(data);
+						if (data.status && data.status.deficit) {
+							_.forEach(data.status.deficit, message => {
+								if (message === 'limits') {
+									toastr.warning('Загружены не все рекламные материалы');
+								}
+
+								if (message === 'utm_in_banners') {
+									toastr.warning('Не все баннеры имеют UTM-метки в ссылках');
+								}
+							});
+						} else {
+							processErrors(data);
+						}
 						break;
 					}
 					case 409: {
@@ -260,9 +273,11 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		openPromoSelectModal() {
 			jQuery('#promo-select-modal').modal('show');
 			const {
-				data,
-				merchantId
+				data
 			} = this.state;
+			const {
+				merchantId
+			} = this.props;
 			const {
 				paymentStatus,
 				promo
@@ -353,16 +368,126 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			return categoriesAvailable;
 		},
 
+		isModerationAllowed() {
+			const {
+				data
+			} = this.state;
+			const {
+				moderation = {}
+			} = data;
+			const moderationStatus = moderation.status;
+
+			if (moderationStatus === 1) {
+				return false;
+			}
+
+			if (!hasRole('admin') && !hasRole('advertiser')) {
+				return false;
+			}
+
+			if (!this.validateMerchantData()) {
+				return false;
+			}
+
+			if (!this.validateMerchantLogoCategories()) {
+				return false;
+			}
+
+			if (!this.validateMerchantBanners()) {
+				return false;
+			}
+
+			if (!this.validateMerchantProducts()) {
+				return false;
+			}
+
+			return true;
+		},
+
+		validateMerchantData() {
+			const {data} = this.state;
+			const required = [
+				'name',
+				'url',
+				'description',
+				'image'
+			];
+			let isValid = true;
+
+			_.forEach(required, name => {
+				if (!data[name]) {
+					isValid = false;
+					return false;
+				}
+			});
+
+			return isValid;
+		},
+
+		validateMerchantLogoCategories() {
+			const {
+				limits,
+				logoCategories
+			} = this.state;
+
+			if (limits.logo_categories) {
+				if (limits.logo_categories !== logoCategories.length) {
+					return false;
+				}
+			}
+
+			return true;
+		},
+
+		validateMerchantBanners() {
+			const {
+				limits,
+				banners
+			} = this.state;
+
+			let limitCount = 0;
+			const limitNames = [
+				'banners',
+				'superbanners',
+				'vertical_banners'
+			];
+			limitNames.forEach(name => {
+				if (!limits[name]) {
+					return;
+				}
+				limitCount += limits[name];
+			});
+
+			const doubleLimitNames = [
+				'category_backgrounds',
+				'main_backgrounds'
+			];
+			doubleLimitNames.forEach(name => {
+				if (!limits[name]) {
+					return;
+				}
+				limitCount += (limits[name] * 2);
+			});
+
+			if (limitCount !== banners.length) {
+				return false;
+			}
+
+			return true;
+		},
+
+		validateMerchantProducts() {
+			return true;
+		},
+
 		render() {
 			const {
 				data,
-				limits,
-				merchantId
+				limits
 			} = this.state;
-
-			if (merchantId === null) {
-				return null;
-			}
+			const {
+				merchantId
+			} = this.props;
 
 			const categoriesSelected = this.collectCategoriesSelected();
 			const categoriesAvailable = this.collectCategoriesAvailable(categoriesSelected);
@@ -383,16 +508,8 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			const promoName = promo ? promo.name : 'Не выбран';
 
 			const isAdmin = hasRole('admin');
-			const isAdvertiser = hasRole('advertiser');
 
-			let isModerationAllowed = false;
-
-			if (moderationStatus !== 1) {
-				// TODO: Check is all merchant materials uploaded
-				if (isAdmin || isAdvertiser) {
-					isModerationAllowed = true;
-				}
-			}
+			let isModerationAllowed = this.isModerationAllowed();
 
 			return (
 				<div>
@@ -503,5 +620,5 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	});
 
 	const block = document.getElementById('admin-merchant');
-	ReactDOM.render(<AdminMerchant/>, block);
+	ReactDOM.render(<AdminMerchant merchantId={ENV.merchantId}/>, block);
 })();
