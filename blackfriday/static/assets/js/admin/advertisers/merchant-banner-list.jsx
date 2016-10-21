@@ -11,6 +11,7 @@ import {processErrors} from '../utils.js';
 import ImageInfo from '../common/image-info.jsx';
 import MerchantBanner from './merchant-banner.jsx';
 import MerchantBannerAddForm from './merchant-banner-add-form.jsx';
+import MerchantBannerBackgroundList from './merchant-banner-background-list.jsx';
 
 const className = 'merchant-banner-list';
 
@@ -29,6 +30,9 @@ class MerchantBannerList extends React.Component {
 		this.handleChangeCategories = this.handleChangeCategories.bind(this);
 		this.handleClickDelete = this.handleClickDelete.bind(this);
 		this.handleUploadImage = this.handleUploadImage.bind(this);
+		this.handleUploadBannerBackground = this.handleUploadBannerBackground.bind(this);
+		this.handleDeleteBannerBackground = this.handleDeleteBannerBackground.bind(this);
+		this.handleChangeBannerBackground = this.handleChangeBannerBackground.bind(this);
 	}
 
 	componentWillMount() {
@@ -187,6 +191,51 @@ class MerchantBannerList extends React.Component {
 		this.requestBannerUpdate(id, {image: image.id});
 	}
 
+	handleUploadBannerBackground(banner) {
+		this.requestMerchantBannerAdd(banner);
+	}
+
+	handleDeleteBannerBackground(id) {
+		if (window.confirm('Удалить фон?')) {
+			this.requestBannerDelete(id);
+		}
+	}
+
+	handleChangeBannerBackground(id, props) {
+		this.requestBannerUpdate(id, props);
+	}
+
+	requestMerchantBannerAdd(banner) {
+		const {merchantId} = this.props;
+		const json = banner;
+
+		xhr({
+			url: `/api/merchants/${merchantId}/banners/`,
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			switch (resp.statusCode) {
+				case 201: {
+					this.merchantBannerAdd(data);
+					break;
+				}
+				case 400: {
+					processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось загрузить баннер');
+					break;
+				}
+			}
+		});
+	}
+
 	getBannerById(id) {
 		return _.find(this.state.banners, {id});
 	}
@@ -259,10 +308,17 @@ class MerchantBannerList extends React.Component {
 
 	render() {
 		const {
-			categoriesAvailable
+			categoriesAvailable,
+			limits
 		} = this.props;
 
 		const bannerTypes = [0, 10, 20];
+
+		const bannerBackgrounds = _.filter(this.state.banners, banner => {
+			return banner.type === 30 || banner.type === 40;
+		});
+		const bannersMainBackgrounds = _.filter(bannerBackgrounds, banner => banner.onMain);
+		const bannersCategoryBackgrounds = _.filter(bannerBackgrounds, banner => Boolean(banner.categories && banner.categories.length));
 
 		return (
 			<div className="shop-edit-block">
@@ -272,9 +328,9 @@ class MerchantBannerList extends React.Component {
 
 				{bannerTypes.map(bannerType => {
 					const banners = this.getBannersByType(bannerType);
-					const limits = this.collectLimits(bannerType);
+					const bannerLimits = this.collectLimits(bannerType);
 
-					if (!limits.length) {
+					if (!bannerLimits.length) {
 						return null;
 					}
 
@@ -301,7 +357,7 @@ class MerchantBannerList extends React.Component {
 											onClickAdd={this.handleClickBannerAdd}
 											availableBannerTypes={[bannerType]}
 											bannerLength={banners.length}
-											bannerLimit={limits.length}
+											bannerLimit={bannerLimits.length}
 											/>
 
 										{banners.length ? (
@@ -318,9 +374,9 @@ class MerchantBannerList extends React.Component {
 															onChangeUrl={this.handleChangeUrl}
 															onClickDelete={this.handleClickDelete}
 															onUploadImage={this.handleUploadImage}
+															limits={bannerLimits}
 															{...{
-																categoriesAvailable,
-																limits
+																categoriesAvailable
 															}}
 															{...banner}
 															/>
@@ -334,6 +390,31 @@ class MerchantBannerList extends React.Component {
 						</div>
 					);
 				})}
+
+				{limits.main_backgrounds ? (
+					<MerchantBannerBackgroundList
+						title="Брендирование фона главной страницы"
+						type="main"
+						limit={limits.main_backgrounds}
+						banners={bannersMainBackgrounds}
+						onUpload={this.handleUploadBannerBackground}
+						onDelete={this.handleDeleteBannerBackground}
+						onChange={this.handleChangeBannerBackground}
+						/>
+				) : null}
+
+				{limits.category_backgrounds ? (
+					<MerchantBannerBackgroundList
+						title="Брендирование фона категории"
+						type="category"
+						limit={limits.category_backgrounds}
+						banners={bannersCategoryBackgrounds}
+						categoriesAvailable={categoriesAvailable}
+						onUpload={this.handleUploadBannerBackground}
+						onDelete={this.handleDeleteBannerBackground}
+						onChange={this.handleChangeBannerBackground}
+						/>
+				) : null}
 			</div>
 		);
 	}

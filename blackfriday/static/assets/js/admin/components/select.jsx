@@ -57,6 +57,7 @@ const Select = React.createClass({
 					<option
 						key={option.id}
 						value={option.id}
+						disabled={option.disabled}
 						>
 						{option.name}
 					</option>
