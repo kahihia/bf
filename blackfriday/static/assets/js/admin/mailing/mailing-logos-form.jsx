@@ -3,7 +3,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {TOKEN, REGEXP} from '../const.js';
+import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 import ImagesUpload from '../common/images-upload.jsx';
 import Checkbox from '../components/checkbox.jsx';
@@ -24,7 +24,6 @@ class MailingLogosForm extends Form {
 				topBannerUrl: {
 					label: 'Ссылка',
 					type: 'url',
-					pattern: REGEXP.url,
 					value: '',
 					required: false
 				},
@@ -38,7 +37,6 @@ class MailingLogosForm extends Form {
 				middleBannerUrl: {
 					label: 'Ссылка с баннера посередине',
 					type: 'url',
-					pattern: REGEXP.url,
 					value: '',
 					required: false
 				},
@@ -56,7 +54,6 @@ class MailingLogosForm extends Form {
 				bottomTextUrl: {
 					label: 'Ссылка',
 					type: 'url',
-					pattern: REGEXP.url,
 					value: '',
 					required: false
 				},
