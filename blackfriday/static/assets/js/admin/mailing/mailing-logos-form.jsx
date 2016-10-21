@@ -11,6 +11,17 @@ import Checkbox from '../components/checkbox.jsx';
 class MailingLogosForm extends Form {
 	constructor(props) {
 		super(props);
+		const placeholder =
+			'<h3>Посетите все распродажи за один день, не выходя из дома!</h3>\n' +
+			'<p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном сайте.</p>\n' +
+			'<p style="line-height: 1.4;">\n' +
+			'Только 24 и 25 ноября 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -\n' +
+			'<span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>\n' +
+			'</p>\n' +
+			'<p>\n' +
+			'<b>Проведите лучшую пятницу года с пользой!</b>\n' +
+			'</p>';
+
 		this.state = {
 			isLoading: false,
 			fields: {
@@ -41,8 +52,9 @@ class MailingLogosForm extends Form {
 					required: false
 				},
 				topText: {
-					label: 'Текст',
+					label: 'HTML',
 					type: 'textarea',
+					placeholder: placeholder,
 					value: '',
 					required: false
 				},
