@@ -4,5 +4,5 @@ from .views import PaymentFinishedView
 
 
 urlpatterns = [
-    url(r'^(?P<pk>\d+)/finished/$', PaymentFinishedView.as_view(), name='finished'),
+    url(r'^payment/(?P<invoice_id>\d+)/finished/$', PaymentFinishedView.as_view(), name='finished'),
 ]

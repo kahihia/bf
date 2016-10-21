@@ -11,6 +11,8 @@ class PaymentFinishedView(DetailView):
 
     model = Payment
     template_name = 'payment/success.html'
+    slug_field = 'invoice_id'
+    slug_url_kwarg = 'invoice_id'
 
     def get(self, request, *args, **kwargs):
         response = super().get(request, *args, **kwargs)
