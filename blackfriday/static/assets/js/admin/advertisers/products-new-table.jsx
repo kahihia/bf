@@ -121,7 +121,13 @@ class ProductsNewTable extends React.Component {
 					break;
 				}
 				case 400: {
-					processErrors(data);
+					if (data.detail) {
+						if (data.detail === 'out_of_limit') {
+							toastr.warning('Превышен лимит');
+						}
+					} else {
+						processErrors(data);
+					}
 					break;
 				}
 				default: {
