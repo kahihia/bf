@@ -1,0 +1,33 @@
+{% extends "layouts/admin-base-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+	<div class="page-header">
+		<h1>
+			Рассылки
+		</h1>
+	</div>
+
+	<ul class="nav nav-tabs" role="tablist">
+		<li role="presentation">
+			<a href="{% url 'mailing:logos' %}" role="tab">Создать макет логотипной рассылки</a>
+		</li>
+		<li role="presentation" class="active">
+			<a href="" role="tab">Создать макет баннерной рассылки</a>
+		</li>
+	</ul>
+
+	<div id="admin-mailing-banners"></div>
+
+	{% comment %}
+	{% include "specials/includes/add-special-modal.html"  %}
+	{% include "specials/includes/edit-special-modal.html"  %}
+	{% endcomment %}
+{% endblock content %}
+
+{% comment %}
+{% block js %}
+	{% render_bundle 'admin-mailing' 'js' %}
+{% endblock js %}
+{% endcomment %}

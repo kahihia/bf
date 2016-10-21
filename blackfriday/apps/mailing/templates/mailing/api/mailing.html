@@ -13,13 +13,15 @@
 <body style="background: url({{ SITE_URL }}{% static 'mailing/img/pattern.gif' %}); font-family: 'Arial'">
 <div id="main_wrap" style="width: 640px; margin: 0 auto">
     <div style="height: 150px">
-        <img src="{{ SITE_URL }}{% static 'mailing/img/header.png' %}" alt="">
+        <a href="{{ SITE_URL }}" style="text-decoration: none;">
+            <img src="{{ SITE_URL }}{% static 'mailing/img/header.png' %}" alt="">
+        </a>
     </div>
 
     <div style="background-color: #fff; padding: 25px 0 30px">
         <div style="width: 570px; margin: 0 auto">
             {% if top_banner %}
-                <a href="{{ top_banner.url }}">
+                <a href="{{ top_banner.url }}" style="text-decoration: none;">
                     <img src="{{ SITE_URL }}{{ top_banner.image.url }}" alt="">
                 </a>
             {% else %}
@@ -47,16 +49,12 @@
             <div>
                 <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
 
-                <a href="" style="text-decoration: none;">
+                <a href="http://www.akit.ru" style="text-decoration: none;">
                     <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/akit-logo.png' %}" alt="">
                 </a>
 
-                <a href="" style="text-decoration: none;">
-                    <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/mnogo-logo.png' %}" alt="">
-                </a>
-
-                <a href="" style="text-decoration: none;">
-                    <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/bonus-cmonday.png' %}" alt="">
+                <a href="http://www.mnogo.ru" style="text-decoration: none;">
+                    <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/mnogo-logo.jpg' %}" alt="">
                 </a>
             </div>
 
@@ -68,7 +66,7 @@
                 от участников Черной пятницы
             </h2>
             {% for logo in logos|slice:":9" %}
-                <a href="{{ logo.url }}" style="float: left; margin-bottom: 20px; width: 190px; height: 118px">
+                <a href="{{ logo.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
                     <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" style="max-width: 90%; max-height: 90%">
                 </a>
                 {% cycle False False True as newrow silent %}
@@ -82,7 +80,7 @@
         </div>
 
         {% if middle_banner %}
-            <a href="{{ middle_banner.url }}" style="margin: 0 auto; display: block; width: 620px">
+            <a href="{{ middle_banner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
                 <img src="{{ SITE_URL }}{{ middle_banner.image.url }}" alt="">
             </a>
         {% else %}
@@ -93,7 +91,7 @@
         <div style="width: 570px; margin: 0 auto">
 
             {% for logo in logos|slice:"9:" %}
-                <a href="{{ logo.url }}" style="float: left; margin-bottom: 20px; width: 190px; height: 118px">
+                <a href="{{ logo.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
                     <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" style="max-width: 90%; max-height: 90%">
                 </a>
                 {% cycle False False True as newrow silent %}
