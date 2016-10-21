@@ -15,6 +15,7 @@ class MerchantProfileForm extends Form {
 	constructor(props) {
 		super(props);
 
+		const isAdvertiser = hasRole('advertiser');
 		const isSpecialAdvertiser = ADVERTISER_INNER || ADVERTISER_IS_SUPERNOVA;
 		const innerOptions = _.union(
 			[{id: '', name: '- нет -'}],
@@ -56,13 +57,13 @@ class MerchantProfileForm extends Form {
 					type: 'select',
 					options: innerOptions,
 					required: false,
-					excluded: isSpecialAdvertiser
+					excluded: isAdvertiser
 				},
 				isSupernova: {
 					text: '«Сверхновая»',
 					value: false,
 					type: 'checkbox',
-					excluded: isSpecialAdvertiser
+					excluded: isAdvertiser
 				},
 				account: {
 					label: 'Расчётный счёт',
