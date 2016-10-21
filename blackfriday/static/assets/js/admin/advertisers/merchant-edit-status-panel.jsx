@@ -2,7 +2,7 @@
 
 import React from 'react';
 import b from 'b_';
-import {PAYMENT_STATUS, MODERATION_STATUS} from '../const.js';
+import {PAYMENT_STATUS, MODERATION_STATUS, ADVERTISER_IS_SUPERNOVA} from '../const.js';
 import {hasRole} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';
@@ -60,7 +60,9 @@ class MerchantEditStatusPanel extends React.Component {
 								{promoName}
 							</span>
 
-							<EditButton onClick={this.handleClickPromoSelect}/>
+							{ADVERTISER_IS_SUPERNOVA ? null : (
+								<EditButton onClick={this.handleClickPromoSelect}/>
+							)}
 						</li>
 
 						<li className="props__item">
@@ -72,7 +74,9 @@ class MerchantEditStatusPanel extends React.Component {
 								{optionsCount}
 							</span>
 
-							<EditButton onClick={this.handleClickPromoOptionsSelect}/>
+							{ADVERTISER_IS_SUPERNOVA ? null : (
+								<EditButton onClick={this.handleClickPromoOptionsSelect}/>
+							)}
 						</li>
 					</ul>
 
