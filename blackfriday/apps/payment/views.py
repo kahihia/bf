@@ -22,7 +22,7 @@ class PaymentFinishedView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context = (
+            context.update(
                 {
                     'status': self.object.status,
                     'message': self.object.message
@@ -36,5 +36,3 @@ class PaymentFinishedView(DetailView):
                 }
             )
         return context
-
-
