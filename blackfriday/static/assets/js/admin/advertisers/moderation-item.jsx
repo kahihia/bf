@@ -54,6 +54,7 @@ export default class ModerationItem extends React.Component {
 				style={{maxWidth: 40, maxHeight: 40}}
 				/>
 		);
+		const merchantUrl = `/admin/merchants/${merchant.id}/`;
 		const previewUrl = `/admin/merchants/${merchant.id}/preview/`;
 
 		return (
@@ -62,7 +63,13 @@ export default class ModerationItem extends React.Component {
 					{merchant.image ? logo : null}
 				</td>
 				<td>
-					{merchant.name}
+					<a
+						href={merchantUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						>
+						{merchant.name}
+					</a>
 				</td>
 				<td>
 					<Input

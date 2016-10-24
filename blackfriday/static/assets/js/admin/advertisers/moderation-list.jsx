@@ -137,7 +137,7 @@ export class ModerationList extends React.Component {
 							<th className={b(className, 'table-th', {name: 'logo'})}/>
 
 							<th className={b(className, 'table-th', {name: 'name'})}>
-								{'Название'}
+								{'Магазин'}
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'comment'})}>
