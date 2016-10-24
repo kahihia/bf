@@ -31,7 +31,7 @@ class MerchantDetailView(LoginRequiredMixin, RolePermissionMixin, DetailView):
 
 
 class ModerationListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
-    allowed_roles = ['manager']
+    allowed_roles = ['admin']
     template_name = 'advertisers/moderation-list.html'
 
 
