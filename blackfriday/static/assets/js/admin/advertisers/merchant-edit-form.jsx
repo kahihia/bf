@@ -6,9 +6,11 @@ import xhr from 'xhr';
 import {TOKEN} from '../const.js';
 import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
-import MerchantDescriptionEditor from './merchant-description-editor.jsx';
+import ControlLabel from '../components/control-label.jsx';
+import TextareaRich from '../components/textarea-rich.jsx';
 
 const className = 'merchant-edit-form';
+const DESCRIPTION_LENGTH = 1000;
 
 class MerchantEditForm extends Form {
 	constructor(props) {
@@ -45,7 +47,8 @@ class MerchantEditForm extends Form {
 					value: '',
 					type: 'textarea',
 					required: true,
-					help: 'Max. 1000 симв.'
+					help: `Max. ${DESCRIPTION_LENGTH} симв.`,
+					maxlength: DESCRIPTION_LENGTH
 				},
 				promocode: {
 					label: 'Промо-код',
@@ -56,6 +59,7 @@ class MerchantEditForm extends Form {
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
+		this.handleChangeDescription = this.handleChangeDescription.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -130,7 +134,19 @@ class MerchantEditForm extends Form {
 		this.requestMerchantUpdate();
 	}
 
+	handleChangeDescription(e) {
+		this.setState(previousState => {
+			previousState.fields.description.value = e.target.value;
+			previousState.isChanged = true;
+			return previousState;
+		}, () => {
+			this.requestMerchantUpdate();
+		});
+	}
+
 	render() {
+		const {fields} = this.state;
+
 		return (
 			<div className={className}>
 				<form
@@ -140,10 +156,25 @@ class MerchantEditForm extends Form {
 					{this.buildRow('name')}
 					{this.buildRow('url')}
 					{this.buildRow('slug')}
-					{this.buildRow('description')}
-					{this.buildRow('promocode')}
 
-					<MerchantDescriptionEditor/>
+					<div className="form-group">
+						<ControlLabel
+							name={fields.description.label}
+							required={fields.description.required}
+							/>
+
+						<TextareaRich
+							value={fields.description.value}
+							maxlength={fields.description.maxlength}
+							onChange={this.handleChangeDescription}
+							/>
+
+						<span className="help-block">
+							{fields.description.help}
+						</span>
+					</div>
+
+					{this.buildRow('promocode')}
 				</form>
 			</div>
 		);
