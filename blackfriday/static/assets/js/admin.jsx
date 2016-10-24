@@ -24,28 +24,4 @@ import ReactDOM from 'react-dom';
 			ReactDOM.render(<MerchantLimitsWarning success={cb}/>, merchantLimitsWarning);
 		};
 	}
-
-	const promoList = document.getElementById('promo-list');
-	if (promoList) {
-		let PromoList = require('./admin/administrator/promo-list').PromoList;
-		ReactDOM.render(<PromoList/>, promoList);
-	}
-
-	const promoMaker = document.getElementById('promo-maker');
-	if (promoMaker) {
-		let PromoMaker = require('./admin/promo/promo-maker').PromoMaker;
-		ReactDOM.render(<PromoMaker/>, promoMaker);
-	}
-
-	const feedMaker = document.getElementById('feed-maker');
-	if (feedMaker) {
-		let FeedMaker = require('./admin/catalog/feed-maker');
-		ReactDOM.render(<FeedMaker/>, feedMaker);
-	}
-
-	const moderateList = document.getElementById('moderate-list');
-	if (moderateList) {
-		let ModerateList = require('./admin/manager/moderate-list').ModerateList;
-		ReactDOM.render(<ModerateList/>, moderateList);
-	}
 })();
