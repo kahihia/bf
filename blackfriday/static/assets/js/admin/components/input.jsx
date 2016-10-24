@@ -81,7 +81,7 @@ class Input extends React.Component {
 				<textarea
 					className="form-control"
 					value={val}
-					{...{accept, disabled, placeholder, name, type, required, readOnly}}
+					{...{disabled, placeholder, name, type, required, readOnly}}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onKeyUp={this.handleKeyUp}
