@@ -314,12 +314,6 @@ class ProductsTable extends React.Component {
 								</SortHeaderCell>
 							</th>
 
-							<th className={b(className, 'table-th', {name: 'startprice'})}>
-								<span>
-									{FEED_CELL.startPrice}
-								</span>
-							</th>
-
 							<th className={b(className, 'table-th', {name: 'oldprice'})}>
 								<span>
 									{FEED_CELL.oldPrice}
@@ -329,6 +323,12 @@ class ProductsTable extends React.Component {
 							<th className={b(className, 'table-th', {name: 'price'})}>
 								<span>
 									{FEED_CELL.price}
+								</span>
+							</th>
+
+							<th className={b(className, 'table-th', {name: 'startprice'})}>
+								<span>
+									{FEED_CELL.startPrice}
 								</span>
 							</th>
 
@@ -614,27 +614,6 @@ class ProductsTableRow extends React.Component {
 				</ProductsTableCell>
 
 				<ProductsTableCell
-					names={['startPrice']}
-					errors={errors}
-					warnings={warnings}
-					>
-					<EditableCell
-						values={[{
-							name: 'startPrice',
-							value: data.startPrice
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						{data.startPrice || data.startPrice === 0 ? (
-							<Price
-								cost={formatPrice(data.startPrice)}
-								currency="₽"
-								/>
-						) : null}
-					</EditableCell>
-				</ProductsTableCell>
-
-				<ProductsTableCell
 					names={['oldPrice']}
 					errors={errors}
 					warnings={warnings}
@@ -675,6 +654,27 @@ class ProductsTableRow extends React.Component {
 									currency="₽"
 									/>
 							</strong>
+						) : null}
+					</EditableCell>
+				</ProductsTableCell>
+
+				<ProductsTableCell
+					names={['startPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
+					<EditableCell
+						values={[{
+							name: 'startPrice',
+							value: data.startPrice
+						}]}
+						onChange={this.handleChangeCell}
+						>
+						{data.startPrice || data.startPrice === 0 ? (
+							<Price
+								cost={formatPrice(data.startPrice)}
+								currency="₽"
+								/>
 						) : null}
 					</EditableCell>
 				</ProductsTableCell>

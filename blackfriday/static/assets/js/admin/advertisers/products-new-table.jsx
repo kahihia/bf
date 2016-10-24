@@ -213,12 +213,6 @@ class ProductsNewTable extends React.Component {
 									</span>
 								</th>
 
-								<th className={b(className, 'table-th', {name: 'startprice'})}>
-									<span>
-										{FEED_CELL.startPrice}
-									</span>
-								</th>
-
 								<th className={b(className, 'table-th', {name: 'oldprice'})}>
 									<span>
 										{FEED_CELL.oldPrice}
@@ -228,6 +222,12 @@ class ProductsNewTable extends React.Component {
 								<th className={b(className, 'table-th', {name: 'price'})}>
 									<span>
 										{FEED_CELL.price}
+									</span>
+								</th>
+
+								<th className={b(className, 'table-th', {name: 'startprice'})}>
+									<span>
+										{FEED_CELL.startPrice}
 									</span>
 								</th>
 
@@ -402,27 +402,6 @@ class ProductsNewTableRow extends React.Component {
 				</ProductsTableCell>
 
 				<ProductsTableCell
-					names={['startPrice']}
-					errors={errors}
-					warnings={warnings}
-					>
-					<EditableCell
-						values={[{
-							name: 'startPrice',
-							value: data.startPrice
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						{data.startPrice || data.startPrice === 0 ? (
-							<Price
-								cost={formatPrice(data.startPrice)}
-								currency="₽"
-								/>
-						) : null}
-					</EditableCell>
-				</ProductsTableCell>
-
-				<ProductsTableCell
 					names={['oldPrice']}
 					errors={errors}
 					warnings={warnings}
@@ -463,6 +442,27 @@ class ProductsNewTableRow extends React.Component {
 									currency="₽"
 									/>
 							</strong>
+						) : null}
+					</EditableCell>
+				</ProductsTableCell>
+
+				<ProductsTableCell
+					names={['startPrice']}
+					errors={errors}
+					warnings={warnings}
+					>
+					<EditableCell
+						values={[{
+							name: 'startPrice',
+							value: data.startPrice
+						}]}
+						onChange={this.handleChangeCell}
+						>
+						{data.startPrice || data.startPrice === 0 ? (
+							<Price
+								cost={formatPrice(data.startPrice)}
+								currency="₽"
+								/>
 						) : null}
 					</EditableCell>
 				</ProductsTableCell>
