@@ -49,7 +49,7 @@ export default class ModerationItem extends React.Component {
 
 		const logo = (
 			<img
-				src={merchant.image.url}
+				src={merchant.image ? merchant.image.url : ''}
 				alt=""
 				style={{maxWidth: 40, maxHeight: 40}}
 				/>
