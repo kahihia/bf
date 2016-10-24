@@ -204,7 +204,7 @@ class ProductsNewTable extends React.Component {
 				<IsLoadingWrapper isLoading={isWaiting}>
 					{uploadPanel}
 
-					<table className={'table table-hover ' + b(className, 'table')}>
+					<table className={'table table-bordered table-hover ' + b(className, 'table')}>
 						<thead>
 							<tr>
 								<th className={b(className, 'table-th', {name: 'name'})}>
