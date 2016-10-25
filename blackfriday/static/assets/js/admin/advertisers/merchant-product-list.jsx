@@ -11,6 +11,7 @@ import {processErrors} from '../utils.js';
 import MerchantProductsAddForm from './merchant-products-add-form.jsx';
 import ProductsTable from './products-table.jsx';
 import ProductsNewTable from './products-new-table.jsx';
+import DownloadFile from '../common/download-file.jsx';
 
 const className = 'merchant-product-list';
 
@@ -176,6 +177,16 @@ class MerchantProductList extends React.Component {
 			<div className="shop-edit-block">
 				<h2 className={b(className, 'title')}>
 					{'Загрузить товары'}
+
+					<DownloadFile
+						href="/public/RBF_feed_howto.pdf"
+						name="Инструкция по заполнению товарного файла"
+						/>
+
+					<DownloadFile
+						href="/public/RBF_feed_template.xlsx"
+						name="Шаблон файла для загрузки товаров"
+						/>
 				</h2>
 
 				<div className="panel panel-default">

@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -75,7 +76,15 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'partial_update': MerchantUpdateSerializer,
             'moderation': MerchantModerationSerializer,
             'logo_categories': CategorySerializer,
+            'notifications': MerchantNotificationsSerializer,
         }.get(self.action, MerchantSerializer)
+
+    @list_route(methods=['patch'])
+    def notifications(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(request.data)
 
     @detail_route(methods=['patch', 'put', 'get'])
     def partners(self, request, *args, **kwargs):

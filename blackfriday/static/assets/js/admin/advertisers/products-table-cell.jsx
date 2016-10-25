@@ -35,6 +35,7 @@ class ProductsTableCell extends React.Component {
 	render() {
 		const {
 			children,
+			disabled,
 			errors,
 			names,
 			warnings
@@ -50,7 +51,7 @@ class ProductsTableCell extends React.Component {
 		});
 
 		return (
-			<td className={errorClassName + ' ' + b(className, 'table-td', {name: names[0].toLowerCase()})}>
+			<td className={(disabled ? 'active ' : '') + errorClassName + ' ' + b(className, 'table-td', {name: names[0].toLowerCase()})}>
 				{names.map(name => (
 					<ErrorNotification
 						key={name}
@@ -69,6 +70,7 @@ class ProductsTableCell extends React.Component {
 }
 ProductsTableCell.propTypes = {
 	children: React.PropTypes.any,
+	disabled: React.PropTypes.bool,
 	errors: React.PropTypes.object,
 	names: React.PropTypes.array,
 	warnings: React.PropTypes.object
