@@ -32,7 +32,8 @@ const SimpleShopCard = React.createClass({
 			optionsCount,
 			paymentStatus,
 			previewUrl,
-			promo
+			promo,
+			receivesNotifications
 		} = this.props.data;
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
@@ -65,7 +66,8 @@ const SimpleShopCard = React.createClass({
 						moderationStatus,
 						optionsCount,
 						paymentStatus,
-						promo
+						promo,
+						receivesNotifications
 					}}
 					/>
 

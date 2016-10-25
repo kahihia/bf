@@ -114,7 +114,8 @@ const MerchantListItem = React.createClass({
 		optionsCount: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number,
 		previewUrl: React.PropTypes.string,
-		promo: React.PropTypes.object
+		promo: React.PropTypes.object,
+		receivesNotifications: React.PropTypes.bool
 	},
 
 	getDefaultProps() {
@@ -141,7 +142,8 @@ const MerchantListItem = React.createClass({
 			optionsCount,
 			paymentStatus,
 			previewUrl,
-			promo
+			promo,
+			receivesNotifications
 		} = this.props;
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
@@ -177,7 +179,8 @@ const MerchantListItem = React.createClass({
 							moderationStatus,
 							optionsCount,
 							paymentStatus,
-							promo
+							promo,
+							receivesNotifications
 						}}
 						/>
 				</td>
