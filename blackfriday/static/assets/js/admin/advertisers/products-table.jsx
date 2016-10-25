@@ -12,6 +12,7 @@ import SortHeaderCell from '../components/sort-header-cell.jsx';
 import EditableCell from './editable-cell.jsx';
 import ProductsTableCell from './products-table-cell.jsx';
 import IsLoadingWrapper from '../components/is-loading-wrapper.jsx';
+import ProductsTableHelpIcon from './products-table-help-icon.jsx';
 
 const className = 'products-table';
 
@@ -310,12 +311,16 @@ class ProductsTable extends React.Component {
 									columnKey="name"
 									sortDir={colSortDirs.name}
 									>
+									<ProductsTableHelpIcon name="name"/>
+
 									{FEED_CELL.name}
 								</SortHeaderCell>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'oldprice'})}>
 								<span>
+									<ProductsTableHelpIcon name="oldprice"/>
+
 									{FEED_CELL.oldPrice}
 								</span>
 							</th>
@@ -328,24 +333,32 @@ class ProductsTable extends React.Component {
 
 							<th className={b(className, 'table-th', {name: 'startprice'})}>
 								<span>
+									<ProductsTableHelpIcon name="startprice"/>
+
 									{FEED_CELL.startPrice}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'discount'})}>
 								<span>
+									<ProductsTableHelpIcon name="discount"/>
+
 									{FEED_CELL.discount}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'country'})}>
 								<span>
+									<ProductsTableHelpIcon name="country"/>
+
 									{FEED_CELL.country}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'brand'})}>
 								<span>
+									<ProductsTableHelpIcon name="brand"/>
+
 									{FEED_CELL.brand}
 								</span>
 							</th>
@@ -368,12 +381,16 @@ class ProductsTable extends React.Component {
 
 							<th className={b(className, 'table-th', {name: 'category'})}>
 								<span>
+									<ProductsTableHelpIcon name="category"/>
+
 									{FEED_CELL.category}
 								</span>
 							</th>
 
 							<th className={b(className, 'table-th', {name: 'image'})}>
 								<span>
+									<ProductsTableHelpIcon name="image"/>
+
 									{FEED_CELL.image}
 								</span>
 							</th>

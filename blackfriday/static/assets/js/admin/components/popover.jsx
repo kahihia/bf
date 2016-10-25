@@ -7,7 +7,10 @@ const Popover = React.createClass({
 		children: React.PropTypes.node,
 		className: React.PropTypes.string,
 		content: React.PropTypes.string,
-		html: React.PropTypes.string,
+		html: React.PropTypes.oneOfType([
+			React.PropTypes.bool,
+			React.PropTypes.string
+		]),
 		placement: React.PropTypes.string,
 		title: React.PropTypes.string
 	},
@@ -39,7 +42,7 @@ const Popover = React.createClass({
 				className={className}
 				title={title}
 				data-content={content}
-				data-html={html}
+				data-html={String(html)}
 				data-placement={placement}
 				data-toggle="popover"
 				data-trigger="hover"
