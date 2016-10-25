@@ -8,6 +8,7 @@ import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
 import ControlLabel from '../components/control-label.jsx';
 import TextareaRich from '../components/textarea-rich.jsx';
+import Checkbox from '../components/checkbox.jsx';
 
 const className = 'merchant-edit-form';
 const DESCRIPTION_LENGTH = 1000;
@@ -54,12 +55,20 @@ class MerchantEditForm extends Form {
 					label: 'Промо-код',
 					value: '',
 					help: 'Если Ваш магазин предоставляет скидку по промо-коду, укажите его в данном поле'
+				},
+				receivesNotifications: {
+					text: 'Почтовые уведомления',
+					type: 'checkbox',
+					value: true,
+					excluded: !isAdmin,
+					readOnly: !isAdmin
 				}
 			}
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 		this.handleChangeDescription = this.handleChangeDescription.bind(this);
+		this.handleChangeReceivesNotifications = this.handleChangeReceivesNotifications.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -144,6 +153,16 @@ class MerchantEditForm extends Form {
 		});
 	}
 
+	handleChangeReceivesNotifications(value) {
+		this.setState(previousState => {
+			previousState.fields.receivesNotifications.value = value;
+			previousState.isChanged = true;
+			return previousState;
+		}, () => {
+			this.requestMerchantUpdate();
+		});
+	}
+
 	render() {
 		const {fields} = this.state;
 
@@ -175,6 +194,15 @@ class MerchantEditForm extends Form {
 					</div>
 
 					{this.buildRow('promocode')}
+
+					<div className="form-group">
+						<Checkbox
+							text={this.state.fields.receivesNotifications.text}
+							isChecked={this.state.fields.receivesNotifications.value}
+							onChange={this.handleChangeReceivesNotifications}
+							disabled={this.state.fields.receivesNotifications.readOnly}
+							/>
+					</div>
 				</form>
 			</div>
 		);
