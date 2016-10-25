@@ -172,7 +172,7 @@ class MerchantSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
                   'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
-                  'moderation', 'preview_url')
+                  'moderation', 'preview_url', 'receives_notifications')
 
     def get_moderation(self, obj):
         return MerchantModerationSerializer(obj).data
@@ -192,7 +192,7 @@ class MerchantListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'image', 'payment_status', 'moderation', 'promo',
-                  'is_active', 'is_previewable', 'preview_url', 'advertiser', 'options_count')
+                  'is_active', 'is_previewable', 'preview_url', 'advertiser', 'options_count', 'receives_notifications')
 
     def get_moderation(self, obj):
         return MerchantModerationSerializer(obj).data
@@ -252,7 +252,7 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
         fields = ['name', 'url', 'description', 'promocode', 'image']
         user = self.context['request'].user
         if user and user.is_authenticated and user.is_admin:
-            fields += ['is_active', 'slug']
+            fields += ['is_active', 'slug', 'receives_notifications']
         return fields
 
     def to_representation(self, instance):
@@ -263,3 +263,21 @@ class MerchantTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name')
+
+
+class MerchantNotificationsSerializer(serializers.Serializer):
+    is_enabled = serializers.BooleanField()
+
+    def save(self, **kwargs):
+        assert not hasattr(self, 'save_object'), super().save(**kwargs)
+        assert hasattr(self, '_errors'), super().save(**kwargs)
+        assert not self.errors, super().save(**kwargs)
+        assert 'commit' not in kwargs, super().save(**kwargs)
+        assert not hasattr(self, '_data'), super().save(**kwargs)
+
+        validated_data = dict(list(self.validated_data.items()) + list(kwargs.items()))
+
+        receives_notifications = validated_data.get('is_enabled')
+        if receives_notifications is not None:
+            Merchant.objects.update(receives_notifications=receives_notifications)
+        return None
