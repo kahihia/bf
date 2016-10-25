@@ -59,18 +59,53 @@ class ProductsNewTable extends React.Component {
 		this.requestProductsSave();
 	}
 
+	processProductPrice(product) {
+		const {
+			oldPrice,
+			price,
+			startPrice,
+			discount
+		} = product;
+
+		if (price || price === 0 || oldPrice || oldPrice === 0) {
+			product.startPrice = null;
+			product.discount = null;
+		} else if (startPrice || startPrice === 0) {
+			product.oldPrice = null;
+			product.price = null;
+			product.discount = null;
+		} else if (discount || discount === 0) {
+			product.oldPrice = null;
+			product.price = null;
+			product.startPrice = null;
+		}
+
+		return product;
+	}
+
+	processProductEmpty(product) {
+		_.forEach(product, (i, k) => {
+			if (product[k] === '') {
+				product[k] = null;
+			}
+		});
+		return product;
+	}
+
+	processProduct(product) {
+		let productProcessed = _.cloneDeep(product);
+		productProcessed = this.processProductPrice(productProcessed);
+		productProcessed = this.processProductEmpty(productProcessed);
+		return productProcessed;
+	}
+
 	requestChangeProduct(productId, productData) {
 		this.setState({isLoading: true});
 
-		const clonedProduct = _.cloneDeep(productData);
-		_.forEach(clonedProduct, (i, k) => {
-			if (clonedProduct[k] === '') {
-				clonedProduct[k] = null;
-			}
-		});
+		const productProcessed = this.processProduct(productData);
 
 		const {merchantId} = this.props;
-		const json = [clonedProduct];
+		const json = [productProcessed];
 
 		xhr({
 			url: `/api/merchants/${merchantId}/products/verify/`,
@@ -102,7 +137,9 @@ class ProductsNewTable extends React.Component {
 		this.setState({isUploading: true});
 
 		const {merchantId} = this.props;
-		const json = _.cloneDeep(this.state.products).map(product => product.data);
+		const json = _.cloneDeep(this.state.products).map(product => {
+			return this.processProduct(product.data);
+		});
 
 		xhr({
 			url: `/api/merchants/${merchantId}/products/`,
@@ -382,11 +419,37 @@ class ProductsNewTableRow extends React.Component {
 	}
 
 	render() {
-		const {errors, warnings} = this.state;
+		const {
+			errors,
+			warnings
+		} = this.state;
 		const {
 			categoriesAvailable,
 			data
 		} = this.props;
+
+		const {
+			oldPrice,
+			price,
+			startPrice,
+			discount
+		} = data;
+		let isOldPriceAvailable = true;
+		let isPriceAvailable = true;
+		let isStartPriceAvailable = true;
+		let isDiscountAvailable = true;
+		if (price || price === 0 || oldPrice || oldPrice === 0) {
+			isStartPriceAvailable = false;
+			isDiscountAvailable = false;
+		} else if (startPrice || startPrice === 0) {
+			isOldPriceAvailable = false;
+			isPriceAvailable = false;
+			isDiscountAvailable = false;
+		} else if (discount || discount === 0) {
+			isOldPriceAvailable = false;
+			isPriceAvailable = false;
+			isStartPriceAvailable = false;
+		}
 
 		return (
 			<tr>
@@ -422,86 +485,98 @@ class ProductsNewTableRow extends React.Component {
 					names={['oldPrice']}
 					errors={errors}
 					warnings={warnings}
+					disabled={!isOldPriceAvailable}
 					>
-					<EditableCell
-						values={[{
-							name: 'oldPrice',
-							value: data.oldPrice
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						{data.oldPrice || data.oldPrice === 0 ? (
-							<Price
-								cost={formatPrice(data.oldPrice)}
-								type="old"
-								currency="₽"
-								/>
-						) : null}
-					</EditableCell>
+					{isOldPriceAvailable ? (
+						<EditableCell
+							values={[{
+								name: 'oldPrice',
+								value: data.oldPrice
+							}]}
+							onChange={this.handleChangeCell}
+							>
+							{data.oldPrice || data.oldPrice === 0 ? (
+								<Price
+									cost={formatPrice(data.oldPrice)}
+									type="old"
+									currency="₽"
+									/>
+							) : null}
+						</EditableCell>
+					) : null}
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['price']}
 					errors={errors}
 					warnings={warnings}
+					disabled={!isPriceAvailable}
 					>
-					<EditableCell
-						values={[{
-							name: 'price',
-							value: data.price
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						{data.price || data.price === 0 ? (
-							<strong>
-								<Price
-									cost={formatPrice(data.price)}
-									currency="₽"
-									/>
-							</strong>
-						) : null}
-					</EditableCell>
+					{isPriceAvailable ? (
+						<EditableCell
+							values={[{
+								name: 'price',
+								value: data.price
+							}]}
+							onChange={this.handleChangeCell}
+							>
+							{data.price || data.price === 0 ? (
+								<strong>
+									<Price
+										cost={formatPrice(data.price)}
+										currency="₽"
+										/>
+								</strong>
+							) : null}
+						</EditableCell>
+					) : null}
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['startPrice']}
 					errors={errors}
 					warnings={warnings}
+					disabled={!isStartPriceAvailable}
 					>
-					<EditableCell
-						values={[{
-							name: 'startPrice',
-							value: data.startPrice
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						{data.startPrice || data.startPrice === 0 ? (
-							<Price
-								cost={formatPrice(data.startPrice)}
-								currency="₽"
-								/>
-						) : null}
-					</EditableCell>
+					{isStartPriceAvailable ? (
+						<EditableCell
+							values={[{
+								name: 'startPrice',
+								value: data.startPrice
+							}]}
+							onChange={this.handleChangeCell}
+							>
+							{data.startPrice || data.startPrice === 0 ? (
+								<Price
+									cost={formatPrice(data.startPrice)}
+									currency="₽"
+									/>
+							) : null}
+						</EditableCell>
+					) : null}
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['discount']}
 					errors={errors}
 					warnings={warnings}
+					disabled={!isDiscountAvailable}
 					>
-					<EditableCell
-						values={[{
-							name: 'discount',
-							value: data.discount
-						}]}
-						onChange={this.handleChangeCell}
-						>
-						<strong>
-							{data.discount}
-						</strong>
+					{isDiscountAvailable ? (
+						<EditableCell
+							values={[{
+								name: 'discount',
+								value: data.discount
+							}]}
+							onChange={this.handleChangeCell}
+							>
+							<strong>
+								{data.discount}
+							</strong>
 
-						{data.discount ? ' %' : null}
-					</EditableCell>
+							{data.discount ? ' %' : null}
+						</EditableCell>
+					) : null}
 				</ProductsTableCell>
 
 				<ProductsTableCell
