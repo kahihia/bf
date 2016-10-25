@@ -31,7 +31,7 @@ class Payment(models.Model):
     invoice = models.OneToOneField('orders.Invoice')
 
     def __str__(self):
-        return self.invoice_id
+        return str(self.invoice_id)
 
     def build_url(self, endpoint):
         return '{url}{module}/{endpoint}/{pk}?requestor={requestor}'.format(
@@ -93,3 +93,7 @@ class Payment(models.Model):
         super().save(*args, **kwargs)
         if created:
             self.create()
+
+    @property
+    def owner_id(self):
+        return self.invoice.merchant.advertiser_id
