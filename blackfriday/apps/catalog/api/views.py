@@ -121,7 +121,7 @@ class ProductViewSet(
         instance = self.get_object()
         cleaned_data, errors, warnings = FeedParser(
             merchant_id=self.get_merchant().id,
-            id_required=False
+            _id_required=False
         ).parse_feed(request.data)
         result = {
             'id': instance.id,
