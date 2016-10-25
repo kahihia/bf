@@ -118,6 +118,8 @@ class Merchant(models.Model):
 
     logo_categories = models.ManyToManyField('catalog.Category', related_name='merchant_logos')
 
+    receives_notifications = models.BooleanField(default=False, verbose_name='Получает уведомления')
+
     class Meta:
         verbose_name = 'Магазин'
         verbose_name_plural = 'Магазины'
