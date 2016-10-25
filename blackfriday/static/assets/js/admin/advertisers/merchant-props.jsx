@@ -19,7 +19,8 @@ class MerchantProps extends React.Component {
 			moderationStatus,
 			optionsCount,
 			paymentStatus,
-			promo
+			promo,
+			receivesNotifications
 		} = this.props;
 
 		const isAdmin = hasRole('admin');
@@ -136,6 +137,20 @@ class MerchantProps extends React.Component {
 						{MODERATION_STATUS[moderationStatus]}
 					</span>
 				</li>
+
+				<li className="props__item">
+					<span className="props__label">
+						{'Почтовые уведомления:'}
+					</span>
+
+					<span className="props__value">
+						<Glyphicon
+							name={receivesNotifications ? 'ok' : 'remove'}
+							className={receivesNotifications ? 'text-success' : 'text-danger'}
+							style={{marginRight: 3}}
+							/>
+					</span>
+				</li>
 			</ul>
 		);
 	}
@@ -146,7 +161,8 @@ MerchantProps.propTypes = {
 	moderationStatus: React.PropTypes.number,
 	optionsCount: React.PropTypes.number,
 	paymentStatus: React.PropTypes.number,
-	promo: React.PropTypes.object
+	promo: React.PropTypes.object,
+	receivesNotifications: React.PropTypes.bool
 };
 MerchantProps.defaultProps = {
 };
