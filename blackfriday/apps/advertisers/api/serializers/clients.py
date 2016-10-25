@@ -266,18 +266,16 @@ class MerchantTinySerializer(serializers.ModelSerializer):
 
 
 class MerchantNotificationsSerializer(serializers.Serializer):
-    is_enabled = serializers.BooleanField()
+    is_enabled = serializers.NullBooleanField(required=True)
 
-    def save(self, **kwargs):
-        assert not hasattr(self, 'save_object'), super().save(**kwargs)
-        assert hasattr(self, '_errors'), super().save(**kwargs)
-        assert not self.errors, super().save(**kwargs)
-        assert 'commit' not in kwargs, super().save(**kwargs)
-        assert not hasattr(self, '_data'), super().save(**kwargs)
+    # Это очень странно, но так нужно
+    def validate_is_enabled(self, value):
+        if value is None:
+            raise ValidationError('не может быть Null')
+        return value
 
-        validated_data = dict(list(self.validated_data.items()) + list(kwargs.items()))
-
+    def create(self, validated_data):
         receives_notifications = validated_data.get('is_enabled')
         if receives_notifications is not None:
             Merchant.objects.update(receives_notifications=receives_notifications)
-        return None
+        return validated_data
