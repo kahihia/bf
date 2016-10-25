@@ -6,12 +6,12 @@ import Link from './link.jsx';
 
 const CardDescription = React.createClass({
 	propTypes: {
-		name: React.PropTypes.string,
-		url: React.PropTypes.string,
-		text: React.PropTypes.string,
+		linkedPartners: React.PropTypes.array,
 		logo: React.PropTypes.string,
+		name: React.PropTypes.string,
 		promoCode: React.PropTypes.string,
-		linkedPartners: React.PropTypes.array
+		text: React.PropTypes.string,
+		url: React.PropTypes.string
 	},
 
 	getInitialState() {
@@ -50,7 +50,11 @@ const CardDescription = React.createClass({
 
 					{promoCode ? (
 						<p className="card-description__promocode">
-							Для предоставления скидки используйте промо-код: <code>{promoCode}</code>
+							{'Для предоставления скидки используйте промо-код: '}
+
+							<code>
+								{promoCode}
+							</code>
 						</p>
 					) : null}
 
@@ -63,23 +67,22 @@ const CardDescription = React.createClass({
 					{linkedPartners.length ? (
 						<div className="paysys card-description__paysys">
 							<div className="paysys__label">
-								Этот магазин использует:
+								{'Этот магазин использует:'}
 							</div>
+
 							<div className="paysys__list">
-								{linkedPartners.map((partner, index) => {
-									return (
-										<Link
-											key={index}
-											href={partner.url}
-											isExternal
-											>
-											<img
-												src={resolveImgPath(partner.logo)}
-												alt=""
-												/>
-										</Link>
-									);
-								})}
+								{linkedPartners.map((partner, index) => (
+									<Link
+										key={index}
+										href={partner.url}
+										isExternal
+										>
+										<img
+											src={resolveImgPath(partner.logo)}
+											alt=""
+											/>
+									</Link>
+								))}
 							</div>
 						</div>
 					) : null}

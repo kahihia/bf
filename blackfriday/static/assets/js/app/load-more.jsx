@@ -36,7 +36,9 @@ class LoadMoreBtn extends React.Component {
 					className="load-more-btn"
 					disabled={this.props.disabled}
 					>
-					<span>{this.props.text}</span>
+					<span>
+						{this.props.text}
+					</span>
 				</button>
 			</div>
 		);

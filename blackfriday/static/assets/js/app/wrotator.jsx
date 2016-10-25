@@ -24,6 +24,7 @@ const Wrotator = React.createClass({
 						backgroundImage: `url(${resolveImgPath(backgrounds.left)})`
 					}}
 					/>
+
 				<div
 					className="wrotator__right"
 					style={{

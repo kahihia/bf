@@ -1,6 +1,5 @@
 /* global window */
 /* eslint react/require-optimization: 0 */
-/* eslint react/jsx-no-bind: ["error", {ignoreRefs: true}] */
 
 import React from 'react';
 import SimpleMenu from './simple-menu.jsx';
@@ -10,6 +9,7 @@ class Header extends React.Component {
 	constructor() {
 		super();
 		this.state = {isCollapsed: true};
+
 		this.handleClick = this.handleClick.bind(this);
 	}
 
@@ -47,21 +47,29 @@ class Header extends React.Component {
 	}
 
 	render() {
-		const isCollapsed = this.state.isCollapsed;
+		const {isCollapsed} = this.state;
+
+		const node = node => {
+			this.node = node;
+		};
+
 		return (
 			<div
 				className="container"
-				ref={node => {
-					this.node = node;
-				}}
+				ref={node}
 				>
 				<div className="navbar-header">
-					<button onClick={this.handleClick} type="button" className={`navbar-toggle${isCollapsed ? ' collapsed' : ''}`}>
+					<button
+						onClick={this.handleClick}
+						type="button"
+						className={`navbar-toggle${isCollapsed ? ' collapsed' : ''}`}
+						>
 						<span className="icon-bar"/>
 						<span className="icon-bar"/>
 						<span className="icon-bar"/>
 					</button>
 				</div>
+
 				<div className={`navbar-collapse collapse${isCollapsed ? '' : ' in'}`}>
 					<div className="row row-main">
 						<div className="col-sm-3 col-md-3">
@@ -69,9 +77,13 @@ class Header extends React.Component {
 								<SimpleMenu list={this.props.headerMenu}/>
 							</div>
 						</div>
+
 						<div className="col-sm-9 col-md-9">
 							<div className="header-cats">
-								<SimpleMenu list={this.props.categories} sorting={categoriesSorting}/>
+								<SimpleMenu
+									list={this.props.categories}
+									sorting={categoriesSorting}
+									/>
 							</div>
 						</div>
 					</div>
@@ -81,8 +93,8 @@ class Header extends React.Component {
 	}
 }
 Header.propTypes = {
-	headerMenu: React.PropTypes.array.isRequired,
-	categories: React.PropTypes.array.isRequired
+	categories: React.PropTypes.array.isRequired,
+	headerMenu: React.PropTypes.array.isRequired
 };
 
 export default Header;

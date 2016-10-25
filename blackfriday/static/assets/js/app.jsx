@@ -34,7 +34,7 @@ import Banners from './app/banners.jsx';
 	ReactDOM.render(<SimpleMenu list={DATA.footerCats}/>, document.getElementById('footer-cats'));
 
 	// Site Sidebar menu
-	var sidebarCats = document.querySelector('.left-sidebar__sidebar-cats');
+	const sidebarCats = document.querySelector('.left-sidebar__sidebar-cats');
 	if (!window.isSideMenuHidden && sidebarCats) {
 		ReactDOM.render(<SidebarCats list={DATA.categories} isSideShown={DATA.isSideShown}/>, sidebarCats);
 	}
@@ -48,8 +48,14 @@ import Banners from './app/banners.jsx';
 		}
 		const m = (
 			<div className="categories-rus">
-				<div className="categories-rus__title">Товары российского производства</div>
-				<SimpleMenu list={DATA.categoriesRus} sorting={categoriesSorting}/>
+				<div className="categories-rus__title">
+					'Товары российского производства'
+				</div>
+
+				<SimpleMenu
+					list={DATA.categoriesRus}
+					sorting={categoriesSorting}
+					/>
 			</div>
 		);
 		ReactDOM.render(m, categoriesRus);
@@ -148,6 +154,7 @@ import Banners from './app/banners.jsx';
 			return (
 				<div>
 					<Scroll.Element name="anchor-goods"/>
+
 					<Tabs tabActive={this.props.tabActive}>
 						<Tabs.Panel title={(<span>Лучшие акции</span>)}>
 							<RRMarkupBlock
@@ -155,13 +162,16 @@ import Banners from './app/banners.jsx';
 								id="571e14d19872e50edcded355"
 								categoryId="00"
 								/>
+
 							<Banners {...DATA.banners}/>
 						</Tabs.Panel>
+
 						<Tabs.Panel title={(<span>Лучшие товары</span>)}>
 							<RRMarkupBlock
 								key="571e13c565bf192790e915fc"
 								id="571e13c565bf192790e915fc"
 								/>
+
 							<Goods {...DATA.goods}/>
 						</Tabs.Panel>
 					</Tabs>
@@ -195,8 +205,10 @@ import Banners from './app/banners.jsx';
 								categoryId={virtualCategoryId}
 								/>
 						) : null}
+
 						<Banners {...DATA.banners}/>
 					</Tabs.Panel>
+
 					<Tabs.Panel title={(<span>{'Лучшие товары'}</span>)}>
 						{this.props.withRr ? (
 							<RRMarkupBlock
@@ -205,6 +217,7 @@ import Banners from './app/banners.jsx';
 								categoryId={categoryId}
 								/>
 						) : null}
+
 						<Goods {...DATA.goods}/>
 					</Tabs.Panel>
 				</Tabs>
@@ -256,8 +269,8 @@ import Banners from './app/banners.jsx';
 	}
 
 	function toggleClass(elem, className) {
-		var classString = elem.className;
-		var nameIndex = classString.indexOf(className);
+		let classString = elem.className;
+		let nameIndex = classString.indexOf(className);
 
 		if (nameIndex === -1) {
 			classString += ' ' + className;
@@ -276,13 +289,13 @@ import Banners from './app/banners.jsx';
 
 	const cardDescription = document.getElementById('card-description');
 	if (cardDescription) {
-		let CardDescription = require('./app/card-description');
+		const CardDescription = require('./app/card-description');
 		ReactDOM.render(<CardDescription {...DATA.cardDescription}/>, cardDescription);
 	}
 
 	const specialOffers = document.getElementById('special-offers');
 	if (specialOffers) {
-		let SpecialOffers = require('./app/special-offers');
+		const SpecialOffers = require('./app/special-offers');
 		ReactDOM.render(<SpecialOffers {...DATA.specialOffers}/>, specialOffers);
 	}
 
@@ -313,14 +326,12 @@ import Banners from './app/banners.jsx';
 	const mainTeasers = document.getElementById('main-teasers');
 	if (mainTeasers) {
 		let teasers = document.querySelectorAll('#main-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => {
-			return (
-				<div
-					key={index}
-					dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-					/>
-			);
-		});
+		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
+			<div
+				key={index}
+				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
+				/>
+		));
 		const Slider = require('react-slick');
 		const MainTeasers = React.createClass({
 			componentDidMount() {
@@ -381,14 +392,12 @@ import Banners from './app/banners.jsx';
 	const sidebarTeasers = document.getElementById('sidebar-teasers');
 	if (sidebarTeasers) {
 		let teasers = document.querySelectorAll('#sidebar-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => {
-			return (
-				<div
-					key={index}
-					dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-					/>
-			);
-		});
+		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
+			<div
+				key={index}
+				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
+				/>
+		));
 		const Slider = require('react-slick');
 		const SidebarTeasers = React.createClass({
 			componentDidMount() {

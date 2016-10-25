@@ -59,16 +59,23 @@ const ShortProduct = React.createClass({
 					isExternal
 					>
 					<div className="short-product__preview">
-						<img src={item.image_url} alt="" className="img-responsive"/>
+						<img
+							src={item.image_url}
+							alt=""
+							className="img-responsive"
+							/>
 					</div>
+
 					<div className="short-product__name">
 						{item.name}
 					</div>
+
 					{item.cat_name ? (
 						<div className="short-product__cat">
 							{item.cat_name}
 						</div>
 					) : null}
+
 					<div className="short-product__price">
 						<del className="price price_old">
 							{item.start_price ? (
@@ -76,9 +83,11 @@ const ShortProduct = React.createClass({
 									{'от '}
 								</span>
 							) : null}
+
 							<span className="price__cost">
 								{priceOld}
 							</span>
+
 							{priceOldCur ? (
 								<span className="price__currency">
 									{priceOld ? 'руб.' : ''}
@@ -91,9 +100,11 @@ const ShortProduct = React.createClass({
 								<span className="price__prefix">
 									{'скидка '}
 								</span>
+
 								<span className="price__cost">
 									{item.discount}
 								</span>
+
 								<span className="price__currency">
 									{'%'}
 								</span>
@@ -105,9 +116,11 @@ const ShortProduct = React.createClass({
 										{'от '}
 									</span>
 								) : null}
+
 								<span className="price__cost">
 									{priceNew}
 								</span>
+
 								{priceNewCur ? (
 									<span className="price__currency">
 										{priceNew ? 'руб.' : ''}
@@ -117,6 +130,7 @@ const ShortProduct = React.createClass({
 						)}
 					</div>
 				</Link>
+
 				{item.merchant_url ? (
 					<a
 						className="short-product__shop"

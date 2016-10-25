@@ -30,11 +30,12 @@ class Goods extends React.Component {
 		this.state = {
 			data: []
 		};
+
 		this.handleNext = this.handleNext.bind(this);
 	}
 
 	handleNext(data) {
-		this.setState({data: data});
+		this.setState({data});
 	}
 
 	render() {
@@ -55,17 +56,17 @@ class Goods extends React.Component {
 	}
 }
 Goods.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
-	speed: React.PropTypes.number,
+	data: React.PropTypes.array,
+	isRandom: React.PropTypes.bool,
+	loadMoreText: React.PropTypes.string,
+	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	loadMoreText: React.PropTypes.string
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export default Goods;

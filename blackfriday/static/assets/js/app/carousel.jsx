@@ -4,16 +4,17 @@ import React from 'react';
 import Pager from './pager.js';
 
 class Carousel extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
-			timer: null,
 			data: [],
-			page: null,
-			isLoading: false,
 			isAllLoaded: false,
-			isInited: false
+			isInited: false,
+			isLoading: false,
+			page: null,
+			timer: null
 		};
+
 		this.handleClickNext = this.handleClickNext.bind(this);
 		this.handleClickPrev = this.handleClickPrev.bind(this);
 		this.handleClickPage = this.handleClickPage.bind(this);
@@ -72,8 +73,8 @@ class Carousel extends React.Component {
 
 	_handleNext(data, page) {
 		this.setState({
-			data: data,
-			page: page
+			data,
+			page
 		}, () => {
 			this.props.onNext(data);
 		});
@@ -154,19 +155,19 @@ class Carousel extends React.Component {
 	}
 }
 Carousel.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
-	isControlsShown: React.PropTypes.bool,
-	isPagerShown: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
-	speed: React.PropTypes.number,
+	children: React.PropTypes.element,
+	data: React.PropTypes.array,
+	isControlsShown: React.PropTypes.bool,
+	isPagerShown: React.PropTypes.bool,
+	isRandom: React.PropTypes.bool,
+	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	children: React.PropTypes.element
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export default Carousel;
@@ -174,6 +175,7 @@ export default Carousel;
 class CarouselPager extends React.Component {
 	constructor() {
 		super();
+
 		this.handleClickPage = this.handleClickPage.bind(this);
 	}
 
@@ -203,14 +205,15 @@ class CarouselPager extends React.Component {
 	}
 }
 CarouselPager.propTypes = {
-	pages: React.PropTypes.number,
+	onPage: React.PropTypes.func,
 	page: React.PropTypes.number,
-	onPage: React.PropTypes.func
+	pages: React.PropTypes.number
 };
 
 class CarouselPage extends React.Component {
 	constructor() {
 		super();
+
 		this.handleClickPage = this.handleClickPage.bind(this);
 	}
 
@@ -233,7 +236,7 @@ class CarouselPage extends React.Component {
 	}
 }
 CarouselPage.propTypes = {
-	page: React.PropTypes.number,
 	isActive: React.PropTypes.bool,
-	onClick: React.PropTypes.func
+	onClick: React.PropTypes.func,
+	page: React.PropTypes.number
 };

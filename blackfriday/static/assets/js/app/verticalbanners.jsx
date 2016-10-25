@@ -48,19 +48,19 @@ const VerticalbannersCarousel = React.createClass({
 
 const Verticalbanners = React.createClass({
 	propTypes: {
-		data: React.PropTypes.array,
-		pages: React.PropTypes.number,
-		perPage: React.PropTypes.number,
-		pagesCount: React.PropTypes.number,
-		loadPagesCount: React.PropTypes.number,
-		isRandom: React.PropTypes.bool,
-		isControlsShown: React.PropTypes.bool,
-		isPagerShown: React.PropTypes.bool,
 		ajaxUrl: React.PropTypes.string,
 		ajaxUrlRoot: React.PropTypes.bool,
-		speed: React.PropTypes.number,
+		data: React.PropTypes.array,
+		isControlsShown: React.PropTypes.bool,
+		isPagerShown: React.PropTypes.bool,
+		isRandom: React.PropTypes.bool,
+		loadMoreText: React.PropTypes.string,
+		loadPagesCount: React.PropTypes.number,
 		onNext: React.PropTypes.func,
-		loadMoreText: React.PropTypes.string
+		pages: React.PropTypes.number,
+		pagesCount: React.PropTypes.number,
+		perPage: React.PropTypes.number,
+		speed: React.PropTypes.number
 	},
 
 	getInitialState() {
