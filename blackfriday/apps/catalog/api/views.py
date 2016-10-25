@@ -141,7 +141,7 @@ class ProductViewSet(
         data = dict(
             cleaned_data,
             **{
-                'category': cat_qs.get(name=cleaned_data.get('category')),
+                'category': cat_qs.get(name__iexact=cleaned_data.get('category')),
                 'is_teaser': request.data.get('is_teaser', False),
                 'is_teaser_on_main': request.data.get('is_teaser_on_main', False),
             }
