@@ -81,7 +81,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['patch'])
     def notifications(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, partial=False)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(request.data)
