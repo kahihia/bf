@@ -33,7 +33,7 @@ const MerchantEditPromoSelect = React.createClass({
 
 	requestPromos() {
 		xhr({
-			url: '/api/promos/',
+			url: '/api/promos/?is_custom=false',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
