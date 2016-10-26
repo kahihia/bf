@@ -34,7 +34,7 @@ import Banners from './app/banners.jsx';
 	ReactDOM.render(<SimpleMenu list={DATA.footerCats}/>, document.getElementById('footer-cats'));
 
 	// Site Sidebar menu
-	const sidebarCats = document.querySelector('.left-sidebar__sidebar-cats');
+	const sidebarCats = document.querySelector('.super-header__sidebar-cats');
 	if (!window.isSideMenuHidden && sidebarCats) {
 		ReactDOM.render(<SidebarCats list={DATA.categories} isSideShown={DATA.isSideShown}/>, sidebarCats);
 	}

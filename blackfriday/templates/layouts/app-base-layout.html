@@ -59,6 +59,34 @@
     <nav class="navbar header-nav" id="header"></nav>
     <div class="header-nav__placeholder"></div>
 
+    <div class="super-header">
+        <div class="container">
+            <div class="row row-main">
+                <div class="col-md-3">
+
+                    <a href="/" class="logo">
+                        <img src="{% static 'images/logo.png' %}" alt="">
+                    </a>
+
+                    <div class="super-header__share share">
+                        <div class="share__content">
+                            <script src="//yastatic.net/share2/share.js"></script>
+                            <div class="ya-share2" data-services="facebook,twitter,vkontakte,odnoklassniki,gplus" data-size="s"></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-cats super-header__sidebar-cats"></div>
+
+                </div>
+                <div class="col-md-9">
+
+                    <div id="superbanner"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-container container">
         {% block container %}
         block container

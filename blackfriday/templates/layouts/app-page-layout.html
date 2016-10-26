@@ -10,20 +10,6 @@
         <div class="left-sidebar">
 
             {% block sidebar %}
-                <a href="/" class="logo">
-                  <img src="{% static 'images/logo.png' %}" alt="">
-                </a>
-
-                <div class="left-sidebar__share share">
-                    <div class="share__title"><strong>Расскажи</strong> друзьям:</div>
-                    <div class="share__content">
-                        <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-                        <div class="ya-share2" data-services="facebook,twitter,vkontakte,odnoklassniki,gplus" data-size="s"></div>
-                    </div>
-                </div>
-
-                <div class="sidebar-cats left-sidebar__sidebar-cats"></div>
-
                 <div id="categories-rus"></div>
 
                 <div id="sidebar-hidden-block">
@@ -57,8 +43,6 @@
     </div>
 
     <div class="col-md-9">
-
-        <div id="superbanner"></div>
 
         {% block content %}
         block content
