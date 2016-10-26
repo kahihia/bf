@@ -31,11 +31,11 @@
 
 		&.is-active
 			&::after
-				background-color: #0089ff
+				background-color: $link-color
 
 		&:hover
 			&::after
-				background-color: #83c6ff
+				background-color: $link-hover-color
 
 	.carousel__prev
 	.carousel__next
@@ -57,20 +57,24 @@
 			content: ''
 			display: inline-block
 			vertical-align: middle
-			width: $supercarousel_nav_next_width
-			height: $supercarousel_nav_next_height
+			width: 12px
+			height: 20px
 
 	.carousel__prev
 		left: 0
 
 		&:after
-			sprite $supercarousel_nav_prev
+			background-position: 50% 50%
+			background-repeat: no-repeat
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAUCAQAAAAT+RSaAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgARgMKilWnkrCAAAAvUlEQVQY022RoQ7CMBRF78Y8bhKLHgkSAW6QgAQBmoQETxD8AIIPQCD5BeAj8FjkEgQhgSVbOAgytrW0ouk97WvvfULWrHKi58kcvg4KFJmna1yALZWyXOcKrHFQUW4QAUscVAQt7sAs22dylxcp4/z+dxmRENMvvifElDcP2uX/iQVwo2nadIUkybGM/kp1zFJCDEmIGdhAhDxJmdggMzi3gQiIgJUZSR7iBtcEWew7PLt/Pmdgr7+tPRJ+AAKvBb9wHlucAAAAAElFTkSuQmCC")
 
 	.carousel__next
 		right: 0
 
 		&:after
-			sprite $supercarousel_nav_next
+			background-position: 50% 50%
+			background-repeat: no-repeat
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAUCAQAAAAT+RSaAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgARgMKhlwR3puAAAAqklEQVQY03XRIW6CQRAG0Pmhvg6JRbcJsgIckIAsotUkTfBNBRdAcABETZOeoRwCj0WSIJomlATSV83usiPfZmfnmzCwcivSCh9Ya+RQt8RGM4VQmWOrlUKovGHnPoUQXvDtIYfw5OxXP4cwdHQyziF0/PgzySG07fFai/RUEVG43y0/NXJ08pg2f3Z20Eu/Oy0NWJlh5+4ykppFKcQb7+XYP68tquertNp/A5ASTS9RfdAAAAAASUVORK5CYII=")
 
 .super-banner-carousel-content
 	&__item

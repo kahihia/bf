@@ -23,8 +23,8 @@ class Superbanner extends React.Component {
 		const item = this.state.data[0];
 		let content = '';
 		if (item) {
-			const filename = item.fixed ? item.filename : resolveImgPath(item.filename);
-			const img = (<img className="embed-responsive-item" src={filename} alt=""/>);
+			const image = item.fixed ? item.image : resolveImgPath(item.image);
+			const img = (<img className="embed-responsive-item" src={image} alt=""/>);
 			if (item.url) {
 				content = (
 					<Link

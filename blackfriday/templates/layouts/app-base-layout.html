@@ -71,7 +71,7 @@
                     <div class="super-header__share share">
                         <div class="share__content">
                             <script src="//yastatic.net/share2/share.js"></script>
-                            <div class="ya-share2" data-services="facebook,twitter,vkontakte,odnoklassniki,gplus" data-size="s"></div>
+                            <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
                         </div>
                     </div>
 
@@ -109,30 +109,34 @@
                         </div>
 
                         <div class="footer-social__list">
-                            <a href="https://vk.com/realblackfriday" target="_blank" rel="noopener noreferrer">
-                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
-                            </a>
                             <a href="https://www.facebook.com/Real-Black-Friday-1598467580447815/" target="_blank" rel="noopener noreferrer">
                                 <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
+                            </a>
+                            <a href="https://vk.com/realbf" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
                             </a>
                         </div>
                     </div>
 
+                    {% comment %}
                     <div class="footer-mnogo-left">
                         <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
                             <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
                         </a>
                     </div>
+                    {% endcomment %}
                 </div>
 
                 <div class="footer__navigation col-sm-4">
                     <div id="footer-cats" class="footer-cats"></div>
 
+                    {% comment %}
                     <div class="footer-mnogo-center">
                         <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
                             <img src="{% static 'images/footer-mnogo-2.png' %}" alt="">
                         </a>
                     </div>
+                    {% endcomment %}
                 </div>
 
                 <div class="footer__copyright col-sm-4 col-sm-offset-0">
@@ -142,11 +146,13 @@
                                 <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
                             </a>
 
+                            {% comment %}
                             <div class="footer-mnogo-right">
                                 <span>При поддержке программы:</span>
                                 <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
                                 <img src="{% static 'images/footer-qiwi.png' %}" alt="">
                             </div>
+                            {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -156,15 +162,17 @@
 </div>
 <!-- end site__footer -->
 
+{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
     <a href="http://www.mnogo.ru/anketa.html?range=1063" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
+{% endcomment %}
 
 
 <script>
 window.ENV = {
-    imgBaseUrl: '/media/images/',
+    imgBaseUrl: '',
     redirectPrefix: '',
 };
 
