@@ -10,6 +10,7 @@ import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
+import MerchantEditHeader from './admin/advertisers/merchant-edit-header.jsx';
 import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
 import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
 import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
@@ -496,11 +497,13 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				image,
 				isPreviewable,
 				moderation = {},
+				name,
 				optionsCount = 0,
 				partners,
 				paymentStatus,
 				previewUrl,
-				promo
+				promo,
+				url
 			} = data;
 
 			const moderationStatus = moderation.status;
@@ -513,6 +516,13 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 			return (
 				<div>
+					<MerchantEditHeader
+						{...{
+							name,
+							url
+						}}
+						/>
+
 					<MerchantEditStatusPanel
 						onClickDelete={this.handleClickDelete}
 						onClickModeration={this.handleClickModeration}

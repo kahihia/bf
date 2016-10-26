@@ -39,7 +39,7 @@ class MerchantEditForm extends Form {
 					label: 'URL на сайте',
 					value: data.slug || '',
 					pattern: '^[a-z0-9-]+$',
-					required: true,
+					required: isAdmin,
 					excluded: !isAdmin,
 					readOnly: !isAdmin
 				},
@@ -60,6 +60,7 @@ class MerchantEditForm extends Form {
 					text: 'Почтовые уведомления',
 					type: 'checkbox',
 					value: true,
+					valueType: 'Boolean',
 					excluded: !isAdmin,
 					readOnly: !isAdmin
 				}
@@ -78,7 +79,11 @@ class MerchantEditForm extends Form {
 			const {fields} = previousState;
 
 			_.forEach(fields, (field, name) => {
-				field.value = data[name] || '';
+				let value = data[name] || '';
+				if (field.valueType === 'Boolean') {
+					value = data[name] || false;
+				}
+				field.value = value;
 			});
 
 			return previousState;
