@@ -228,7 +228,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		},
 
 		handleImagesUploadUpload(data) {
-			this.requestMerchantUploadLogo(data.merchantId);
+			this.requestMerchantUploadLogo(data.id);
 		},
 
 		handleMerchantUpdate(data) {
