@@ -1,6 +1,9 @@
 .sidebar-cats
 	.dropdown
 		&--active
+			.dropdown__trigger
+				background-color: $link-hover-color
+
 			.dropdown__content
 				display: block
 
@@ -15,9 +18,13 @@
 			text-align: center
 			padding: 9px 13px 9px 36px
 			background: none
-			background-color: #7409e8
+			background-color: $link-color
 			position: relative
 			border: none
+			transition: background-color ease 0.15s
+
+			&:hover
+				background-color: $link-hover-color
 
 			&:after
 				content: ''
@@ -57,7 +64,7 @@
 		border-radius: 0
 		box-shadow: none
 		width: 100%
-		background-color: #f7f7f7
+		background-color: #f9f9fc
 
 		&__link
 			color: #232323
