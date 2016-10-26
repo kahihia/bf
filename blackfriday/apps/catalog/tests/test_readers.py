@@ -1,5 +1,8 @@
+import pytest
+
 from unittest.mock import MagicMock, patch
 from apps.catalog.utils import csv_dict_reader
+from rest_framework.exceptions import ValidationError
 
 
 def pytest_generate_tests(metafunc):
@@ -16,9 +19,7 @@ def pytest_generate_tests(metafunc):
 empty = (
     'empty',
     {
-        'input': [
-            {'invalid_key': 'foo'}
-        ],
+        'input': {'invalid_key': 'foo'},
         'output': [
             {
                 'name': None,
@@ -33,28 +34,27 @@ empty = (
                 'url': None,
                 'image': None,
             }
-        ]
+        ],
+        'raised_exception': ValidationError
     }
 )
 
 transformed_keys = (
     'transformed_keys',
     {
-        'input': [
-            {
-                'name': 'foo',
-                'oldPrice': 'foo',
-                'price': 'foo',
-                'discount': 'foo',
-                'startPrice': 'foo',
-                'currencyId': 'foo',
-                'vendor': 'foo',
-                'CATEGORY': 'foo',
-                'countryoforigin': 'foo',
-                'url': 'foo',
-                'image': 'foo',
-            }
-        ],
+        'input': {
+            'name': 'foo',
+            'oldPrice': 'foo',
+            'price': 'foo',
+            'discount': 'foo',
+            'startPrice': 'foo',
+            'currencyId': 'foo',
+            'vendor': 'foo',
+            'CATEGORY': 'foo',
+            'countryoforigin': 'foo',
+            'url': 'foo',
+            'image': 'foo',
+        },
         'output': [
             {
                 'name': 'foo',
@@ -69,7 +69,8 @@ transformed_keys = (
                 'url': 'foo',
                 'image': 'foo',
             }
-        ]
+        ],
+        'raised_exception': None,
     }
 )
 
@@ -77,10 +78,15 @@ transformed_keys = (
 class TestReadersByScenario:
     scenarios = [empty, transformed_keys]
 
-    def test_csv_reader(self, input, output):
-        with patch('apps.catalog.utils.DictReader') as fakeDictReader:
-            fakeDictReader.return_value = input
-            fake_file = MagicMock(**{'read.return_value.decode.return_value': 'foo'})
+    def test_csv_reader(self, input, output, raised_exception):
+        fake_file = MagicMock(**{
+            'read.return_value':
+                b';'.join(map(str.encode, input.keys())) + b'\n' + b';'.join(map(str.encode, input.values()))
+        })
+        if raised_exception:
+            with pytest.raises(raised_exception):
+                assert list(csv_dict_reader(fake_file)) == output
+        else:
             assert list(csv_dict_reader(fake_file)) == output
 
     # TODO: add fixtures with xlsx files

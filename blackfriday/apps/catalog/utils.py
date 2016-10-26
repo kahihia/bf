@@ -7,11 +7,6 @@ from django.conf import settings
 from rest_framework.exceptions import ValidationError
 
 
-def dict_reader_lowercaser(iterator):
-    for row in iterator:
-        yield {str.lower(str(key)): value for key, value in row.items()}
-
-
 def csv_dict_reader(f):
     reader = DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"')
     reader.fieldnames = list(map(str.lower, reader.fieldnames))
