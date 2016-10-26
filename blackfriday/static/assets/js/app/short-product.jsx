@@ -7,7 +7,7 @@ import Link from './link.jsx';
 
 const ShortProduct = React.createClass({
 	propTypes: {
-		data: React.PropTypes.object
+		data: React.PropTypes.object.isRequired
 	},
 
 	handleClick() {
@@ -24,27 +24,27 @@ const ShortProduct = React.createClass({
 	},
 
 	render() {
-		const item = this.props.data;
+		const {data} = this.props;
 
-		let priceOld = item.price_old;
+		let priceOld = data.oldPrice;
 		let priceOldCur = false;
 		if (
 			priceOld &&
 			!/[A-Za-zА-Яа-я]/gi.test(priceOld)
 		) {
-			priceOld = priceOld.replace(/\d+/gi, match => {
+			priceOld = String(priceOld).replace(/\d+/gi, match => {
 				return formatThousands(match);
 			});
 			priceOldCur = true;
 		}
 
-		let priceNew = item.price;
+		let priceNew = data.price;
 		let priceNewCur = false;
 		if (
 			priceNew &&
 			!/[A-Za-zА-Яа-я]/gi.test(priceNew)
 		) {
-			priceNew = priceNew.replace(/\d+/gi, match => {
+			priceNew = String(priceNew).replace(/\d+/gi, match => {
 				return formatThousands(match);
 			});
 			priceNewCur = true;
@@ -54,31 +54,31 @@ const ShortProduct = React.createClass({
 			<div className="short-product">
 				<Link
 					className="short-product__link"
-					href={item.url}
+					href={data.url}
 					onClick={this.handleClick}
 					isExternal
 					>
 					<div className="short-product__preview">
 						<img
-							src={item.image_url}
+							src={data.image}
 							alt=""
 							className="img-responsive"
 							/>
 					</div>
 
 					<div className="short-product__name">
-						{item.name}
+						{data.name}
 					</div>
 
-					{item.cat_name ? (
+					{data.category ? (
 						<div className="short-product__cat">
-							{item.cat_name}
+							{data.category.name}
 						</div>
 					) : null}
 
 					<div className="short-product__price">
 						<del className="price price_old">
-							{item.start_price ? (
+							{data.startPrice ? (
 								<span className="price__prefix">
 									{'от '}
 								</span>
@@ -95,14 +95,14 @@ const ShortProduct = React.createClass({
 							) : null}
 						</del>
 
-						{item.discount ? (
+						{data.discount ? (
 							<div className="price price_theme_normal">
 								<span className="price__prefix">
 									{'скидка '}
 								</span>
 
 								<span className="price__cost">
-									{item.discount}
+									{data.discount}
 								</span>
 
 								<span className="price__currency">
@@ -111,7 +111,7 @@ const ShortProduct = React.createClass({
 							</div>
 						) : (
 							<div className="price price_theme_normal">
-								{item.start_price ? (
+								{data.startPrice ? (
 									<span className="price__prefix">
 										{'от '}
 									</span>
@@ -131,13 +131,13 @@ const ShortProduct = React.createClass({
 					</div>
 				</Link>
 
-				{item.merchant_url ? (
+				{data.merchant_url ? (
 					<a
 						className="short-product__shop"
-						href={item.merchant_url}
+						href={data.merchant_url}
 						>
 						<img
-							src={resolveImgPath(item.logo)}
+							src={resolveImgPath(data.logo)}
 							alt=""
 							className="short-product__logo"
 							/>
