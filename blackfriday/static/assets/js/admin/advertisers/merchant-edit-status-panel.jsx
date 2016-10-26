@@ -36,7 +36,6 @@ class MerchantEditStatusPanel extends React.Component {
 
 	render() {
 		const {
-			isModerationAllowed,
 			isPreviewable,
 			moderationComment,
 			moderationStatus,
@@ -153,7 +152,6 @@ class MerchantEditStatusPanel extends React.Component {
 						className="btn btn-primary"
 						onClick={this.handleClickModeration}
 						type="button"
-						disabled={!isModerationAllowed}
 						>
 						{'Отправить на модерацию'}
 					</button>
@@ -163,7 +161,6 @@ class MerchantEditStatusPanel extends React.Component {
 	}
 }
 MerchantEditStatusPanel.propTypes = {
-	isModerationAllowed: React.PropTypes.bool,
 	isPreviewable: React.PropTypes.bool,
 	moderationComment: React.PropTypes.string,
 	moderationStatus: React.PropTypes.number,
