@@ -197,10 +197,10 @@ class MerchantEditForm extends Form {
 
 					<div className="form-group">
 						<Checkbox
-							text={this.state.fields.receivesNotifications.text}
-							isChecked={this.state.fields.receivesNotifications.value}
+							text={fields.receivesNotifications.text}
+							isChecked={fields.receivesNotifications.value}
+							disabled={fields.receivesNotifications.readOnly}
 							onChange={this.handleChangeReceivesNotifications}
-							disabled={this.state.fields.receivesNotifications.readOnly}
 							/>
 					</div>
 				</form>
