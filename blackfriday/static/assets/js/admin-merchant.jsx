@@ -105,7 +105,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestCategories() {
 			xhr({
-				url: '/api/categories/',
+				url: `/api/categories/?available_to_merchant=${this.props.merchantId}`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
