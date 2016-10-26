@@ -13,12 +13,15 @@ def dict_reader_lowercaser(iterator):
 
 
 def csv_dict_reader(f):
+    reader = DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"')
+    reader.fieldnames = list(map(str.lower, reader.fieldnames))
+    diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(reader.fieldnames)
+    if diff:
+        raise ValidationError('некорректный формат данных, отсутствуют колонки: {}'.format(','.join(diff)))
     try:
         return [
-            {
-                _key: row.get(key) for key, _key in settings.PRODUCT_FILE_COLUMNS_MAPPING.items()
-            } for row in dict_reader_lowercaser(
-                DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"'))
+            {field: row[key] for key, field in settings.PRODUCT_FILE_COLUMNS_MAPPING.items()}
+            for row in reader
         ]
     except (Error, UnicodeDecodeError):
         raise ValidationError('некорректный формат данных')
@@ -31,9 +34,9 @@ def xls_dict_reader(f, sheet_index=0):
         headers = dict(
             (i, str.lower(sheet.cell_value(0, i))) for i in range(sheet.ncols) if sheet.cell_value(0, i)
         )
-
-        if set(headers.values()) != set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()):
-            raise ValidationError('некорректный формат данных')
+        diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(headers.values())
+        if diff:
+            raise ValidationError('некорректный формат данных, отсутствуют колонки: {}'.format(','.join(diff)))
         return [
             dict(
                 (settings.PRODUCT_FILE_COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
