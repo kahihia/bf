@@ -139,6 +139,11 @@ class Form extends React.Component {
 		processErrors(errors, (error, label) => {
 			const field = fields[label];
 			if (field) {
+				if (error === 'exact_width') {
+					error = 'Неподходящая шинина картинки';
+				} else if (error === 'exact_height') {
+					error = 'Неподходящая высота картинки';
+				}
 				field.helpError = error;
 				field.hasError = true;
 				return;
