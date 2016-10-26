@@ -255,29 +255,6 @@
 
 <script>
 $(function () {
-    // Кнопки генерации страницы
-    $('.js-generate-page').on('click', function () {
-        var $this = $(this);
-
-        $.ajax({
-            type: 'GET',
-            url: $this.data('url'),
-            data: $this.data('data') || '',
-            beforeSend: function () {
-                $this.prop('disabled', true);
-            },
-            complete: function () {
-                $this.prop('disabled', false);
-            },
-            success: function () {
-                toastr.success('Страница сгенерирована');
-            },
-            error: function () {
-                toastr.error('Не удалось сгенерировать страницу');
-            }
-        });
-    });
-
     // Bootstrap Popover and Tooltip
     $('[data-toggle="popover"]').popover();
     $('[data-toggle="tooltip"]').tooltip();
