@@ -1,7 +1,7 @@
 import operator
 from functools import reduce
 
-from django.db.models import Q
+from django.db.models import Q, timezone
 
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError, PermissionDenied
@@ -158,6 +158,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
+
+        user = self.context['request'].user
+        if user.role == 'advertiser':
+            attrs['last_save'] = timezone.now()
+
         return attrs
 
 

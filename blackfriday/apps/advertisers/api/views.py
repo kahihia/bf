@@ -1,4 +1,11 @@
+from functools import partial
+
+from django.conf import settings
+from django.core.mail import send_mail
+from django.db.models import Count, Sum, Aggregate
 from django.db.models import Q
+from django.db.models.expressions import RawSQL
+from django.template.loader import render_to_string
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -7,6 +14,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
+from apps.advertisers.models import BannerType
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -20,7 +28,7 @@ from apps.users.models import User
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant
+from ..models import Banner, Merchant, ModerationStatus
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
@@ -106,9 +114,14 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['patch', 'put'])
     def moderation(self, request, *args, **kwargs):
         obj = self.get_object()
+
         serializer = self.get_serializer(obj, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+
+        instance = serializer.save()
+        if instance.moderation_status == ModerationStatus.confirmed:
+            self.send_moderation_report(instance)
+
         return Response(serializer.data)
 
     @detail_route(methods=['get'])
@@ -166,6 +179,47 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(merchant.logo_categories.all(), many=True)
         return Response(serializer.data)
+
+    def send_moderation_report(self, instance):
+        if not instance.receives_notifications:
+            return
+
+        header = ('type', 'url', 'on_main')
+        materials = []
+
+        if instance.image:
+            materials.append(('Логотип', None, False))
+
+        banners = instance.banners.all()
+        banner_types = {
+            BannerType.SUPER: 'Супербаннер',
+            BannerType.ACTION: 'Акционный баннер',
+            BannerType.VERTICAL: 'Вертикальный баннер',
+            BannerType.BG_LEFT: 'Фон',
+            BannerType.BG_RIGHT: 'Фон',
+        }
+
+        for banner in banners.order_by('type', '-on_main'):
+            materials.append((banner_types[banner.type], banner.url, banner.on_main))
+
+        teasers = instance.product_set.filter(Q(is_teaser=True) | Q(is_teaser_on_main=True))
+        for teaser in teasers.order_by('is_teaser_on_main'):
+            materials.append(('Тизер', teaser.url, teaser.is_teaser_on_main))
+
+        send_mail(
+            subject='Просьба о помощи от рекламодателя',
+            recipient_list=[instance.advertiser.email],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            html_message=render_to_string(
+                'advertisers/messages/report.html',
+                {
+                    'merchant': instance,
+                    'materials': map(dict, map(partial(zip, header), materials)),
+                    'products': instance.product_set.count()
+                }
+            ),
+            message=''
+        )
 
 
 class BannerViewSet(viewsets.ModelViewSet):
