@@ -7,7 +7,7 @@ class EditableCell extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isActive: false,
+			isActive: props.opened || false,
 			values: _.cloneDeep(props.values)
 		};
 
@@ -19,12 +19,27 @@ class EditableCell extends React.Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		this.setState({values: _.cloneDeep(newProps.values)});
+		const isActive = newProps.opened || false;
+		this.setState({
+			isActive,
+			values: _.cloneDeep(newProps.values)
+		}, () => {
+			if (!isActive) {
+				return;
+			}
+			this.firstInput.focus();
+		});
 	}
 
 	handleClick(e) {
 		e.preventDefault();
-		this.setState({isActive: !this.state.isActive});
+		const isActive = !this.state.isActive;
+		this.setState({isActive}, () => {
+			if (!isActive) {
+				return;
+			}
+			this.firstInput.focus();
+		});
 	}
 
 	handleChange(e) {
@@ -65,6 +80,10 @@ class EditableCell extends React.Component {
 			values
 		} = this.props;
 
+		const firstInput = node => {
+			this.firstInput = node;
+		};
+
 		return (
 			<div className="editable-cell">
 				{children}
@@ -82,10 +101,11 @@ class EditableCell extends React.Component {
 						<div className="arrow"/>
 
 						<div className="popover-content">
-							{values.map(item => (
+							{values.map((item, index) => (
 								<p key={item.name}>
 									{item.type === 'textarea' ? (
 										<textarea
+											ref={index === 0 ? firstInput : null}
 											value={this.getStateValueByName(item.name).value || ''}
 											className="form-control"
 											name={item.name}
@@ -94,6 +114,7 @@ class EditableCell extends React.Component {
 											/>
 									) : (
 										<input
+											ref={index === 0 ? firstInput : null}
 											value={this.getStateValueByName(item.name).value || ''}
 											className="form-control"
 											type={item.type || 'text'}
@@ -131,8 +152,9 @@ class EditableCell extends React.Component {
 }
 EditableCell.propTypes = {
 	children: React.PropTypes.node,
-	values: React.PropTypes.array,
-	onChange: React.PropTypes.func
+	values: React.PropTypes.array.isRequired,
+	onChange: React.PropTypes.func.isRequired,
+	opened: React.PropTypes.bool
 };
 EditableCell.defaultProps = {
 };

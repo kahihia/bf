@@ -126,3 +126,5 @@ export const BANNER_LIMIT_ALIAS = {
 		'category_background'
 	]
 };
+
+export const MERCHANT_DESCRIPTION_LENGTH = 1000;

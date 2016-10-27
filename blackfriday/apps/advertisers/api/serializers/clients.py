@@ -1,13 +1,12 @@
-import operator
-from functools import reduce
-
 from django.db.models import Q
+from django.utils import timezone
 
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError, PermissionDenied
 
-from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner, AdvertiserType, \
-    ADVERTISER_INNER_TYPES
+from apps.advertisers.models import (
+    AdvertiserProfile, Merchant, ModerationStatus, AdvertiserType, ADVERTISER_INNER_TYPES
+)
 from apps.mediafiles.models import Image
 from apps.users.models import User
 
@@ -140,10 +139,9 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 requirements = {
                     'name': self.instance.name,
                     'description': self.instance.description,
-                    'slug': self.instance.slug,
                     'url': self.instance.url,
                     'image': self.instance.image,
-                    'promo': self.instance.get_promo,
+                    'promo': self.instance.promo,
                     'limits': not unused_limits,
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
@@ -158,6 +156,11 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
+
+        user = self.context['request'].user
+        if user.role == 'advertiser':
+            attrs['last_save'] = timezone.now()
+
         return attrs
 
 
@@ -172,7 +175,7 @@ class MerchantSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
                   'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
-                  'moderation', 'preview_url')
+                  'moderation', 'preview_url', 'receives_notifications')
 
     def get_moderation(self, obj):
         return MerchantModerationSerializer(obj).data
@@ -192,7 +195,7 @@ class MerchantListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name', 'image', 'payment_status', 'moderation', 'promo',
-                  'is_active', 'is_previewable', 'preview_url', 'advertiser', 'options_count')
+                  'is_active', 'is_previewable', 'preview_url', 'advertiser', 'options_count', 'receives_notifications')
 
     def get_moderation(self, obj):
         return MerchantModerationSerializer(obj).data
@@ -252,7 +255,7 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
         fields = ['name', 'url', 'description', 'promocode', 'image']
         user = self.context['request'].user
         if user and user.is_authenticated and user.is_admin:
-            fields += ['is_active', 'slug']
+            fields += ['is_active', 'slug', 'receives_notifications']
         return fields
 
     def to_representation(self, instance):
@@ -263,3 +266,19 @@ class MerchantTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
         fields = ('id', 'name')
+
+
+class MerchantNotificationsSerializer(serializers.Serializer):
+    is_enabled = serializers.NullBooleanField(required=True)
+
+    # Это очень странно, но так нужно
+    def validate_is_enabled(self, value):
+        if value is None:
+            raise ValidationError('не может быть Null')
+        return value
+
+    def create(self, validated_data):
+        receives_notifications = validated_data.get('is_enabled')
+        if receives_notifications is not None:
+            Merchant.objects.update(receives_notifications=receives_notifications)
+        return validated_data
