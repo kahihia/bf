@@ -1,12 +1,12 @@
 import collections
 
 import operator
-from functools import partial
 from functools import reduce
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q, Sum
+from django.core.urlresolvers import reverse
 
 from apps.orders.models import InvoiceStatus, InvoiceOption
 from apps.promo.models import Option
@@ -111,6 +111,8 @@ class Merchant(models.Model):
     partners = models.ManyToManyField('banners.Partner', blank=True, related_name='merchants', verbose_name='Партнеры')
     advertiser = models.ForeignKey('users.User', related_name='merchants', verbose_name='Рекламодатель')
 
+    last_save = models.DateTimeField(null=True, blank=True)
+
     moderation_comment = models.TextField(null=True, blank=True, verbose_name='Комментарий модератора')
     moderation_status = models.IntegerField(default=ModerationStatus.new, choices=MODERATION_STATUSES,
                                             verbose_name='Статус модерации')
@@ -181,8 +183,7 @@ class Merchant(models.Model):
 
     @property
     def preview_url(self):
-        # ToDo: реверсить страницу превью
-        return ''
+        return reverse('advertisers:merchant-preview', args=(self.id,))
 
     @property
     def payment_status(self):

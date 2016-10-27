@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
@@ -155,7 +154,7 @@ class AddAdvertiserForm extends Form {
 
 	render() {
 		return (
-			<div className={b('add-advertiser')}>
+			<div className="add-advertiser">
 				<div className="modal-body">
 					<form
 						action=""

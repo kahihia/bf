@@ -11,6 +11,7 @@ import MerchantListFilter from './admin/advertisers/merchant-list-filter.jsx';
 import ViewSwitcher from './admin/advertisers/view-switcher.jsx';
 import MerchantTiles from './admin/advertisers/merchant-tiles.jsx';
 import MerchantList from './admin/advertisers/merchant-list.jsx';
+import NotificationHandler from './admin/advertisers/notification-handler.jsx';
 import AddMerchantForm from './admin/advertisers/add-merchant-form.jsx';
 
 const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid';
@@ -114,6 +115,39 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 						toastr.error('Не удалось обновить магазин');
 						break;
 					}
+				}
+			});
+		},
+
+		requestChangeNotifications(isEnabled) {
+			this.setState({isLoading: true});
+
+			xhr({
+				url: '/api/merchants/notifications/',
+				method: 'PATCH',
+				headers: {
+					'X-CSRFToken': TOKEN.csrftoken
+				},
+				json: {isEnabled}
+			}, (err, resp, data) => {
+				this.setState({isLoading: false});
+
+				if (!err && resp.statusCode === 200) {
+					this.setState(prevState => {
+						prevState.merchants = _.map(prevState.merchants, merchant => {
+							merchant.receivesNotifications = data.isEnabled;
+							return merchant;
+						});
+						return prevState;
+					}, () => {
+						const action = isEnabled ? 'включена' : 'отключена';
+
+						toastr.success(`Для всех магазинов была ${action} отправка почтовых уведомлений.`);
+					});
+				} else {
+					const action = isEnabled ? 'включить' : 'отключить';
+
+					toastr.error(`Не удалось ${action} для всех магазинов отправку почтовых уведомлений.`);
 				}
 			});
 		},
@@ -287,6 +321,14 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			}
 		},
 
+		handleEnableNotifications() {
+			this.requestChangeNotifications(true);
+		},
+
+		handleDisableNotifications() {
+			this.requestChangeNotifications(false);
+		},
+
 		render() {
 			const {
 				filterByDate,
@@ -347,6 +389,14 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 					) : null}
 
 					<p>
+						{isAdmin ? (
+							<div className="pull-right">
+								<NotificationHandler
+									onEnable={this.handleEnableNotifications}
+									onDisable={this.handleDisableNotifications}
+									/>
+							</div>
+						) : null}
 						<ViewSwitcher
 							onClick={this.handleClickViewSwitcher}
 							view={view}

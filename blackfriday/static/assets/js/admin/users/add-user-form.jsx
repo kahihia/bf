@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {USER_ROLE, REGEXP, HELP_TEXT, TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
@@ -163,7 +162,7 @@ class AddUser extends Form {
 
 	render() {
 		return (
-			<div className={b('add-user')}>
+			<div className="add-user">
 				<div className="modal-body">
 					<form
 						action=""

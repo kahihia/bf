@@ -13,24 +13,31 @@ class Checkbox extends React.Component {
 	}
 
 	render() {
+		const {
+			disabled,
+			isChecked,
+			name,
+			text
+		} = this.props;
+
 		return (
 			<div className="checkbox">
 				<label>
 					<input
 						type="checkbox"
-						name={this.props.name}
+						name={name}
 						onChange={this.handleChange}
-						checked={this.props.isChecked}
-						disabled={this.props.disabled}
+						checked={Boolean(isChecked)}
+						disabled={disabled}
 						/>
-					{this.props.text}
+					{text}
 				</label>
 			</div>
 		);
 	}
 }
 Checkbox.propTypes = {
-	name: React.PropTypes.string.isRequired,
+	name: React.PropTypes.string,
 	text: React.PropTypes.string.isRequired,
 	value: React.PropTypes.oneOfType([
 		React.PropTypes.string,

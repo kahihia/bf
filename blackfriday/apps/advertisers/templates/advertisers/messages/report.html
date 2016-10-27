@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title></title>
+
+
+</head>
+
+<body>
+
+<p>Уважаемый рекламодатель.
+    Настоящим сообщаем, что материалы магазина "{{ merchant.name }}",
+    опубликованные Вами {{ merchant.last_save|date:'j E Y' }}, успешно прошли модерацию.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Название элемента</th>
+            <th>Ссылка, по которой назначен переход с элемента</th>
+            <th>Признак публикации на главной странице</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for material in materials %}
+        <tr>
+            <td>{{ material.type }}</td>
+            <td>{{ material.url }}</td>
+            <td>{% if material.on_main %}Да{% else %}Нет{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p>Также {{ merchant.last_save|date:'j E Y' }} Вами был загружен фид товарной витрины,
+    содержащий в себе позиций: {{ products }}</p>
+
+</body>
+</html>

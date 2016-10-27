@@ -3,19 +3,6 @@
 {% load render_bundle from webpack_loader %}
 
 {% block content %}
-<div class="page-header">
-    <h1>
-        {{ merchant.name }}
-
-        <small>
-            <a href="{{ merchant.url }}" target="_blank">
-                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                URL
-            </a>
-        </small>
-    </h1>
-</div>
-
 <div id="admin-merchant"></div>
 
 {% include "advertisers/includes/promo-select-modal.html" %}

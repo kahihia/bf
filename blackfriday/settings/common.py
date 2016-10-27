@@ -43,6 +43,7 @@ TEMPLATES = [
                 'libs.recaptcha.context_processors.captcha_keys',
                 'libs.templates.context_processors.site_url',
                 'apps.advertisers.context_processors.moderation',
+                'apps.catalog.context_processors.categories',
             ],
         },
     },
@@ -122,17 +123,17 @@ LOGIN_REDIRECT_URL = '/admin/'
 SITE_URL = 'https://realblackfriday.ru'
 
 PRODUCT_FILE_COLUMNS_MAPPING = {
-    'name': 'name',
-    'oldprice': 'old_price',
-    'price': 'price',
-    'discount': 'discount',
-    'startprice': 'start_price',
-    'currencyid': 'currency',
-    'vendor': 'brand',
-    'category': 'category',
-    'countryoforigin': 'country',
-    'url': 'url',
-    'image': 'image',
+    'наименование товара': 'name',
+    'старая цена': 'old_price',
+    'цена': 'price',
+    'скидка': 'discount',
+    'цена от': 'start_price',
+    'валюта': 'currency',
+    'производитель': 'brand',
+    'категория': 'category',
+    'страна производитель': 'country',
+    'ссылка на товар': 'url',
+    'ссылка на изображение товара': 'image',
 }
 
 BANK_ACCOUNT = {
