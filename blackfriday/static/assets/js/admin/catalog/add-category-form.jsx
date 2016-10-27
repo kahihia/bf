@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {TOKEN} from '../const.js';
 import {getFullUrl} from '../utils.js';
 import Form from '../components/form.jsx';
@@ -127,7 +126,7 @@ class AddCategoryForm extends Form {
 
 	render() {
 		return (
-			<div className={b('add-category')}>
+			<div className="add-category">
 				<div className="modal-body">
 					<form
 						action=""

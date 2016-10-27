@@ -17,10 +17,22 @@ class ImagesUpload extends React.Component {
 
 	modalOpen() {
 		const {exactSize, ext, onUpload, width, height} = this.props;
+		const modal = jQuery('#images-upload-modal');
+		const openedModals = jQuery('.modal.in');
+		if (openedModals.length) {
+			openedModals.one('hidden.bs.modal', () => {
+				modal.modal('show');
+			});
+			openedModals.modal('hide');
+			modal.one('hidden.bs.modal', () => {
+				openedModals.modal('show');
+			});
+		} else {
+			modal.modal('show');
+		}
 
-		jQuery('#images-upload-modal').modal('show');
 		const onSubmit = data => {
-			jQuery('#images-upload-modal').modal('hide');
+			modal.modal('hide');
 			onUpload(data);
 		};
 		ReactDOM.render(

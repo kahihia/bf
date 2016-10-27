@@ -3,7 +3,7 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {TOKEN} from '../const.js';
+import {TOKEN, MERCHANT_DESCRIPTION_LENGTH} from '../const.js';
 import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
 import ControlLabel from '../components/control-label.jsx';
@@ -11,7 +11,6 @@ import TextareaRich from '../components/textarea-rich.jsx';
 import Checkbox from '../components/checkbox.jsx';
 
 const className = 'merchant-edit-form';
-const DESCRIPTION_LENGTH = 1000;
 
 class MerchantEditForm extends Form {
 	constructor(props) {
@@ -26,20 +25,17 @@ class MerchantEditForm extends Form {
 			fields: {
 				name: {
 					label: 'Название',
-					value: data.name || '',
-					required: true
+					value: data.name || ''
 				},
 				url: {
 					label: 'URL',
-					value: data.url || '',
-					required: true
+					value: data.url || ''
 				},
 				slug: {
 					addon: `${getFullUrl('merchants')}`,
 					label: 'URL на сайте',
 					value: data.slug || '',
 					pattern: '^[a-z0-9-]+$',
-					required: isAdmin,
 					excluded: !isAdmin,
 					readOnly: !isAdmin
 				},
@@ -47,9 +43,8 @@ class MerchantEditForm extends Form {
 					label: 'Описание',
 					value: '',
 					type: 'textarea',
-					required: true,
-					help: `Max. ${DESCRIPTION_LENGTH} симв.`,
-					maxlength: DESCRIPTION_LENGTH
+					help: `Max. ${MERCHANT_DESCRIPTION_LENGTH} симв.`,
+					maxlength: MERCHANT_DESCRIPTION_LENGTH
 				},
 				promocode: {
 					label: 'Промо-код',

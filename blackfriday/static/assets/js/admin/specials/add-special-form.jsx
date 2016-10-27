@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 
@@ -89,7 +88,7 @@ class AddSpecialForm extends Form {
 		};
 
 		return (
-			<div className={b('add-special')}>
+			<div className="add-special">
 				<div className="modal-body">
 					<form
 						ref={form}
