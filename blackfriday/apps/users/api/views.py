@@ -11,6 +11,7 @@ from rest_framework.decorators import detail_route
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 
+from apps.mailing.utils import send_advertiser_registration_mail
 from libs.api.exceptions import ServiceUnavailable
 from libs.api.permissions import IsAdmin, IsAuthenticated, IsAdvertiser
 
@@ -108,6 +109,7 @@ class RegistrationViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()
+        send_advertiser_registration_mail(instance)
         Token.invalidate(instance, type=TokenType.REGISTRATION)
 
     def perform_create(self, serializer):

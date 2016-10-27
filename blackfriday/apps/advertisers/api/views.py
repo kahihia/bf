@@ -13,6 +13,8 @@ from rest_framework.response import Response
 
 from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
 from apps.advertisers.models import BannerType
+from apps.mailing.utils import send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, \
+    send_moderation_fail_mail
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -68,6 +70,10 @@ class MerchantViewSet(viewsets.ModelViewSet):
         IsAdmin
     ]
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        send_merchant_creation_mail(instance)
+
     def get_queryset(self):
         qs = super().get_queryset()
         if self.action == 'list' and self.request.user.role == 'advertiser':
@@ -119,6 +125,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
+            send_moderation_success_mail(instance)
+        elif instance.moderation_status == ModerationStatus.rejected:
+            send_moderation_fail_mail(instance)
+        elif instance.moderation_status == ModerationStatus.waiting:
+            send_moderation_request_mail(instance)
 
         return Response(serializer.data)
 
