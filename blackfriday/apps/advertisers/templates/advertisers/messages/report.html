@@ -26,7 +26,7 @@
     {% for material in materials %}
         <tr>
             <td>{{ material.type }}</td>
-            <td>{{ material.url }}</td>
+            <td>{% if material.url %}{{ material.url }}{% endif %}</td>
             <td>{% if material.on_main %}Да{% else %}Нет{% endif %}</td>
         </tr>
     {% endfor %}
