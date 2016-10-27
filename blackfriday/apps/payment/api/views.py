@@ -21,7 +21,9 @@ class PaymentViewSet(
         return PaymentSerializer
 
     def perform_create(self, serializer):
-        if not self.request.user.is_admin and not Invoice.objects.filter(
-                id=serializer.validated_data['invoice_id'], merchant__advertiser_id=self.request.user.id).exists():
+        if (
+            not self.request.user.is_admin and
+            serializer.validated_data['invoice'].owner_id != self.request.user.id
+        ):
             raise PermissionDenied
         super().perform_create(serializer)

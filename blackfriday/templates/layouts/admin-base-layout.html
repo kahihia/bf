@@ -219,16 +219,29 @@
 
         <div class="site-sidebar__footer">
             <footer class="site-footer">
-                {% if user.role == 'advertiser' %}
-                <a
-                    class="site-footer__feedback"
-                    href="#"
-                    data-toggle="modal"
-                    data-target="#feedback-modal"
-                    >
-                    Служба поддержки
-                </a>
-                {% endif %}
+                <ul class="simple-menu">
+                    <li class="simple-menu__item">
+                        <a
+                            class="simple-menu__link"
+                            href="{% url 'users:logout' %}"
+                            >
+                            Выйти
+                        </a>
+                    </li>
+
+                    {% if user.role == 'advertiser' %}
+                    <li class="simple-menu__item">
+                        <a
+                            class="simple-menu__link"
+                            href="#"
+                            data-toggle="modal"
+                            data-target="#feedback-modal"
+                            >
+                            Служба поддержки
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
 
                 <a class="akit-copy" href="http://www.akit.ru/" target="_blank" rel="noopener noreferrer">
                     <img class="akit-copy__logo" src="{% static 'images/admin/akit-logo.png' %}" alt="retail hotline" title="" />Ассоциация компаний интернет-торговли

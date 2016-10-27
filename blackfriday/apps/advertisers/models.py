@@ -111,6 +111,8 @@ class Merchant(models.Model):
     partners = models.ManyToManyField('banners.Partner', blank=True, related_name='merchants', verbose_name='Партнеры')
     advertiser = models.ForeignKey('users.User', related_name='merchants', verbose_name='Рекламодатель')
 
+    last_save = models.DateTimeField(null=True, blank=True)
+
     moderation_comment = models.TextField(null=True, blank=True, verbose_name='Комментарий модератора')
     moderation_status = models.IntegerField(default=ModerationStatus.new, choices=MODERATION_STATUSES,
                                             verbose_name='Статус модерации')
