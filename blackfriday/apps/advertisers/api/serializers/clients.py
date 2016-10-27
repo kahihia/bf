@@ -143,7 +143,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                     'slug': self.instance.slug,
                     'url': self.instance.url,
                     'image': self.instance.image,
-                    'promo': self.instance.get_promo,
+                    'promo': self.instance.promo,
                     'limits': not unused_limits,
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
