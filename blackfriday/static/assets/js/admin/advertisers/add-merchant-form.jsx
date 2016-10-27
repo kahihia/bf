@@ -3,7 +3,6 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import b from 'b_';
 import {TOKEN, SILVER_PROMO_ID} from '../const.js';
 import {hasRole, processErrors} from '../utils.js';
 import Form from '../components/form.jsx';
@@ -224,7 +223,7 @@ class AddMerchantForm extends Form {
 
 	render() {
 		return (
-			<div className={b('add-merchant')}>
+			<div className="add-merchant">
 				<div className="modal-body">
 					<form
 						action=""

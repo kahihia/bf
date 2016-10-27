@@ -102,7 +102,7 @@ class MerchantProductsAddForm extends Form {
 					<button
 						className="btn btn-default"
 						data-dismiss="modal"
-						disabled={disabled}
+						disabled={isLoading}
 						type="button"
 						>
 						{'Отмена'}
