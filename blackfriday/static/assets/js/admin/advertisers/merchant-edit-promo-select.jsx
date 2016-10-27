@@ -184,7 +184,7 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	getActiveOptions() {
-		return this.state.availableOptions.filter(o => o.isActive);
+		return this.getAvailableOptions().filter(o => o.isActive);
 	},
 
 	getActivePromo() {
