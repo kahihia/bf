@@ -1,13 +1,12 @@
-import operator
-from functools import reduce
-
-from django.db.models import Q, timezone
+from django.db.models import Q
+from django.utils import timezone
 
 from rest_framework import serializers, validators
 from rest_framework.exceptions import ValidationError, PermissionDenied
 
-from apps.advertisers.models import AdvertiserProfile, Merchant, ModerationStatus, Banner, AdvertiserType, \
-    ADVERTISER_INNER_TYPES
+from apps.advertisers.models import (
+    AdvertiserProfile, Merchant, ModerationStatus, AdvertiserType, ADVERTISER_INNER_TYPES
+)
 from apps.mediafiles.models import Image
 from apps.users.models import User
 

@@ -200,7 +200,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         for banner in banners.order_by('type', '-on_main'):
             materials.append((banner_types[banner.type], banner.url, banner.on_main))
 
-        teasers = instance.product_set.filter(Q(is_teaser=True) | Q(is_teaser_on_main=True))
+        teasers = instance.products.filter(Q(is_teaser=True) | Q(is_teaser_on_main=True))
         for teaser in teasers.order_by('is_teaser_on_main'):
             materials.append(('Тизер', teaser.url, teaser.is_teaser_on_main))
 
@@ -213,7 +213,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 {
                     'merchant': instance,
                     'materials': map(dict, map(partial(zip, header), materials)),
-                    'products': instance.product_set.count()
+                    'products': instance.products.count()
                 }
             ),
             message=''

@@ -1,12 +1,12 @@
 import collections
 
 import operator
-from functools import partial
 from functools import reduce
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q, Sum
+from django.core.urlresolvers import reverse
 
 from apps.orders.models import InvoiceStatus, InvoiceOption
 from apps.promo.models import Option
@@ -183,8 +183,7 @@ class Merchant(models.Model):
 
     @property
     def preview_url(self):
-        # ToDo: реверсить страницу превью
-        return ''
+        return reverse('advertisers:merchant-preview', args=(self.id,))
 
     @property
     def payment_status(self):
