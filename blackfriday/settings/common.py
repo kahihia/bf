@@ -43,6 +43,7 @@ TEMPLATES = [
                 'libs.recaptcha.context_processors.captcha_keys',
                 'libs.templates.context_processors.site_url',
                 'apps.advertisers.context_processors.moderation',
+                'apps.catalog.context_processors.categories',
             ],
         },
     },
