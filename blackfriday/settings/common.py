@@ -181,6 +181,11 @@ LIMITS_RULES = {
     'teasers_on_main': ['teaser_on_main'],
     'vertical_banners': ['vertical_banner_on_main'],
 }
+
+LIMITS_RULES_COEFS = {
+    'additional_products': 100
+}
+
 SPECIAL_SUPPORTED_FORMATS = ['pdf']
 RETAIL_ROCKET_CAT_SHIFT = 100
 

@@ -162,7 +162,9 @@ class Merchant(models.Model):
             return dict(qs.values_list('option__tech_name', 'option_sum'))
 
         def get_value(rule):
-            return rule if isinstance(rule, int) else int(options.get(rule, 0))
+            value = rule if isinstance(rule, int) else int(options.get(rule, 0))
+            value *= settings.LIMITS_RULES_COEFS.get(rule, 1)
+            return value
 
         if self.promo:
             options.update(get_options(self.promo.options))
