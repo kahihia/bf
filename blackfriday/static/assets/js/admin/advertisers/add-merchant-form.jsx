@@ -76,6 +76,7 @@ class AddMerchantForm extends Form {
 						name: `${a.name} (${a.email})`
 					};
 				});
+				advertiserOptions.unshift([{id: null, name: ''}]);
 
 				this.setState(previousState => {
 					previousState.fields.advertiserId.options = advertiserOptions;

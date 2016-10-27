@@ -437,8 +437,25 @@ export default ProductsTable;
 class ProductsTableRow extends React.Component {
 	constructor(props) {
 		super(props);
-		const {errors, warnings} = props;
+		const {
+			data,
+			errors,
+			warnings
+		} = props;
+		const {
+			discount = null,
+			oldPrice = null,
+			price = null,
+			startPrice = null
+		} = data;
 		this.state = {
+			activeEditableCell: null,
+			prices: {
+				discount,
+				oldPrice,
+				price,
+				startPrice
+			},
 			errors: this.processErrors(errors),
 			warnings: this.processErrors(warnings)
 		};
@@ -451,63 +468,28 @@ class ProductsTableRow extends React.Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		const {errors, warnings} = newProps;
+		const {
+			data,
+			errors,
+			warnings
+		} = newProps;
+		const {
+			discount = null,
+			oldPrice = null,
+			price = null,
+			startPrice = null
+		} = data;
 		this.setState({
+			activeEditableCell: null,
+			prices: {
+				discount,
+				oldPrice,
+				price,
+				startPrice
+			},
 			errors: this.processErrors(errors),
 			warnings: this.processErrors(warnings)
 		});
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		let isChanged = false;
-		const previousProps = this.props;
-		const previousState = this.state;
-
-		if (JSON.stringify(previousState.errors) !== JSON.stringify(nextState.errors)) {
-			isChanged = true;
-		}
-
-		if (JSON.stringify(previousState.warnings) !== JSON.stringify(nextState.warnings)) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.categoriesAvailable, nextProps.categoriesAvailable)) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.errors, nextProps.errors)) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.warnings, nextProps.warnings)) {
-			isChanged = true;
-		}
-
-		if (previousProps.isSelected !== nextProps.isSelected) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.data, nextProps.data)) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.data.category, nextProps.data.category)) {
-			isChanged = true;
-		}
-
-		if (!_.isEqual(previousProps.limits, nextProps.limits)) {
-			isChanged = true;
-		}
-
-		if (previousProps.showIsTeaser !== nextProps.showIsTeaser) {
-			isChanged = true;
-		}
-
-		if (previousProps.showIsTeaserOnMain !== nextProps.showIsTeaserOnMain) {
-			isChanged = true;
-		}
-
-		return isChanged;
 	}
 
 	handleSelect() {
@@ -515,8 +497,57 @@ class ProductsTableRow extends React.Component {
 	}
 
 	handleChangeCell(values) {
-		const firstValueName = values[0].name;
-		if (firstValueName === 'price' || firstValueName === 'oldPrice') {
+		const firstItemName = values[0].name;
+		const firstItemValue = values[0].value;
+
+		if (firstItemName === 'price' || firstItemName === 'oldPrice') {
+			let {
+				price,
+				oldPrice
+			} = this.state.prices;
+
+			if (firstItemValue) {
+				if (firstItemName === 'price' && !oldPrice) {
+					this.setState(previousState => {
+						previousState.prices = {
+							price: firstItemValue,
+							oldPrice: null,
+							startPrice: null,
+							discount: null
+						};
+						previousState.activeEditableCell = 'oldPrice';
+						return previousState;
+					});
+					return;
+				} else if (firstItemName === 'oldPrice' && !price) {
+					this.setState(previousState => {
+						previousState.prices = {
+							price: null,
+							oldPrice: firstItemValue,
+							startPrice: null,
+							discount: null
+						};
+						previousState.activeEditableCell = 'price';
+						return previousState;
+					});
+					return;
+				}
+			} else {
+				price = null;
+				oldPrice = null;
+			}
+
+			if (firstItemName === 'price') {
+				values.push({
+					name: 'oldPrice',
+					value: oldPrice
+				});
+			} else if (firstItemName === 'oldPrice') {
+				values.push({
+					name: 'price',
+					value: price
+				});
+			}
 			values.push({
 				name: 'startPrice',
 				value: null
@@ -525,7 +556,7 @@ class ProductsTableRow extends React.Component {
 				name: 'discount',
 				value: null
 			});
-		} else if (firstValueName === 'startPrice') {
+		} else if (firstItemName === 'startPrice') {
 			values.push({
 				name: 'oldPrice',
 				value: null
@@ -538,7 +569,7 @@ class ProductsTableRow extends React.Component {
 				name: 'discount',
 				value: null
 			});
-		} else if (firstValueName === 'discount') {
+		} else if (firstItemName === 'discount') {
 			values.push({
 				name: 'oldPrice',
 				value: null
@@ -594,7 +625,9 @@ class ProductsTableRow extends React.Component {
 
 	render() {
 		const {
+			activeEditableCell,
 			errors,
+			prices,
 			warnings
 		} = this.state;
 		const {
@@ -610,11 +643,11 @@ class ProductsTableRow extends React.Component {
 		const disabledIsTeaserOnMain = limits.isTeaserOnMain === 0 && !data.isTeaserOnMain;
 
 		const {
-			oldPrice,
 			price,
+			oldPrice,
 			startPrice,
 			discount
-		} = data;
+		} = prices;
 		let isOldPriceAvailable = true;
 		let isPriceAvailable = true;
 		let isStartPriceAvailable = true;
@@ -674,98 +707,90 @@ class ProductsTableRow extends React.Component {
 					names={['oldPrice']}
 					errors={errors}
 					warnings={warnings}
-					disabled={!isOldPriceAvailable}
 					>
-					{isOldPriceAvailable ? (
-						<EditableCell
-							values={[{
-								name: 'oldPrice',
-								value: data.oldPrice
-							}]}
-							onChange={this.handleChangeCell}
-							>
-							{data.oldPrice || data.oldPrice === 0 ? (
-								<Price
-									cost={formatPrice(data.oldPrice)}
-									type="old"
-									currency="₽"
-									/>
-							) : null}
-						</EditableCell>
-					) : null}
+					<EditableCell
+						values={[{
+							name: 'oldPrice',
+							value: oldPrice
+						}]}
+						onChange={this.handleChangeCell}
+						opened={activeEditableCell === 'oldPrice'}
+						>
+						{isOldPriceAvailable && (oldPrice || oldPrice === 0) ? (
+							<Price
+								cost={formatPrice(oldPrice)}
+								type="old"
+								currency="₽"
+								/>
+						) : null}
+					</EditableCell>
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['price']}
 					errors={errors}
 					warnings={warnings}
-					disabled={!isPriceAvailable}
 					>
-					{isPriceAvailable ? (
-						<EditableCell
-							values={[{
-								name: 'price',
-								value: data.price
-							}]}
-							onChange={this.handleChangeCell}
-							>
-							{data.price || data.price === 0 ? (
-								<strong>
-									<Price
-										cost={formatPrice(data.price)}
-										currency="₽"
-										/>
-								</strong>
-							) : null}
-						</EditableCell>
-					) : null}
+					<EditableCell
+						values={[{
+							name: 'price',
+							value: price
+						}]}
+						onChange={this.handleChangeCell}
+						opened={activeEditableCell === 'price'}
+						>
+						{isPriceAvailable && (price || price === 0) ? (
+							<strong>
+								<Price
+									cost={formatPrice(price)}
+									currency="₽"
+									/>
+							</strong>
+						) : null}
+					</EditableCell>
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['startPrice']}
 					errors={errors}
 					warnings={warnings}
-					disabled={!isStartPriceAvailable}
 					>
-					{isStartPriceAvailable ? (
-						<EditableCell
-							values={[{
-								name: 'startPrice',
-								value: data.startPrice
-							}]}
-							onChange={this.handleChangeCell}
-							>
-							{data.startPrice || data.startPrice === 0 ? (
-								<Price
-									cost={formatPrice(data.startPrice)}
-									currency="₽"
-									/>
-							) : null}
-						</EditableCell>
-					) : null}
+					<EditableCell
+						values={[{
+							name: 'startPrice',
+							value: startPrice
+						}]}
+						onChange={this.handleChangeCell}
+						>
+						{isStartPriceAvailable && (startPrice || startPrice === 0) ? (
+							<Price
+								cost={formatPrice(startPrice)}
+								currency="₽"
+								/>
+						) : null}
+					</EditableCell>
 				</ProductsTableCell>
 
 				<ProductsTableCell
 					names={['discount']}
 					errors={errors}
 					warnings={warnings}
-					disabled={!isDiscountAvailable}
 					>
-					{isDiscountAvailable ? (
-						<EditableCell
-							values={[{
-								name: 'discount',
-								value: data.discount
-							}]}
-							onChange={this.handleChangeCell}
-							>
+					<EditableCell
+						values={[{
+							name: 'discount',
+							value: discount
+						}]}
+						onChange={this.handleChangeCell}
+						>
+						{isDiscountAvailable ? (
 							<strong>
-								{data.discount}
+								{discount}
 							</strong>
+						) : null}
 
-							{data.discount ? ' %' : null}
-						</EditableCell>
-					) : null}
+						{isDiscountAvailable && discount ? ' %' : null}
+					</EditableCell>
 				</ProductsTableCell>
 
 				<ProductsTableCell
@@ -842,12 +867,10 @@ class ProductsTableRow extends React.Component {
 					warnings={warnings}
 					>
 					<EditableCell
-						values={[
-							{
-								name: 'image',
-								value: data.image
-							}
-						]}
+						values={[{
+							name: 'image',
+							value: data.image
+						}]}
 						onChange={this.handleChangeCell}
 						>
 						{data.image ? (

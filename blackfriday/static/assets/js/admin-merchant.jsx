@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
+import {STATUS_DEFICIT_MESSAGE} from './admin/messages.js';
 import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
@@ -201,15 +202,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 					}
 					case 400: {
 						if (data.status && data.status.deficit) {
-							_.forEach(data.status.deficit, message => {
-								if (message === 'limits') {
-									toastr.warning('Загружены не все рекламные материалы');
-								}
-
-								if (message === 'utm_in_banners') {
-									toastr.warning('Не все баннеры имеют UTM-метки в ссылках');
-								}
-							});
+							processStatusDeficit(data.status.deficit);
 						} else {
 							processErrors(data);
 						}
@@ -517,3 +510,9 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	const block = document.getElementById('admin-merchant');
 	ReactDOM.render(<AdminMerchant merchantId={ENV.merchantId}/>, block);
 })();
+
+function processStatusDeficit(deficit) {
+	const messages = deficit.map(name => (STATUS_DEFICIT_MESSAGE[name] || name));
+	const message = '<ul style="padding-left: 18px"><li>' + messages.join('</li><li>') + '</li></ul>';
+	toastr.warning(message, 'Не все данные заполнены');
+}
