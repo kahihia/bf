@@ -36,6 +36,7 @@
     "format-thousands": "1.0.4",
     "husky": "0.11.7",
     "js-cookie": "2.1.3",
+    "medium-editor": "5.22.1",
     "minimist": "1.2.0",
     "react": "15.3.1",
     "react-datepicker": "0.29.0",
