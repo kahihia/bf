@@ -1,0 +1,34 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title></title>
+
+
+</head>
+
+<body style="background: url({{ SITE_URL }}{% static 'mailing/img/pattern.gif' %}); font-family: 'Arial'">
+<div id="main_wrap" style="width: 640px; margin: 0 auto">
+    <div style="height: 150px">
+        <a href="{{ SITE_URL }}" style="text-decoration: none;">
+            <img src="{{ SITE_URL }}{% static 'mailing/img/header.png' %}" alt="">
+        </a>
+    </div>
+
+    <div style="background-color: #fff; padding: 25px 0 30px">
+        <p>Здравствуйте, уважаемый участник!</p>
+
+        {% block content %}{{ message }}{% endblock %}
+    </div>
+
+    <div style="padding: 20px 10px; color: #fff; font-size: 12px; position: relative">
+        С уважением, <br>
+        команда RealBlackFriday.ru <br>
+        +7 (800) 505-37-04 <br>
+    </div>
+</div>
+</body>
+</html>
