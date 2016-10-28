@@ -1,14 +1,16 @@
-import requests
 import logging
 
+from pysberbps import SberWrapper, SberRequestError
 from django.db import models, transaction
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-from libs.api.exceptions import ServiceUnavailable
-
 
 logger = logging.getLogger(__name__)
+
+payment_service = SberWrapper(
+    username=settings.PAYMENT_SERVICE['login'], password=settings.PAYMENT_SERVICE['password']
+)
 
 
 class PaymentServiceEndpoint:
@@ -24,31 +26,22 @@ class Payment(models.Model):
     _message = None
     _status = None
 
-    _form_url = None
-    auth = requests.auth.HTTPBasicAuth(settings.PAYMENT_SERVICE['login'], settings.PAYMENT_SERVICE['password'])
+    form_url = None
 
-    external_id = models.IntegerField(null=True)
+    external_id = models.CharField(null=True, blank=True, max_length=255)
     invoice = models.OneToOneField('orders.Invoice')
 
     def __str__(self):
         return str(self.invoice_id)
 
-    def build_url(self, endpoint):
-        return '{url}{module}/{endpoint}/{pk}?requestor={requestor}'.format(
-            **settings.PAYMENT_SERVICE, endpoint=endpoint, pk=self.invoice_id,
-        )
-
     def get_remote_data(self):
         try:
-            response = requests.get(
-                self.build_url(PaymentServiceEndpoint.status),
-                auth=self.auth
-            )
-            self._status = response.json()['status']
-            self._message = response.json()['message']
-        except Exception as e:
-            logger.error(str(e))
-            raise ServiceUnavailable
+            response = payment_service.status(order_id=self.external_id)
+            self._status = response['ErrorCode']
+            self._message = response['ErrorMessage']
+        except SberRequestError as e:
+            self._status = e.code
+            self._message = e.desc
 
     @property
     def status(self):
@@ -62,30 +55,12 @@ class Payment(models.Model):
             self.get_remote_data()
         return self._message
 
-    @property
-    def form_url(self):
-        return self._form_url
-
-    @property
-    def is_successfull(self):
-        return self.status == PaymentServiceStatus.success
-
     def create(self):
-        try:
-            response = requests.post(
-                self.build_url(PaymentServiceEndpoint.create),
-                data={
-                    'total_price': self.invoice.sum,
-                    'return_url': reverse(settings.PAYMENT_SERVICE['redirect_url'], args=(self.pk,))
-                },
-                auth=self.auth
-            )
-            self._form_url = response.json()['extra']['formUrl']
-            self.external_id = response.json()['order_id']
-            self.save()
-        except Exception as e:
-            logger.error(str(e))
-            raise ServiceUnavailable
+        self.external_id, self.form_url = payment_service.register(
+            order=self.invoice_id, success_url=reverse('payment:finished', args=(self.pk,)),
+            amount=self.invoice.sum
+        )
+        self.save()
 
     @transaction.atomic
     def save(self, *args, **kwargs):

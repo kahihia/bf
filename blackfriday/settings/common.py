@@ -190,10 +190,6 @@ SPECIAL_SUPPORTED_FORMATS = ['pdf']
 RETAIL_ROCKET_CAT_SHIFT = 100
 
 PAYMENT_SERVICE = {
-    'login': '1c',
-    'password': 'runforestrun',
-    'url': 'http://127.0.0.1:8081/api/v1/',
-    'module': 'sberbank',
-    'requestor': 'realblackfriday',
-    'redirect_url': 'payment:finished'
+    'login': 'realblackfriday-api',
+    'password': 'realblackfriday'
 }
