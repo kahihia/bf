@@ -3,14 +3,14 @@
 
 import React from 'react';
 import xhr from 'xhr';
-import {TOKEN} from '../const.js';
+import {TOKEN, MERCHANT_DESCRIPTION_LENGTH} from '../const.js';
 import {getFullUrl, hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
 import ControlLabel from '../components/control-label.jsx';
 import TextareaRich from '../components/textarea-rich.jsx';
+import Checkbox from '../components/checkbox.jsx';
 
 const className = 'merchant-edit-form';
-const DESCRIPTION_LENGTH = 1000;
 
 class MerchantEditForm extends Form {
 	constructor(props) {
@@ -25,20 +25,17 @@ class MerchantEditForm extends Form {
 			fields: {
 				name: {
 					label: 'Название',
-					value: data.name || '',
-					required: true
+					value: data.name || ''
 				},
 				url: {
 					label: 'URL',
-					value: data.url || '',
-					required: true
+					value: data.url || ''
 				},
 				slug: {
 					addon: `${getFullUrl('merchants')}`,
 					label: 'URL на сайте',
 					value: data.slug || '',
 					pattern: '^[a-z0-9-]+$',
-					required: true,
 					excluded: !isAdmin,
 					readOnly: !isAdmin
 				},
@@ -46,20 +43,28 @@ class MerchantEditForm extends Form {
 					label: 'Описание',
 					value: '',
 					type: 'textarea',
-					required: true,
-					help: `Max. ${DESCRIPTION_LENGTH} симв.`,
-					maxlength: DESCRIPTION_LENGTH
+					help: `Max. ${MERCHANT_DESCRIPTION_LENGTH} симв.`,
+					maxlength: MERCHANT_DESCRIPTION_LENGTH
 				},
 				promocode: {
 					label: 'Промо-код',
 					value: '',
 					help: 'Если Ваш магазин предоставляет скидку по промо-коду, укажите его в данном поле'
+				},
+				receivesNotifications: {
+					text: 'Почтовые уведомления',
+					type: 'checkbox',
+					value: true,
+					valueType: 'Boolean',
+					excluded: !isAdmin,
+					readOnly: !isAdmin
 				}
 			}
 		};
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 		this.handleChangeDescription = this.handleChangeDescription.bind(this);
+		this.handleChangeReceivesNotifications = this.handleChangeReceivesNotifications.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -69,7 +74,11 @@ class MerchantEditForm extends Form {
 			const {fields} = previousState;
 
 			_.forEach(fields, (field, name) => {
-				field.value = data[name] || '';
+				let value = data[name] || '';
+				if (field.valueType === 'Boolean') {
+					value = data[name] || false;
+				}
+				field.value = value;
 			});
 
 			return previousState;
@@ -144,6 +153,16 @@ class MerchantEditForm extends Form {
 		});
 	}
 
+	handleChangeReceivesNotifications(value) {
+		this.setState(previousState => {
+			previousState.fields.receivesNotifications.value = value;
+			previousState.isChanged = true;
+			return previousState;
+		}, () => {
+			this.requestMerchantUpdate();
+		});
+	}
+
 	render() {
 		const {fields} = this.state;
 
@@ -175,6 +194,15 @@ class MerchantEditForm extends Form {
 					</div>
 
 					{this.buildRow('promocode')}
+
+					<div className="form-group">
+						<Checkbox
+							text={fields.receivesNotifications.text}
+							isChecked={fields.receivesNotifications.value}
+							disabled={fields.receivesNotifications.readOnly}
+							onChange={this.handleChangeReceivesNotifications}
+							/>
+					</div>
 				</form>
 			</div>
 		);

@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.exceptions import PermissionDenied
 
-from libs.api.permissions import IsAuthenticated, IsAdmin, IsOwner
+from libs.api.permissions import IsAuthenticated, IsAdmin, IsOwner, IsValidAdvertiser
 
 from apps.orders.models import Invoice
 
@@ -13,7 +13,7 @@ class PaymentViewSet(
         mixins.RetrieveModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = Payment.objects.all()
     lookup_field = 'invoice_id'
-    permission_classes = [IsAuthenticated, IsAdmin | IsOwner]
+    permission_classes = [IsAuthenticated, IsAdmin | IsValidAdvertiser & IsOwner]
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -21,7 +21,9 @@ class PaymentViewSet(
         return PaymentSerializer
 
     def perform_create(self, serializer):
-        if not Invoice.objects.filter(
-                id=serializer.data['invoice_id'], merchant__advertiser_id=self.request.user.id).exists():
+        if (
+            not self.request.user.is_admin and
+            serializer.validated_data['invoice'].owner_id != self.request.user.id
+        ):
             raise PermissionDenied
         super().perform_create(serializer)

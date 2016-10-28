@@ -6,10 +6,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {TOKEN} from './admin/const.js';
+import {STATUS_DEFICIT_MESSAGE} from './admin/messages.js';
 import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
+import MerchantEditHeader from './admin/advertisers/merchant-edit-header.jsx';
 import MerchantPartnersSelect from './admin/advertisers/merchant-partners-select.jsx';
 import MerchantEditStatusPanel from './admin/advertisers/merchant-edit-status-panel.jsx';
 import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-select.jsx';
@@ -104,7 +106,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 		requestCategories() {
 			xhr({
-				url: '/api/categories/',
+				url: `/api/categories/?available_to_merchant=${this.props.merchantId}`,
 				method: 'GET',
 				json: true
 			}, (err, resp, data) => {
@@ -200,15 +202,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 					}
 					case 400: {
 						if (data.status && data.status.deficit) {
-							_.forEach(data.status.deficit, message => {
-								if (message === 'limits') {
-									toastr.warning('Загружены не все рекламные материалы');
-								}
-
-								if (message === 'utm_in_banners') {
-									toastr.warning('Не все баннеры имеют UTM-метки в ссылках');
-								}
-							});
+							processStatusDeficit(data.status.deficit);
 						} else {
 							processErrors(data);
 						}
@@ -227,7 +221,7 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 		},
 
 		handleImagesUploadUpload(data) {
-			this.requestMerchantUploadLogo(data.merchantId);
+			this.requestMerchantUploadLogo(data.id);
 		},
 
 		handleMerchantUpdate(data) {
@@ -368,118 +362,6 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			return categoriesAvailable;
 		},
 
-		isModerationAllowed() {
-			const {
-				data
-			} = this.state;
-			const {
-				moderation = {}
-			} = data;
-			const moderationStatus = moderation.status;
-
-			if (moderationStatus === 1) {
-				return false;
-			}
-
-			if (!hasRole('admin') && !hasRole('advertiser')) {
-				return false;
-			}
-
-			if (!this.validateMerchantData()) {
-				return false;
-			}
-
-			if (!this.validateMerchantLogoCategories()) {
-				return false;
-			}
-
-			if (!this.validateMerchantBanners()) {
-				return false;
-			}
-
-			if (!this.validateMerchantProducts()) {
-				return false;
-			}
-
-			return true;
-		},
-
-		validateMerchantData() {
-			const {data} = this.state;
-			const required = [
-				'name',
-				'url',
-				'description',
-				'image'
-			];
-			let isValid = true;
-
-			_.forEach(required, name => {
-				if (!data[name]) {
-					isValid = false;
-					return false;
-				}
-			});
-
-			return isValid;
-		},
-
-		validateMerchantLogoCategories() {
-			const {
-				limits,
-				logoCategories
-			} = this.state;
-
-			if (limits.logo_categories) {
-				if (limits.logo_categories !== logoCategories.length) {
-					return false;
-				}
-			}
-
-			return true;
-		},
-
-		validateMerchantBanners() {
-			const {
-				limits,
-				banners
-			} = this.state;
-
-			let limitCount = 0;
-			const limitNames = [
-				'banners',
-				'superbanners',
-				'vertical_banners'
-			];
-			limitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
-				}
-				limitCount += limits[name];
-			});
-
-			const doubleLimitNames = [
-				'category_backgrounds',
-				'main_backgrounds'
-			];
-			doubleLimitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
-				}
-				limitCount += (limits[name] * 2);
-			});
-
-			if (limitCount !== banners.length) {
-				return false;
-			}
-
-			return true;
-		},
-
-		validateMerchantProducts() {
-			return true;
-		},
-
 		render() {
 			const {
 				data,
@@ -496,11 +378,13 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 				image,
 				isPreviewable,
 				moderation = {},
+				name,
 				optionsCount = 0,
 				partners,
 				paymentStatus,
 				previewUrl,
-				promo
+				promo,
+				url
 			} = data;
 
 			const moderationStatus = moderation.status;
@@ -509,17 +393,21 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 
 			const isAdmin = hasRole('admin');
 
-			let isModerationAllowed = this.isModerationAllowed();
-
 			return (
 				<div>
+					<MerchantEditHeader
+						{...{
+							name,
+							url
+						}}
+						/>
+
 					<MerchantEditStatusPanel
 						onClickDelete={this.handleClickDelete}
 						onClickModeration={this.handleClickModeration}
 						onClickPromoSelect={this.handleClickPromoSelect}
 						onClickPromoOptionsSelect={this.handleClickPromoOptionsSelect}
 						{...{
-							isModerationAllowed,
 							isPreviewable,
 							moderationComment,
 							moderationStatus,
@@ -622,3 +510,9 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 	const block = document.getElementById('admin-merchant');
 	ReactDOM.render(<AdminMerchant merchantId={ENV.merchantId}/>, block);
 })();
+
+function processStatusDeficit(deficit) {
+	const messages = deficit.map(name => (STATUS_DEFICIT_MESSAGE[name] || name));
+	const message = '<ul style="padding-left: 18px"><li>' + messages.join('</li><li>') + '</li></ul>';
+	toastr.warning(message, 'Не все данные заполнены');
+}

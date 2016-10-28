@@ -101,7 +101,7 @@ class Input extends React.Component {
 		} else {
 			input = (
 				<input
-					className="form-control"
+					className={type === 'file' ? 'btn btn-block btn-default' : 'form-control'}
 					value={val}
 					{...{accept, disabled, pattern, placeholder, name, type, required, readOnly}}
 					onBlur={this.handleBlur}

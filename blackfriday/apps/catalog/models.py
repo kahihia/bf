@@ -15,7 +15,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    merchant = models.ForeignKey('advertisers.Merchant')
+    merchant = models.ForeignKey('advertisers.Merchant', related_name='products')
     category = models.ForeignKey(Category, verbose_name='Категория')
     name = models.CharField(max_length=120, verbose_name='Название')
 

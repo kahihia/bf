@@ -33,7 +33,7 @@ const MerchantEditPromoSelect = React.createClass({
 
 	requestPromos() {
 		xhr({
-			url: '/api/promos/',
+			url: '/api/promos/?is_custom=false',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -57,7 +57,7 @@ const MerchantEditPromoSelect = React.createClass({
 
 	requestOptions() {
 		xhr({
-			url: `/api/merchants/${this.props.merchantId}/available-options/`,
+			url: '/api/options/?is_required=0',
 			method: 'GET',
 			json: true
 		}, (err, resp, data) => {
@@ -65,6 +65,9 @@ const MerchantEditPromoSelect = React.createClass({
 				case 200: {
 					let sorted = _.sortBy(data, 'name');
 					sorted = _.sortBy(sorted, 'price');
+					sorted.forEach(item => {
+						item.promosAvailableFor = item.promosAvailableFor.map(i => i.id);
+					});
 					this.setState({availableOptions: sorted});
 					break;
 				}
@@ -181,7 +184,7 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	getActiveOptions() {
-		return this.state.availableOptions.filter(o => o.isActive);
+		return this.getAvailableOptions().filter(o => o.isActive);
 	},
 
 	getActivePromo() {
@@ -244,13 +247,27 @@ const MerchantEditPromoSelect = React.createClass({
 		});
 	},
 
+	getAvailableOptions() {
+		const {
+			activePromoId,
+			availableOptions
+		} = this.state;
+
+		const availableOptionsFiltered = _.filter(availableOptions, option => {
+			return option.promosAvailableFor.indexOf(activePromoId) > -1;
+		});
+
+		return availableOptionsFiltered;
+	},
+
 	render() {
 		const {
 			activePromoId,
 			isCustomPromo,
-			promos,
-			availableOptions
+			promos
 		} = this.state;
+
+		const availableOptions = this.getAvailableOptions();
 
 		return (
 			<div>
