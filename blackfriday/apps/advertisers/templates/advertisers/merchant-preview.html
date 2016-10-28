@@ -1,0 +1,75 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+
+<div id="card-description"></div>
+<div id="special-offers"></div>
+
+<div class="title-2">Лучшие товары</div>
+<div id="goods" class="card-product-list"></div>
+
+{% endblock content %}
+
+{% block superbanner %}
+pages: {{ superbanners|length }},
+isRandom: false,
+isControlsShown: true,
+isPagerShown: true,
+data: [
+    {% for item in superbanners %}
+    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
+    {% endfor %}
+],
+{% endblock superbanner %}
+
+{% block data %}
+window.DATA.goods = {
+    ajaxUrl: 'goods',
+    perPage: 4,
+    pages: 1,
+    data: [
+        {% for item in merchant.products.all %}
+        {
+            id: {{ item.id }},
+            url: '{{ item.url|escapejs }}',
+            image: '{{ item.image }}',
+            name: '{{ item.name }}',
+            price: {{ item.price|default:'null' }},
+            oldPrice: {{ item.old_price|default:'null' }},
+            startPrice: {{ item.start_price|default:'null' }},
+            discount: {{ item.discount|default:'null' }},
+            category: {
+                name: '{{ item.category }}'
+            },
+            country: '{{ item.country }}',
+            brand: '{{ item.brand }}'
+        },
+        {% endfor %}
+    ]
+};
+window.DATA.cardDescription = {
+    name: '{{ merchant.name|escapejs }}',
+    url: '{{ merchant.url|escapejs }}',
+    description: '{{ merchant.description|escapejs }}',
+    image: '{{ merchant.image.image.url }}',
+    promocode: '{{ merchant.promocode }}',
+    linkedPartners: [
+        {% for item in partners %}
+        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.url }}'},
+        {% endfor %}
+    ]
+};
+window.DATA.specialOffers = {
+    banners: [
+        {% for item in actionbanners %}
+        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
+        {% endfor %}
+    ]
+};
+{% endblock %}
+
+{% block js %}
+    {% render_bundle 'app' 'js' %}
+{% endblock js %}

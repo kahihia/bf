@@ -196,8 +196,9 @@ window.DATA = {
         {name: 'Партнеры', url: '/partners'}
     ],
     categories: [
-        {id: 0, url: '/foo/', name: 'Foo'},
-        {id: 1, url: '/bar/', name: 'Bar'}
+        {% for item in categories %}
+        {id: {{ item.id }}, url: '/categories/{{ item.slug }}', name: '{{ item.name }}'},
+        {% endfor %}
     ],
     footerCats: [
         {name: 'Российские товары', url: '/russian-goods'},
