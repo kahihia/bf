@@ -107,7 +107,7 @@ const MerchantListItem = React.createClass({
 		image: React.PropTypes.object,
 		isActive: React.PropTypes.bool,
 		isPreviewable: React.PropTypes.bool,
-		moderationStatus: React.PropTypes.number,
+		moderation: React.PropTypes.object,
 		name: React.PropTypes.string,
 		onClickMerchantDelete: React.PropTypes.func,
 		onClickMerchantHide: React.PropTypes.func,
@@ -137,7 +137,7 @@ const MerchantListItem = React.createClass({
 			image,
 			isActive,
 			isPreviewable,
-			moderationStatus,
+			moderation,
 			name,
 			optionsCount,
 			paymentStatus,
@@ -176,7 +176,7 @@ const MerchantListItem = React.createClass({
 					<MerchantProps
 						{...{
 							id,
-							moderationStatus,
+							moderation,
 							optionsCount,
 							paymentStatus,
 							promo,
