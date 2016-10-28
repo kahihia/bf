@@ -2,6 +2,7 @@
 
 import Cookie from 'js-cookie';
 import MESSAGES from './messages.js';
+import trackAdmitAd from './admitad.js';
 var createFloctory = require('./flocktory.js');
 
 const csrftoken = Cookie.get('csrftoken');
@@ -22,6 +23,7 @@ function showResponse(data) {
 	toastr.success(MESSAGES.subscribeSuccess);
 	$('.modal.in').modal('hide');
 
+	// если это форма заявки, то отбой
 	if (data.organizationName || data.phone) {
 		return;
 	}
@@ -33,6 +35,9 @@ function showResponse(data) {
 
 	createFloctory.update(name, email);
 	createFloctory.renderMgm();
+
+	// AdmitAd
+	trackAdmitAd();
 }
 
 function showError(resp) {
