@@ -103,6 +103,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/admin/login/'
+SHOW_LOGIN_ON_LANDING = False
+
 DEFAULT_FROM_EMAIL = 'no-reply@realblackfriday.ru'
 
 VERIFICATION_SUBJ = 'RealBlackFriday — активация учётной записи'
