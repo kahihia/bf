@@ -13,7 +13,7 @@ $.ajaxSetup({
 	}
 });
 
-$('form').ajaxForm({
+$('.js-form-ajax').ajaxForm({
 	clearForm: true,
 	success: showResponse,
 	error: showError

@@ -1,0 +1,92 @@
+.modal.auth-modal
+	.modal-dialog
+		width: 430px
+
+	.modal-content
+		height: 430px
+		padding: 100px 70px 0
+		border-radius: 50%
+		box-shadow: 0 0 0 7px rgba(113, 0, 184, 0.5),
+					0 0 109px 9px rgba(135, 7, 255, 0.25),
+					0 14px 16px 3px rgba(0, 0, 0, 0.9)
+		background-position: 50% 50%
+		background-repeat: repeat
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIBAMAAAA2IaO4AAAAD1BMVEXx8fHy8vL8/Pz9/f3////2V85SAAAAK0lEQVQIHQXBAQ0AMAgEscsmYRYQAAkO/vxrWsvVsDpoHjqLuWKX5Chd+gGJ+Qbai8FNtwAAAABJRU5ErkJggg==")
+
+	.modal-header
+		padding: 0 0 15px
+
+	.close
+		position: absolute
+		top: 20px
+		right: 20px
+		margin-top: 0
+		color: #fff
+		font-size: 40px
+
+	.modal-title
+		font-size: 23px
+		white-space: nowrap
+
+	.modal-body
+		padding: 0
+
+		a
+			color: $btn-default-bg
+
+	.control-label
+		font-weight: normal
+		color: #222121
+
+
+	label
+		&.form-group
+			max-width: none
+			display: block
+			font-weight: normal
+
+		.row > &
+			display: block
+			margin-bottom: 0
+			font-weight: normal
+
+		.row > &
+		&.form-group
+			.control-label
+				display: inline-block
+				max-width: 100%
+				margin-bottom: 5px
+				font-weight: normal
+				font-size: 15px
+				line-height: 1.3
+
+	.form-group
+		margin-bottom: 15px
+
+		.control-label
+			display: inline-block
+			max-width: 100%
+			margin-bottom: 5px
+			font-weight: normal
+			font-size: 15px
+			cursor: default
+
+	label .help-block
+		display: block
+		font-weight: normal
+		font-size: 13px
+		color: #9d9d9d
+		margin: 3px 0 0
+
+	.btn
+		text-transform: none
+		border-radius: 22px
+		padding: 10px 24px
+		font-weight: normal
+
+	.form-control
+		border-radius: 20px
+		border-color: #b0b0b0
+
+		&:focus
+			border-color: $input-border-focus
