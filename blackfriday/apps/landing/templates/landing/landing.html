@@ -87,6 +87,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
             {% endcomment %}
 
+            {% if SHOW_LOGIN_ON_LANDING %}
             <div class="site-header-info__auth">
                 <div class="header-auth">
                     <a
@@ -99,6 +100,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </a>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </div><!-- site-header-info -->
@@ -1553,8 +1555,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div>
 
-
+{% if SHOW_LOGIN_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}
+{% endif %}
 
 
 <script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>

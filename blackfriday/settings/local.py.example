@@ -60,3 +60,5 @@ DATABASES = {
 #SUPPORT_EMAIL = 'help@realblackfriday.com'
 
 #PROMO_MANAGERS = []
+
+#SHOW_LOGIN_ON_LANDING = False
