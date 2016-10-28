@@ -7,20 +7,25 @@ import Link from './link.jsx';
 
 class Banner extends React.Component {
 	render() {
-		const item = this.props.data;
+		const {data} = this.props;
+
 		return (
 			<Link
 				className="item"
-				href={item.url}
+				href={data.url}
 				isExternal
 				>
-				<img className="img-responsive" src={resolveImgPath(item.logo)} alt=""/>
+				<img
+					className="img-responsive"
+					src={resolveImgPath(data.logo)}
+					alt=""
+					/>
 			</Link>
 		);
 	}
 }
 Banner.propTypes = {
-	data: React.PropTypes.object
+	data: React.PropTypes.object.isRequired
 };
 
 class PartnersCarousel extends React.Component {
@@ -40,7 +45,7 @@ class PartnersCarousel extends React.Component {
 	}
 }
 PartnersCarousel.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array.isRequired
 };
 
 class Partners extends React.Component {
@@ -49,6 +54,7 @@ class Partners extends React.Component {
 		this.state = {
 			data: []
 		};
+
 		this.handleNext = this.handleNext.bind(this);
 	}
 
@@ -70,19 +76,19 @@ class Partners extends React.Component {
 	}
 }
 Partners.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
-	isControlsShown: React.PropTypes.bool,
-	isPagerShown: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
-	speed: React.PropTypes.number,
+	data: React.PropTypes.array,
+	isControlsShown: React.PropTypes.bool,
+	isPagerShown: React.PropTypes.bool,
+	isRandom: React.PropTypes.bool,
+	loadMoreText: React.PropTypes.string,
+	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	loadMoreText: React.PropTypes.string
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export default Partners;

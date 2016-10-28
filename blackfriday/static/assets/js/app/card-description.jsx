@@ -6,12 +6,12 @@ import Link from './link.jsx';
 
 const CardDescription = React.createClass({
 	propTypes: {
+		description: React.PropTypes.string,
+		linkedPartners: React.PropTypes.array,
+		image: React.PropTypes.string,
 		name: React.PropTypes.string,
-		url: React.PropTypes.string,
-		text: React.PropTypes.string,
-		logo: React.PropTypes.string,
-		promoCode: React.PropTypes.string,
-		linkedPartners: React.PropTypes.array
+		promocode: React.PropTypes.string,
+		url: React.PropTypes.string
 	},
 
 	getInitialState() {
@@ -28,7 +28,14 @@ const CardDescription = React.createClass({
 	},
 
 	render() {
-		const {name, url, text, logo, promoCode, linkedPartners} = this.props;
+		const {
+			description,
+			linkedPartners,
+			image,
+			name,
+			promocode,
+			url
+		} = this.props;
 
 		return (
 			<div className="card-description">
@@ -43,43 +50,46 @@ const CardDescription = React.createClass({
 
 				<div className="card-description__content">
 					<img
-						src={resolveImgPath(logo)}
+						src={resolveImgPath(image)}
 						alt=""
 						className="card-description__logo"
 						/>
 
-					{promoCode ? (
+					{promocode ? (
 						<p className="card-description__promocode">
-							Для предоставления скидки используйте промо-код: <code>{promoCode}</code>
+							{'Для предоставления скидки используйте промо-код: '}
+
+							<code>
+								{promocode}
+							</code>
 						</p>
 					) : null}
 
 					<div
 						className={`card-description__desc${this.state.isDescCollapsed ? ' collapsed' : ''}`}
-						dangerouslySetInnerHTML={{__html: text}}
+						dangerouslySetInnerHTML={{__html: description}}
 						onClick={this.handleClickDesc}
 						/>
 
 					{linkedPartners.length ? (
 						<div className="paysys card-description__paysys">
 							<div className="paysys__label">
-								Этот магазин использует:
+								{'Этот магазин использует:'}
 							</div>
+
 							<div className="paysys__list">
-								{linkedPartners.map((partner, index) => {
-									return (
-										<Link
-											key={index}
-											href={partner.url}
-											isExternal
-											>
-											<img
-												src={resolveImgPath(partner.logo)}
-												alt=""
-												/>
-										</Link>
-									);
-								})}
+								{linkedPartners.map((partner, index) => (
+									<Link
+										key={index}
+										href={partner.url}
+										isExternal
+										>
+										<img
+											src={resolveImgPath(partner.image)}
+											alt=""
+											/>
+									</Link>
+								))}
 							</div>
 						</div>
 					) : null}

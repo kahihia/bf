@@ -17,7 +17,6 @@
 
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
-    <link rel="manifest" href="{% static 'manifest.json' %}">
     <link rel="mask-icon" href="{% static 'safari-pinned-tab.svg' %}" color="#000000">
     <meta name="theme-color" content="#000000">
 
@@ -59,6 +58,34 @@
     <nav class="navbar header-nav" id="header"></nav>
     <div class="header-nav__placeholder"></div>
 
+    <div class="super-header">
+        <div class="container">
+            <div class="row row-main">
+                <div class="col-md-3">
+
+                    <a href="/" class="logo">
+                        <img src="{% static 'images/logo.png' %}" alt="">
+                    </a>
+
+                    <div class="super-header__share share">
+                        <div class="share__content">
+                            <script src="//yastatic.net/share2/share.js"></script>
+                            <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-cats super-header__sidebar-cats"></div>
+
+                </div>
+                <div class="col-md-9">
+
+                    <div id="superbanner"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-container container">
         {% block container %}
         block container
@@ -81,30 +108,34 @@
                         </div>
 
                         <div class="footer-social__list">
-                            <a href="https://vk.com/realblackfriday" target="_blank" rel="noopener noreferrer">
-                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
-                            </a>
                             <a href="https://www.facebook.com/Real-Black-Friday-1598467580447815/" target="_blank" rel="noopener noreferrer">
                                 <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
+                            </a>
+                            <a href="https://vk.com/realbf" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
                             </a>
                         </div>
                     </div>
 
+                    {% comment %}
                     <div class="footer-mnogo-left">
                         <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
                             <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
                         </a>
                     </div>
+                    {% endcomment %}
                 </div>
 
                 <div class="footer__navigation col-sm-4">
                     <div id="footer-cats" class="footer-cats"></div>
 
+                    {% comment %}
                     <div class="footer-mnogo-center">
                         <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
                             <img src="{% static 'images/footer-mnogo-2.png' %}" alt="">
                         </a>
                     </div>
+                    {% endcomment %}
                 </div>
 
                 <div class="footer__copyright col-sm-4 col-sm-offset-0">
@@ -114,11 +145,13 @@
                                 <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
                             </a>
 
+                            {% comment %}
                             <div class="footer-mnogo-right">
                                 <span>При поддержке программы:</span>
                                 <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
                                 <img src="{% static 'images/footer-qiwi.png' %}" alt="">
                             </div>
+                            {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -128,15 +161,17 @@
 </div>
 <!-- end site__footer -->
 
+{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
     <a href="http://www.mnogo.ru/anketa.html?range=1063" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
+{% endcomment %}
 
 
 <script>
 window.ENV = {
-    imgBaseUrl: '/media/images/',
+    imgBaseUrl: '',
     redirectPrefix: '',
 };
 
@@ -160,8 +195,9 @@ window.DATA = {
         {name: 'Партнеры', url: '/partners'}
     ],
     categories: [
-        {id: 0, url: '/foo/', name: 'Foo'},
-        {id: 1, url: '/bar/', name: 'Bar'}
+        {% for item in categories %}
+        {id: {{ item.id }}, url: '/categories/{{ item.slug }}', name: '{{ item.name }}'},
+        {% endfor %}
     ],
     footerCats: [
         {name: 'Российские товары', url: '/russian-goods'},

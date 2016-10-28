@@ -3,8 +3,8 @@ import React from 'react';
 const SimpleMenu = React.createClass({
 	propTypes: {
 		list: React.PropTypes.array,
-		sorting: React.PropTypes.func,
-		onClick: React.PropTypes.func
+		onClick: React.PropTypes.func,
+		sorting: React.PropTypes.func
 	},
 
 	handleClick(e, id) {
@@ -40,10 +40,10 @@ export default SimpleMenu;
 
 const SimpleMenuItem = React.createClass({
 	propTypes: {
-		url: React.PropTypes.string,
-		name: React.PropTypes.string,
 		id: React.PropTypes.number,
-		onClick: React.PropTypes.func
+		name: React.PropTypes.string,
+		onClick: React.PropTypes.func,
+		url: React.PropTypes.string
 	},
 
 	handleClick(e) {

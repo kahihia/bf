@@ -15,13 +15,18 @@ class Banner extends React.Component {
 			url = item.merchant_url;
 			isExternal = true;
 		}
+
 		return (
 			<Link
 				href={url}
 				className="party-carousel-content__image-placeholder embed-responsive"
 				isExternal={isExternal}
 				>
-				<img className="party-carousel-content__image embed-responsive-item" src={resolveImgPath(item.logo)} alt=""/>
+				<img
+					className="party-carousel-content__image embed-responsive-item"
+					src={resolveImgPath(item.logo)}
+					alt=""
+					/>
 			</Link>
 		);
 	}
@@ -34,7 +39,11 @@ class BannerPlaceholder extends React.Component {
 	render() {
 		return (
 			<span className="party-carousel-content__image-placeholder embed-responsive">
-				<img className="party-carousel-content__image embed-responsive-item" src="/static/images/banner-placeholder.png" alt=""/>
+				<img
+					className="party-carousel-content__image embed-responsive-item"
+					src="/static/images/banner-placeholder.png"
+					alt=""
+					/>
 			</span>
 		);
 	}
@@ -76,8 +85,8 @@ class MerchantsCarousel extends React.Component {
 }
 MerchantsCarousel.propTypes = {
 	list: React.PropTypes.array,
-	perPage: React.PropTypes.number,
-	pages: React.PropTypes.number
+	pages: React.PropTypes.number,
+	perPage: React.PropTypes.number
 };
 
 export class Merchants extends React.Component {
@@ -86,6 +95,7 @@ export class Merchants extends React.Component {
 		this.state = {
 			data: []
 		};
+
 		this.handleNext = this.handleNext.bind(this);
 	}
 
@@ -113,42 +123,41 @@ export class Merchants extends React.Component {
 	}
 }
 Merchants.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
-	isControlsShown: React.PropTypes.bool,
-	isPagerShown: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
-	speed: React.PropTypes.number,
+	data: React.PropTypes.array,
+	isControlsShown: React.PropTypes.bool,
+	isPagerShown: React.PropTypes.bool,
+	isRandom: React.PropTypes.bool,
+	loadMoreText: React.PropTypes.string,
+	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	loadMoreText: React.PropTypes.string
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export class AllMerchants extends React.Component {
 	constructor(props) {
-		super();
+		super(props);
 		this.state = {
 			data: arrayShuffle(props.data || [])
 		};
 	}
 
 	render() {
-		let banners = this.state.data.map(function (item) {
-			return (
-				<div className="col-xs-6 all-merchants__item" key={`${item.logo}${item.url}`}>
-					<Banner data={item}/>
-				</div>
-			);
-		});
-
 		return (
 			<div className="all-merchants">
 				<div className="row">
-					{banners}
+					{this.state.data.map(item => (
+						<div
+							key={`${item.logo}${item.url}`}
+							className="col-xs-6 all-merchants__item"
+							>
+							<Banner data={item}/>
+						</div>
+					))}
 				</div>
 			</div>
 		);
