@@ -368,6 +368,8 @@ class ProductsTable extends React.Component {
 							{showIsTeaser ? (
 								<th className={b(className, 'table-th', {name: 'teaser'})}>
 									<span>
+										<ProductsTableHelpIcon name="teaser"/>
+
 										{FEED_CELL.teaser}
 									</span>
 								</th>
