@@ -69,30 +69,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <div class="site-header-info">
     <div class="container">
-        <div class="site-header-info__about">
-            <span class="site-header-info__text">
-                Официальный сайт распродажи "Настоящая Черная Пятница" 2016 в России
-            </span>
-        </div>{% comment %}
-
-        {% endcomment %}{% comment %}<div class="site-header-info__rpt">
-            <span class="rpt">
-                <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
-                <span class="rpt__text">
-                    При поддержке <strong>Роспотребнадзора</strong>
+        <div class="site-header-info__content">
+            <div class="site-header-info__about">
+                <span class="site-header-info__text">
+                    Официальный сайт распродажи "Настоящая Черная Пятница" 2016 в России
                 </span>
-            </span>
-        </div>{% endcomment %}
+            </div>
 
-        {% comment %}
-        <div class="site-header-info__auth">
-            <div class="header-auth">
-                <a class="header-auth__link" href="/admin/login/">
-                    Вход для рекламодателей
-                </a>
+            {% comment %}
+            <div class="site-header-info__rpt">
+                <span class="rpt">
+                    <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
+                    <span class="rpt__text">
+                        При поддержке <strong>Роспотребнадзора</strong>
+                    </span>
+                </span>
+            </div>
+            {% endcomment %}
+
+            <div class="site-header-info__auth">
+                <div class="header-auth">
+                    <a
+                        class="header-auth__link"
+                        href="#"
+                        data-toggle="modal"
+                        data-target="#auth-modal"
+                        >
+                        Вход для рекламодателей
+                    </a>
+                </div>
             </div>
         </div>
-        {% endcomment %}
     </div>
 </div><!-- site-header-info -->
 
@@ -161,7 +168,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
 
                         <form
-                            class="aa-section__form"
+                            class="aa-section__form js-form-ajax"
                             id="subscribe-form-1"
                             method="POST"
                             action="/api/subscribers/"
@@ -1027,7 +1034,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="row">
             <div class="col-xs-5 col-xs-offset-7">
                 <form
-                    class="subscribe-section__form"
+                    class="subscribe-section__form js-form-ajax"
                     id="subscribe-form-2"
                     method="POST"
                     action="/api/subscribers/"
@@ -1306,7 +1313,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div class="col-xs-6">
                 <form
-                    class="party-section__form"
+                    class="party-section__form js-form-ajax"
                     id="apply-form-1"
                     method="POST"
                     action="/api/applications/"
@@ -1497,6 +1504,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="modal-body">
 
                 <form
+                    class="js-form-ajax"
                     id="subscribe-form-3"
                     method="POST"
                     action="/api/subscribers/"
@@ -1544,6 +1552,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 </div>
+
+
+{% include "landing/includes/auth-modal.html" %}
 
 
 <script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
