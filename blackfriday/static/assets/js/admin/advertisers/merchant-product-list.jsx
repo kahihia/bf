@@ -179,12 +179,12 @@ class MerchantProductList extends React.Component {
 					{'Загрузить товары'}
 
 					<DownloadFile
-						href="/public/RBF_feed_howto.pdf"
+						href="/RBF_feed_howto.pdf"
 						name="Инструкция по заполнению товарного файла"
 						/>
 
 					<DownloadFile
-						href="/public/RBF_feed_template.xlsx"
+						href="/RBF_feed_template.xlsx"
 						name="Шаблон файла для загрузки товаров"
 						/>
 				</h2>
