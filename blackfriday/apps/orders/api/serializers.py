@@ -9,7 +9,7 @@ from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from apps.advertisers.models import Merchant
+from apps.advertisers.models import Merchant, ModerationStatus
 from apps.promo.models import Option, Promo
 
 from apps.advertisers.api.serializers.clients import AdvertiserTinySerializer, MerchantTinySerializer
@@ -192,10 +192,18 @@ class InvoiceUpdateSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
+        paid = instance.is_paid
         status = validated_data.pop('status', None)
         if status:
             instance.status = status
-        return super().update(instance, validated_data)
+
+        instance = super().update(instance, validated_data)
+
+        if paid != instance.is_paid:
+            instance.merchant.moderation_status = ModerationStatus.new
+            instance.merchant.save()
+
+        return instance
 
     def create(self, validated_data):
         raise NotImplementedError
@@ -217,7 +225,20 @@ class InvoiceStatusBulkSerializer(serializers.ModelSerializer):
         return attrs
 
     def bulk_update(self, validated_data):
-        return Invoice.change_status([invoice.id for invoice in validated_data['invoices']], validated_data['status'])
+        invoices = Invoice.change_status(
+            [invoice.id for invoice in validated_data['invoices']],
+            validated_data['status']
+        )
+
+        reset = [
+            invoice.id for invoice in filter(
+                lambda invoice: (invoice.is_paid != (validated_data['status'] == InvoiceStatus.paid)),
+                validated_data['invoices']
+            )
+        ]
+
+        Merchant.objects.filter(invoices__id__in=reset).update(moderation_status=ModerationStatus.new)
+        return invoices
 
     def update(self, instance, validated_data):
         return self.bulk_update(validated_data)
