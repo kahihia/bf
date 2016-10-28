@@ -3,8 +3,9 @@ import io
 from PIL import Image, ImageFile
 
 from django.db.models import ImageField
-from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
+
+from rest_framework.exceptions import ValidationError
 
 
 class ResizedImageFieldFile(ImageField.attr_class):
