@@ -216,7 +216,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             materials.append(('Тизер', teaser.url, teaser.is_teaser_on_main))
 
         send_mail(
-            subject='Просьба о помощи от рекламодателя',
+            subject='Отчет о прохождении модерации магазина рекламодателем',
             recipient_list=[instance.advertiser.email],
             from_email=settings.DEFAULT_FROM_EMAIL,
             html_message=render_to_string(
