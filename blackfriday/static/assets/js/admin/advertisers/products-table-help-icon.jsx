@@ -6,16 +6,22 @@ const HELP_IMAGE_DIR = '/static/images/admin/';
 const HELP_IMAGE_NAME = 'products-table-help-icon';
 const HELP = {
 	name: {
-		text: 'Укажите название товара'
+		text: 'Укажите название товара и ссылку на товар'
 	},
 	discount: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_discount.png`
+	},
+	price: {
+		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_oldprice.png`
 	},
 	oldprice: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_oldprice.png`
 	},
 	startprice: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_startprice.png`
+	},
+	teaser: {
+		text: 'Отметьте товары для публикации на главной странице'
 	},
 	country: {
 		text: 'Укажите страну производителя товара'
