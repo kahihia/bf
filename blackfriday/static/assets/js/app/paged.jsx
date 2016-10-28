@@ -7,11 +7,12 @@ class Paged extends React.Component {
 		super();
 		this.state = {
 			data: [],
-			page: null,
-			isLoading: false,
 			isAllLoaded: false,
-			isInited: false
+			isInited: false,
+			isLoading: false,
+			page: null
 		};
+
 		this.handleClick = this.handleClick.bind(this);
 	}
 
@@ -54,8 +55,8 @@ class Paged extends React.Component {
 	handleNext(data, page) {
 		data = this.state.data.concat(data);
 		this.setState({
-			data: data,
-			page: page
+			data,
+			page
 		}, () => {
 			this.props.onNext(data);
 		});
@@ -70,6 +71,7 @@ class Paged extends React.Component {
 			return (
 				<div className="special-offers">
 					{this.props.children}
+
 					{this.state.isAllLoaded ? null : (
 						<LoadMore
 							key={this.state.page}
@@ -86,19 +88,19 @@ class Paged extends React.Component {
 	}
 }
 Paged.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
+	children: React.PropTypes.element,
 	className: React.PropTypes.string,
-	speed: React.PropTypes.number,
-	onNext: React.PropTypes.func,
+	data: React.PropTypes.array,
+	isRandom: React.PropTypes.bool,
 	loadMoreText: React.PropTypes.string,
-	children: React.PropTypes.element
+	loadPagesCount: React.PropTypes.number,
+	onNext: React.PropTypes.func,
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export default Paged;

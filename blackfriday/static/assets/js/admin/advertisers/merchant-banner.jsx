@@ -66,8 +66,10 @@ class MerchantBanner extends React.Component {
 		const showInMailing = limits.inMailing || limits.inMailing === 0;
 		const disabledInMailing = limits.inMailing === 0 && !inMailing;
 
-		const showOnMain = limits.onMain || limits.onMain === 0;
+		const showOnMain = type !== 20 && (limits.onMain || limits.onMain === 0);
 		const disabledOnMain = limits.onMain === 0 && !onMain;
+
+		const showCategories = type !== 20;
 
 		return (
 			<div className={className}>
@@ -99,47 +101,51 @@ class MerchantBanner extends React.Component {
 							</div>
 						</div>
 
-						<div className="col-xs-2">
-							<ControlLabel name="Показывать"/>
+						{showOnMain || showInMailing || showCategories ? (
+							<div className="col-xs-2">
+								<ControlLabel name="Показывать"/>
 
-							{showOnMain ? (
-								<Checkbox
-									name="onMain"
-									text="На главной"
-									isChecked={onMain}
-									onChange={this.handleCheckOnMain}
-									disabled={disabledOnMain}
+								{showOnMain ? (
+									<Checkbox
+										name="onMain"
+										text="На главной"
+										isChecked={onMain}
+										onChange={this.handleCheckOnMain}
+										disabled={disabledOnMain}
+										/>
+								) : null}
+
+								{showInMailing ? (
+									<Checkbox
+										name="inMailing"
+										text="В рассылке"
+										isChecked={inMailing}
+										onChange={this.handleCheckInMailing}
+										disabled={disabledInMailing}
+										/>
+								) : null}
+							</div>
+						) : null}
+
+						{showCategories ? (
+							<div className="col-xs-6">
+								<MultiselectTwoSides
+									onChange={this.handleChangeCategories}
+									clearFilterText="Очистить"
+									availableHeader="Доступные"
+									selectedHeader="Выбранные"
+									selectAllText="Выбрать все"
+									deselectAllText="Очистить"
+									options={categoriesAvailable}
+									value={selectedCategories}
+									limit={limits.categories}
+									labelKey="name"
+									valueKey="id"
+									showControls
+									searchable
 									/>
-							) : null}
-
-							{showInMailing ? (
-								<Checkbox
-									name="inMailing"
-									text="В рассылке"
-									isChecked={inMailing}
-									onChange={this.handleCheckInMailing}
-									disabled={disabledInMailing}
-									/>
-							) : null}
-						</div>
-
-						<div className="col-xs-6">
-							<MultiselectTwoSides
-								onChange={this.handleChangeCategories}
-								clearFilterText="Очистить"
-								availableHeader="Доступные"
-								selectedHeader="Выбранные"
-								selectAllText="Выбрать все"
-								deselectAllText="Очистить"
-								options={categoriesAvailable}
-								value={selectedCategories}
-								limit={limits.categories}
-								labelKey="name"
-								valueKey="id"
-								showControls
-								searchable
-								/>
-						</div>
+							</div>
+						) : null}
 					</div>
 				</div>
 

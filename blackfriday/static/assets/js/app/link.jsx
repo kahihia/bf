@@ -7,9 +7,9 @@ const ADMITAD_REGEX = /ad.admitad.com/;
 
 const Link = React.createClass({
 	propTypes: {
-		href: React.PropTypes.string.isRequired,
-		className: React.PropTypes.string,
 		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string,
+		href: React.PropTypes.string.isRequired,
 		isExternal: React.PropTypes.bool,
 		onClick: React.PropTypes.func
 	},

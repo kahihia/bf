@@ -5,8 +5,8 @@ import {categoriesSorting} from './utils.js';
 
 const SidebarCats = React.createClass({
 	propTypes: {
-		list: React.PropTypes.array,
-		isSideShown: React.PropTypes.bool
+		isSideShown: React.PropTypes.bool,
+		list: React.PropTypes.array
 	},
 
 	getDefaultProps() {
@@ -16,8 +16,8 @@ const SidebarCats = React.createClass({
 	getInitialState() {
 		return {
 			active: null,
-			timer: null,
-			delayTimeout: null
+			delayTimeout: null,
+			timer: null
 		};
 	},
 
@@ -36,9 +36,7 @@ const SidebarCats = React.createClass({
 		if (!state.timer) {
 			this.setState({
 				delayTimeout: setTimeout(() => {
-					this.setState({
-						active: active
-					});
+					this.setState({active});
 				}, delay),
 				timer: setTimeout(() => {
 					this.setState({
@@ -65,7 +63,10 @@ const SidebarCats = React.createClass({
 				onMouseLeave={this.handleMouseLeave}
 				>
 				<Dropdown active={this.state.active}>
-					<DropdownTrigger>Категории</DropdownTrigger>
+					<DropdownTrigger>
+						{'Категории'}
+					</DropdownTrigger>
+
 					<DropdownContent>
 						<SimpleMenu
 							list={this.props.list}

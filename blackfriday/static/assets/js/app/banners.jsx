@@ -7,19 +7,33 @@ import {resolveImgPath} from './utils.js';
 
 class Banner extends React.Component {
 	render() {
-		const item = this.props.data;
+		const {data} = this.props;
+
 		return (
 			<div className="special-offers__item">
 				<Link
-					href={item.url}
+					href={data.url}
 					className="special-offers__link embed-responsive"
 					isExternal
 					>
-					<img src={resolveImgPath(item.banner_image)} alt="" className="special-offers__banner embed-responsive-item"/>
+					<img
+						src={resolveImgPath(data.banner_image)}
+						alt=""
+						className="special-offers__banner embed-responsive-item"
+						/>
 				</Link>
-				{item.merchant_logo ? (
-					<a className="special-offers__shop" href={item.merchant_url}>
-						<img src={resolveImgPath(item.merchant_logo)} alt="" className="special-offers__logo"/>
+
+				{data.merchant_logo ? (
+					<a
+						className="special-offers__shop"
+						href={data.merchant_url}
+						>
+						<img
+							src={resolveImgPath(data.merchant_logo)}
+							alt=""
+							className="special-offers__logo"
+							/>
+
 						{'К магазину'}
 					</a>
 				) : null}
@@ -28,7 +42,7 @@ class Banner extends React.Component {
 	}
 }
 Banner.propTypes = {
-	data: React.PropTypes.object
+	data: React.PropTypes.object.isRequired
 };
 
 class BannerList extends React.Component {
@@ -48,15 +62,16 @@ class BannerList extends React.Component {
 	}
 }
 BannerList.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array.isRequired
 };
 
 class Banners extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
 			data: []
 		};
+
 		this.handleNext = this.handleNext.bind(this);
 	}
 
@@ -77,17 +92,17 @@ class Banners extends React.Component {
 	}
 }
 Banners.propTypes = {
-	data: React.PropTypes.array,
-	pages: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	pagesCount: React.PropTypes.number,
-	loadPagesCount: React.PropTypes.number,
-	isRandom: React.PropTypes.bool,
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
-	speed: React.PropTypes.number,
+	data: React.PropTypes.array,
+	isRandom: React.PropTypes.bool,
+	loadMoreText: React.PropTypes.string,
+	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	loadMoreText: React.PropTypes.string
+	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
+	perPage: React.PropTypes.number,
+	speed: React.PropTypes.number
 };
 
 export default Banners;

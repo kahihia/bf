@@ -157,11 +157,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
-
-        user = self.context['request'].user
-        if user.role == 'advertiser':
-            attrs['last_save'] = timezone.now()
-
+        attrs['last_save'] = timezone.now()
         return attrs
 
 

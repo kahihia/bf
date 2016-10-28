@@ -1,6 +1,9 @@
 .header-nav
-	padding: 8px 0
-	background-color: #176cd9
+	padding: 5px 0
+	background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPAgMAAABGuH3ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////////////////9aUOcwAAAAR0Uk5TAAIWGlHt/lkAAAAuSURBVAjXY3jCwCDBsJOBgYUhz4GBgUF6ApBgAwoyMAIFGYgQdGBg3MEAZOcAALTIC+yD04roAAAAAElFTkSuQmCC")
+	background-position: 50% 0
+	background-repeat: repeat
+	background-color: #000
 	position: fixed
 	top: 0
 	left: 0
@@ -11,16 +14,17 @@
 		color: #fff
 
 	&__placeholder
-		height: 53px
+		height: 50px
+		background-color: #000
 
 		+above(768px)
-			height: 148px
+			height: 73px
 
 		+above(992px)
-			height: 122px
+			height: 73px
 
 		+above(1200px)
-			height: 100px
+			height: 73px
 
 	&.navbar
 		border-radius: 0
@@ -44,21 +48,24 @@
 
 .header-menu
 	text-align: center
+	font-size: 12px
 
 	.simple-menu
 		{}
 
 		&__item:first-child
-			background: url(/static/images/header-menu__item_rf.png) 50% 50% no-repeat
+			background-position: 50% 50%
+			background-repeat: no-repeat
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAAASCAYAAAB4p22AAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXNJREFUeNrsmC9PxDAYxnsExxI8hvsMU4cCMzWDmRkCRy7BzF/CcQJ/hoScwgwzc+bUGfgCk+hh0Ij58ZS8wCCMLmmXtNv7JL90/bM07Z683dvR3lUloDE4AyHwQQ42IAVFuRA6SoglwbJUI5hBGuEGxH/0P4AZzFBozCHfPQQvZDqWpdqhiBA39MfUr6MlGYGjggNmCBVjQgNmGHdqBi9IQPFRsrTM4CvG+A6sI6GjqL9m8IIJuAdvVE66MEOuGJM7sFVDOIqm4BzsUzk1PcEuZQ1H/4zZWL9N5XYImcqpom4kMqSUNYiGbCLl09QKrRV1I5FBpn4z8Nx0z8DfwQrd1SLCulY3d89QVRVvM+srMrB0fvLn4gDFBYioKQOrciFe2QzDkzTCvFb/fL528Z6BpaeoZRubgdU3M3hBBB6JiLfth7KWbb35Z7gEx64vtiOtfh0NWa3NKbVLLWVE+DbDkyi3J+yB4aaWtw3PrB7pXYABAHFNT9qCBwxUAAAAAElFTkSuQmCC")
 
 		&__link
 			text-transform: uppercase
 			font-weight: bold
 			display: inline-block
-			padding: 4px 0
+			padding: 2px 0
 
 .header-cats
-	padding-top: 2px
+	padding-top: 5px
 	font-size: 13px
 
 	.simple-menu
