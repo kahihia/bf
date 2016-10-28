@@ -12,6 +12,7 @@ from apps.users.models import User
 
 from apps.mediafiles.api.serializers import ImageSerializer
 from apps.promo.api.serializers import PromoTinySerializer
+from .validators import html_validator
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -215,6 +216,7 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'allow_null': True, 'allow_blank': False},
             'name': {'allow_null': False, 'allow_blank': False},
+            'description': {'validators': [html_validator]},
         }
 
     def get_default_field_names(self, declared_fields, model_info):
@@ -250,6 +252,9 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merchant
+        extra_kwargs = {
+            'description': {'validators': [html_validator]},
+        }
 
     def get_default_field_names(self, declared_fields, model_info):
         fields = ['name', 'url', 'description', 'promocode', 'image']
