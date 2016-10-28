@@ -11,6 +11,9 @@ const HELP = {
 	discount: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_discount.png`
 	},
+	price: {
+		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_oldprice.png`
+	},
 	oldprice: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_oldprice.png`
 	},

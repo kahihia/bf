@@ -263,6 +263,8 @@ class ProductsNewTable extends React.Component {
 
 								<th className={b(className, 'table-th', {name: 'price'})}>
 									<span>
+										<ProductsTableHelpIcon name="price"/>
+
 										{FEED_CELL.price}
 									</span>
 								</th>
