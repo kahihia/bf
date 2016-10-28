@@ -10,6 +10,7 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
+from apps.mailing.utils import send_invoice_creation_mail
 from libs.api.permissions import IsAuthenticated, IsAdmin, IsAdvertiser, IsOwner, action_permission, IsManager
 
 from ..models import Invoice
@@ -42,6 +43,10 @@ class InvoiceViewSet(
         if self.action == 'list' and user.role == 'advertiser':
             qs = qs.filter(merchant__advertiser=user)
         return qs
+
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        send_invoice_creation_mail(instance)
 
     @list_route(methods=['post'])
     def statuses(self, request, *args, **kwargs):
