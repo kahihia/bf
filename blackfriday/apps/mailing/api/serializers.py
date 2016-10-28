@@ -27,6 +27,7 @@ class LogoMailingSerializer(serializers.Serializer):
     bottom_text = ButtonSerializer(required=False)
 
     include_admitad = serializers.BooleanField(write_only=True, required=False)
+    links_to_main = serializers.BooleanField(required=False)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
