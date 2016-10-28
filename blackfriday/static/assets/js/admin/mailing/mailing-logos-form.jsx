@@ -73,6 +73,11 @@ class MailingLogosForm extends Form {
 					type: 'checkbox',
 					text: 'Включить логотипы со ссылками на AdmitAd',
 					value: false
+				},
+				linksToMain: {
+					type: 'checkbox',
+					text: 'Заменить ссылки логотипов на RBF',
+					value: false
 				}
 			},
 			previews: {
@@ -87,11 +92,13 @@ class MailingLogosForm extends Form {
 		this.handleMiddleBannerUpload = this.handleMiddleBannerUpload.bind(this);
 		this.handleClickRemoveMiddleBanner = this.handleClickRemoveMiddleBanner.bind(this);
 		this.handleChangeIncludeAdmitad = this.handleChangeIncludeAdmitad.bind(this);
+		this.handleChangeLinksToMain = this.handleChangeLinksToMain.bind(this);
 	}
 
 	reformatData(data) {
 		let result = {
-			includeAdmitad: data.includeAdmitad || false
+			includeAdmitad: data.includeAdmitad || false,
+			linksToMain: data.linksToMain || false
 		};
 
 		if (data.topBanner && data.topBannerUrl) {
@@ -188,6 +195,13 @@ class MailingLogosForm extends Form {
 	handleChangeIncludeAdmitad(value) {
 		this.setState(prevState => {
 			prevState.fields.includeAdmitad.value = value;
+			return prevState;
+		});
+	}
+
+	handleChangeLinksToMain(value) {
+		this.setState(prevState => {
+			prevState.fields.linksToMain.value = value;
 			return prevState;
 		});
 	}
@@ -294,6 +308,14 @@ class MailingLogosForm extends Form {
 						text={this.state.fields.includeAdmitad.text}
 						isChecked={this.state.fields.includeAdmitad.value}
 						onChange={this.handleChangeIncludeAdmitad}
+						/>
+				</div>
+
+				<div className="form-group">
+					<Checkbox
+						text={this.state.fields.linksToMain.text}
+						isChecked={this.state.fields.linksToMain.value}
+						onChange={this.handleChangeLinksToMain}
 						/>
 				</div>
 
