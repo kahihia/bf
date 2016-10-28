@@ -81,6 +81,9 @@ class MerchantBannerAddForm extends Form {
 
 		const {merchantId} = this.props;
 		const json = this.serialize();
+		if (json.type === 20) {
+			json.onMain = true;
+		}
 
 		xhr({
 			url: `/api/merchants/${merchantId}/banners/`,
