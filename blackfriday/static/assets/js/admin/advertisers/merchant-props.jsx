@@ -16,7 +16,6 @@ class MerchantProps extends React.Component {
 		const {
 			id,
 			moderation,
-			moderationStatus,
 			optionsCount,
 			paymentStatus,
 			promo,
@@ -71,8 +70,8 @@ class MerchantProps extends React.Component {
 					</span>
 
 					<span className="props__value">
-						<span title={MODERATION_STATUS[moderationStatus]}>
-							{moderationStatus === 2 ? (
+						<span title={MODERATION_STATUS[moderation.status]}>
+							{moderation.status === 2 ? (
 								<Glyphicon
 									name="ok"
 									className="text-success"
@@ -134,7 +133,7 @@ class MerchantProps extends React.Component {
 							</Popover>
 						) : null}
 
-						{MODERATION_STATUS[moderationStatus]}
+						{MODERATION_STATUS[moderation.status]}
 					</span>
 				</li>
 
@@ -158,7 +157,6 @@ class MerchantProps extends React.Component {
 MerchantProps.propTypes = {
 	id: React.PropTypes.number,
 	moderation: React.PropTypes.object,
-	moderationStatus: React.PropTypes.number,
 	optionsCount: React.PropTypes.number,
 	paymentStatus: React.PropTypes.number,
 	promo: React.PropTypes.object,

@@ -27,7 +27,7 @@ const SimpleShopCard = React.createClass({
 			image,
 			isActive,
 			isPreviewable,
-			moderationStatus,
+			moderation,
 			name,
 			optionsCount,
 			paymentStatus,
@@ -63,7 +63,7 @@ const SimpleShopCard = React.createClass({
 				<MerchantProps
 					{...{
 						id,
-						moderationStatus,
+						moderation,
 						optionsCount,
 						paymentStatus,
 						promo,
