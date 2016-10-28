@@ -5,4 +5,5 @@ require('css/landing.styl');
 	require('./landing/carousels.js');
 	require('./landing/countdown.js');
 	require('./landing/forms.js');
+	require('./landing/admitad.js');
 })();
