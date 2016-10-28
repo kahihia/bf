@@ -44,13 +44,16 @@ class MerchantBannerAddForm extends Form {
 					required: true
 				},
 				onMain: {
-					value: false
+					value: false,
+					defaultValue: false
 				},
 				inMailing: {
-					value: false
+					value: false,
+					defaultValue: false
 				},
 				categories: {
-					value: []
+					value: [],
+					defaultValue: []
 				}
 			}
 		};
