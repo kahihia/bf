@@ -66,7 +66,7 @@
                 от участников Черной пятницы
             </h2>
             {% for logo in logos|slice:":9" %}
-                <a href="{{ logo.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
+                <a href="{% if links_to_main %}{{ SITE_URL }}{% else %}{{ logo.url }}{% endif %}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
                     <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" style="max-width: 90%; max-height: 90%">
                 </a>
                 {% cycle False False True as newrow silent %}
@@ -91,7 +91,7 @@
         <div style="width: 570px; margin: 0 auto">
 
             {% for logo in logos|slice:"9:" %}
-                <a href="{{ logo.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
+                <a href="{% if links_to_main %}{{ SITE_URL }}{% else %}{{ logo.url }}{% endif %}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
                     <img src="{{ SITE_URL }}{{ logo.image.url }}" alt="" style="max-width: 90%; max-height: 90%">
                 </a>
                 {% cycle False False True as newrow silent %}
