@@ -1,8 +1,11 @@
-/* global jQuery toastr */
+/* global toastr */
 /* eslint quote-props: ["error", "as-needed"] */
 /* eslint react/require-optimization: 0 */
 
 import React from 'react';
+import MediumEditor from 'medium-editor';
+require('node_modules/medium-editor/dist/css/medium-editor.css');
+require('node_modules/medium-editor/dist/css/themes/bootstrap.css');
 
 class TextareaRich extends React.Component {
 	constructor(props) {
@@ -11,55 +14,59 @@ class TextareaRich extends React.Component {
 			value: props.value
 		};
 
-		this.handleBlur = this.handleBlur.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentWillReceiveProps(newProps) {
-		this.setState({value: newProps.value});
+		this.setState({value: newProps.value}, this.initializeEditor);
 	}
 
 	componentDidMount() {
-		const _this = this;
+		this.initializeEditor();
+	}
 
-		jQuery(this.textarea).wysihtml5({
+	initializeEditor() {
+		if (this.editor) {
+			this.editor.destroy();
+		}
+
+		this.editor = new MediumEditor(this.textarea, {
 			toolbar: {
-				'font-styles': true, // Font styling, e.g. h1, h2, etc
-				emphasis: true, // Italics, bold, etc
-				lists: true, // (Un)ordered lists, e.g. Bullets, Numbers
-				html: false, // Button which allows you to edit the generated HTML
-				link: true, // Button to insert a link
-				image: false, // Button to insert an image
-				color: false, // Button to change color of font
-				blockquote: false, // Blockquote
-				size: null // default: none, other options are xs, sm, lg
+				buttons: [
+					'bold',
+					'italic',
+					'underline',
+					'strikethrough',
+					'anchor',
+					'orderedlist',
+					'unorderedlist',
+					'h2',
+					'h3'
+				]
 			},
-			locale: 'ru-RU',
-			events: {
-				change: function () {
-					const value = this.editableElement.value;
-					if (_this.props.maxlength) {
-						const length = value.replace(/<.*?>/gi, '').length;
-						if (length > _this.props.maxlength) {
-							toastr.warning(`Максимальная длина описания ${_this.props.maxlength} символов. Текущее описание составляет ${length} символов`);
-							return;
-						}
-					}
-					_this.handleChange(value);
-				},
-				blur: function () {
-					const value = this.editableElement.value;
-					if (_this.props.maxlength) {
-						const length = value.replace(/<.*?>/gi, '').length;
-						if (length > _this.props.maxlength) {
-							toastr.warning(`Максимальная длина описания ${_this.props.maxlength} символов. Текущее описание составляет ${length} символов`);
-							return;
-						}
-					}
-					_this.handleBlur(value);
-				}
+			targetBlank: true
+		});
+
+		this.editor.subscribe('blur', () => {
+			const value = this.editor.getContent();
+			if (this.validate(value)) {
+				this.handleChange(value);
 			}
 		});
+	}
+
+	validate(value) {
+		const {maxlength} = this.props;
+
+		if (maxlength) {
+			const length = value.replace(/<.*?>/gi, '').length;
+			if (length > maxlength) {
+				toastr.warning(`Максимальная длина описания ${maxlength} символов. Текущее описание составляет ${length} символов`);
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	handleChange(value) {
@@ -70,22 +77,12 @@ class TextareaRich extends React.Component {
 					value
 				}
 			};
-			if (this.props.onChange) {
-				this.props.onChange(ev);
-			}
-		});
-	}
-
-	handleBlur(value) {
-		this.setState({value}, () => {
-			const ev = {
-				target: {
-					name: this.props.name,
-					value
-				}
-			};
 			if (this.props.onBlur) {
 				this.props.onBlur(ev);
+				return;
+			}
+			if (this.props.onChange) {
+				this.props.onChange(ev);
 			}
 		});
 	}
@@ -101,9 +98,7 @@ class TextareaRich extends React.Component {
 
 		return (
 			<textarea
-				className="form-control"
 				ref={textarea}
-				style={{width: '100%'}}
 				value={value}
 				/>
 		);
