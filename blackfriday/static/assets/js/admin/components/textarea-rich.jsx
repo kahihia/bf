@@ -44,7 +44,15 @@ class TextareaRich extends React.Component {
 					'h3'
 				]
 			},
-			targetBlank: true
+			targetBlank: true,
+			paste: {
+				forcePlainText: false,
+				cleanPastedHTML: false,
+				cleanReplacements: [],
+				cleanAttrs: ['class', 'style', 'dir'],
+				cleanTags: ['meta'],
+				unwrapTags: []
+			}
 		});
 
 		this.editor.subscribe('blur', () => {
