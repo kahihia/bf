@@ -140,7 +140,6 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 requirements = {
                     'name': self.instance.name,
                     'description': self.instance.description,
-                    'slug': self.instance.slug,
                     'url': self.instance.url,
                     'image': self.instance.image,
                     'promo': self.instance.promo,
