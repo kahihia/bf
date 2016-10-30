@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {MODERATION_STATUS, PAYMENT_STATUS} from '../const.js';
-import {getUrl, hasRole} from '../utils.js';
+import {getUrl, hasRole, getCssClassForModerationStatus} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';
 
@@ -32,6 +32,8 @@ class MerchantProps extends React.Component {
 		promoName = isAllowPromoSelect ? 'Выберите пакет' : promoName;
 
 		const editUrl = `${getUrl('merchants')}${id}/`;
+
+		const moderationCssClass = getCssClassForModerationStatus(moderation.status);
 
 		return (
 			<ul className="props merchant-props">
@@ -70,19 +72,21 @@ class MerchantProps extends React.Component {
 					</span>
 
 					<span className="props__value">
-						<span title={MODERATION_STATUS[moderation.status]}>
-							{moderation.status === 2 ? (
-								<Glyphicon
-									name="ok"
-									className="text-success"
-									/>
-							) : (
-								<Glyphicon
-									name="remove"
-									className="text-danger"
-									/>
-							)}
+						<span className={moderationCssClass}>
+							{MODERATION_STATUS[moderation.status]}
 						</span>
+
+						{moderation && ((moderation.status === 2) || (moderation.status === 3)) && moderation.comment ? (
+							<Popover
+								title="Комментарий модератора"
+								content={moderation.comment}
+								>
+								<Glyphicon
+									name="comment"
+									style={{marginLeft: 3}}
+									/>
+							</Popover>
+						) : null}
 					</span>
 				</li>
 
@@ -101,41 +105,6 @@ class MerchantProps extends React.Component {
 						</span>
 					</li>
 				) : null}
-
-				<li className="props__item">
-					<span className="props__label">
-						{'Материалы:'}
-					</span>
-
-					<span className="props__value">
-						{moderation && moderation.comment ? (
-							<Popover
-								className="text-danger"
-								title="Комментарий модератора"
-								content={moderation.comment}
-								>
-								<Glyphicon
-									name="warning-sign"
-									style={{marginRight: 3}}
-									/>
-							</Popover>
-						) : null}
-
-						{paymentStatus === 0 && !(moderation && moderation.comment) ? (
-							<Popover
-								className="text-warning"
-								content="Загрузка материалов возможна после оплаты"
-								>
-								<Glyphicon
-									name="warning-sign"
-									style={{marginRight: 3}}
-									/>
-							</Popover>
-						) : null}
-
-						{MODERATION_STATUS[moderation.status]}
-					</span>
-				</li>
 
 				<li className="props__item">
 					<span className="props__label">
