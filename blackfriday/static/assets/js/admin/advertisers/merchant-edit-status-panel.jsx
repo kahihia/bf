@@ -3,7 +3,7 @@
 import React from 'react';
 import b from 'b_';
 import {PAYMENT_STATUS, MODERATION_STATUS, ADVERTISER_IS_SUPERNOVA} from '../const.js';
-import {hasRole} from '../utils.js';
+import {hasRole, getCssClassForModerationStatus} from '../utils.js';
 import Popover from '../components/popover.jsx';
 import Glyphicon from '../components/glyphicon.jsx';
 
@@ -45,6 +45,7 @@ class MerchantEditStatusPanel extends React.Component {
 			promoName
 		} = this.props;
 		const isAdmin = hasRole('admin');
+		const moderationCssClass = getCssClassForModerationStatus(moderationStatus);
 
 		return (
 			<div className={className}>
@@ -96,31 +97,21 @@ class MerchantEditStatusPanel extends React.Component {
 							</span>
 
 							<span className="props__value">
-								{moderationComment ? (
-									<span>
-										<Popover
-											className="text-danger"
-											title="Комментарий модератора"
-											content={moderationComment}
-											>
-											<Glyphicon name="warning-sign"/>
-										</Popover>
-
-										{' '}
-									</span>
-								) : null}
-
-								<span className={moderationStatus === 2 ? 'text-success' : 'text-danger'}>
-									{moderationStatus === 2 ? (
-										<Glyphicon name="ok"/>
-									) : (
-										<Glyphicon name="remove"/>
-									)}
-
-									{' '}
-
+								<span className={moderationCssClass}>
 									{MODERATION_STATUS[moderationStatus]}
 								</span>
+
+								{((moderationStatus === 2) || (moderationStatus === 3)) && moderationComment ? (
+									<Popover
+										title="Комментарий модератора"
+										content={moderationComment}
+										>
+										<Glyphicon
+											name="comment"
+											style={{marginLeft: 3}}
+											/>
+									</Popover>
+								) : null}
 							</span>
 						</li>
 					</ul>
