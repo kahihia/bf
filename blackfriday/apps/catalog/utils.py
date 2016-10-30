@@ -9,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 
 def csv_dict_reader(f):
     reader = DictReader(StringIO(f.read().decode('utf-8')), delimiter=';', quotechar='"')
-    reader.fieldnames = list(map(str.lower, reader.fieldnames))
+    reader.fieldnames = list(map(lambda x: x.lower().strip(), reader.fieldnames))
     diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(reader.fieldnames)
     if diff:
         raise ValidationError('некорректный формат данных, отсутствуют колонки: {}'.format(','.join(diff)))
@@ -27,7 +27,7 @@ def xls_dict_reader(f, sheet_index=0):
         book = xlrd.open_workbook(file_contents=f.read())
         sheet = book.sheet_by_index(sheet_index)
         headers = dict(
-            (i, str.lower(sheet.cell_value(0, i))) for i in range(sheet.ncols) if sheet.cell_value(0, i)
+            (i, str.lower(sheet.cell_value(0, i)).strip()) for i in range(sheet.ncols) if sheet.cell_value(0, i)
         )
         diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(headers.values())
         if diff:
