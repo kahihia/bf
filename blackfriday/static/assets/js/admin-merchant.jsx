@@ -18,6 +18,7 @@ import MerchantEditPromoSelect from './admin/advertisers/merchant-edit-promo-sel
 import MerchantLogoCategoriesSelect from './admin/advertisers/merchant-logo-categories-select.jsx';
 import MerchantBannerList from './admin/advertisers/merchant-banner-list.jsx';
 import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
+import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 (function () {
 	'use strict';
@@ -362,6 +363,127 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 			return categoriesAvailable;
 		},
 
+		validateMerchantData() {
+			const {data} = this.state;
+			const required = [
+				'name',
+				'url',
+				'description',
+				'image'
+			];
+			const result = [];
+
+			_.forEach(required, name => {
+				if (!data[name]) {
+					result.push(name);
+				}
+			});
+
+			return {
+				name: 'data',
+				data: result
+			};
+		},
+
+		validateMerchantLogoCategories() {
+			const {
+				limits,
+				logoCategories
+			} = this.state;
+			const result = [];
+
+			if (limits.logo_categories) {
+				if (limits.logo_categories !== logoCategories.length) {
+					result.push({
+						name: 'logo_categories',
+						value: limits.logo_categories - logoCategories.length
+					});
+				}
+			}
+
+			return {
+				name: 'logo_categories',
+				data: result
+			};
+		},
+
+		validateMerchantBanners() {
+			const {
+				limits,
+				banners
+			} = this.state;
+			const result = [];
+
+			let limitCount = 0;
+			const limitNames = [
+				'banners',
+				'superbanners',
+				'vertical_banners'
+			];
+			limitNames.forEach(name => {
+				if (!limits[name]) {
+					return;
+				}
+				limitCount += limits[name];
+			});
+
+			const doubleLimitNames = [
+				'category_backgrounds',
+				'main_backgrounds'
+			];
+			doubleLimitNames.forEach(name => {
+				if (!limits[name]) {
+					return;
+				}
+				limitCount += (limits[name] * 2);
+			});
+
+			if (limitCount !== banners.length) {
+				result.push({
+					name: 'banners',
+					value: limitCount
+				});
+			}
+
+			return {
+				name: 'banners',
+				data: result
+			};
+		},
+
+		validateMerchantProducts() {
+			const {
+				limits,
+				products
+			} = this.state;
+			const result = [];
+
+			if (limits.products) {
+				if (products.length < limits.products) {
+					result.push({
+						name: 'products',
+						value: limits.products - products.length
+					});
+				}
+			}
+
+			return {
+				name: 'products',
+				data: result
+			};
+		},
+
+		handleClickFakeSave(cb) {
+			const result = [];
+
+			result.push(this.validateMerchantData());
+			result.push(this.validateMerchantLogoCategories());
+			result.push(this.validateMerchantBanners());
+			result.push(this.validateMerchantProducts());
+
+			cb(result);
+		},
+
 		render() {
 			const {
 				data,
@@ -502,6 +624,8 @@ import MerchantProductList from './admin/advertisers/merchant-product-list.jsx';
 							merchantId
 						}}
 						/>
+
+					<MerchantFakeSave onClickSave={this.handleClickFakeSave}/>
 				</div>
 			);
 		}
