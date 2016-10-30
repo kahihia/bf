@@ -190,20 +190,21 @@ window.DATA = {
         speed: 3000
     },
     headerMenu: [
-        {name: 'Российские товары', url: '/russian-goods'},
-        {name: 'Все акции', url: '/actions'},
-        {name: 'Партнеры', url: '/partners'}
+        {name: 'Российские товары', url: '/russian-goods/'},
+        {name: 'Supernova', url: '/supernova/'},
+        {name: 'Все акции', url: '/actions/'},
+        {name: 'Все товары', url: '/merchants/'}
     ],
     categories: [
         {% for item in categories %}
-        {id: {{ item.id }}, url: '/categories/{{ item.slug }}', name: '{{ item.name }}'},
+        {id: {{ item.id }}, url: '/categories/{{ item.slug }}/', name: '{{ item.name }}'},
         {% endfor %}
     ],
     footerCats: [
-        {name: 'Российские товары', url: '/russian-goods'},
-        {name: 'Все акции', url: '/actions'},
-        {name: 'Все участники', url: '/merchants'},
-        {name: 'Партнеры', url: '/partners'}
+        {name: 'Российские товары', url: '/russian-goods/'},
+        {name: 'Все акции', url: '/actions/'},
+        {name: 'Все участники', url: '/merchants/'},
+        {name: 'Партнеры', url: '/partners/'}
     ]
 };
 

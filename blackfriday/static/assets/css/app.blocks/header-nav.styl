@@ -51,18 +51,23 @@
 	font-size: 12px
 
 	.simple-menu
-		{}
+		&__item
+			display: inline-block
 
-		&__item:first-child
-			background-position: 50% 50%
-			background-repeat: no-repeat
-			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAAASCAYAAAB4p22AAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXNJREFUeNrsmC9PxDAYxnsExxI8hvsMU4cCMzWDmRkCRy7BzF/CcQJ/hoScwgwzc+bUGfgCk+hh0Ij58ZS8wCCMLmmXtNv7JL90/bM07Z683dvR3lUloDE4AyHwQQ42IAVFuRA6SoglwbJUI5hBGuEGxH/0P4AZzFBozCHfPQQvZDqWpdqhiBA39MfUr6MlGYGjggNmCBVjQgNmGHdqBi9IQPFRsrTM4CvG+A6sI6GjqL9m8IIJuAdvVE66MEOuGJM7sFVDOIqm4BzsUzk1PcEuZQ1H/4zZWL9N5XYImcqpom4kMqSUNYiGbCLl09QKrRV1I5FBpn4z8Nx0z8DfwQrd1SLCulY3d89QVRVvM+srMrB0fvLn4gDFBYioKQOrciFe2QzDkzTCvFb/fL528Z6BpaeoZRubgdU3M3hBBB6JiLfth7KWbb35Z7gEx64vtiOtfh0NWa3NKbVLLWVE+DbDkyi3J+yB4aaWtw3PrB7pXYABAHFNT9qCBwxUAAAAAElFTkSuQmCC")
+			&:first-child
+				display: block
+				background-position: 50% 50%
+				background-repeat: no-repeat
+				background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAAASCAYAAAB4p22AAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXNJREFUeNrsmC9PxDAYxnsExxI8hvsMU4cCMzWDmRkCRy7BzF/CcQJ/hoScwgwzc+bUGfgCk+hh0Ij58ZS8wCCMLmmXtNv7JL90/bM07Z683dvR3lUloDE4AyHwQQ42IAVFuRA6SoglwbJUI5hBGuEGxH/0P4AZzFBozCHfPQQvZDqWpdqhiBA39MfUr6MlGYGjggNmCBVjQgNmGHdqBi9IQPFRsrTM4CvG+A6sI6GjqL9m8IIJuAdvVE66MEOuGJM7sFVDOIqm4BzsUzk1PcEuZQ1H/4zZWL9N5XYImcqpom4kMqSUNYiGbCLl09QKrRV1I5FBpn4z8Nx0z8DfwQrd1SLCulY3d89QVRVvM+srMrB0fvLn4gDFBYioKQOrciFe2QzDkzTCvFb/fL528Z6BpaeoZRubgdU3M3hBBB6JiLfth7KWbb35Z7gEx64vtiOtfh0NWa3NKbVLLWVE+DbDkyi3J+yB4aaWtw3PrB7pXYABAHFNT9qCBwxUAAAAAElFTkSuQmCC")
+
+			&:nth-child(2)
+				display: block
 
 		&__link
 			text-transform: uppercase
 			font-weight: bold
 			display: inline-block
-			padding: 2px 0
+			padding: 2px 5px
 
 .header-cats
 	padding-top: 5px
