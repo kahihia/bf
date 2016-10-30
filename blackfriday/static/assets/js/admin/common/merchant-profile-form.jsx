@@ -18,13 +18,14 @@ class MerchantProfileForm extends Form {
 		const isAdvertiser = hasRole('advertiser');
 		const isSpecialAdvertiser = ADVERTISER_INNER || ADVERTISER_IS_SUPERNOVA;
 		const innerOptions = _.union(
-			[{id: '', name: '- нет -'}],
-			_.map(ADVERTISER_INNER_VALUES, inner => {
-				return {
-					id: inner,
-					name: inner
-				};
-			})
+			[{
+				id: '',
+				name: '- нет -'
+			}],
+			_.map(ADVERTISER_INNER_VALUES, inner => ({
+				id: inner,
+				name: inner
+			}))
 		);
 
 		this.untouchableFields = ['name', 'contactName', 'contactPhone', 'inner', 'isSupernova'];
@@ -181,6 +182,7 @@ class MerchantProfileForm extends Form {
 
 		xhr({
 			url: `/api/advertisers/${this.props.userId}/`,
+			method: 'GET',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
 			},
@@ -311,6 +313,45 @@ class MerchantProfileForm extends Form {
 		});
 	}
 
+	requestUserRegistrationProfile() {
+		if (!this.validate(true)) {
+			return;
+		}
+
+		this.setState({isLoading: true});
+
+		const fields = this.state.fields;
+		const json = {
+			name: fields.name.value,
+			profile: this.serialize()
+		};
+
+		if (json.profile.inner === '') {
+			json.profile.inner = null;
+		}
+
+		xhr({
+			url: `/api/registration/?${this.props.token}`,
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			if (!err && resp.statusCode === 200) {
+				if (this.props.onSubmit) {
+					this.props.onSubmit(data);
+				}
+			} else if (resp.statusCode === 400) {
+				this.processErrors(data);
+			} else {
+				toastr.error('Не удалось обновить реквизиты рекламодателя');
+			}
+		});
+	}
+
 	handleChangeInner(value) {
 		this.setState(prevState => {
 			prevState.fields.inner.value = value;
@@ -368,7 +409,9 @@ class MerchantProfileForm extends Form {
 	handleClickSubmit(e) {
 		e.preventDefault();
 
-		if (this.props.isNew || this.state.profileId === '') {
+		if (this.props.token) {
+			this.requestUserRegistrationProfile();
+		} else if (this.props.isNew || this.state.profileId === '') {
 			this.requestProfileUserCreate();
 		} else {
 			this.requestProfileUserSave();
@@ -461,6 +504,7 @@ MerchantProfileForm.propTypes = {
 		React.PropTypes.number
 	]).isRequired,
 	userName: React.PropTypes.string,
+	token: React.PropTypes.string,
 	isNew: React.PropTypes.bool
 };
 MerchantProfileForm.defaultProps = {

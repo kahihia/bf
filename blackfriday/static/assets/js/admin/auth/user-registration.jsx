@@ -8,13 +8,15 @@ const UserRegistration = React.createClass({
 	getInitialState() {
 		return {
 			step: 1,
-			userId: null
+			userId: null,
+			token: null
 		};
 	},
 
 	handleSubmitRegistration(user) {
 		this.setState({
 			userId: user.id,
+			token: user.token,
 			step: 2
 		});
 	},
@@ -24,7 +26,7 @@ const UserRegistration = React.createClass({
 	},
 
 	render() {
-		const {step, userId} = this.state;
+		const {step, userId, token} = this.state;
 
 		return (
 			<div className="">
@@ -41,6 +43,7 @@ const UserRegistration = React.createClass({
 				{step === 2 ? (
 					<MerchantProfileForm
 						userId={userId}
+						token={token}
 						onSubmit={this.handleSubmitMerchantProfile}
 						isNew
 						/>

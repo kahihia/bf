@@ -75,45 +75,24 @@ class RegistrationForm extends Form {
 			this.setState({isLoading: false});
 			recaptchaReset();
 
-			if (data) {
-				switch (resp.statusCode) {
-					case 201: {
-						toastr.success('Вы успешно зарегистрированы');
-						this.requestVerification(data.id);
-						this.resetForm();
+			switch (resp.statusCode) {
+				case 201: {
+					toastr.success('Вы успешно зарегистрированы');
+					this.resetForm();
 
-						if (this.props.onSubmit) {
-							this.props.onSubmit(data);
-						}
-						break;
+					if (this.props.onSubmit) {
+						this.props.onSubmit(data);
 					}
-					case 400: {
-						this.processErrors(data);
-						break;
-					}
-					default: {
-						toastr.error('Не удалось зарегистрироваться');
-						break;
-					}
+					break;
 				}
-
-				return;
-			}
-
-			toastr.error('Не удалось зарегистрироваться');
-		});
-	}
-
-	requestVerification(userId) {
-		xhr({
-			url: `/api/users/${userId}/verification/`,
-			method: 'POST',
-			headers: {
-				'X-CSRFToken': TOKEN.csrftoken
-			}
-		}, err => {
-			if (err) {
-				toastr.error('Не удалось отправить письмо верификации');
+				case 400: {
+					this.processErrors(data);
+					break;
+				}
+				default: {
+					toastr.error('Не удалось зарегистрироваться');
+					break;
+				}
 			}
 		});
 	}
