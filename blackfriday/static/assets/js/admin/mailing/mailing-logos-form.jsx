@@ -7,20 +7,11 @@ import {TOKEN} from '../const.js';
 import Form from '../components/form.jsx';
 import ImagesUpload from '../common/images-upload.jsx';
 import Checkbox from '../components/checkbox.jsx';
+import TextareaRich from '../components/textarea-rich.jsx';
 
 class MailingLogosForm extends Form {
 	constructor(props) {
 		super(props);
-		const placeholder =
-			'<h3>Посетите все распродажи за один день, не выходя из дома!</h3>\n' +
-			'<p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном сайте.</p>\n' +
-			'<p style="line-height: 1.4;">\n' +
-			'Только 24 и 25 ноября 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -\n' +
-			'<span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>\n' +
-			'</p>\n' +
-			'<p>\n' +
-			'<b>Проведите лучшую пятницу года с пользой!</b>\n' +
-			'</p>';
 
 		this.state = {
 			isLoading: false,
@@ -54,7 +45,6 @@ class MailingLogosForm extends Form {
 				topText: {
 					label: 'HTML',
 					type: 'textarea',
-					placeholder: placeholder,
 					value: '',
 					required: false
 				},
@@ -93,6 +83,7 @@ class MailingLogosForm extends Form {
 		this.handleClickRemoveMiddleBanner = this.handleClickRemoveMiddleBanner.bind(this);
 		this.handleChangeIncludeAdmitad = this.handleChangeIncludeAdmitad.bind(this);
 		this.handleChangeLinksToMain = this.handleChangeLinksToMain.bind(this);
+		this.handleChangeTopText = this.handleChangeTopText.bind(this);
 	}
 
 	reformatData(data) {
@@ -206,6 +197,13 @@ class MailingLogosForm extends Form {
 		});
 	}
 
+	handleChangeTopText(e) {
+		this.setState(prevState => {
+			prevState.fields.topText.value = e.target.value;
+			return prevState;
+		});
+	}
+
 	handleClickSubmit(e) {
 		e.preventDefault();
 		this.requestPostMailingData();
@@ -262,7 +260,10 @@ class MailingLogosForm extends Form {
 
 				<h3>Текст</h3>
 
-				{this.buildRow('topText')}
+				<TextareaRich
+					value={this.state.fields.topText.value}
+					onChange={this.handleChangeTopText}
+					/>
 
 				<h3>Средний баннер</h3>
 
