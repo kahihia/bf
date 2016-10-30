@@ -1,6 +1,6 @@
 {% extends 'mailing/messages/base_mail.html' %}
 
 {% block content %}
-    <p>Вы зарегистрировались на сайте RealBlackFriday.ru. Чтобы участвовать в Настоящей черной пятнице, оплатите счёт и загрузите рекламные материалы до 20.11.2016.</p>
-    <p>Для оплаты счёта зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}">личный кабинет</a>.</p>
+    Вы зарегистрировались на сайте RealBlackFriday.ru. Чтобы участвовать в Настоящей Черной Пятнице, оплатите счёт и загрузите рекламные материалы до 20.11.2016.<br>
+    Для оплаты счёта зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}" target="_blank">личный кабинет</a>.
 {% endblock %}

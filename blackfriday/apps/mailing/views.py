@@ -20,3 +20,11 @@ class GoToMailingView(LoginRequiredMixin, RolePermissionMixin, RedirectView):
 
     def get_redirect_url(self):
         return reverse('mailing:logos')
+
+
+class MailingPreviewView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    allowed_roles = ['admin']
+
+    def get_template_names(self):
+        message_type = self.kwargs.get('message_type')
+        return 'mailing/messages/{}_mail.html'.format(message_type)

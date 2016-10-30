@@ -1,7 +1,7 @@
 {% extends 'mailing/messages/base_mail.html' %}
 
 {% block content %}
-    <p>Вы загрузили рекламные материалы для магазина {{ merchant.name }} на RealBlackFriday.ru. Магазин отправлен на модерацию.</p>
-    <p>Проверка займёт 1-2 дня. После этого мы обязательно пришлём письмо с её результатами.</p>
-    <p>Для управления магазином зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}">личный кабинет</a>.</p>
+    Вы загрузили рекламные материалы для магазина {{ merchant.name }} на RealBlackFriday.ru. Магазин отправлен на модерацию.<br>
+    Проверка займёт 1-2 дня. После этого мы обязательно пришлём письмо с её результатами.<br>
+    Для управления магазином зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}" target="_blank">личный кабинет</a>.
 {% endblock %}

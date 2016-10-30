@@ -1,9 +1,9 @@
 {% extends 'mailing/messages/base_mail.html' %}
 
 {% block content %}
-    <p>Ваш магазин {{ merchant.name }} не прошёл модерацию и не был опубликован на realblackfriday.ru</p>
-    <p>Причина: {{ merchant.moderation_comment }}</p>
-    <p></p>
-    <p>Чтобы участвовать в Настоящей черной пятнице, исправьте ошибку до 24 ноября и снова отправьте магазин на модерацию.</p>
-    <p>Для управления магазином зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}">личный кабинет</a>.</p>
+    Ваш магазин {{ merchant.name }} не прошёл модерацию и не был опубликован на RealBlackFriday.ru.<br>
+    Причина: {{ merchant.moderation_comment }}<br>
+
+    Чтобы участвовать в Настоящей черной пятнице, исправьте ошибку до 24 ноября и снова отправьте магазин на модерацию.<br>
+    Для управления магазином зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}" target="_blank">личный кабинет</a>.
 {% endblock %}
