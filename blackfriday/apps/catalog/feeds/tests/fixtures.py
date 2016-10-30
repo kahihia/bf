@@ -82,6 +82,47 @@ FAIL_DATA = {
 }
 
 
+FAIL_DATA_NO_PRICES = {
+    'input': {
+        "_id": 12,
+        "category": "correct_category_name",
+        "name": "name",
+        "image": "http://image.com",
+        "price": None,
+        "start_price": None,
+        "old_price": None,
+        "discount": None,
+        "country": "Country",
+        "brand": "Brand",
+        "url": "http://product_url--utm_source--utm_medium--utm_campaign",
+        "currency": "rur"
+    },
+    'output': (
+        {
+            "_id": 12,
+            "category": "correct_category_name",
+            "name": "name",
+            "image": "http://image.com",
+            "price": None,
+            "start_price": None,
+            "old_price": None,
+            "discount": None,
+            "country": "country",
+            "brand": "Brand",
+            "url": "http://product_url--utm_source--utm_medium--utm_campaign",
+            "currency": "rur"
+        },
+        [
+            {'field': 'price', 'message': 'Укажите хотя бы одну цену'},
+            {'field': 'old_price', 'message': 'Укажите хотя бы одну цену'},
+            {'field': 'start_price', 'message': 'Укажите хотя бы одну цену'},
+            {'field': 'discount', 'message': 'Укажите хотя бы одну цену'},
+        ],
+        []
+    )
+}
+
+
 @pytest.fixture
 def fake_image_response():
     fake_response = Response()

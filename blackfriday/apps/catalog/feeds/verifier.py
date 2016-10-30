@@ -74,25 +74,30 @@ class ProductRow(Row):
             validators=(Required(), Length(rule=255))),
         Grouped(
             columns=(
+                Grouped(
+                    columns=(
+                        Column(
+                            'old_price', pipes=(float, int),
+                            validators=(IsNumeric(),)),
+                        Column(
+                            'price', pipes=(float, int),
+                            validators=(IsNumeric(),)),
+                    ),
+                    validators=(
+                        GenericValidator(message='Оба поля должны быть валидны', rule=together),
+                        GenericValidator(
+                            message='Старая цена должна быть больше новой', rule=old_price_gte_price, is_warning=True)
+                    ),
+                ),
                 Column(
-                    'old_price', pipes=(float, int),
-                    validators=(IsNumeric(),)),
+                    'discount', pipes=(float, int),
+                    validators=(IsNumeric(), MaxValue(rule=100),)),
                 Column(
-                    'price', pipes=(float, int),
+                    'start_price', pipes=(float, int),
                     validators=(IsNumeric(),)),
             ),
-            validators=(
-                GenericValidator(message='Оба поля должны быть валидны', rule=together),
-                GenericValidator(
-                    message='Старая цена должна быть больше новой', rule=old_price_gte_price, is_warning=True)
-            ),
+            validators=[GenericValidator(message='Укажите хотя бы одну цену', rule=lambda **data: any(data.values()))]
         ),
-        Column(
-            'discount', pipes=(float, int),
-            validators=(IsNumeric(), MaxValue(rule=100),)),
-        Column(
-            'start_price', pipes=(float, int),
-            validators=(IsNumeric(),)),
         Column(
             'currency', pipes=(str, str.lower),
             validators=(Required(), Choices(rule=settings.CURRENCY_IDS,),)),

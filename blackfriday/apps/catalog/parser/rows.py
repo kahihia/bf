@@ -67,13 +67,18 @@ class Grouped(object):
         warnings = []
         cleaned_data = {}
         for col in self.columns:
-            data, _errors, warnings = col.validate(row, context=context)
+            data, _errors, _warnings = col.validate(row, context=context)
             errors.extend(_errors)
-            warnings.extend(warnings)
+            warnings.extend(_warnings)
             cleaned_data.update(data)
         for validator in self.validators:
             if validator(**cleaned_data, context=context) is False:
-                result = [self.error_output(col.field, validator.message) for col in self.columns]
+                result = []
+                for col in self.columns:
+                    if isinstance(col, Column):
+                        result.append(self.error_output(col.field, validator.message))
+                    else:
+                        result.extend([self.error_output(subcol.field, validator.message) for subcol in col.columns])
                 warnings.extend(result) if validator.is_warning else errors.extend(result)
 
         return cleaned_data, errors, warnings
