@@ -14,6 +14,9 @@ export function resolveImgPath(path, type) {
 }
 
 export function hasRole(role) {
+	if (!ENV.userRoles) {
+		return false;
+	}
 	return (ENV.userRoles.indexOf(role) !== -1);
 }
 
