@@ -12,7 +12,7 @@ from apps.users.models import User
 
 from apps.mediafiles.api.serializers import ImageSerializer
 from apps.promo.api.serializers import PromoTinySerializer
-from .validators import html_validator
+from libs.api.validators import html_validator
 
 
 class ProfileSerializer(serializers.ModelSerializer):

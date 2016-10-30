@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from libs.api.validators import html_validator
 
 from apps.landing.models import LandingLogo
 from apps.mediafiles.models import Image
@@ -23,7 +24,7 @@ class LogoMailingSerializer(serializers.Serializer):
     top_banner = BannerSerializer(required=False)
     middle_banner = BannerSerializer(required=False)
 
-    top_text = serializers.CharField(required=False)
+    top_text = serializers.CharField(required=False, validators=[html_validator])
     bottom_text = ButtonSerializer(required=False)
 
     include_admitad = serializers.BooleanField(write_only=True, required=False)

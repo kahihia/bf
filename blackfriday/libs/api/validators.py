@@ -5,7 +5,8 @@ from rest_framework.exceptions import ValidationError
 
 
 ALLOWED_TAGS = {
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'blockquote', 'ul', 'li', 'b', 'i', 'u', 'ol', 'p', 'a', 'body', 'html'
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'blockquote', 'ul', 'li', 'b', 'i', 'u', 'ol', 'p', 'a', 'body', 'html',
+    'div', 'span'
 }
 
 
