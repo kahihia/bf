@@ -77,3 +77,16 @@ export function isUTM(value) {
 
 	return false;
 }
+
+export function getCssClassForModerationStatus(status) {
+	switch (status) {
+		case 1:
+			return 'text-warning';
+		case 2:
+			return 'text-success';
+		case 3:
+			return 'text-danger';
+		default:
+			return 'text-muted';
+	}
+}
