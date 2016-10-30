@@ -7,7 +7,9 @@
 <div id="card-description"></div>
 <div id="special-offers"></div>
 
+{% if merchant.products.all %}
 <div class="title-2">Лучшие товары</div>
+{% endif %}
 <div id="goods" class="card-product-list"></div>
 
 {% endblock content %}
@@ -50,11 +52,11 @@ window.DATA.goods = {
     ]
 };
 window.DATA.cardDescription = {
-    name: '{{ merchant.name|escapejs }}',
-    url: '{{ merchant.url|escapejs }}',
-    description: '{{ merchant.description|escapejs }}',
-    image: '{{ merchant.image.image.url }}',
-    promocode: '{{ merchant.promocode }}',
+    name: '{{ merchant.name|default:''|escapejs }}',
+    url: '{{ merchant.url|default:''|escapejs }}',
+    description: '{{ merchant.description|default:''|escapejs }}',
+    image: '{{ merchant.image.image.url|default:'' }}',
+    promocode: '{{ merchant.promocode|default:'' }}',
     linkedPartners: [
         {% for item in partners %}
         {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.url }}'},

@@ -1,8 +1,11 @@
 /* eslint react/no-danger: 0 */
 
 import React from 'react';
+import b from 'b_';
 import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
+
+const className = 'card-description';
 
 const CardDescription = React.createClass({
 	propTypes: {
@@ -16,8 +19,14 @@ const CardDescription = React.createClass({
 
 	getInitialState() {
 		return {
-			isDescCollapsed: true
+			isDescCollapsed: false
 		};
+	},
+
+	componentDidMount() {
+		if (this.description.offsetHeight > 100) {
+			this.setState({isDescCollapsed: true});
+		}
 	},
 
 	handleClickDesc() {
@@ -37,9 +46,13 @@ const CardDescription = React.createClass({
 			url
 		} = this.props;
 
+		const descriptionRef = node => {
+			this.description = node;
+		};
+
 		return (
-			<div className="card-description">
-				<h1 className="card-description__title">
+			<div className={className}>
+				<h1 className={b(className, 'title')}>
 					<Link
 						href={url}
 						isExternal
@@ -48,15 +61,15 @@ const CardDescription = React.createClass({
 					</Link>
 				</h1>
 
-				<div className="card-description__content">
+				<div className={b(className, 'content')}>
 					<img
 						src={resolveImgPath(image)}
 						alt=""
-						className="card-description__logo"
+						className={b(className, 'logo')}
 						/>
 
 					{promocode ? (
-						<p className="card-description__promocode">
+						<p className={b(className, 'promocode')}>
 							{'Для предоставления скидки используйте промо-код: '}
 
 							<code>
@@ -69,10 +82,11 @@ const CardDescription = React.createClass({
 						className={`card-description__desc${this.state.isDescCollapsed ? ' collapsed' : ''}`}
 						dangerouslySetInnerHTML={{__html: description}}
 						onClick={this.handleClickDesc}
+						ref={descriptionRef}
 						/>
 
 					{linkedPartners.length ? (
-						<div className="paysys card-description__paysys">
+						<div className={'paysys ' + b(className, 'paysys')}>
 							<div className="paysys__label">
 								{'Этот магазин использует:'}
 							</div>

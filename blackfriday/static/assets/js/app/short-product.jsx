@@ -1,9 +1,16 @@
 /* global window */
+/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import formatThousands from 'format-thousands';
+import b from 'b_';
 import {resolveImgPath} from './utils.js';
+import Price from 'react-price';
 import Link from './link.jsx';
+
+const CURRENCY = 'руб.';
+
+const className = 'short-product';
 
 const ShortProduct = React.createClass({
 	propTypes: {
@@ -25,40 +32,22 @@ const ShortProduct = React.createClass({
 
 	render() {
 		const {data} = this.props;
-
-		let priceOld = data.oldPrice;
-		let priceOldCur = false;
-		if (
-			priceOld &&
-			!/[A-Za-zА-Яа-я]/gi.test(priceOld)
-		) {
-			priceOld = String(priceOld).replace(/\d+/gi, match => {
-				return formatThousands(match);
-			});
-			priceOldCur = true;
-		}
-
-		let priceNew = data.price;
-		let priceNewCur = false;
-		if (
-			priceNew &&
-			!/[A-Za-zА-Яа-я]/gi.test(priceNew)
-		) {
-			priceNew = String(priceNew).replace(/\d+/gi, match => {
-				return formatThousands(match);
-			});
-			priceNewCur = true;
-		}
+		const {
+			discount,
+			oldPrice,
+			price,
+			startPrice
+		} = data;
 
 		return (
-			<div className="short-product">
+			<div className={className}>
 				<Link
-					className="short-product__link"
+					className={b(className, 'link')}
 					href={data.url}
 					onClick={this.handleClick}
 					isExternal
 					>
-					<div className="short-product__preview">
+					<div className={b(className, 'preview')}>
 						<img
 							src={data.image}
 							alt=""
@@ -66,80 +55,35 @@ const ShortProduct = React.createClass({
 							/>
 					</div>
 
-					<div className="short-product__name">
+					<div className={b(className, 'name')}>
 						{data.name}
 					</div>
 
 					{data.category ? (
-						<div className="short-product__cat">
+						<div className={b(className, 'cat')}>
 							{data.category.name}
 						</div>
 					) : null}
 
-					<div className="short-product__price">
-						<del className="price price_old">
-							{data.startPrice ? (
-								<span className="price__prefix">
-									{'от '}
-								</span>
-							) : null}
-
-							<span className="price__cost">
-								{priceOld}
-							</span>
-
-							{priceOldCur ? (
-								<span className="price__currency">
-									{priceOld ? 'руб.' : ''}
-								</span>
-							) : null}
-						</del>
-
-						{data.discount ? (
-							<div className="price price_theme_normal">
-								<span className="price__prefix">
-									{'скидка '}
-								</span>
-
-								<span className="price__cost">
-									{data.discount}
-								</span>
-
-								<span className="price__currency">
-									{'%'}
-								</span>
-							</div>
-						) : (
-							<div className="price price_theme_normal">
-								{data.startPrice ? (
-									<span className="price__prefix">
-										{'от '}
-									</span>
-								) : null}
-
-								<span className="price__cost">
-									{priceNew}
-								</span>
-
-								{priceNewCur ? (
-									<span className="price__currency">
-										{priceNew ? 'руб.' : ''}
-									</span>
-								) : null}
-							</div>
-						)}
-					</div>
+					<ShortProductPrice
+						{...{
+							discount,
+							oldPrice,
+							price,
+							startPrice
+						}}
+						/>
 				</Link>
 
 				{data.merchant_url ? (
 					<a
-						className="short-product__shop"
+						className={b(className, 'shop')}
 						href={data.merchant_url}
 						>
 						<img
 							src={resolveImgPath(data.logo)}
 							alt=""
-							className="short-product__logo"
+							className={b(className, 'logo')}
 							/>
 					</a>
 				) : null}
@@ -149,3 +93,62 @@ const ShortProduct = React.createClass({
 });
 
 export default ShortProduct;
+
+class ShortProductPrice extends React.Component {
+	render() {
+		const {
+			discount,
+			oldPrice,
+			price,
+			startPrice
+		} = this.props;
+
+		return (
+			<div className={b(className, 'price')}>
+				{oldPrice ? (
+					<Price
+						cost={formatThousands(oldPrice)}
+						currency={CURRENCY}
+						type="old"
+						/>
+				) : (
+					<del className="price price_old"/>
+				)}
+
+				{price ? (
+					<Price
+						cost={formatThousands(price)}
+						currency={CURRENCY}
+						className="price_theme_normal"
+						/>
+				) : null}
+
+				{discount ? (
+					<Price
+						cost={discount}
+						currency="%"
+						className="price_theme_normal"
+						prefix="скидка "
+						/>
+				) : null}
+
+				{startPrice ? (
+					<Price
+						cost={formatThousands(startPrice)}
+						currency={CURRENCY}
+						className="price_theme_normal"
+						prefix="от "
+						/>
+				) : null}
+			</div>
+		);
+	}
+}
+ShortProductPrice.propTypes = {
+	discount: React.PropTypes.number,
+	oldPrice: React.PropTypes.number,
+	price: React.PropTypes.number,
+	startPrice: React.PropTypes.number
+};
+ShortProductPrice.defaultProps = {
+};
