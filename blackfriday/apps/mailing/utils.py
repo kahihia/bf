@@ -6,6 +6,10 @@ from django.template.loader import render_to_string
 
 
 def send_html_mail(user, subject, template, context):
+    context.update({
+        'SITE_URL': settings.SITE_URL
+    })
+
     send_mail(
         subject=subject,
         recipient_list=[user.email],
