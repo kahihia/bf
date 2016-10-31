@@ -72,7 +72,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        send_merchant_creation_mail(instance)
+        if instance.receives_notifications:
+            send_merchant_creation_mail(instance)
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -125,11 +126,14 @@ class MerchantViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
-            send_moderation_success_mail(instance)
+            if instance.receives_notifications:
+                send_moderation_success_mail(instance)
         elif instance.moderation_status == ModerationStatus.rejected:
-            send_moderation_fail_mail(instance)
+            if instance.receives_notifications:
+                send_moderation_fail_mail(instance)
         elif instance.moderation_status == ModerationStatus.waiting:
-            send_moderation_request_mail(instance)
+            if instance.receives_notifications:
+                send_moderation_request_mail(instance)
 
         return Response(serializer.data)
 

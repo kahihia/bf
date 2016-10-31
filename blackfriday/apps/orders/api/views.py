@@ -46,7 +46,8 @@ class InvoiceViewSet(
 
     def perform_create(self, serializer):
         instance = serializer.save()
-        send_invoice_creation_mail(instance)
+        if instance.merchant.receives_notifications:
+            send_invoice_creation_mail(instance)
 
     @list_route(methods=['post'])
     def statuses(self, request, *args, **kwargs):
