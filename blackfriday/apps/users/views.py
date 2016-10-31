@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView, RedirectView
 from django.core.urlresolvers import reverse
 
+from apps.mailing.utils import send_advertiser_registration_mail
+
 from .models import Token, TokenType
 from .mixins import RolePermissionMixin
 
@@ -35,6 +37,7 @@ class VerificationView(RedirectByRoleMixin, RedirectView):
         if token and not token.is_expired:
             token.user.activate()
             Token.invalidate(token.user, type=TokenType.VERIFICATION)
+            send_advertiser_registration_mail(token.user)
             user = authenticate(user=token.user)
             if user:
                 login(self.request, user)
