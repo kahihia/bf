@@ -20,20 +20,23 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
 
-    inner = serializers.CharField(allow_null=True)
-    is_supernova = serializers.BooleanField()
-
     class Meta:
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis',
                   'inner', 'is_supernova')
+        extra_kwargs = {}
 
-    def get_inner(self, obj):
-        return obj.inner
+    def get_extra_kwargs(self):
+        kwargs = super().get_extra_kwargs()
+        request = self.context.get('request')
+        if request and request.user and request.user.is_authenticated and request.user.role != 'admin':
+            kwargs['inner'] = kwargs.get('inner') or {}
+            kwargs['inner']['read_only'] = True
+            kwargs['is_supernova'] = kwargs.get('is_supernova') or {}
+            kwargs['is_supernova']['read_only'] = True
 
-    def get_is_supernova(self, obj):
-        return obj.is_supernova
+        return kwargs
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
