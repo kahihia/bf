@@ -86,6 +86,33 @@ const AdvertiserInvoiceList = React.createClass({
 		});
 	},
 
+	requestPaymentCreate(invoiceId) {
+		xhr({
+			url: '/api/payments/',
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': TOKEN.csrftoken
+			},
+			json: {invoiceId}
+		}, (err, resp, data) => {
+			const {statusCode} = resp;
+
+			if (statusCode >= 200 && statusCode < 300) {
+				if (data.formUrl) {
+					window.location = data.formUrl;
+				}
+			} else if (statusCode === 400 && data.message) {
+				processErrors(data.message);
+			} else {
+				toastr.error('Не удалось создать счёт');
+			}
+		});
+	},
+
+	handleClickPay(invoiceId) {
+		this.requestPaymentCreate(invoiceId);
+	},
+
 	getInvoiceById(id) {
 		return _.find(this.state.invoices, {id});
 	},
@@ -109,23 +136,22 @@ const AdvertiserInvoiceList = React.createClass({
 
 		return (
 			<div>
-				{this.state.invoices.map(invoice => {
-					return (
-						<Invoice
-							key={invoice.id}
-							id={invoice.id}
-							merchant={invoice.merchant}
-							createdDatetime={invoice.createdDatetime}
-							promo={invoice.promo}
-							status={invoice.status}
-							options={invoice.options}
-							sum={invoice.sum}
-							onCancel={this.handleInvoiceCancel}
-							active={String(invoice.id) === this.state.activeInvoiceId}
-							expiredDate={invoice.expiredDate}
-							/>
-					);
-				})}
+				{this.state.invoices.map(invoice => (
+					<Invoice
+						key={invoice.id}
+						id={invoice.id}
+						merchant={invoice.merchant}
+						createdDatetime={invoice.createdDatetime}
+						promo={invoice.promo}
+						status={invoice.status}
+						options={invoice.options}
+						sum={invoice.sum}
+						onCancel={this.handleInvoiceCancel}
+						onClickPay={this.handleClickPay}
+						active={String(invoice.id) === this.state.activeInvoiceId}
+						expiredDate={invoice.expiredDate}
+						/>
+				))}
 
 				{listStatus ? statusBlock : null}
 			</div>
