@@ -76,7 +76,15 @@ class ProfileSerializer(serializers.ModelSerializer):
         if 'type' not in attrs:
             attrs['type'] = self.instance.type if self.instance else AdvertiserType.REGULAR
 
-        if attrs.get('type') == AdvertiserType.REGULAR and any(map(lambda x: x in ('', None), attrs.values())):
+        if (
+            attrs.get('type') == AdvertiserType.REGULAR and
+            any(
+                [
+                    value in ('', None)
+                    for key, value in attrs.items()
+                    if key not in ['kpp', 'head_name', 'head_appointment']
+                ])
+        ):
             raise ValidationError('Все поля должны быть ненулевыми')
 
         return attrs
