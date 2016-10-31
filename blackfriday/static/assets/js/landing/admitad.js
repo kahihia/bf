@@ -1,6 +1,17 @@
 /* global document, window */
 /* eslint camelcase: 0 */
 
+import Cookie from 'js-cookie';
+import parse from 'url-parse';
+
+(function (w) {
+	const admitadUid = parse(w.location.href, true).query.admitad_uid;
+
+	if (admitadUid) {
+		Cookie.set('admitad_uid', admitadUid, {expires: 90});
+	}
+})(window);
+
 export default function trackAdmitAd() {
 	(function (d, w) {
 		w._admitadPixel = {
@@ -10,7 +21,7 @@ export default function trackAdmitAd() {
 		};
 		w._admitadPositions = w._admitadPositions || [];
 		w._admitadPositions.push({
-			uid: '',
+			uid: Cookie.get('admitad_uid') || '',
 			order_id: '',
 			client_id: '',
 			tariff_code: '1',
