@@ -1,4 +1,5 @@
 import collections
+import itertools
 
 import operator
 from functools import reduce
@@ -9,6 +10,7 @@ from django.db.models import Q, Sum
 from django.core.urlresolvers import reverse
 
 from apps.orders.models import InvoiceStatus, InvoiceOption
+from apps.catalog.models import Category
 from apps.promo.models import Option
 from django.utils import timezone
 
@@ -173,6 +175,76 @@ class Merchant(models.Model):
         return {
             limit: reduce(operator.add, map(get_value, rules), 0)
             for limit, rules in settings.LIMITS_RULES.items()
+        }
+
+    @property
+    def unused_limits(self):
+        prefetched = Merchant.objects.prefetch_related('logo_categories').get(pk=self.pk)
+        banners = Banner.objects.prefetch_related('categories')
+        limits = self.limits
+        return {
+            'banner_on_main': len([b for b in banners if b.on_main]) == limits['banner_on_main'],
+            'banner_positions': (
+                len(
+                    [b for b in banners if b.type == BannerType.ACTION and b.categories.all()]
+                ) == limits['banner_positions']
+            ),
+            'banners': (
+                len(
+                    [b for b in banners if b.type == BannerType.ACTION]
+                ) == limits['banners']
+            ),
+            'categories': (
+                Category.objects.filter(
+                    banners__merchant=self, products__merchant=self).distinct().count() >= limits['categories']
+            ),
+            'category_backgrounds': (
+                len(
+                    [b for b in banners if b.type == BannerType.BG_LEFT]
+                ) == limits['category_backgrounds']
+            ),
+            'extra_banner_categories': (
+                len(
+                    {cat for cat in itertools.chain.from_iterable(
+                        [b.cats.all() for b in banners if b.type == BannerType.ACTION])}
+                ) == limits['extra_banner_categories']
+            ),
+            'logo_categories': (
+                len({cat.id for cat in prefetched.logo_categories.all()}) == limits['logo_categories']
+            ),
+            'main_backgrounds': (
+                len(
+                    [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main]
+                ) == limits['main_backgrounds']
+            ),
+            'superbanner_categories': (
+                len(
+                    {cat for cat in itertools.chain.from_iterable(
+                        [b.cats.all() for b in banners if b.type == BannerType.SUPER])}
+                ) == limits['superbanner_categories']
+            ),
+            'superbanner_in_mailing': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.SUPER and b.in_mailing])
+                ) == bool(limits['superbanner_in_mailing'])
+            ),
+            'superbanner_on_main': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.SUPER and b.on_main])
+                ) == bool(limits['superbanner_in_mailing'])
+            ),
+            'superbanners': (
+                len([b for b in banners if b.type == BannerType.SUPER]) == limits['superbanners']
+            ),
+            'teasers': (
+                len([p for p in prefetched.products.all() if p.is_teaser]) == limits['teasers']
+            ),
+            'teasers_on_main': (
+                len([p for p in prefetched.products.all() if p.is_teaser_on_main]) == limits['teasers']
+            ),
+            'vertical_banners': (
+                len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
+            ),
         }
 
     @property

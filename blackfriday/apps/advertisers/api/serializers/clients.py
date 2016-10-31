@@ -135,7 +135,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                         'tech_name': limit,
                         'value': value
                     }
-                    for limit, value in self.instance.limits.items() if limit != 'products' and value
+                    for limit, value in self.instance.unused_limits.items() if value
                 ]
                 requirements = {
                     'name': self.instance.name,
@@ -146,7 +146,7 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                     'limits': not unused_limits,
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
-                    ).count == self.instance.banners.count()
+                    ).count() == self.instance.banners.count()
                 }
                 deficit = [key for key, value in requirements.items() if not value]
 
