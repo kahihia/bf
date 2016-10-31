@@ -29,7 +29,7 @@ class Invoice(models.Model):
     expired_datetime = models.DateTimeField(default=get_default_expiration_date, verbose_name='Срок истечения')
     is_paid = models.BooleanField(default=False, verbose_name='Оплачено')
 
-    sum = models.IntegerField(default=0, verbose_name='Сумма')
+    sum = models.IntegerField(default=0, verbose_name='Сумма в рублях')
     discount = models.IntegerField(default=0, verbose_name='Скидка')
 
     merchant = models.ForeignKey('advertisers.Merchant', related_name='invoices', verbose_name='Магазин')
