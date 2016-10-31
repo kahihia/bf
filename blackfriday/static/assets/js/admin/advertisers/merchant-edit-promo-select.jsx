@@ -268,10 +268,12 @@ const MerchantEditPromoSelect = React.createClass({
 		} = this.state;
 
 		const availableOptions = this.getAvailableOptions();
+		const isPromosVisible = promos.length && !isCustomPromo;
+		const isOptionsVisible = availableOptions.length;
 
 		return (
 			<div>
-				{promos.length && !isCustomPromo ? (
+				{isPromosVisible ? (
 					<MerchantPromoSelect
 						{...{
 							activePromoId,
@@ -281,7 +283,7 @@ const MerchantEditPromoSelect = React.createClass({
 						/>
 				) : null}
 
-				{availableOptions.length ? (
+				{isOptionsVisible ? (
 					<div>
 						<h2>
 							{'Дополнительные опции'}
@@ -295,32 +297,38 @@ const MerchantEditPromoSelect = React.createClass({
 					</div>
 				) : null}
 
-				<div className="add-shop-footer">
-					<div className="add-shop-footer__help">
-						<p/>
-					</div>
-
-					<div className="add-shop-footer__calc">
-						<div className="add-shop-footer__label">
-							{'Итоговая сумма:'}
+				{isPromosVisible || isOptionsVisible ? (
+					<div className="add-shop-footer">
+						<div className="add-shop-footer__help">
+							<p/>
 						</div>
 
-						<div className="add-shop-footer__price">
-							<Price
-								cost={formatPrice(this.calculateSum())}
-								currency={'₽'}
-								/>
-						</div>
+						<div className="add-shop-footer__calc">
+							<div className="add-shop-footer__label">
+								{'Итоговая сумма:'}
+							</div>
 
-						<button
-							className="btn btn-primary"
-							type="button"
-							onClick={this.handleClickFinal}
-							>
-							{'Выставить счёт'}
-						</button>
+							<div className="add-shop-footer__price">
+								<Price
+									cost={formatPrice(this.calculateSum())}
+									currency={'₽'}
+									/>
+							</div>
+
+							<button
+								className="btn btn-primary"
+								type="button"
+								onClick={this.handleClickFinal}
+								>
+								{'Выставить счёт'}
+							</button>
+						</div>
 					</div>
-				</div>
+				) : (
+					<p className="lead text-center">
+						{'Обратитесь к менеджеру'}
+					</p>
+				)}
 			</div>
 		);
 	}

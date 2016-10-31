@@ -141,6 +141,7 @@ class MerchantProfileForm extends Form {
 			}
 		};
 
+		this.handleSpecialFields = this.handleSpecialFields.bind(this);
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 		this.handleChangeInner = this.handleChangeInner.bind(this);
 		this.handleChangeIsSupernova = this.handleChangeIsSupernova.bind(this);
@@ -176,6 +177,20 @@ class MerchantProfileForm extends Form {
 		}
 
 		this.requestProfileUser();
+	}
+
+	handleSpecialFields(profile) {
+		this.setState(prevState => {
+			if (!profile.inner && !profile.isSupernova) {
+				prevState.fields.inner.excluded = true;
+				prevState.fields.isSupernova.excluded = true;
+			} else if (profile.isSupernova) {
+				prevState.fields.inner.excluded = true;
+			} else {
+				prevState.fields.isSupernova.excluded = true;
+			}
+			return prevState;
+		});
 	}
 
 	// Get profile info
@@ -219,6 +234,7 @@ class MerchantProfileForm extends Form {
 								field.excluded = true;
 							}
 						});
+						this.handleSpecialFields(data.profile);
 					}
 
 					if (data.name) {
