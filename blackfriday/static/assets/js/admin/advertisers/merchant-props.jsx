@@ -60,7 +60,7 @@ class MerchantProps extends React.Component {
 					</span>
 
 					<span className="props__value">
-						<a href={`${getUrl('invoices')}#invoice${id}`}>
+						<a href={`${getUrl('invoices')}`}>
 							{PAYMENT_STATUS[paymentStatus]}
 						</a>
 					</span>

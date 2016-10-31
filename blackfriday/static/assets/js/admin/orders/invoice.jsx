@@ -6,7 +6,7 @@ import xhr from 'xhr';
 import Scroll from 'react-scroll';
 import b from 'b_';
 import {PAYMENT_STATUS} from '../const.js';
-import {formatPrice, processErrors} from '../utils.js';
+import {getUrl, formatPrice, processErrors} from '../utils.js';
 
 const Invoice = React.createClass({
 	propTypes: {
@@ -72,6 +72,7 @@ const Invoice = React.createClass({
 
 		const d = moment(createdDatetime).format('D MMMM YYYY');
 		const className = 'invoice-card';
+		const editUrl = `${getUrl('merchants')}${merchant.id}/`;
 
 		return (
 			<div className={b(className, {active: active})}>
@@ -118,7 +119,9 @@ const Invoice = React.createClass({
 							</span>
 
 							<span className="props__value">
-								{merchant.name}
+								<a href={`${editUrl}`}>
+									{merchant.name}
+								</a>
 							</span>
 						</li>
 
