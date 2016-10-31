@@ -253,6 +253,7 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
         model = Merchant
         extra_kwargs = {
             'description': {'validators': [html_validator]},
+            'slug': {'allow_blank': False},
         }
 
     def get_default_field_names(self, declared_fields, model_info):
