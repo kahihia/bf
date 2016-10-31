@@ -3,7 +3,7 @@
 import React from 'react';
 import Paged from './paged.jsx';
 import Link from './link.jsx';
-import {resolveImgPath} from './utils.js';
+import StickerSupernova from './sticker-supernova.jsx';
 
 class Banner extends React.Component {
 	render() {
@@ -17,7 +17,7 @@ class Banner extends React.Component {
 					isExternal
 					>
 					<img
-						src={resolveImgPath(data.banner_image)}
+						src={data.banner_image}
 						alt=""
 						className="special-offers__banner embed-responsive-item"
 						/>
@@ -29,13 +29,17 @@ class Banner extends React.Component {
 						href={data.merchant_url}
 						>
 						<img
-							src={resolveImgPath(data.merchant_logo)}
+							src={data.merchant_logo}
 							alt=""
 							className="special-offers__logo"
 							/>
 
 						{'К магазину'}
 					</a>
+				) : null}
+
+				{data.isSupernova ? (
+					<StickerSupernova size="lg"/>
 				) : null}
 			</div>
 		);

@@ -7,6 +7,7 @@ import b from 'b_';
 import {resolveImgPath} from './utils.js';
 import Price from 'react-price';
 import Link from './link.jsx';
+import StickerSupernova from './sticker-supernova.jsx';
 
 const CURRENCY = 'руб.';
 
@@ -86,6 +87,10 @@ const ShortProduct = React.createClass({
 							className={b(className, 'logo')}
 							/>
 					</a>
+				) : null}
+
+				{data.isSupernova ? (
+					<StickerSupernova size="sm"/>
 				) : null}
 			</div>
 		);
