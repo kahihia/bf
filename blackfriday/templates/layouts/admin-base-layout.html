@@ -215,15 +215,6 @@
         <div class="site-sidebar__footer">
             <footer class="site-footer">
                 <ul class="simple-menu">
-                    <li class="simple-menu__item">
-                        <a
-                            class="simple-menu__link"
-                            href="{% url 'users:logout' %}"
-                            >
-                            Выйти
-                        </a>
-                    </li>
-
                     {% if user.role == 'advertiser' %}
                     <li class="simple-menu__item">
                         <a
@@ -250,6 +241,18 @@
     </aside>
 
     <main class="site-content">
+        <div class="site-top-right-panel">
+            <ul class="simple-menu">
+                <li class="simple-menu__item">
+                    <a
+                        class="simple-menu__link"
+                        href="{% url 'users:logout' %}"
+                        >
+                        Выйти
+                    </a>
+                </li>
+            </ul>
+        </div>
 
         {% block content %}{% endblock %}
 
