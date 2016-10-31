@@ -17,6 +17,8 @@ class MerchantProfileForm extends Form {
 
 		const isAdvertiser = hasRole('advertiser');
 		const isSpecialAdvertiser = ADVERTISER_INNER || ADVERTISER_IS_SUPERNOVA;
+		const isTokenExists = Boolean(props.token);
+
 		const innerOptions = _.union(
 			[{
 				id: '',
@@ -58,13 +60,13 @@ class MerchantProfileForm extends Form {
 					type: 'select',
 					options: innerOptions,
 					required: false,
-					excluded: isAdvertiser
+					excluded: isAdvertiser || isTokenExists
 				},
 				isSupernova: {
 					text: '«Сверхновая»',
 					value: false,
 					type: 'checkbox',
-					excluded: isAdvertiser
+					excluded: isAdvertiser || isTokenExists
 				},
 				account: {
 					label: 'Расчётный счёт',
@@ -331,7 +333,7 @@ class MerchantProfileForm extends Form {
 		}
 
 		xhr({
-			url: `/api/registration/?${this.props.token}`,
+			url: `/api/registration/?token=${this.props.token}`,
 			method: 'POST',
 			headers: {
 				'X-CSRFToken': TOKEN.csrftoken
