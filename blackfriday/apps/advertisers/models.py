@@ -206,7 +206,7 @@ class Merchant(models.Model):
             'extra_banner_categories': (
                 len(
                     {cat for cat in itertools.chain.from_iterable(
-                        [b.cats.all() for b in banners if b.type == BannerType.ACTION])}
+                        [b.categories.all() for b in banners if b.type == BannerType.ACTION])}
                 ) == limits['extra_banner_categories']
             ),
             'logo_categories': (
@@ -220,7 +220,7 @@ class Merchant(models.Model):
             'superbanner_categories': (
                 len(
                     {cat for cat in itertools.chain.from_iterable(
-                        [b.cats.all() for b in banners if b.type == BannerType.SUPER])}
+                        [b.categories.all() for b in banners if b.type == BannerType.SUPER])}
                 ) == limits['superbanner_categories']
             ),
             'superbanner_in_mailing': (
