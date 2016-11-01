@@ -11,7 +11,7 @@ class PromoOptionInline(admin.TabularInline):
 
 @admin.register(Option)
 class OptionAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ['image']
 
 
 @admin.register(Promo)

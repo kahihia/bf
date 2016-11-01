@@ -33,7 +33,7 @@ class PromoOptionSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(queryset=Option.objects.all(), source='option')
 
     name = serializers.CharField(read_only=True, source='option.name')
-    image = serializers.ImageField(read_only=True, source='option.image')
+    image = serializers.CharField(read_only=True, source='option.image')
     is_boolean = serializers.BooleanField(read_only=True, source='option.is_boolean')
 
     class Meta:
