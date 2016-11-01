@@ -72,8 +72,15 @@ class AdvertiserProfile(models.Model):
 
     @property
     def is_valid(self):
-        return (self.type > 0 or
-                all(map(lambda field: field.value_from_object(self) not in (None, ''), self._meta.fields)))
+        return (
+            self.type > 0 or
+            all(
+                map(
+                    lambda field: field.value_from_object(self) not in (None, ''),
+                    filter(lambda f: f.name not in ('kpp', 'head_name', 'head_appointment'), self._meta.fields)
+                )
+            )
+        )
 
     @property
     def is_supernova(self):
@@ -179,8 +186,8 @@ class Merchant(models.Model):
 
     @property
     def unused_limits(self):
-        prefetched = Merchant.objects.prefetch_related('logo_categories').get(pk=self.pk)
-        banners = Banner.objects.prefetch_related('categories')
+        products = self.products.all()
+        banners = self.banners.prefetch_related('categories')
         limits = self.limits
         return {
             'banner_on_main': len([b for b in banners if b.on_main]) == limits['banner_on_main'],
@@ -210,7 +217,7 @@ class Merchant(models.Model):
                 ) == limits['extra_banner_categories']
             ),
             'logo_categories': (
-                len({cat.id for cat in prefetched.logo_categories.all()}) == limits['logo_categories']
+                len({cat.id for cat in self.logo_categories.all()}) == limits['logo_categories']
             ),
             'main_backgrounds': (
                 len(
@@ -237,10 +244,10 @@ class Merchant(models.Model):
                 len([b for b in banners if b.type == BannerType.SUPER]) == limits['superbanners']
             ),
             'teasers': (
-                len([p for p in prefetched.products.all() if p.is_teaser]) == limits['teasers']
+                len([p for p in products if p.is_teaser]) == limits['teasers']
             ),
             'teasers_on_main': (
-                len([p for p in prefetched.products.all() if p.is_teaser_on_main]) == limits['teasers']
+                len([p for p in products if p.is_teaser_on_main]) == limits['teasers']
             ),
             'vertical_banners': (
                 len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
