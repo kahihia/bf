@@ -252,6 +252,11 @@ class Merchant(models.Model):
             'vertical_banners': (
                 len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
             ),
+            'banner_in_mailing': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.ACTION and b.in_mailing])
+                ) == bool(limits['banner_in_mailing'])
+            )
         }
 
     @property

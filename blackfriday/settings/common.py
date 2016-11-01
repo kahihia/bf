@@ -182,6 +182,7 @@ LIMITS_RULES = {
     'teasers': ['teaser', 'additional_teaser'],
     'teasers_on_main': ['teaser_on_main'],
     'vertical_banners': ['vertical_banner_on_main'],
+    'banner_in_mailing': ['mailing']
 }
 
 LIMITS_RULES_COEFS = {
