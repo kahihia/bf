@@ -1,7 +1,9 @@
 from apps.catalog.models import Category
-from apps.orders.models import InvoiceStatus
+from django.contrib.staticfiles import finders
+from django.conf import settings
 from django.db import models
 from django.db.models import Sum
+from django.templatetags.static import static
 from django.utils import timezone
 
 
@@ -31,8 +33,6 @@ class Option(models.Model):
     is_required = models.BooleanField(default=False, verbose_name='Обязательна для пакета')
     is_boolean = models.BooleanField(default=False, verbose_name='Логическая')
 
-    image = models.ImageField(upload_to='promo', verbose_name='Изображение')
-
     @property
     def count_available(self):
         if self.max_count:
@@ -45,6 +45,14 @@ class Option(models.Model):
         if self.max_count:
             return self.count_available > 0
         return True
+
+    @property
+    def image(self):
+        path_to_image = 'images/options/{}.jpg'.format(self.tech_name)
+        if finders.find(path_to_image):
+            return settings.SITE_URL + static(path_to_image)
+        else:
+            return None
 
     @classmethod
     def calculate_restrictions(cls):
