@@ -53,7 +53,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context['request']
 
-        if request.user.role == 'admin':
+        if request.user.is_authenticated and request.user.role == 'admin':
             if 'inner' in attrs and 'is_supernova' in attrs:
                 raise ValidationError('Нельзя одновременно изменить эти поля')
 
