@@ -1,6 +1,5 @@
 import React from 'react';
 import arrayShuffle from 'array-shuffle';
-import {resolveImgPath} from './utils.js';
 
 const Wrotator = React.createClass({
 	propTypes: {
@@ -21,14 +20,14 @@ const Wrotator = React.createClass({
 				<div
 					className="wrotator__left"
 					style={{
-						backgroundImage: `url(${resolveImgPath(backgrounds.left)})`
+						backgroundImage: `url(${backgrounds.left})`
 					}}
 					/>
 
 				<div
 					className="wrotator__right"
 					style={{
-						backgroundImage: `url(${resolveImgPath(backgrounds.right)})`
+						backgroundImage: `url(${backgrounds.right})`
 					}}
 					/>
 			</div>
