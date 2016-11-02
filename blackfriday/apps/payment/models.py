@@ -53,8 +53,8 @@ class Payment(models.Model):
     def get_remote_data(self):
         try:
             response = payment_service.status(order_id=self.external_id)
-            self._error_status = response['ErrorCode']
-            self._order_status = response['OrderStatus']
+            self._error_status = str(response['ErrorCode'])
+            self._order_status = str(response['OrderStatus'])
         except SberRequestError as e:
             self._error_status = e.code
             self._error_message = e.desc
