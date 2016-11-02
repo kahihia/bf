@@ -7,7 +7,7 @@ from ..models import Option, Promo, PromoOption
 class PromoTinySerializer(serializers.ModelSerializer):
     class Meta:
         model = Promo
-        fields = ('id', 'name', 'price')
+        fields = ('id', 'name', 'price', 'is_custom')
 
 
 class OptionSerializer(serializers.ModelSerializer):

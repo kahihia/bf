@@ -12,6 +12,7 @@ import MerchantPromoSelect from './merchant-promo-select.jsx';
 const MerchantEditPromoSelect = React.createClass({
 	propTypes: {
 		activePromoId: React.PropTypes.number,
+		isCustomPromo: React.PropTypes.bool,
 		merchantId: React.PropTypes.number,
 		paymentStatus: React.PropTypes.number
 	},
@@ -20,7 +21,6 @@ const MerchantEditPromoSelect = React.createClass({
 		return {
 			activePromoId: null,
 			availableOptions: [],
-			isCustomPromo: false,
 			options: [],
 			promos: [],
 			sum: 0
@@ -28,7 +28,11 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	componentDidMount() {
-		this.requestPromos();
+		if (this.props.isCustomPromo) {
+			this.requestOptions();
+		} else {
+			this.requestPromos();
+		}
 	},
 
 	requestPromos() {
@@ -84,6 +88,7 @@ const MerchantEditPromoSelect = React.createClass({
 	},
 
 	processPromos(promos) {
+		const {isCustomPromo} = this.props;
 		const isNew = this.props.activePromoId === null;
 		const activePromoId = isNew ? promos[0].id : this.props.activePromoId;
 		const data = {
@@ -93,7 +98,6 @@ const MerchantEditPromoSelect = React.createClass({
 
 		let priceOld = 0;
 		let currentPromo = _.find(promos, {id: activePromoId});
-		const isCustomPromo = !currentPromo;
 
 		if (isCustomPromo) {
 			currentPromo = data;
@@ -113,7 +117,6 @@ const MerchantEditPromoSelect = React.createClass({
 
 		this.setState({
 			activePromoId,
-			isCustomPromo,
 			priceOld,
 			promos
 		});
@@ -263,9 +266,11 @@ const MerchantEditPromoSelect = React.createClass({
 	render() {
 		const {
 			activePromoId,
-			isCustomPromo,
 			promos
 		} = this.state;
+		const {
+			isCustomPromo
+		} = this.props;
 
 		const availableOptions = this.getAvailableOptions();
 		const isPromosVisible = promos.length && !isCustomPromo;
