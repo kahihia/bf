@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -6,6 +7,7 @@ from rest_framework.response import Response
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
 from apps.landing.models import LandingLogo
+from apps.advertisers.models import Merchant
 
 from .serializers import LogoMailingSerializer
 
@@ -30,3 +32,19 @@ class MailingViewSet(viewsets.GenericViewSet):
             serializer.is_valid(raise_exception=True)
             data = serializer.data
         return Response(data, template_name='mailing/api/mailing.html')
+
+
+class MailingBannersViewSet(viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    @list_route(methods=['post'], url_path='increment-counters')
+    def increment_counters(self, request, *args, **kwargs):
+        Merchant.objects.filter(
+            invoices__is_paid=True, invoices__options__option__tech_name='mailing',
+            banner_mailings_count__lt=F('invoices__options__value')
+        ).update(banner_mailings_count=F('banner_mailings_count') + 1)
+        Merchant.objects.filter(
+            invoices__is_paid=True, invoices__options__option__tech_name='superbanner_at_mailing',
+            superbanner_mailings_count__lt=F('invoices__options__value')
+        ).update(superbanner_mailings_count=F('banner_mailings_count') + 1)
+        return Response()

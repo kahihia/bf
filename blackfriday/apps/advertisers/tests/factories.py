@@ -23,6 +23,7 @@ class MerchantFactory(factory.django.DjangoModelFactory):
     image = factory.SubFactory('apps.mediafiles.tests.factories.ImageFactory')
     advertiser = factory.SubFactory('apps.users.tests.factories.UserFactory')
     is_active = True
+    banner_mailings_count = 0
 
     class Meta:
         model = 'advertisers.Merchant'
