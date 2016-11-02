@@ -24,15 +24,15 @@
                             </div>
                         {% endblock teasers__body %}
 
-                        <a class="teasers__all" href="/merchants">Все участники</a>
-                        <a class="teasers__all" href="/actions#tab=2">Все товары</a>
+                        <a class="teasers__all" href="{% if not is_preview %}/merchants{% endif %}">Все участники</a>
+                        <a class="teasers__all" href="{% if not is_preview %}/actions#tab=2{% endif %}">Все товары</a>
                     </div>
 
-                    <a class="left-sidebar__banner" href="/russian-goods/">
+                    <a class="left-sidebar__banner" href="{% if not is_preview %}/russian-goods/{% endif %}">
                         <img class="img-responsive" src="{% static 'images/left-sidebar__banner.jpg' %}" alt="">
                     </a>
 
-                    <a class="left-sidebar__banner" href="/supernova/">
+                    <a class="left-sidebar__banner" href="{% if not is_preview %}/supernova/{% endif %}">
                         <img class="img-responsive" src="{% static 'images/left-sidebar__banner_supernova.jpg' %}" alt="">
                     </a>
                 </div>

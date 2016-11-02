@@ -1,3 +1,5 @@
+/* global window */
+
 import React from 'react';
 
 const SimpleMenu = React.createClass({
@@ -55,7 +57,11 @@ const SimpleMenuItem = React.createClass({
 	},
 
 	render() {
-		const {url, name} = this.props;
+		let {url, name} = this.props;
+
+		if (window.ENV.isPreview) {
+			url = '';
+		}
 
 		return (
 			<li className="simple-menu__item">
