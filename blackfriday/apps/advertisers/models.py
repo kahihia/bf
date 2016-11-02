@@ -216,7 +216,7 @@ class Merchant(models.Model):
                 len(
                     {cat for cat in itertools.chain.from_iterable(
                         [b.categories.all() for b in banners if b.type == BannerType.ACTION])}
-                ) == limits['extra_banner_categories']
+                ) == (limits['extra_banner_categories'] + limits['categories'])
             ),
             'logo_categories': (
                 len({cat.id for cat in self.logo_categories.all()}) == limits['logo_categories']
