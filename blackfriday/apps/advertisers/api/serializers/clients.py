@@ -141,20 +141,13 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 user.role in ['manager', 'advertiser'] and
                 value in [ModerationStatus.waiting, ModerationStatus.confirmed]
             ):
-                unused_limits = [
-                    {
-                        'tech_name': limit,
-                        'value': value
-                    }
-                    for limit, value in self.instance.unused_limits.items() if value
-                ]
                 requirements = {
                     'name': self.instance.name,
                     'description': self.instance.description,
                     'url': self.instance.url,
                     'image': self.instance.image,
                     'promo': self.instance.promo,
-                    'limits': not unused_limits,
+                    'limits': all(self.instance.unused_limits.values()),
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
                     ).count() == self.instance.banners.count()
