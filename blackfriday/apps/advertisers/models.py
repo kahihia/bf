@@ -205,7 +205,8 @@ class Merchant(models.Model):
             ),
             'categories': (
                 Category.objects.filter(
-                    banners__merchant=self, products__merchant=self).distinct().count() >= limits['categories']
+                    Q(banners__merchant=self) | Q(products__merchant=self)
+                ).distinct().count() >= limits['categories']
             ),
             'category_backgrounds': (
                 len(
