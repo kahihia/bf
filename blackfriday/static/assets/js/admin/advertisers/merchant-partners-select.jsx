@@ -20,15 +20,13 @@ class MerchantPartnersSelect extends React.Component {
 
 	componentWillMount() {
 		this.requestPartners();
+		// this.requestMerchantPartners();
 	}
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.value) {
 			this.setState({value: newProps.value});
-			return;
 		}
-
-		this.requestMerchantPartners();
 	}
 
 	requestPartners() {

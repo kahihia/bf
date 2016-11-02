@@ -29,6 +29,7 @@ const MerchantEditPromoSelect = React.createClass({
 
 	componentDidMount() {
 		if (this.props.isCustomPromo) {
+			this.processPromos();
 			this.requestOptions();
 		} else {
 			this.requestPromos();
@@ -87,10 +88,13 @@ const MerchantEditPromoSelect = React.createClass({
 		});
 	},
 
-	processPromos(promos) {
+	processPromos(promos = []) {
 		const {isCustomPromo} = this.props;
 		const isNew = this.props.activePromoId === null;
-		const activePromoId = isNew ? promos[0].id : this.props.activePromoId;
+		let activePromoId = this.props.activePromoId;
+		if (isNew && promos.length) {
+			activePromoId = promos[0].id;
+		}
 		const data = {
 			id: activePromoId,
 			options: []
