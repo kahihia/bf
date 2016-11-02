@@ -19,6 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     inn = serializers.CharField(max_length=12, allow_blank=True, allow_null=True, validators=[
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
+    inner = serializers.CharField(required=False, allow_null=True)
+    is_supernova = serializers.BooleanField(required=False)
 
     class Meta:
         model = AdvertiserProfile
@@ -26,17 +28,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis',
                   'inner', 'is_supernova')
         extra_kwargs = {}
-
-    def get_extra_kwargs(self):
-        kwargs = super().get_extra_kwargs()
-        request = self.context.get('request')
-        if request and request.user and request.user.is_authenticated and request.user.role != 'admin':
-            kwargs['inner'] = kwargs.get('inner') or {}
-            kwargs['inner']['read_only'] = True
-            kwargs['is_supernova'] = kwargs.get('is_supernova') or {}
-            kwargs['is_supernova']['read_only'] = True
-
-        return kwargs
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -71,7 +62,10 @@ class ProfileSerializer(serializers.ModelSerializer):
                     attrs['type'] = AdvertiserType.REGULAR
 
         elif 'inner' in attrs or 'is_supernova' in attrs:
-            raise PermissionDenied('Только администратору доступны эти параметры')
+            # Because we have property-disease. I mean is_supernova and inner are properties, so their
+            # 'read_only' kwarg cannot be modified correct.
+            attrs.pop('inner', None)
+            attrs.pop('is_supernova', None)
 
         if 'type' not in attrs:
             attrs['type'] = self.instance.type if self.instance else AdvertiserType.REGULAR
