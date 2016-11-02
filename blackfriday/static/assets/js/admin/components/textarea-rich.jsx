@@ -1,6 +1,5 @@
 /* global toastr */
 /* eslint quote-props: ["error", "as-needed"] */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import MediumEditor from 'medium-editor';

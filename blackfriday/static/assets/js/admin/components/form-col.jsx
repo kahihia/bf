@@ -1,4 +1,3 @@
-/* eslint react/require-optimization: 0 */
 /* eslint quote-props: ["error", "as-needed"] */
 
 import React from 'react';

@@ -1,6 +1,5 @@
 /* global window document jQuery _ toastr */
 /* eslint-disable no-alert */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import ReactDOM from 'react-dom';

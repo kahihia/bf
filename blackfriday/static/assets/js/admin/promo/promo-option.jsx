@@ -1,6 +1,5 @@
 /* global _ */
 /* eslint no-useless-escape: 0 */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import {promoActions} from './promo-maker.jsx';
