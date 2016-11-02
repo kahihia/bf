@@ -198,7 +198,11 @@ class Merchant(models.Model):
         banners = self.banners.prefetch_related('categories')
         limits = self.limits
         return {
-            'banner_on_main': len([b for b in banners if b.on_main]) == limits['banner_on_main'],
+            'banner_on_main': (
+                len(
+                    [b for b in banners if b.on_main and b.type == BannerType.ACTION]
+                ) == limits['banner_on_main']
+            ),
             'banner_positions': (
                 len(
                     [b for b in banners if b.type == BannerType.ACTION and b.categories.all()]
@@ -216,7 +220,12 @@ class Merchant(models.Model):
             ),
             'category_backgrounds': (
                 len(
-                    [b for b in banners if b.type == BannerType.BG_LEFT]
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT],
+                        )
+                    )
                 ) == limits['category_backgrounds']
             ),
             'extra_banner_categories': (
@@ -230,7 +239,12 @@ class Merchant(models.Model):
             ),
             'main_backgrounds': (
                 len(
-                    [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main]
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT and b.on_main],
+                        )
+                    )
                 ) == limits['main_backgrounds']
             ),
             'superbanner_categories': (
