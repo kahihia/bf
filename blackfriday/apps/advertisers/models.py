@@ -99,6 +99,12 @@ class AdvertiserProfile(models.Model):
     def inner(self, value):
         self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES))).get(value)
 
+    def __str__(self):
+        if self.inn:
+            return 'ИНН {}'.format(self.inn)
+        else:
+            return 'Без ИНН'
+
 
 class Merchant(models.Model):
     MODERATION_STATUSES = (
