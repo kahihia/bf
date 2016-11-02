@@ -18,13 +18,29 @@ class PaymentServiceEndpoint:
     status = 'check_status'
 
 
-class PaymentServiceStatus:
-    success = 'HELD'
-
-
 class Payment(models.Model):
-    _message = None
-    _status = None
+    _error_message = None
+    _error_status = None
+    _order_message = None
+    _order_status = None
+
+    ERROR_MESSAGES = {
+        '0': 'Обработка запроса прошла без системных ошибок',
+        '2': 'Заказ отклонен по причине ошибки в реквизитах платежа',
+        '5': 'Доступ запрещён/Пользователь должен сменить свой пароль/[orderId] не указан',
+        '6': 'Незарегистрированный OrderId',
+        '7': 'Системная ошибка'
+    }
+
+    ORDER_MESSAGES = {
+        '0': 'Заказ зарегистрирован, но не оплачен',
+        '1': 'Предавторизованная сумма захолдирована (для двухстадийных платежей)',
+        '2': 'Проведена полная авторизация суммы заказа',
+        '3': 'Авторизация отменена',
+        '4': 'По транзакции была проведена операция возврата',
+        '5': 'Инициирована авторизация через ACS банка-эмитента',
+        '6': 'Авторизация отклонена'
+    }
 
     form_url = None
 
@@ -37,23 +53,31 @@ class Payment(models.Model):
     def get_remote_data(self):
         try:
             response = payment_service.status(order_id=self.external_id)
-            self._status = response['ErrorCode']
-            self._message = response['ErrorMessage']
+            self._error_status = response['ErrorCode']
+            self._order_status = response['OrderStatus']
         except SberRequestError as e:
-            self._status = e.code
-            self._message = e.desc
+            self._error_status = e.code
+            self._error_message = e.desc
 
     @property
-    def status(self):
-        if self._status is None:
+    def error_status(self):
+        if self._error_status is None:
             self.get_remote_data()
-        return self._status
+        return self._error_status
 
     @property
-    def message(self):
-        if self._message is None:
+    def error_message(self):
+        return Payment.ERROR_MESSAGES[self.error_status]
+
+    @property
+    def order_status(self):
+        if self._order_status is None:
             self.get_remote_data()
-        return self._message
+        return self._order_status
+
+    @property
+    def order_message(self):
+        return Payment.ORDER_MESSAGES.get(self.order_status)
 
     def create(self):
         self.external_id, self.form_url = payment_service.register(
