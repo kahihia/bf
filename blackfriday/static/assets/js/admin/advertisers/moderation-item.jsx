@@ -1,5 +1,4 @@
 /* eslint camelcase: ["error", {properties: "never"}] */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import Input from '../components/input.jsx';

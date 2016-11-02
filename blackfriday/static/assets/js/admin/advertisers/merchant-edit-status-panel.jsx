@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import b from 'b_';
 import {PAYMENT_STATUS, MODERATION_STATUS, ADVERTISER_IS_SUPERNOVA} from '../const.js';

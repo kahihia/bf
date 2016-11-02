@@ -1,4 +1,3 @@
-/* eslint react/require-optimization: 0 */
 /* eslint react/no-find-dom-node: 0 */
 
 import React from 'react';

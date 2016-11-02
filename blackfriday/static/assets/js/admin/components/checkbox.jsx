@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 
 class Checkbox extends React.Component {
@@ -25,11 +23,14 @@ class Checkbox extends React.Component {
 				<label>
 					<input
 						type="checkbox"
-						name={name}
 						onChange={this.handleChange}
 						checked={Boolean(isChecked)}
-						disabled={disabled}
+						{...{
+							disabled,
+							name
+						}}
 						/>
+
 					{text}
 				</label>
 			</div>
@@ -39,10 +40,6 @@ class Checkbox extends React.Component {
 Checkbox.propTypes = {
 	name: React.PropTypes.string,
 	text: React.PropTypes.string.isRequired,
-	value: React.PropTypes.oneOfType([
-		React.PropTypes.string,
-		React.PropTypes.number
-	]),
 	disabled: React.PropTypes.bool,
 	isChecked: React.PropTypes.bool,
 	onChange: React.PropTypes.func.isRequired

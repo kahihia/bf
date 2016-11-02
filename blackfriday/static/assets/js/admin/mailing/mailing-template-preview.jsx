@@ -1,5 +1,4 @@
 /* global jQuery */
-/* eslint react/require-optimization: 0 */
 /* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';

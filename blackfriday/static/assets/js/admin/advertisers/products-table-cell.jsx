@@ -1,6 +1,5 @@
 /* global _ */
 /* eslint camelcase: ["error", {properties: "never"}] */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import b from 'b_';

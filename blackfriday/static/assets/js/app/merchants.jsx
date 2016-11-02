@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import arrayShuffle from 'array-shuffle';
 import {resolveImgPath} from './utils.js';

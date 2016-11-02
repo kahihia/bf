@@ -130,7 +130,7 @@ class MailingLogosForm extends Form {
 			url: '/api/mailing/logos/',
 			method: 'POST',
 			headers: {
-				'Accept': 'text/html',
+				Accept: 'text/html',
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json

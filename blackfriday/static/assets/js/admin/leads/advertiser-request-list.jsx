@@ -92,7 +92,7 @@ const AdvertiserRequestListItem = React.createClass({
 		organizationName: React.PropTypes.string,
 		phone: React.PropTypes.string,
 		status: React.PropTypes.number,
-		updatedDatetime: React.PropTypes.string,
+		// updatedDatetime: React.PropTypes.string,
 		userResponsible: React.PropTypes.object
 	},
 

@@ -1,5 +1,4 @@
 /* global _ */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import {BANNER_TYPE, REGEXP} from '../const.js';

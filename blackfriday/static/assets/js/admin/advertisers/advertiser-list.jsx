@@ -235,9 +235,12 @@ const AdvertiserListItem = React.createClass({
 	handleClickEdit(e) {
 		e.preventDefault();
 
-		const props = this.props;
-		if (props.onClickEdit) {
-			props.onClickEdit(props.id);
+		const {
+			id,
+			onClickEdit
+		} = this.props;
+		if (onClickEdit) {
+			onClickEdit(id);
 		}
 	},
 
