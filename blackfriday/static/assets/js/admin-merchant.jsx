@@ -278,11 +278,13 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				promo
 			} = data;
 			const activePromoId = promo ? promo.id : null;
+			const isCustomPromo = promo ? promo.isCustom : false;
 
 			ReactDOM.render(
 				<MerchantEditPromoSelect
 					{...{
 						activePromoId,
+						isCustomPromo,
 						merchantId,
 						paymentStatus
 					}}
