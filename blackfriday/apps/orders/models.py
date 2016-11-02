@@ -83,6 +83,9 @@ class Invoice(models.Model):
     def total_number(self):
         return self.options.all().count() + 1 if self.promo else self.options.all().count()
 
+    def __str__(self):
+        return 'Магазин "{merchant_name}", сумма {sum} руб.'.format(merchant_name=self.merchant.name, sum=self.sum)
+
 
 class InvoiceOption(models.Model):
     invoice = models.ForeignKey(Invoice, related_name='options', verbose_name='Счёт')
