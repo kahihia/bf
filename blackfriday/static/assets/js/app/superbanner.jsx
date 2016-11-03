@@ -1,9 +1,7 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Carousel from './carousel.jsx';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
+import StickerSupernova from './sticker-supernova.jsx';
 
 class Superbanner extends React.Component {
 	constructor() {
@@ -23,8 +21,14 @@ class Superbanner extends React.Component {
 		const item = this.state.data[0];
 		let content = '';
 		if (item) {
-			const image = item.fixed ? item.image : resolveImgPath(item.image);
-			const img = (<img className="embed-responsive-item" src={image} alt=""/>);
+			const img = (
+				<img
+					className="embed-responsive-item"
+					src={item.image}
+					alt=""
+					/>
+			);
+
 			if (item.url) {
 				content = (
 					<Link
@@ -32,10 +36,22 @@ class Superbanner extends React.Component {
 						isExternal
 						>
 						{img}
+
+						{item.isSupernova ? (
+							<StickerSupernova size="lg"/>
+						) : null}
 					</Link>
 				);
 			} else {
-				content = img;
+				content = (
+					<span>
+						{img}
+
+						{item.isSupernova ? (
+							<StickerSupernova size="lg"/>
+						) : null}
+					</span>
+				);
 			}
 		}
 

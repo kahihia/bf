@@ -64,5 +64,6 @@ class MerchantPreview(LoginRequiredMixin, RolePermissionMixin, DetailView):
             'superbanners': self.object.superbanners,
             'actionbanners': self.object.actionbanners,
             'partners': self.object.partners.all(),
+            'is_preview': True
         })
         return context

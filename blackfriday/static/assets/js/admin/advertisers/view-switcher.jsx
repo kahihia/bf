@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import classNames from 'classnames';
 import Glyphicon from '../components/glyphicon.jsx';

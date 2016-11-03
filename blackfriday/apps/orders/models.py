@@ -29,7 +29,7 @@ class Invoice(models.Model):
     expired_datetime = models.DateTimeField(default=get_default_expiration_date, verbose_name='Срок истечения')
     is_paid = models.BooleanField(default=False, verbose_name='Оплачено')
 
-    sum = models.IntegerField(default=0, verbose_name='Сумма')
+    sum = models.IntegerField(default=0, verbose_name='Сумма в рублях')
     discount = models.IntegerField(default=0, verbose_name='Скидка')
 
     merchant = models.ForeignKey('advertisers.Merchant', related_name='invoices', verbose_name='Магазин')
@@ -82,6 +82,9 @@ class Invoice(models.Model):
 
     def total_number(self):
         return self.options.all().count() + 1 if self.promo else self.options.all().count()
+
+    def __str__(self):
+        return 'Магазин "{merchant_name}", сумма {sum} руб.'.format(merchant_name=self.merchant.name, sum=self.sum)
 
 
 class InvoiceOption(models.Model):

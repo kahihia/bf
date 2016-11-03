@@ -250,7 +250,7 @@ const FeedMaker = React.createClass({
 						<div className="col-sm-12">
 							<p>
 								<small className="text-muted">
-									Обратите внимание, товары списка "исключить" имеют приоритет.
+									{'Обратите внимание, товары списка "исключить" имеют приоритет.'}
 								</small>
 							</p>
 						</div>

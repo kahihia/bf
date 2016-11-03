@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Pager from './pager.js';
 
@@ -114,38 +112,58 @@ class Carousel extends React.Component {
 	}
 
 	render() {
+		const {
+			children,
+			isControlsShown,
+			isPagerShown,
+			pages
+		} = this.props;
+		const {
+			page,
+			isInited
+		} = this.state;
+		const isPaged = pages > 1;
+
 		let controls = '';
 		let className = 'carousel';
-		const isPaged = this.props.pages > 1;
-		if (isPaged && this.props.isControlsShown) {
+		if (isPaged && isControlsShown) {
 			controls = (
 				<div className="carousel__controls">
-					<div className="carousel__prev" onClick={this.handleClickPrev}/>
-					<div className="carousel__next" onClick={this.handleClickNext}/>
+					<div
+						className="carousel__prev"
+						onClick={this.handleClickPrev}
+						/>
+
+					<div
+						className="carousel__next"
+						onClick={this.handleClickNext}
+						/>
 				</div>
 			);
 			className += ' is-paged';
 		}
 
 		let pager = '';
-		if (isPaged && this.props.isPagerShown) {
+		if (isPaged && isPagerShown) {
 			pager = (
 				<CarouselPager
-					pages={this.props.pages}
-					page={this.state.page}
+					pages={pages}
+					page={page}
 					onPage={this.handleClickPage}
 					/>
 			);
 			className += ' is-pager';
 		}
 
-		if (this.state.isInited) {
+		if (isInited) {
 			return (
 				<div className={className}>
 					<div className="carousel__content">
-						{this.props.children}
+						{children}
 					</div>
+
 					{controls}
+
 					{pager}
 				</div>
 			);

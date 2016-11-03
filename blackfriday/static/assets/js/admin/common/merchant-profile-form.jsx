@@ -31,6 +31,7 @@ class MerchantProfileForm extends Form {
 		);
 
 		this.untouchableFields = ['name', 'contactName', 'contactPhone', 'inner', 'isSupernova'];
+		this.neverRequiredFields = ['kpp', 'headName', 'headAppointment'];
 
 		this.state = {
 			isLoading: false,
@@ -95,7 +96,7 @@ class MerchantProfileForm extends Form {
 				headAppointment: {
 					label: 'Должность руководителя',
 					value: '',
-					required: true,
+					required: false,
 					excluded: isSpecialAdvertiser
 				},
 				headBasis: {
@@ -111,7 +112,7 @@ class MerchantProfileForm extends Form {
 				headName: {
 					label: 'ФИО руководителя',
 					value: '',
-					required: true,
+					required: false,
 					excluded: isSpecialAdvertiser
 				},
 				inn: {
@@ -129,7 +130,7 @@ class MerchantProfileForm extends Form {
 				kpp: {
 					label: 'КПП',
 					value: '',
-					required: true,
+					required: false,
 					excluded: isSpecialAdvertiser
 				},
 				legalAddress: {
@@ -141,6 +142,7 @@ class MerchantProfileForm extends Form {
 			}
 		};
 
+		this.handleSpecialFields = this.handleSpecialFields.bind(this);
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 		this.handleChangeInner = this.handleChangeInner.bind(this);
 		this.handleChangeIsSupernova = this.handleChangeIsSupernova.bind(this);
@@ -176,6 +178,20 @@ class MerchantProfileForm extends Form {
 		}
 
 		this.requestProfileUser();
+	}
+
+	handleSpecialFields(profile) {
+		this.setState(prevState => {
+			if (!profile.inner && !profile.isSupernova) {
+				prevState.fields.inner.excluded = true;
+				prevState.fields.isSupernova.excluded = true;
+			} else if (profile.isSupernova) {
+				prevState.fields.inner.excluded = true;
+			} else {
+				prevState.fields.isSupernova.excluded = true;
+			}
+			return prevState;
+		});
 	}
 
 	// Get profile info
@@ -219,6 +235,7 @@ class MerchantProfileForm extends Form {
 								field.excluded = true;
 							}
 						});
+						this.handleSpecialFields(data.profile);
 					}
 
 					if (data.name) {
@@ -367,7 +384,9 @@ class MerchantProfileForm extends Form {
 
 			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
 				if (!_.includes(this.untouchableFields, field)) {
-					conf.required = !value;
+					if (!_.includes(this.neverRequiredFields, field)) {
+						conf.required = !value;
+					}
 					conf.excluded = Boolean(value);
 				}
 				return conf;
@@ -390,7 +409,9 @@ class MerchantProfileForm extends Form {
 
 			prevState.fields = _.mapValues(prevState.fields, (conf, field) => {
 				if (!_.includes(this.untouchableFields, field)) {
-					conf.required = !value;
+					if (!_.includes(this.neverRequiredFields, field)) {
+						conf.required = !value;
+					}
 					conf.excluded = value;
 				}
 				return conf;

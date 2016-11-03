@@ -1,6 +1,5 @@
-/* global document jQuery */
+/* global document _ jQuery */
 /* eslint camelcase: 0 */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -34,12 +33,25 @@ class MerchantFakeSave extends React.Component {
 	}
 
 	handleClickSave() {
-		this.props.onClickSave(this.openMerchantFakeSaveModal);
+		this.props.onClickSave(result => {
+			this.openMerchantFakeSaveModal(result);
+		});
 	}
 
-	openMerchantFakeSaveModal(result) {
-		jQuery('#merchant-fake-save-modal').modal('show');
-		ReactDOM.render(
+	renderList(result) {
+		let isEmpty = true;
+		_.forEach(result, limit => {
+			if (limit.data.length) {
+				isEmpty = false;
+				return false;
+			}
+		});
+
+		if (isEmpty) {
+			return null;
+		}
+
+		return (
 			<div>
 				<p>
 					{'Осталось предоставить:'}
@@ -69,7 +81,13 @@ class MerchantFakeSave extends React.Component {
 					})}
 				</ul>
 			</div>
-			,
+		);
+	}
+
+	openMerchantFakeSaveModal(result) {
+		jQuery('#merchant-fake-save-modal').modal('show');
+		ReactDOM.render(
+			this.renderList(result),
 			document.getElementById('merchant-fake-save-form')
 		);
 	}

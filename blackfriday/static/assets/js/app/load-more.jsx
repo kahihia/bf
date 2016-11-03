@@ -1,5 +1,4 @@
 /* global window */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import Waypoint from 'react-waypoint';
@@ -11,11 +10,7 @@ class LoadMore extends React.Component {
 			// If it IE8 show button
 			content = (<LoadMoreBtn {...this.props}/>);
 		} else if (!this.props.disabled) {
-			content = (
-				<Waypoint
-					onEnter={this.props.onClick}
-					/>
-			);
+			content = (<Waypoint onEnter={this.props.onClick}/>);
 		}
 		return content;
 	}

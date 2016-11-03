@@ -1,6 +1,5 @@
 /* global window document jQuery _ toastr */
 /* eslint-disable no-alert */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -276,19 +275,29 @@ class MerchantBannerList extends React.Component {
 
 	getLimitAvailableByTypeAndName(bannerType, limitName, propName) {
 		let limit = this.getLimitByTypeAndName(bannerType, limitName);
-		if (typeof limit !== 'number') {
-			return null;
-		}
-		this.state.banners.forEach(banner => {
-			if (banner.type === bannerType && banner[propName]) {
-				if (Array.isArray(banner[propName])) {
-					limit -= banner[propName].length;
-				} else {
-					limit -= 1;
+		if (typeof limit === 'number') {
+			this.state.banners.forEach(banner => {
+				if (banner.type === bannerType && banner[propName]) {
+					if (Array.isArray(banner[propName])) {
+						limit -= banner[propName].length;
+					} else {
+						limit -= 1;
+					}
 				}
-			}
-		});
-		return limit;
+			});
+			return limit;
+		} else if (typeof limit === 'boolean') {
+			let available = 1;
+			_.forEach(this.state.banners, banner => {
+				if (banner.type === bannerType && banner[propName]) {
+					available = 0;
+					return false;
+				}
+			});
+			return available;
+		}
+
+		return null;
 	}
 
 	collectLimits(bannerType) {

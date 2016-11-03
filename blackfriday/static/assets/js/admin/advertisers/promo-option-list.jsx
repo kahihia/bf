@@ -2,7 +2,7 @@ import React from 'react';
 import b from 'b_';
 import Price from 'react-price';
 import DecInc from 'react-decinc';
-import {resolveImgPath, formatPrice} from '../utils.js';
+import {formatPrice} from '../utils.js';
 import Radio from '../components/radio.jsx';
 import Icon from '../components/icon.jsx';
 
@@ -82,7 +82,7 @@ const PromoOptionListItem = React.createClass({
 								<Icon name="promo-help"/>
 
 								<img
-									src={resolveImgPath(this.props.image, 'static')}
+									src={this.props.image}
 									alt=""
 									/>
 							</span>

@@ -19,21 +19,15 @@ class ProfileSerializer(serializers.ModelSerializer):
     inn = serializers.CharField(max_length=12, allow_blank=True, allow_null=True, validators=[
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
-
-    inner = serializers.CharField(allow_null=True)
-    is_supernova = serializers.BooleanField()
+    inner = serializers.CharField(required=False, allow_null=True)
+    is_supernova = serializers.BooleanField(required=False)
 
     class Meta:
         model = AdvertiserProfile
         fields = ('account', 'inn', 'bik', 'kpp', 'bank', 'korr', 'address', 'legal_address',
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis',
                   'inner', 'is_supernova')
-
-    def get_inner(self, obj):
-        return obj.inner
-
-    def get_is_supernova(self, obj):
-        return obj.is_supernova
+        extra_kwargs = {}
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -50,7 +44,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context['request']
 
-        if request.user.role == 'admin':
+        if request.user.is_authenticated and request.user.role == 'admin':
             if 'inner' in attrs and 'is_supernova' in attrs:
                 raise ValidationError('Нельзя одновременно изменить эти поля')
 
@@ -68,12 +62,23 @@ class ProfileSerializer(serializers.ModelSerializer):
                     attrs['type'] = AdvertiserType.REGULAR
 
         elif 'inner' in attrs or 'is_supernova' in attrs:
-            raise PermissionDenied('Только администратору доступны эти параметры')
+            # Because we have property-disease. I mean is_supernova and inner are properties, so their
+            # 'read_only' kwarg cannot be modified correct.
+            attrs.pop('inner', None)
+            attrs.pop('is_supernova', None)
 
         if 'type' not in attrs:
             attrs['type'] = self.instance.type if self.instance else AdvertiserType.REGULAR
 
-        if attrs.get('type') == AdvertiserType.REGULAR and any(map(lambda x: x in ('', None), attrs.values())):
+        if (
+            attrs.get('type') == AdvertiserType.REGULAR and
+            any(
+                [
+                    value in ('', None)
+                    for key, value in attrs.items()
+                    if key not in ['kpp', 'head_name', 'head_appointment']
+                ])
+        ):
             raise ValidationError('Все поля должны быть ненулевыми')
 
         return attrs
@@ -130,23 +135,16 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 user.role in ['manager', 'advertiser'] and
                 value in [ModerationStatus.waiting, ModerationStatus.confirmed]
             ):
-                unused_limits = [
-                    {
-                        'tech_name': limit,
-                        'value': value
-                    }
-                    for limit, value in self.instance.limits.items() if limit != 'products' and value
-                ]
                 requirements = {
                     'name': self.instance.name,
                     'description': self.instance.description,
                     'url': self.instance.url,
                     'image': self.instance.image,
                     'promo': self.instance.promo,
-                    'limits': not unused_limits,
+                    'limits': all(self.instance.unused_limits.values()),
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
-                    ).count == self.instance.banners.count()
+                    ).count() == self.instance.banners.count()
                 }
                 deficit = [key for key, value in requirements.items() if not value]
 

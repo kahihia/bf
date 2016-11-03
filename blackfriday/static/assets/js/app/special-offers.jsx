@@ -1,46 +1,40 @@
 import React from 'react';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
+import StickerSupernova from './sticker-supernova.jsx';
 
-const SpecialOffers = React.createClass({
-	propTypes: {
-		banners: React.PropTypes.array
-	},
-
-	getInitialState() {
-		return {};
-	},
-
-	render() {
-		const {banners} = this.props;
-
-		return (
-			<div className="special-offers">
-				<div className="row">
-					{banners.map((banner, index) => (
-						<div
-							key={index}
-							className="col-sm-6"
+const SpecialOffers = props => (
+	<div className="special-offers">
+		<div className="row">
+			{props.banners.map(banner => (
+				<div
+					key={banner.id}
+					className="col-sm-6"
+					>
+					<div className="special-offers__item">
+						<Link
+							href={banner.url}
+							className="special-offers__link embed-responsive"
+							isExternal
 							>
-							<div className="special-offers__item">
-								<Link
-									href={banner.url}
-									className="special-offers__link embed-responsive"
-									isExternal
-									>
-									<img
-										src={resolveImgPath(banner.image)}
-										alt=""
-										className="special-offers__banner embed-responsive-item"
-										/>
-								</Link>
-							</div>
-						</div>
-					))}
+							<img
+								src={banner.image}
+								alt=""
+								className="special-offers__banner embed-responsive-item"
+								/>
+						</Link>
+
+						{banner.isSupernova ? (
+							<StickerSupernova size="lg"/>
+						) : null}
+					</div>
 				</div>
-			</div>
-		);
-	}
-});
+			))}
+		</div>
+	</div>
+);
+SpecialOffers.propTypes = {
+	banners: React.PropTypes.array
+};
+// SpecialOffers.defaultProps = {};
 
 export default SpecialOffers;

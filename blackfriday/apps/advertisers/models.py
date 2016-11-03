@@ -1,4 +1,5 @@
 import collections
+import itertools
 
 import operator
 from functools import reduce
@@ -9,6 +10,7 @@ from django.db.models import Q, Sum
 from django.core.urlresolvers import reverse
 
 from apps.orders.models import InvoiceStatus, InvoiceOption
+from apps.catalog.models import Category
 from apps.promo.models import Option
 from django.utils import timezone
 
@@ -70,8 +72,15 @@ class AdvertiserProfile(models.Model):
 
     @property
     def is_valid(self):
-        return (self.type > 0 or
-                all(map(lambda field: field.value_from_object(self) not in (None, ''), self._meta.fields)))
+        return (
+            self.type > 0 or
+            all(
+                map(
+                    lambda field: field.value_from_object(self) not in (None, ''),
+                    filter(lambda f: f.name not in ('kpp', 'head_name', 'head_appointment'), self._meta.fields)
+                )
+            )
+        )
 
     @property
     def is_supernova(self):
@@ -89,6 +98,12 @@ class AdvertiserProfile(models.Model):
     @inner.setter
     def inner(self, value):
         self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES))).get(value)
+
+    def __str__(self):
+        if self.inn:
+            return 'ИНН {}'.format(self.inn)
+        else:
+            return 'Без ИНН'
 
 
 class Merchant(models.Model):
@@ -121,6 +136,8 @@ class Merchant(models.Model):
     logo_categories = models.ManyToManyField('catalog.Category', related_name='merchant_logos')
 
     receives_notifications = models.BooleanField(default=True, verbose_name='Получает уведомления')
+    banner_mailings_count = models.IntegerField(default=0)
+    superbanner_mailings_count = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = 'Магазин'
@@ -173,6 +190,96 @@ class Merchant(models.Model):
         return {
             limit: reduce(operator.add, map(get_value, rules), 0)
             for limit, rules in settings.LIMITS_RULES.items()
+        }
+
+    @property
+    def unused_limits(self):
+        products = self.products.all()
+        banners = self.banners.prefetch_related('categories')
+        limits = self.limits
+        return {
+            'banner_on_main': (
+                len(
+                    [b for b in banners if b.on_main and b.type == BannerType.ACTION]
+                ) == limits['banner_on_main']
+            ),
+            'banner_positions': (
+                len(
+                    [b for b in banners if b.type == BannerType.ACTION and b.categories.all()]
+                ) == limits['banner_positions']
+            ),
+            'banners': (
+                len(
+                    [b for b in banners if b.type == BannerType.ACTION]
+                ) == limits['banners']
+            ),
+            'categories': (
+                Category.objects.filter(
+                    Q(banners__merchant=self) | Q(products__merchant=self)
+                ).distinct().count() >= limits['categories']
+            ),
+            'category_backgrounds': (
+                len(
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT],
+                        )
+                    )
+                ) == limits['category_backgrounds']
+            ),
+            'extra_banner_categories': (
+                len(
+                    {cat for cat in itertools.chain.from_iterable(
+                        [b.categories.all() for b in banners if b.type == BannerType.ACTION])}
+                ) == (limits['extra_banner_categories'] + limits['categories'])
+            ),
+            'logo_categories': (
+                len({cat.id for cat in self.logo_categories.all()}) == limits['logo_categories']
+            ),
+            'main_backgrounds': (
+                len(
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT and b.on_main],
+                        )
+                    )
+                ) == limits['main_backgrounds']
+            ),
+            'superbanner_categories': (
+                len(
+                    {cat for cat in itertools.chain.from_iterable(
+                        [b.categories.all() for b in banners if b.type == BannerType.SUPER])}
+                ) == limits['superbanner_categories']
+            ),
+            'superbanner_in_mailing': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.SUPER and b.in_mailing])
+                ) == bool(limits['superbanner_in_mailing'])
+            ),
+            'superbanner_on_main': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.SUPER and b.on_main])
+                ) == bool(limits['superbanner_in_mailing'])
+            ),
+            'superbanners': (
+                len([b for b in banners if b.type == BannerType.SUPER]) == limits['superbanners']
+            ),
+            'teasers': (
+                len([p for p in products if p.is_teaser]) == limits['teasers']
+            ),
+            'teasers_on_main': (
+                len([p for p in products if p.is_teaser_on_main]) == limits['teasers']
+            ),
+            'vertical_banners': (
+                len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
+            ),
+            'banner_in_mailing': (
+                bool(
+                    len([b for b in banners if b.type == BannerType.ACTION and b.in_mailing])
+                ) == bool(limits['banner_in_mailing'])
+            )
         }
 
     @property

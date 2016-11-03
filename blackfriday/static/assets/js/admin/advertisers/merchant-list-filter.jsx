@@ -1,8 +1,7 @@
 /* global _ */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
-import {ADVERTISER_INNER_VALUES} from '../const.js';
+import {ADVERTISER_INNER_VALUES, MODERATION_STATUS} from '../const.js';
 import FormRow from '../components/form-row.jsx';
 import Radio from '../components/radio.jsx';
 import Checkbox from '../components/checkbox.jsx';
@@ -16,6 +15,7 @@ class MerchantListFilter extends React.Component {
 		this.handleFilterByDate = this.handleFilterByDate.bind(this);
 		this.handleFilterByName = this.handleFilterByName.bind(this);
 		this.handleFilterByPromo = this.handleFilterByPromo.bind(this);
+		this.handleFilterByModerationStatus = this.handleFilterByModerationStatus.bind(this);
 		this.handleFilterByStatus = this.handleFilterByStatus.bind(this);
 		this.handleFilterBySupernovaAdvertiser = this.handleFilterBySupernovaAdvertiser.bind(this);
 		this.handleFilterByInnerAdvertiser = this.handleFilterByInnerAdvertiser.bind(this);
@@ -31,6 +31,15 @@ class MerchantListFilter extends React.Component {
 
 	handleFilterByPromo(value) {
 		this.props.onFilterByPromo(value);
+	}
+
+	handleFilterByModerationStatus(value) {
+		value = parseInt(value, 10);
+		if (isNaN(value)) {
+			value = -1;
+		}
+
+		this.props.onFilterByModerationStatus(value);
 	}
 
 	handleFilterByStatus(value) {
@@ -50,6 +59,7 @@ class MerchantListFilter extends React.Component {
 			filterByDate,
 			filterByName,
 			filterByPromo,
+			filterByModerationStatus,
 			filterByStatus,
 			filterBySupernovaAdvertiser,
 			filterByInnerAdvertiser
@@ -62,6 +72,18 @@ class MerchantListFilter extends React.Component {
 					name: value
 				};
 			})
+		);
+		const moderationStatusOptions = _.sortBy(
+			_.union(
+				[{id: -1, name: '- статус модерации -'}],
+				_.map(MODERATION_STATUS, (value, key) => {
+					return {
+						id: key,
+						name: value
+					};
+				})
+			),
+			'id'
 		);
 
 		return (
@@ -159,6 +181,16 @@ class MerchantListFilter extends React.Component {
 								/>
 						</div>
 					</div>
+
+					<div className="col-sm-3">
+						<div className="form-group">
+							<Select
+								options={moderationStatusOptions}
+								selected={filterByModerationStatus}
+								onChange={this.handleFilterByModerationStatus}
+								/>
+						</div>
+					</div>
 				</div>
 			</div>
 		);
@@ -168,6 +200,7 @@ MerchantListFilter.propTypes = {
 	filterByDate: React.PropTypes.oneOf(['ASC', 'DESC']),
 	filterByName: React.PropTypes.string,
 	filterByPromo: React.PropTypes.number,
+	filterByModerationStatus: React.PropTypes.number,
 	filterByStatus: React.PropTypes.oneOfType([
 		React.PropTypes.string,
 		React.PropTypes.number
@@ -177,6 +210,7 @@ MerchantListFilter.propTypes = {
 	onFilterByDate: React.PropTypes.func,
 	onFilterByName: React.PropTypes.func,
 	onFilterByPromo: React.PropTypes.func,
+	onFilterByModerationStatus: React.PropTypes.func,
 	onFilterByStatus: React.PropTypes.func,
 	onFilterBySupernovaAdvertiser: React.PropTypes.func,
 	onFilterByInnerAdvertiser: React.PropTypes.func
@@ -185,6 +219,7 @@ MerchantListFilter.defaultProps = {
 	filterByDate: 'ASC',
 	filterByName: '',
 	filterByPromo: '',
+	filterByModerationStatus: '',
 	filterByStatus: '',
 	filterBySupernovaAdvertiser: false,
 	filterByInnerAdvertiser: null

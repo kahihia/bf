@@ -1,6 +1,5 @@
 /* global window document */
 /* eslint react/no-danger: 0 */
-/* eslint react/require-optimization: 0 */
 
 require('css/app.styl');
 
@@ -49,7 +48,7 @@ import Banners from './app/banners.jsx';
 		const m = (
 			<div className="categories-rus">
 				<div className="categories-rus__title">
-					'Товары российского производства'
+					{'Товары российского производства'}
 				</div>
 
 				<SimpleMenu

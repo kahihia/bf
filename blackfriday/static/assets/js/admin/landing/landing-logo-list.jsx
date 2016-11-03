@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import {DropTarget as dropTarget, DragDropContext as dragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';

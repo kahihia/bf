@@ -5,6 +5,9 @@
   ],
   "rules": {
     "handle-callback-err": "off",
-    "complexity": "off"
+    "complexity": "off",
+    "react/forbid-component-props": "off",
+    "react/require-optimization": "off",
+    "react/no-unused-prop-types": "off"
   }
 }
