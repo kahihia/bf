@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from './link.jsx';
-import StickerSupernova from './sticker-supernova.jsx';
 
 const SpecialOffers = props => (
 	<div className="special-offers">
@@ -22,10 +21,6 @@ const SpecialOffers = props => (
 								className="special-offers__banner embed-responsive-item"
 								/>
 						</Link>
-
-						{banner.isSupernova ? (
-							<StickerSupernova size="lg"/>
-						) : null}
 					</div>
 				</div>
 			))}

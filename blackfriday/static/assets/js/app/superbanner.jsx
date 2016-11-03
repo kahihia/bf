@@ -1,7 +1,6 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
-import StickerSupernova from './sticker-supernova.jsx';
 
 class Superbanner extends React.Component {
 	constructor() {
@@ -36,20 +35,12 @@ class Superbanner extends React.Component {
 						isExternal
 						>
 						{img}
-
-						{item.isSupernova ? (
-							<StickerSupernova size="lg"/>
-						) : null}
 					</Link>
 				);
 			} else {
 				content = (
 					<span>
 						{img}
-
-						{item.isSupernova ? (
-							<StickerSupernova size="lg"/>
-						) : null}
 					</span>
 				);
 			}

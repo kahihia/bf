@@ -21,7 +21,7 @@ isControlsShown: true,
 isPagerShown: true,
 data: [
     {% for item in superbanners %}
-    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}', isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}},
+    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
     {% endfor %}
 ],
 {% endblock superbanner %}
@@ -46,8 +46,7 @@ window.DATA.goods = {
                 name: '{{ item.category }}'
             },
             country: '{{ item.country }}',
-            brand: '{{ item.brand }}',
-            isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}
+            brand: '{{ item.brand }}'
         },
         {% endfor %}
     ]
@@ -67,7 +66,7 @@ window.DATA.cardDescription = {
 window.DATA.specialOffers = {
     banners: [
         {% for item in actionbanners %}
-        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}', isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}},
+        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
         {% endfor %}
     ]
 };

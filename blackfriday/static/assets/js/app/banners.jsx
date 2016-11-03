@@ -1,7 +1,6 @@
 import React from 'react';
 import Paged from './paged.jsx';
 import Link from './link.jsx';
-import StickerSupernova from './sticker-supernova.jsx';
 
 class Banner extends React.Component {
 	render() {
@@ -34,10 +33,6 @@ class Banner extends React.Component {
 
 						{'К магазину'}
 					</a>
-				) : null}
-
-				{data.isSupernova ? (
-					<StickerSupernova size="lg"/>
 				) : null}
 			</div>
 		);
