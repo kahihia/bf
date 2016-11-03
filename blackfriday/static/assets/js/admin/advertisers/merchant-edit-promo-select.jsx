@@ -260,6 +260,10 @@ const MerchantEditPromoSelect = React.createClass({
 			availableOptions
 		} = this.state;
 
+		if (this.props.isCustomPromo) {
+			return availableOptions;
+		}
+
 		const availableOptionsFiltered = _.filter(availableOptions, option => {
 			return option.promosAvailableFor.indexOf(activePromoId) > -1;
 		});
