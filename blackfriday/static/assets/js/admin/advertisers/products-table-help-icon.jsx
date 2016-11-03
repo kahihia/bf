@@ -20,7 +20,7 @@ const HELP = {
 	startprice: {
 		image: `${HELP_IMAGE_DIR}${HELP_IMAGE_NAME}_startprice.png`
 	},
-	teaser: {
+	teaserOnMain: {
 		text: 'Отметьте товары для публикации на главной странице'
 	},
 	country: {

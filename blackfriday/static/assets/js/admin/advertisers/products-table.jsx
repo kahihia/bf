@@ -364,20 +364,20 @@ class ProductsTable extends React.Component {
 								</span>
 							</th>
 
-							{showIsTeaser ? (
-								<th className={b(className, 'table-th', {name: 'teaser'})}>
+							{showIsTeaserOnMain ? (
+								<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
 									<span>
-										<ProductsTableHelpIcon name="teaser"/>
+										<ProductsTableHelpIcon name="teaserOnMain"/>
 
-										{FEED_CELL.teaser}
+										{FEED_CELL.teaserOnMain}
 									</span>
 								</th>
 							) : null}
 
-							{showIsTeaserOnMain ? (
-								<th className={b(className, 'table-th', {name: 'teaser-on-main'})}>
+							{showIsTeaser ? (
+								<th className={b(className, 'table-th', {name: 'teaser'})}>
 									<span>
-										{FEED_CELL.teaserOnMain}
+										{FEED_CELL.teaser}
 									</span>
 								</th>
 							) : null}
@@ -828,18 +828,6 @@ class ProductsTableRow extends React.Component {
 					</EditableCell>
 				</ProductsTableCell>
 
-				{showIsTeaser ? (
-					<td className={b(className, 'table-td', {name: 'teaser'})}>
-						<input
-							type="checkbox"
-							name="isTeaser"
-							checked={data.isTeaser}
-							onChange={this.handleChangeTeaser}
-							disabled={disabledIsTeaser}
-							/>
-					</td>
-				) : null}
-
 				{showIsTeaserOnMain ? (
 					<td className={b(className, 'table-td', {name: 'teaser-on-main'})}>
 						<input
@@ -848,6 +836,18 @@ class ProductsTableRow extends React.Component {
 							checked={data.isTeaserOnMain}
 							onChange={this.handleChangeTeaserOnMain}
 							disabled={disabledIsTeaserOnMain}
+							/>
+					</td>
+				) : null}
+
+				{showIsTeaser ? (
+					<td className={b(className, 'table-td', {name: 'teaser'})}>
+						<input
+							type="checkbox"
+							name="isTeaser"
+							checked={data.isTeaser}
+							onChange={this.handleChangeTeaser}
+							disabled={disabledIsTeaser}
 							/>
 					</td>
 				) : null}
