@@ -1,5 +1,4 @@
 /* global _ toastr */
-/* eslint camelcase: ["error", {properties: "never"}] */
 
 import React from 'react';
 import xhr from 'xhr';
@@ -61,6 +60,7 @@ class MerchantEditForm extends Form {
 				}
 			}
 		};
+		this.state.cache = this.serialize();
 
 		this.handleClickSubmit = this.handleClickSubmit.bind(this);
 		this.handleChangeDescription = this.handleChangeDescription.bind(this);
@@ -81,6 +81,8 @@ class MerchantEditForm extends Form {
 				field.value = value;
 			});
 
+			previousState.cache = this.serialize(previousState.fields);
+
 			return previousState;
 		});
 	}
@@ -97,7 +99,7 @@ class MerchantEditForm extends Form {
 		this.setState({isLoading: true});
 
 		const {merchantId} = this.props;
-		const json = this.serialize();
+		const json = this.getDataPatch();
 
 		xhr({
 			url: `/api/merchants/${merchantId}/`,
