@@ -170,9 +170,12 @@ class MerchantSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
                   'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
-                  'moderation', 'preview_url', 'receives_notifications')
+                  'moderation', 'preview_url', 'receives_notifications', 'banner_mailings_count',
+                  'superbanner_mailings_count')
         extra_kwargs = {
-            'slug': {'allow_blank': False}
+            'slug': {'allow_blank': False},
+            'superbanner_mailings_count': {'read_only': True},
+            'banner_mailings_count': {'read_only': True}
         }
 
     def get_moderation(self, obj):

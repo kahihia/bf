@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import F, Q
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -40,11 +40,15 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
     @list_route(methods=['post'], url_path='increment-counters')
     def increment_counters(self, request, *args, **kwargs):
         Merchant.objects.filter(
-            invoices__is_paid=True, invoices__options__option__tech_name='mailing',
-            banner_mailings_count__lt=F('invoices__options__value')
+            Q(invoices__promo__available_options__tech_name='mailing') |
+            Q(invoices__options__option__tech_name='mailing') |
+            Q(invoices__promo__options__option__tech_name='mailing'),
+            invoices__is_paid=True, banner_mailings_count__lt=F('invoices__options__value')
         ).update(banner_mailings_count=F('banner_mailings_count') + 1)
         Merchant.objects.filter(
-            invoices__is_paid=True, invoices__options__option__tech_name='superbanner_at_mailing',
-            superbanner_mailings_count__lt=F('invoices__options__value')
+            Q(invoices__promo__available_options__tech_name='superbanner_at_mailing') |
+            Q(invoices__options__option__tech_name='superbanner_at_mailing') |
+            Q(invoices__promo__options__option__tech_name='superbanner_at_mailing'),
+            invoices__is_paid=True, superbanner_mailings_count__lt=F('invoices__options__value')
         ).update(superbanner_mailings_count=F('banner_mailings_count') + 1)
         return Response()
