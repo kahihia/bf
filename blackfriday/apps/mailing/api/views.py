@@ -7,7 +7,9 @@ from rest_framework.response import Response
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
 from apps.landing.models import LandingLogo
-from apps.advertisers.models import Merchant
+from apps.advertisers.models import Merchant, ModerationStatus
+from apps.promo.models import PromoOption
+from apps.orders.models import InvoiceOption
 
 from .serializers import LogoMailingSerializer
 
@@ -40,15 +42,19 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
     @list_route(methods=['post'], url_path='increment-counters')
     def increment_counters(self, request, *args, **kwargs):
         Merchant.objects.filter(
-            Q(invoices__promo__available_options__tech_name='mailing') |
-            Q(invoices__options__option__tech_name='mailing') |
-            Q(invoices__promo__options__option__tech_name='mailing'),
-            invoices__is_paid=True, banner_mailings_count__lt=F('invoices__options__value')
+            id__in=PromoOption.objects.filter(
+                option__tech_name='mailing',
+                promo__invoice__merchant__banner_mailings_count__lt=F('value'),
+                promo__invoice__is_paid=True,
+                promo__invoice__merchant__moderation_status=ModerationStatus.confirmed
+            ).values_list('promo__invoice__merchant__id', flat=True)
         ).update(banner_mailings_count=F('banner_mailings_count') + 1)
         Merchant.objects.filter(
-            Q(invoices__promo__available_options__tech_name='superbanner_at_mailing') |
-            Q(invoices__options__option__tech_name='superbanner_at_mailing') |
-            Q(invoices__promo__options__option__tech_name='superbanner_at_mailing'),
-            invoices__is_paid=True, superbanner_mailings_count__lt=F('invoices__options__value')
-        ).update(superbanner_mailings_count=F('banner_mailings_count') + 1)
+            id__in=InvoiceOption.objects.filter(
+                option__tech_name='superbanner_at_mailing',
+                invoice__is_paid=True,
+                invoice__merchant__moderation_status=ModerationStatus.confirmed,
+                invoice__merchant__superbanner_mailings_count__lt=F('value')
+            ).values_list('invoice__merchant__id', flat=True)
+        ).update(superbanner_mailings_count=F('superbanner_mailings_count') + 1)
         return Response()

@@ -24,6 +24,7 @@ class MerchantFactory(factory.django.DjangoModelFactory):
     advertiser = factory.SubFactory('apps.users.tests.factories.UserFactory')
     is_active = True
     banner_mailings_count = 0
+    moderation_status = 2
 
     class Meta:
         model = 'advertisers.Merchant'
