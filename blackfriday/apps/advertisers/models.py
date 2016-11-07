@@ -222,8 +222,8 @@ class Merchant(models.Model):
                 len(
                     list(
                         zip(
-                            [b for b in banners if b.type == BannerType.BG_LEFT],
-                            [b for b in banners if b.type == BannerType.BG_RIGHT],
+                            [b for b in banners if b.type == BannerType.BG_LEFT if not b.on_main],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT if not b.on_main],
                         )
                     )
                 ) == limits['category_backgrounds']
@@ -261,7 +261,7 @@ class Merchant(models.Model):
             'superbanner_on_main': (
                 bool(
                     len([b for b in banners if b.type == BannerType.SUPER and b.on_main])
-                ) == bool(limits['superbanner_in_mailing'])
+                ) == bool(limits['superbanner_on_main'])
             ),
             'superbanners': (
                 len([b for b in banners if b.type == BannerType.SUPER]) == limits['superbanners']
@@ -270,7 +270,7 @@ class Merchant(models.Model):
                 len([p for p in products if p.is_teaser]) == limits['teasers']
             ),
             'teasers_on_main': (
-                len([p for p in products if p.is_teaser_on_main]) == limits['teasers']
+                len([p for p in products if p.is_teaser_on_main]) == limits['teasers_on_main']
             ),
             'vertical_banners': (
                 len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
