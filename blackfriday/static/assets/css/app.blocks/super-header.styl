@@ -8,18 +8,90 @@
 		url("/static/images/super-header-bg.png"),
 		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAC3CAYAAADThjThAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHxJREFUeNqUkkEKwDAIBHV9RU+F/v+DPVlsCcWgxlzETXbNCMF5XAwiUitvR0H3S8oslCUiqWvfdLb/BoOtaMHcmjIkSjTeQxsF6305LGy3mt32VkWTFJ5UvE/8KASxWqIclUrxkBJ0jSw69N9HYotpSJ9mae2bVrgfAQYA0UwJg7Hj0D4AAAAASUVORK5CYII=")
 
+	&::before
+		content: ''
+		display: block
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		height: 14px
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPAgMAAABGuH3ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////////////////9aUOcwAAAAR0Uk5TAAIWGlHt/lkAAAAuSURBVAjXY3jCwCDBsJOBgYUhz4GBgUF6ApBgAwoyMAIFGYgQdGBg3MEAZOcAALTIC+yD04roAAAAAElFTkSuQmCC")
+		background-position: 50% 0
+		background-repeat: repeat
+		background-color: #000
+
 	.logo
 		margin-bottom: 20px
 
-	&__share
-		text-align: center
-		margin-bottom: 20px
+	&__share-toggler
+		display: block
+		float: right
+		cursor: pointer
+		background-repeat: no-repeat
+		background-position: 50% 50%
+		background-image: url("/static/images/super-header__share-toggler.png")
+		width: 28px
+		height: 28px
+		padding: 14px 0
+		box-sizing: content-box
 
-		.share__content
-			height: 22px
+	&__share-close
+		display: block
+		cursor: pointer
+		background-repeat: no-repeat
+		background-position: 50% 50%
+		background-image: url("/static/images/super-header__share-close.png")
+		width: 26px
+		height: 26px
+		padding: 28px 15px
+		box-sizing: content-box
+		position: absolute
+		top: 0
+		right: 0
+
+	&__share
+		display: flex
+		align-items: center
+		justify-content: center
+		position: fixed
+		top: -100%
+		left: 0
+		width: 100%
+		height: 100%
+		z-index: 1
+		background-color: #000
+		text-align: center
+
+		&.active
+			top: 0
 
 	&__sidebar-cats
 		margin-bottom: 15px
+		margin-right: -(floor($grid-gutter-width / 2))
+		margin-left: -(floor($grid-gutter-width / 2))
+
+	+above(768px)
+		&::before
+			display: none
+
+		.logo
+			display: block
+
+		&__share-toggler
+			display: none
+
+		&__share-close
+			display: none
+
+		&__share
+			display: block
+			position: static
+			margin-bottom: 20px
+
+		&__sidebar-cats
+			margin-right: 0
+			margin-left: 0
 
 	+above(992px)
 		.logo

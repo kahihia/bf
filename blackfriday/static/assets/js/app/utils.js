@@ -38,3 +38,16 @@ export function convertNodeToDangerouslyHTML(node) {
 		__html: node.outerHTML
 	};
 }
+
+export function toggleClass(elem, className) {
+	let classString = elem.className;
+	let nameIndex = classString.indexOf(className);
+
+	if (nameIndex === -1) {
+		classString += ' ' + className;
+	} else {
+		classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
+	}
+
+	elem.className = classString;
+}
