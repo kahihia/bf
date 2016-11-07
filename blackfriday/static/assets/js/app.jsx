@@ -9,7 +9,7 @@ import ReactDOM from 'react-dom';
 import Scroll from 'react-scroll';
 
 import Tabs from './app/react-simpletabs.jsx';
-import {categoriesSorting, convertNodeToDangerouslyHTML} from './app/utils.js';
+import {categoriesSorting, convertNodeToDangerouslyHTML, toggleClass} from './app/utils.js';
 
 import SimpleMenu from './app/simple-menu.jsx';
 import Header from './app/header.jsx';
@@ -267,17 +267,18 @@ import Banners from './app/banners.jsx';
 		});
 	}
 
-	function toggleClass(elem, className) {
-		let classString = elem.className;
-		let nameIndex = classString.indexOf(className);
-
-		if (nameIndex === -1) {
-			classString += ' ' + className;
-		} else {
-			classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
-		}
-
-		elem.className = classString;
+	const shareToggler = document.querySelector('.super-header__share-toggler');
+	if (shareToggler) {
+		const share = document.querySelector('.super-header__share');
+		const shareClose = document.querySelector('.super-header__share-close');
+		shareToggler.addEventListener('click', e => {
+			e.preventDefault();
+			toggleClass(share, 'active');
+		});
+		shareClose.addEventListener('click', e => {
+			e.preventDefault();
+			toggleClass(share, 'active');
+		});
 	}
 
 	const verticalbanners = document.getElementById('verticalbanners');
