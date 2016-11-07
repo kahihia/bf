@@ -8,6 +8,19 @@
 		url("/static/images/super-header-bg.png"),
 		url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAC3CAYAAADThjThAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHxJREFUeNqUkkEKwDAIBHV9RU+F/v+DPVlsCcWgxlzETXbNCMF5XAwiUitvR0H3S8oslCUiqWvfdLb/BoOtaMHcmjIkSjTeQxsF6305LGy3mt32VkWTFJ5UvE/8KASxWqIclUrxkBJ0jSw69N9HYotpSJ9mae2bVrgfAQYA0UwJg7Hj0D4AAAAASUVORK5CYII=")
 
+	&::before
+		content: ''
+		display: block
+		position: absolute
+		top: 0
+		left: 0
+		right: 0
+		height: 14px
+		background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPAgMAAABGuH3ZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////////////////9aUOcwAAAAR0Uk5TAAIWGlHt/lkAAAAuSURBVAjXY3jCwCDBsJOBgYUhz4GBgUF6ApBgAwoyMAIFGYgQdGBg3MEAZOcAALTIC+yD04roAAAAAElFTkSuQmCC")
+		background-position: 50% 0
+		background-repeat: repeat
+		background-color: #000
+
 	.logo
 		margin-bottom: 20px
 
@@ -55,8 +68,13 @@
 
 	&__sidebar-cats
 		margin-bottom: 15px
+		margin-right: -(floor($grid-gutter-width / 2))
+		margin-left: -(floor($grid-gutter-width / 2))
 
 	+above(768px)
+		&::before
+			display: none
+
 		.logo
 			display: block
 
@@ -70,6 +88,10 @@
 			display: block
 			position: static
 			margin-bottom: 20px
+
+		&__sidebar-cats
+			margin-right: 0
+			margin-left: 0
 
 	+above(992px)
 		.logo
