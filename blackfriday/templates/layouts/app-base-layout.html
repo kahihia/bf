@@ -64,13 +64,28 @@
                 <div class="col-md-3">
 
                     <a href="/" class="logo">
-                        <img src="{% static 'images/logo.png' %}" alt="">
+                        <img class="logo__img logo__img_xs" src="{% static 'images/logo_xs.png' %}" alt="">
+                        <img class="logo__img logo__img_lg" src="{% static 'images/logo.png' %}" alt="">
                     </a>
 
+                    <a class="super-header__share-toggler" href="#"></a>
+
                     <div class="super-header__share share">
-                        <div class="share__content">
-                            <script src="//yastatic.net/share2/share.js"></script>
-                            <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
+                        <a class="super-header__share-close" href="#"></a>
+
+                        <div class="share__container">
+                            <div class="share__prefix">
+                                <strong>Поделиться</strong> с друзьями
+                            </div>
+
+                            <div class="share__content">
+                                <script src="//yastatic.net/share2/share.js"></script>
+                                <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
+                            </div>
+
+                            <div class="share__postfix">
+                                Приятного шопинга!
+                            </div>
                         </div>
                     </div>
 
@@ -214,9 +229,9 @@ window.DATA = {
 {% block data %}{% endblock %}
 </script>
 
-{% block js %}{% endblock js %}
-
-{% render_bundle 'app' 'js' %}
+{% block js %}
+    {% render_bundle 'app' 'js' %}
+{% endblock js %}
 
 <script>
 (function () {

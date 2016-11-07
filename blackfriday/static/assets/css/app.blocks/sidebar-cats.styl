@@ -16,7 +16,7 @@
 			display: inline-block
 			width: 100%
 			text-align: center
-			padding: 9px 13px 9px 36px
+			padding: 13px 13px 13px 36px
 			background: none
 			background-color: $link-color
 			position: relative
@@ -31,12 +31,19 @@
 				display: block
 				position: absolute
 				left: 19px
-				top: 14px
+				top: 18px
 				width: 20px
 				height: 3px
 				border-radius: 2px
 				background-color: #fff
 				box-shadow: 0 8px 0 #fff, 0 16px 0 #fff
+
+			+above(768px)
+				padding-top: 9px
+				padding-bottom: 9px
+
+				&:after
+					top: 14px
 
 			+above(992px)
 				font-size: 16px
