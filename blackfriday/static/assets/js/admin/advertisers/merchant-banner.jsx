@@ -49,8 +49,9 @@ class MerchantBanner extends React.Component {
 
 	render() {
 		const {
-			categoriesAvailable,
 			categories,
+			categoriesAvailable,
+			categoriesHighlighted,
 			image,
 			inMailing,
 			limits,
@@ -84,6 +85,7 @@ class MerchantBanner extends React.Component {
 								<ImagesUpload
 									onUpload={this.handleUploadImage}
 									ext={['png', 'jpg']}
+									size="sm"
 									width={banner.width}
 									height={banner.height}
 									exactSize
@@ -136,7 +138,8 @@ class MerchantBanner extends React.Component {
 									deselectAllText="Очистить"
 									options={categoriesAvailable}
 									value={selectedCategories}
-									limit={limits.categories}
+									highlight={categoriesHighlighted}
+									limit={limits.categories + selectedCategories.length}
 									labelKey="name"
 									valueKey="id"
 									showControls
@@ -171,6 +174,7 @@ class MerchantBanner extends React.Component {
 MerchantBanner.propTypes = {
 	categories: React.PropTypes.array,
 	categoriesAvailable: React.PropTypes.array,
+	categoriesHighlighted: React.PropTypes.array,
 	id: React.PropTypes.number,
 	image: React.PropTypes.object,
 	inMailing: React.PropTypes.bool,

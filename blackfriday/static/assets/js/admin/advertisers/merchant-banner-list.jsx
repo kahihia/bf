@@ -315,9 +315,36 @@ class MerchantBannerList extends React.Component {
 		return _.filter(this.state.banners, {type});
 	}
 
+	collectCategoriesAvailable(bannerType) {
+		if (bannerType !== 10) {
+			return this.props.categoriesAvailable;
+		}
+
+		const {
+			categories,
+			categoriesSelected,
+			limits
+		} = this.props;
+
+		const categoriesLimit = (limits.categories || 0) + (limits.extra_banner_categories || 0);
+
+		if (categoriesSelected.length < categoriesLimit) {
+			return categories;
+		}
+
+		const categoriesAvailable = categories.reduce((a, b) => {
+			if (categoriesSelected.indexOf(b.id) > -1) {
+				a.push(b);
+			}
+			return a;
+		}, []);
+
+		return categoriesAvailable;
+	}
+
 	render() {
 		const {
-			categoriesAvailable,
+			categoriesHighlighted,
 			limits
 		} = this.props;
 
@@ -342,6 +369,8 @@ class MerchantBannerList extends React.Component {
 					if (!bannerLimits.length) {
 						return null;
 					}
+
+					const categoriesAvailable = this.collectCategoriesAvailable(bannerType);
 
 					return (
 						<div
@@ -385,7 +414,8 @@ class MerchantBannerList extends React.Component {
 															onUploadImage={this.handleUploadImage}
 															limits={bannerLimits}
 															{...{
-																categoriesAvailable
+																categoriesAvailable,
+																categoriesHighlighted
 															}}
 															{...banner}
 															/>
@@ -418,7 +448,7 @@ class MerchantBannerList extends React.Component {
 						type="category"
 						limit={limits.category_backgrounds}
 						banners={bannersCategoryBackgrounds}
-						categoriesAvailable={categoriesAvailable}
+						categoriesAvailable={this.props.categoriesAvailable}
 						onUpload={this.handleUploadBannerBackground}
 						onDelete={this.handleDeleteBannerBackground}
 						onChange={this.handleChangeBannerBackground}
@@ -429,7 +459,10 @@ class MerchantBannerList extends React.Component {
 	}
 }
 MerchantBannerList.propTypes = {
+	categories: React.PropTypes.array.isRequired,
 	categoriesAvailable: React.PropTypes.array.isRequired,
+	categoriesHighlighted: React.PropTypes.array,
+	categoriesSelected: React.PropTypes.array,
 	limits: React.PropTypes.object,
 	merchantId: React.PropTypes.number.isRequired,
 	onChange: React.PropTypes.func
