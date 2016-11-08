@@ -1,7 +1,4 @@
 import io
-import os
-from functools import partial
-import uuid
 
 from PIL import Image, ImageFile
 
@@ -37,11 +34,3 @@ class ResizedImageField(ImageField):
         self.size = kwargs.pop('size', [255, 255])
         self.quality = kwargs.pop('quality', 80)
         super(ResizedImageField, self).__init__(verbose_name, name, **kwargs)
-
-
-def _update_filename(instance, filename, path):
-    return os.path.join(path, str(uuid.uuid4()))
-
-
-def upload_to(path):
-    return partial(_update_filename, path=path)
