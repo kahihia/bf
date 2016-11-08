@@ -7,7 +7,7 @@
 	transition: margin ease 0.15s
 
 	&.active
-		margin-right: 347px
+		margin-right: 260px
 
 	& > img
 		top: 47px
@@ -22,8 +22,17 @@
 		left: 100%
 		display: block
 
+		img
+			max-width: 260px
+
 	+above(992px)
 		padding-left: 102px
 
+		&.active
+			margin-right: 347px
+
 		& > img
 			max-height: none
+
+		a img
+			max-width: none
