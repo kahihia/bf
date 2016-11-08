@@ -1579,10 +1579,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div>
 
+{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
     <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
+{% endcomment %}
 
 {% if SHOW_LOGIN_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}
