@@ -54,7 +54,10 @@ class Payment(models.Model):
         try:
             response = payment_service.status(order_id=self.external_id)
             self._error_status = str(response['ErrorCode'])
-            self._order_status = str(response['OrderStatus'])
+            self._order_status = str(response['OrderStatus']) if response['OrderStatus'] else None
+            if self._order_status == '2':
+                self.invoice.is_paid = True
+                self.invoice.save()
         except SberRequestError as e:
             self._error_status = e.code
             self._error_message = e.desc
