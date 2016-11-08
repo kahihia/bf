@@ -54,7 +54,10 @@ class Payment(models.Model):
         try:
             response = payment_service.status(order_id=self.external_id)
             self._error_status = str(response['ErrorCode'])
-            self._order_status = str(response['OrderStatus'])
+            self._order_status = str(response['OrderStatus']) if response['OrderStatus'] else None
+            if self._order_status == '2':
+                self.invoice.is_paid = True
+                self.invoice.save()
         except SberRequestError as e:
             self._error_status = e.code
             self._error_message = e.desc
@@ -79,11 +82,13 @@ class Payment(models.Model):
     def order_message(self):
         return Payment.ORDER_MESSAGES.get(self.order_status)
 
+    def get_success_url(self):
+        return '{}{}#invoice{}'.format(
+            settings.SITE_URL, reverse('orders:invoice-list'), self.invoice_id)
+
     def create(self):
         self.external_id, self.form_url = payment_service.register(
-            order=self.invoice_id, success_url='{}{}'.format(
-                settings.SITE_URL, reverse('payment:finished', args=(self.pk,))
-            ), amount=self.invoice.sum * 100
+            order=self.invoice_id, success_url=self.get_success_url(), amount=self.invoice.sum * 100
         )
         self.save()
 

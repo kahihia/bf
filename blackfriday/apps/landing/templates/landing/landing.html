@@ -183,6 +183,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 required
                                 >
 
+                            <div class="checkbox">
+                                <label>
+                                    <input name="mnogoru" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                                </label>
+                            </div>
+
                             <button class="btn btn-primary btn-lg" type="submit">
                                 <img
                                     src="{% static 'images/landing/aa-section__subscribe-submit-icon.png' %}"
@@ -196,6 +202,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 </div>
             </div>
+        </div>
+
+        <div class="aa-section__msg">
+            <p>
+                Всем подписавшимся подарок <strong>прямо сейчас!</strong>
+            </p>
         </div>
 
         <div class="aa-section__footer">
@@ -1065,6 +1077,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             >
                     </div>
 
+                    <div class="checkbox">
+                        <label>
+                            <input name="mnogoru" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                        </label>
+                    </div>
+
                     <div class="form-group">
                         <button class="btn btn-primary btn-lg btn-block" type="submit">
                             Подписаться
@@ -1417,6 +1435,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </a>
                     </li>
                 </ul>
+
+                {% comment %}
+                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" style="display: inline-block; margin: 0 0 0 0;">
+                    <img src="{% static 'images/landing/footer-mnogo-1.png' %}" alt="">
+                </a>
+                {% endcomment %}
             </div>
 
             <div class="col-xs-3">
@@ -1445,6 +1469,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <a class="akit-copy" href="http://www.akit.ru" target="_blank">
                     <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
                 </a>
+
+                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" style="display: inline-block; margin: 10px 0 0 12px;">
+                    <img src="{% static 'images/landing/footer-mnogo-3.png' %}" alt="">
+                </a>
             </div>
 
             <div class="col-xs-12">
@@ -1459,7 +1487,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
 
                 <div class="site-footer__offer-text">
-                    Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank" rel="nofollow">договора-оферты</a>.
+                    <p>
+                        Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank" rel="nofollow">договора-оферты</a>.
+                    </p>
+
+                    <p style="font-size: 12px;">
+                        * Вступление в Клуб Много.ру подразумевает, что Вы согласны с правилами участия в Клубе и с фактом передачи указанных Вами имени и адреса электронной почты в Клуб Много.ру (www.mnogo.ru) для создания профиля в программе Много.ру
+                    </p>
                 </div>
             </div>
         </div>
@@ -1517,6 +1551,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </div>
 
                     <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input name="mnogoru" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <button
                             class="btn btn-default btn-block btn-lg"
                             type="submit"
@@ -1536,6 +1578,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
         </div>
     </div>
+</div>
+
+<div class="mnogoru-gift" id="mnogoru-gift">
+    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
 
 {% if SHOW_LOGIN_ON_LANDING %}

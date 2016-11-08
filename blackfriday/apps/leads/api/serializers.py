@@ -20,7 +20,7 @@ class UserResponsibleSerializer(serializers.ModelSerializer):
 class SubscriberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscriber
-        fields = ['id', 'name', 'email']
+        fields = ['id', 'name', 'email', 'join_mnogo_ru']
 
 
 class AdvertiserRequestSerializer(serializers.ModelSerializer):
