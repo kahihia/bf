@@ -113,7 +113,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			}, (err, resp, data) => {
 				switch (resp.statusCode) {
 					case 200: {
-						this.setState({categories: data});
+						this.setState({categories: _.sortBy(data, 'name')});
 						break;
 					}
 					case 400: {
@@ -297,21 +297,13 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 		collectCategoriesSelected() {
 			const {
 				banners,
+				limits,
 				logoCategories,
 				products,
 				productsNew
 			} = this.state;
 
 			const selected = [];
-
-			_.forEach(banners, item => {
-				_.forEach(item.categories, item => {
-					if (selected.indexOf(item.id) > -1) {
-						return;
-					}
-					selected.push(item.id);
-				});
-			});
 
 			_.forEach(logoCategories, item => {
 				if (selected.indexOf(item) > -1) {
@@ -339,6 +331,37 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					selected.push(item.id);
 				});
 			});
+
+			const extraBannerCategories = limits.extra_banner_categories || 0;
+
+			_.forEach(banners, item => {
+				if (extraBannerCategories && item.type === 10) {
+					return;
+				}
+				_.forEach(item.categories, item => {
+					if (selected.indexOf(item.id) > -1) {
+						return;
+					}
+					selected.push(item.id);
+				});
+			});
+
+			if (extraBannerCategories) {
+				_.forEach(banners, item => {
+					if (item.type !== 10) {
+						return;
+					}
+					_.forEach(item.categories, item => {
+						if (selected.indexOf(item.id) > -1) {
+							return;
+						}
+						if (selected.length >= limits.categories) {
+							return;
+						}
+						selected.push(item.id);
+					});
+				});
+			}
 
 			selected.sort();
 
@@ -488,6 +511,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 		render() {
 			const {
+				categories,
 				data,
 				limits
 			} = this.state;
@@ -497,6 +521,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 			const categoriesSelected = this.collectCategoriesSelected();
 			const categoriesAvailable = this.collectCategoriesAvailable(categoriesSelected);
+			const categoriesHighlighted = categoriesSelected;
 
 			const {
 				image,
@@ -590,6 +615,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 												limit={limits.logo_categories}
 												onChange={this.handleChangeLogoCategories}
 												{...{
+													categoriesHighlighted,
 													merchantId
 												}}
 												/>
@@ -612,7 +638,10 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					<MerchantBannerList
 						onChange={this.handleChangeBanners}
 						{...{
+							categories,
 							categoriesAvailable,
+							categoriesHighlighted,
+							categoriesSelected,
 							limits,
 							merchantId
 						}}
