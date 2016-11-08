@@ -82,11 +82,13 @@ class Payment(models.Model):
     def order_message(self):
         return Payment.ORDER_MESSAGES.get(self.order_status)
 
+    def get_success_url(self):
+        return '{}{}#invoice{}'.format(
+            settings.SITE_URL, reverse('orders:invoice-list'), self.invoice_id)
+
     def create(self):
         self.external_id, self.form_url = payment_service.register(
-            order=self.invoice_id, success_url='{}{}'.format(
-                settings.SITE_URL, reverse('payment:finished', args=(self.pk,))
-            ), amount=self.invoice.sum * 100
+            order=self.invoice_id, success_url=self.get_success_url(), amount=self.invoice.sum * 100
         )
         self.save()
 
