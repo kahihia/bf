@@ -103,6 +103,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		} = this.state;
 		const {
 			categories,
+			categoriesHighlighted,
 			limit
 		} = this.props;
 
@@ -117,6 +118,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 				deselectAllText="Очистить"
 				options={categories}
 				value={value}
+				highlight={categoriesHighlighted}
 				limit={limit}
 				labelKey="name"
 				valueKey="id"
@@ -128,6 +130,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 }
 MerchantLogoCategoriesSelect.propTypes = {
 	categories: React.PropTypes.array,
+	categoriesHighlighted: React.PropTypes.array,
 	limit: React.PropTypes.number,
 	merchantId: React.PropTypes.number,
 	onChange: React.PropTypes.func
