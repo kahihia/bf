@@ -1,17 +1,7 @@
-/* global window toastr _ */
+/* global toastr _ */
 
 import formatThousands from 'format-thousands';
-import {SORT_TYPES} from './const.js';
-
-export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
-
-export function resolveImgPath(path, type) {
-	if (!type) {
-		return `${ENV.imgBaseUrl}${path}`;
-	}
-
-	return `${ENV.imgStaticBaseUrl}${path}`;
-}
+import {SORT_TYPES, ENV} from './const.js';
 
 export function hasRole(role) {
 	if (!ENV.userRoles) {

@@ -5,9 +5,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {TOKEN} from './admin/const.js';
+import {ENV, TOKEN} from './admin/const.js';
 import {STATUS_DEFICIT_MESSAGE} from './admin/messages.js';
-import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
+import {hasRole, processErrors, getUrl} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';

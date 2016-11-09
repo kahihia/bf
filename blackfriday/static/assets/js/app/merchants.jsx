@@ -1,6 +1,5 @@
 import React from 'react';
 import arrayShuffle from 'array-shuffle';
-import {resolveImgPath} from './utils.js';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
 
@@ -22,7 +21,7 @@ class Banner extends React.Component {
 				>
 				<img
 					className="party-carousel-content__image embed-responsive-item"
-					src={resolveImgPath(item.logo)}
+					src={item.logo}
 					alt=""
 					/>
 			</Link>

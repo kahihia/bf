@@ -2,7 +2,6 @@
 
 import React from 'react';
 import b from 'b_';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 
 const className = 'card-description';
@@ -63,7 +62,7 @@ const CardDescription = React.createClass({
 
 				<div className={b(className, 'content')}>
 					<img
-						src={resolveImgPath(image)}
+						src={image}
 						alt=""
 						className={b(className, 'logo')}
 						/>
@@ -99,7 +98,7 @@ const CardDescription = React.createClass({
 										isExternal
 										>
 										<img
-											src={resolveImgPath(partner.image)}
+											src={partner.image}
 											alt=""
 											/>
 									</Link>

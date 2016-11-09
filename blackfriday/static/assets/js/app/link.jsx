@@ -1,7 +1,6 @@
-/* global window */
-
 import React from 'react';
 import Cookie from 'js-cookie';
+import {ENV} from './utils.js';
 
 const ADMITAD_REGEX = /ad.admitad.com/;
 
@@ -27,7 +26,7 @@ const Link = React.createClass({
 
 		let href = props.href;
 		if (props.isExternal) {
-			href = `${window.ENV.redirectPrefix}${href}`;
+			href = `${ENV.redirectPrefix}${href}`;
 
 			if (ADMITAD_REGEX.test(href)) {
 				href += getAdmitadAddition();

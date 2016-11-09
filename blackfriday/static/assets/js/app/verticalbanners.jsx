@@ -1,6 +1,5 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 
 const Banner = React.createClass({
@@ -19,7 +18,7 @@ const Banner = React.createClass({
 				>
 				<img
 					className="img-responsive"
-					src={resolveImgPath(item.filename)}
+					src={item.filename}
 					alt=""
 					/>
 			</Link>

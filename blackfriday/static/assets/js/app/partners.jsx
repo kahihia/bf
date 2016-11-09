@@ -1,6 +1,5 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 
 class Banner extends React.Component {
@@ -15,7 +14,7 @@ class Banner extends React.Component {
 				>
 				<img
 					className="img-responsive"
-					src={resolveImgPath(data.logo)}
+					src={data.logo}
 					alt=""
 					/>
 			</Link>
