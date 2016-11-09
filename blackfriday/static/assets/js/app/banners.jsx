@@ -2,62 +2,52 @@ import React from 'react';
 import Paged from './paged.jsx';
 import Link from './link.jsx';
 
-class Banner extends React.Component {
-	render() {
-		const {data} = this.props;
+const Banner = props => (
+	<div className="special-offers__item">
+		<Link
+			href={props.data.url}
+			className="special-offers__link embed-responsive"
+			isExternal
+			>
+			<img
+				src={props.data.image}
+				alt=""
+				className="special-offers__banner embed-responsive-item"
+				/>
+		</Link>
 
-		return (
-			<div className="special-offers__item">
-				<Link
-					href={data.url}
-					className="special-offers__link embed-responsive"
-					isExternal
-					>
-					<img
-						src={data.banner_image}
-						alt=""
-						className="special-offers__banner embed-responsive-item"
-						/>
-				</Link>
+		{props.data.merchant ? (
+			<a
+				className="special-offers__shop"
+				href={props.data.merchant.url}
+				>
+				<img
+					src={props.data.merchant.image}
+					alt=""
+					className="special-offers__logo"
+					/>
 
-				{data.merchant_logo ? (
-					<a
-						className="special-offers__shop"
-						href={data.merchant_url}
-						>
-						<img
-							src={data.merchant_logo}
-							alt=""
-							className="special-offers__logo"
-							/>
-
-						{'К магазину'}
-					</a>
-				) : null}
-			</div>
-		);
-	}
-}
+				{'К магазину'}
+			</a>
+		) : null}
+	</div>
+);
 Banner.propTypes = {
 	data: React.PropTypes.object.isRequired
 };
 
-class BannerList extends React.Component {
-	render() {
-		return (
-			<div className="banner-list">
-				{this.props.data.map((item, index) => (
-					<div
-						key={index}
-						className="banner-list__item"
-						>
-						<Banner data={item}/>
-					</div>
-				))}
+const BannerList = props => (
+	<div className="banner-list">
+		{props.data.map(item => (
+			<div
+				key={item.id}
+				className="banner-list__item"
+				>
+				<Banner data={item}/>
 			</div>
-		);
-	}
-}
+		))}
+	</div>
+);
 BannerList.propTypes = {
 	data: React.PropTypes.array.isRequired
 };

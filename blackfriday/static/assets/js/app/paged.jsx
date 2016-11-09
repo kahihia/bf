@@ -20,6 +20,7 @@ class Paged extends React.Component {
 		const props = this.props;
 
 		this.pager = new Pager({
+			preloadedData: props.data && props.data.length ? props.data : null,
 			perPage: props.perPage,
 			pagesCount: props.pages,
 			loadPagesCount: props.loadPagesCount,
