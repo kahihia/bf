@@ -305,13 +305,6 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 			const selected = [];
 
-			_.forEach(logoCategories, item => {
-				if (selected.indexOf(item) > -1) {
-					return;
-				}
-				selected.push(item);
-			});
-
 			_.forEach(products, item => {
 				if (!item.category) {
 					return;
@@ -346,16 +339,26 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				});
 			});
 
+			_.forEach(logoCategories, item => {
+				if (selected.length >= limits.categories) {
+					return false;
+				}
+				if (selected.indexOf(item) > -1) {
+					return;
+				}
+				selected.push(item);
+			});
+
 			if (extraBannerCategories) {
 				_.forEach(banners, item => {
 					if (item.type !== 10) {
 						return;
 					}
 					_.forEach(item.categories, item => {
-						if (selected.indexOf(item.id) > -1) {
-							return;
-						}
 						if (selected.length >= limits.categories) {
+							return false;
+						}
+						if (selected.indexOf(item.id) > -1) {
 							return;
 						}
 						selected.push(item.id);
@@ -587,14 +590,14 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 										<ControlLabel name="Логотип"/>
 
 										<div>
-											<p>
-												{image ? (
+											{image ? (
+												<p>
 													<img
 														src={image.url}
 														alt=""
 														/>
-												) : null}
-											</p>
+												</p>
+											) : null}
 
 											<ImagesUpload
 												onUpload={this.handleImagesUploadUpload}
@@ -611,7 +614,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 											<ControlLabel name="Категории размещения логотипа"/>
 
 											<MerchantLogoCategoriesSelect
-												categories={categoriesAvailable}
+												categoriesAvailable={categoriesAvailable.length >= limits.logo_categories ? categoriesAvailable : categories}
 												limit={limits.logo_categories}
 												onChange={this.handleChangeLogoCategories}
 												{...{
