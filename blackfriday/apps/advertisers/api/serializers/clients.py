@@ -250,6 +250,17 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
     url = serializers.URLField(validators=[
         validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
 
+    def update(self, instance, validated_data):
+        if any(
+            [
+                getattr(instance, key) != validated_data.get(key)
+                for key in ['url', 'name', 'description', 'promocode'] if key in validated_data
+            ]
+        ) or validated_data.get('image', instance.image) != instance.image:
+            instance.moderation_status = ModerationStatus.new
+            instance.save()
+        return super().update(instance, validated_data)
+
     class Meta:
         model = Merchant
         extra_kwargs = {

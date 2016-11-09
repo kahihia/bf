@@ -187,6 +187,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
             if len(cat_list) > merchant.limits.get('logo_categories', 0):
                 raise BadRequest('Превышены ограничения рекламных возможностей')
+            if {cat.id for cat in cats} != {cat.id for cat in merchant.logo_categories.all()}:
+                merchant.moderation_status = ModerationStatus.new
+                merchant.save()
 
             merchant.logo_categories.set(cats)
 
