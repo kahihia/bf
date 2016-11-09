@@ -88,7 +88,9 @@ class Payment(models.Model):
 
     def create(self):
         self.external_id, self.form_url = payment_service.register(
-            order=self.invoice_id, success_url=self.get_success_url(), amount=self.invoice.sum * 100
+            order=self.invoice_id,
+            success_url=reverse('payment:finished', args=(self.pk,)),
+            amount=self.invoice.sum * 100
         )
         self.save()
 
