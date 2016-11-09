@@ -205,7 +205,8 @@ class Merchant(models.Model):
             ),
             'banner_positions': (
                 len(
-                    [b for b in banners if b.type == BannerType.ACTION and b.categories.all()]
+                    [cat for cat in itertools.chain.from_iterable(
+                        [b.categories.all() for b in banners if b.type == BannerType.ACTION])]
                 ) == limits['banner_positions']
             ),
             'banners': (
