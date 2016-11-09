@@ -13,6 +13,7 @@ class AdvertiserProfileFactory(factory.django.DjangoModelFactory):
     contact_name = factory.Faker('name')
     contact_phone = factory.Faker('phone_number')
     head_name = factory.Faker('name')
+    type = 10
 
     class Meta:
         model = 'advertisers.AdvertiserProfile'

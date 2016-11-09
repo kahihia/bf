@@ -17,6 +17,10 @@ class Role:
     ADVERTISER = 2
     ADMIN = 3
 
+    @classmethod
+    def get(self, key):
+        return getattr(self, key.upper())
+
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
