@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, DetailView
 from apps.users.mixins import RolePermissionMixin
 
 from .models import Merchant, BannerType, Banner
+from apps.catalog.models import Product
 
 
 class AdvertiserListView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
@@ -45,7 +46,8 @@ class MerchantPreview(LoginRequiredMixin, RolePermissionMixin, DetailView):
     allowed_roles = ['manager', 'admin', 'advertiser']
 
     queryset = Merchant.objects.prefetch_related(
-        'partners', 'products',
+        'partners',
+        Prefetch('products', queryset=Product.objects.all().order_by('id')),
         Prefetch('banners', queryset=Banner.objects.filter(type=BannerType.SUPER), to_attr='superbanners'),
         Prefetch('banners', queryset=Banner.objects.filter(type=BannerType.ACTION), to_attr='actionbanners')
     )

@@ -324,6 +324,10 @@ class BannerType:
     BG_LEFT = 30
     BG_RIGHT = 40
 
+    @classmethod
+    def get(self, key):
+        return getattr(self, key.upper())
+
 
 class Banner(models.Model):
     TYPES = (

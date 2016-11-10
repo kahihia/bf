@@ -300,12 +300,37 @@ class MerchantBannerList extends React.Component {
 		return null;
 	}
 
+	collectCategoriesSelected(bannerType) {
+		const banners = _.filter(this.state.banners, {type: bannerType});
+		if (!banners.length) {
+			return [];
+		}
+		const categoriesSelected = banners.reduce((categoriesSelected, banner) => {
+			if (banner.categories && banner.categories.length) {
+				banner.categories.forEach(category => {
+					const categoryId = category.id;
+					if (categoriesSelected.indexOf(categoryId) > -1) {
+						return;
+					}
+					categoriesSelected.push(categoryId);
+				});
+			}
+			return categoriesSelected;
+		}, []);
+		if (!categoriesSelected.length) {
+			return [];
+		}
+		categoriesSelected.sort();
+		return categoriesSelected;
+	}
+
 	collectLimits(bannerType) {
 		const limits = {
 			length: this.getLimitByTypeAndName(bannerType, 's'),
 			onMain: this.getLimitAvailableByTypeAndName(bannerType, '_on_main', 'onMain'),
 			inMailing: this.getLimitAvailableByTypeAndName(bannerType, '_in_mailing', 'inMailing'),
-			categories: this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories') || this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories') || 0
+			categories: this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories') || this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories') || 0,
+			categoriesSelected: this.collectCategoriesSelected(bannerType)
 		};
 
 		return limits;

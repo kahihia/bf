@@ -32,7 +32,7 @@ class Carousel extends React.Component {
 		}
 
 		this.pager = new Pager({
-			preloadedData: (props.data && props.data.length === props.pages) ? props.data : null,
+			preloadedData: props.data && props.data.length ? props.data : null,
 			perPage: props.perPage,
 			pagesCount: props.pages,
 			loadPagesCount: props.loadPagesCount,

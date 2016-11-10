@@ -1,6 +1,5 @@
-/* global window */
-
 import React from 'react';
+import {ENV} from './utils.js';
 
 const SimpleMenu = React.createClass({
 	propTypes: {
@@ -59,7 +58,7 @@ const SimpleMenuItem = React.createClass({
 	render() {
 		let {url, name} = this.props;
 
-		if (window.ENV.isPreview) {
+		if (ENV.isPreview) {
 			url = '';
 		}
 

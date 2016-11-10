@@ -3,7 +3,8 @@
 
 import React from 'react';
 import b from 'b_';
-import {hasRole, ENV} from '../utils.js';
+import {ENV} from '../const.js';
+import {hasRole} from '../utils.js';
 import {getApplicationStatusColor} from './utils.js';
 
 const AdvertiserRequestList = React.createClass({

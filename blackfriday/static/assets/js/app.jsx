@@ -16,9 +16,7 @@ import Header from './app/header.jsx';
 import SidebarCats from './app/sidebar-cats.jsx';
 
 import Superbanner from './app/superbanner.jsx';
-import Goods from './app/goods.jsx';
-import {Merchants, AllMerchants} from './app/merchants.jsx';
-import Partners from './app/partners.jsx';
+import Products from './app/products.jsx';
 import Banners from './app/banners.jsx';
 
 (function () {
@@ -38,7 +36,7 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<SidebarCats list={DATA.categories} isSideShown={DATA.isSideShown}/>, sidebarCats);
 	}
 
-	// Russian Goods page Sidebar menu
+	// Russian Products page Sidebar menu
 	const categoriesRus = document.getElementById('categories-rus');
 	if (categoriesRus && DATA.categoriesRus) {
 		const sideHiddenBlock = document.getElementById('sidebar-hidden-block');
@@ -110,9 +108,9 @@ import Banners from './app/banners.jsx';
 			return (
 				<div className="main-teaser__footer">
 					<PseudoLink
-						anchorName="anchor-goods"
+						anchorName="anchor-products"
 						onClick={this.handleClick}
-						key={'anchor-goods'}
+						key={'anchor-products'}
 						>
 						{'Все лучшие товары'}
 					</PseudoLink>
@@ -152,7 +150,7 @@ import Banners from './app/banners.jsx';
 		render() {
 			return (
 				<div>
-					<Scroll.Element name="anchor-goods"/>
+					<Scroll.Element name="anchor-products"/>
 
 					<Tabs tabActive={this.props.tabActive}>
 						<Tabs.Panel title={(<span>Лучшие акции</span>)}>
@@ -171,7 +169,7 @@ import Banners from './app/banners.jsx';
 								id="571e13c565bf192790e915fc"
 								/>
 
-							<Goods {...DATA.goods}/>
+							<Products {...DATA.products}/>
 						</Tabs.Panel>
 					</Tabs>
 				</div>
@@ -217,7 +215,7 @@ import Banners from './app/banners.jsx';
 								/>
 						) : null}
 
-						<Goods {...DATA.goods}/>
+						<Products {...DATA.products}/>
 					</Tabs.Panel>
 				</Tabs>
 			);
@@ -233,29 +231,32 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<MyTabs tabActive={activeTab} withRr={tabs.getAttribute('data-with-rr') === 'true'}/>, tabs);
 	}
 
-	// Russian Goods page
+	// Russian Products page
 	// Merchant page
-	const goods = document.getElementById('goods');
-	if (DATA.goods && goods) {
-		ReactDOM.render(<Goods {...DATA.goods}/>, goods);
+	const products = document.getElementById('products');
+	if (DATA.products && products) {
+		ReactDOM.render(<Products {...DATA.products}/>, products);
 	}
 
 	// Main page
 	// Category page
 	const merchants = document.getElementById('merchants');
 	if (DATA.merchants && merchants) {
+		const Merchants = require('./app/merchants').Merchants;
 		ReactDOM.render(<Merchants {...DATA.merchants}/>, merchants);
 	}
 
 	// All Merchants page
 	const allMerchants = document.getElementById('all-merchants');
 	if (DATA.allMerchants && allMerchants) {
+		const AllMerchants = require('./app/merchants').AllMerchants;
 		ReactDOM.render(<AllMerchants {...DATA.allMerchants}/>, allMerchants);
 	}
 
 	// Main page
 	const partners = document.getElementById('partners');
 	if (DATA.partners && partners) {
+		const Partners = require('./app/partners');
 		ReactDOM.render(<Partners {...DATA.partners}/>, partners);
 	}
 
