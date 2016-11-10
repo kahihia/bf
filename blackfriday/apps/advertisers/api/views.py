@@ -251,6 +251,9 @@ class BannerViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return super().get_queryset().filter(merchant=self.get_parent())
 
+    def get_serializer_context(self):
+        return dict(super().get_serializer_context(), **{'merchant': self.get_parent()})
+
     def perform_create(self, serializer):
         serializer.save(merchant=self.get_parent())
 

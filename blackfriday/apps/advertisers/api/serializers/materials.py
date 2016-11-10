@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.db.models import Q
 
 from apps.advertisers.models import Banner
 from apps.catalog.models import Category
@@ -38,6 +39,23 @@ class BannerSerializer(BannerDetailSerializer):
             if cat.merchant and cat.merchant.advertiser != request.user:
                 raise ValidationError('Категория недоступна')
         return value
+
+    def validate(self, attrs):
+        if (
+            attrs.get('in_mailing', self.instance.in_mailing if self.instance else False) and
+            (
+                attrs.get('on_main', self.instance.on_main if self.instance else False) or
+                attrs.get('categories', self.instance.categories.exists() if self.instance else False)
+            )
+        ):
+            raise ValidationError('Нельзя разместить один и тот же баннер и на сайте, и в рассылке')
+        if (
+            Banner.objects.exclude(pk=self.instance.pk if self.instance else None).filter(
+                Q(on_main=True) | Q(categories__isnull=False), merchant=self.context['merchant'],
+            ) and (attrs.get('on_main', False) or attrs.get('categories'))
+        ):
+            raise ValidationError('В категориях и на главной можно разместить только один супербаннер')
+        return attrs
 
     def save(self, **kwargs):
         categories = self._validated_data.pop('categories', [])
