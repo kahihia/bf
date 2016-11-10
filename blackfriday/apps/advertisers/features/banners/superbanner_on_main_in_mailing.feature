@@ -18,11 +18,11 @@ Feature: Superbanner display area
         Then response status is 400
         When I create banner with:
             | in_mailing | categories |  
-            | true       | [1, 2]]    |  
+            | true       | [1, 2]    |  
         Then response status is 400
         When I create banner with:
             | on_main | in_mailing | categories |  
-            | true    | true       | [1, 2]]       |  
+            | true    | true       | [1, 2]       |  
         Then response status is 400
 
     Scenario: Advertiser cant change banner on main or in categories and in mailing same time
@@ -36,9 +36,9 @@ Feature: Superbanner display area
         Then response status is 400
         When I change banner with:
             | in_mailing | categories |  
-            | true       | [1, 2]]    |  
+            | true       | [1, 2]    |  
         Then response status is 400
         When I change banner with:
             | on_main | in_mailing | categories |  
-            | true    | true       | [1, 2]]       |  
+            | true    | true       | [1, 2]       |  
         Then response status is 400
