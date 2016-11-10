@@ -62,7 +62,7 @@ window.DATA.cardDescription = {
     ]
 };
 window.DATA.specialOffers = {
-    banners: [
+    data: [
         {% for item in actionbanners %}
         {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
         {% endfor %}
