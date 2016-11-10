@@ -22,7 +22,7 @@ ProductList.propTypes = {
 	data: React.PropTypes.array
 };
 
-class Goods extends React.Component {
+class Products extends React.Component {
 	constructor() {
 		super();
 		this.state = {
@@ -53,7 +53,7 @@ class Goods extends React.Component {
 		);
 	}
 }
-Goods.propTypes = {
+Products.propTypes = {
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
 	data: React.PropTypes.array,
@@ -67,4 +67,4 @@ Goods.propTypes = {
 	speed: React.PropTypes.number
 };
 
-export default Goods;
+export default Products;
