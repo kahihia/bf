@@ -1,10 +1,6 @@
 /* global window */
 
-const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
-
-export function resolveImgPath(path) {
-	return `${ENV.imgBaseUrl}${path}`;
-}
+export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function categoriesSorting(catA, catB) {
 	// категории упорядочиваются по имени

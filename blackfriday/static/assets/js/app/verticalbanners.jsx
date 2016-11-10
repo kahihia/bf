@@ -1,50 +1,39 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
-import {resolveImgPath} from './utils.js';
 import Link from './link.jsx';
 
-const Banner = React.createClass({
-	propTypes: {
-		data: React.PropTypes.object
-	},
+const Banner = props => (
+	<Link
+		href={props.data.url}
+		className="item"
+		isExternal
+		>
+		<img
+			className="img-responsive"
+			src={props.data.image}
+			alt=""
+			/>
+	</Link>
+);
+Banner.propTypes = {
+	data: React.PropTypes.object
+};
+// Banner.defaultProps = {};
 
-	render() {
-		const item = this.props.data;
-
-		return (
-			<Link
-				href={item.url}
-				className="item"
-				isExternal
-				>
-				<img
-					className="img-responsive"
-					src={resolveImgPath(item.filename)}
-					alt=""
-					/>
-			</Link>
-		);
-	}
-});
-
-const VerticalbannersCarousel = React.createClass({
-	propTypes: {
-		data: React.PropTypes.array
-	},
-
-	render() {
-		return (
-			<div>
-				{this.props.data.map((item, index) => (
-					<Banner
-						key={index}
-						data={item}
-						/>
-				))}
-			</div>
-		);
-	}
-});
+const VerticalbannersCarousel = props => (
+	<div>
+		{props.data.map(item => (
+			<Banner
+				key={item.id}
+				data={item}
+				/>
+		))}
+	</div>
+);
+VerticalbannersCarousel.propTypes = {
+	data: React.PropTypes.array
+};
+// VerticalbannersCarousel.defaultProps = {};
 
 const Verticalbanners = React.createClass({
 	propTypes: {

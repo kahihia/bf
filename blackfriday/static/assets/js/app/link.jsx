@@ -1,7 +1,6 @@
-/* global window */
-
 import React from 'react';
 import Cookie from 'js-cookie';
+import {ENV} from './utils.js';
 
 const ADMITAD_REGEX = /ad.admitad.com/;
 
@@ -11,6 +10,7 @@ const Link = React.createClass({
 		className: React.PropTypes.string,
 		href: React.PropTypes.string.isRequired,
 		isExternal: React.PropTypes.bool,
+		title: React.PropTypes.string,
 		onClick: React.PropTypes.func
 	},
 
@@ -27,7 +27,7 @@ const Link = React.createClass({
 
 		let href = props.href;
 		if (props.isExternal) {
-			href = `${window.ENV.redirectPrefix}${href}`;
+			href = `${ENV.redirectPrefix}${href}`;
 
 			if (ADMITAD_REGEX.test(href)) {
 				href += getAdmitadAddition();
@@ -38,6 +38,7 @@ const Link = React.createClass({
 			<a
 				className={props.className || ''}
 				href={href}
+				title={props.title}
 				target={props.isExternal ? '_blank' : ''}
 				onClick={this.handleClick}
 				rel="nofollow"

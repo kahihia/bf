@@ -17,8 +17,6 @@ import SidebarCats from './app/sidebar-cats.jsx';
 
 import Superbanner from './app/superbanner.jsx';
 import Goods from './app/goods.jsx';
-import {Merchants, AllMerchants} from './app/merchants.jsx';
-import Partners from './app/partners.jsx';
 import Banners from './app/banners.jsx';
 
 (function () {
@@ -244,18 +242,21 @@ import Banners from './app/banners.jsx';
 	// Category page
 	const merchants = document.getElementById('merchants');
 	if (DATA.merchants && merchants) {
+		const Merchants = require('./app/merchants').Merchants;
 		ReactDOM.render(<Merchants {...DATA.merchants}/>, merchants);
 	}
 
 	// All Merchants page
 	const allMerchants = document.getElementById('all-merchants');
 	if (DATA.allMerchants && allMerchants) {
+		const AllMerchants = require('./app/merchants').AllMerchants;
 		ReactDOM.render(<AllMerchants {...DATA.allMerchants}/>, allMerchants);
 	}
 
 	// Main page
 	const partners = document.getElementById('partners');
 	if (DATA.partners && partners) {
+		const Partners = require('./app/partners');
 		ReactDOM.render(<Partners {...DATA.partners}/>, partners);
 	}
 
