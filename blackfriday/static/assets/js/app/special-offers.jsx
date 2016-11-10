@@ -4,7 +4,7 @@ import Link from './link.jsx';
 const SpecialOffers = props => (
 	<div className="special-offers">
 		<div className="row">
-			{props.banners.map(banner => (
+			{props.data.map(banner => (
 				<div
 					key={banner.id}
 					className="col-sm-6"
@@ -28,7 +28,7 @@ const SpecialOffers = props => (
 	</div>
 );
 SpecialOffers.propTypes = {
-	banners: React.PropTypes.array
+	data: React.PropTypes.array
 };
 // SpecialOffers.defaultProps = {};
 
