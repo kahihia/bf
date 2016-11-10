@@ -60,15 +60,70 @@ class MerchantBanner extends React.Component {
 			url
 		} = this.props;
 		const banner = BANNER_TYPE[type];
-		const selectedCategories = categories.map(item => item.id);
+		const categoriesSelected = categories.map(item => item.id);
 
-		const showInMailing = limits.inMailing || limits.inMailing === 0;
-		const disabledInMailing = limits.inMailing === 0 && !inMailing;
+		let showOnMain = limits.onMain || limits.onMain === 0;
+		let disabledOnMain = limits.onMain === 0 && !onMain;
 
-		const showOnMain = type !== 20 && (limits.onMain || limits.onMain === 0);
-		const disabledOnMain = limits.onMain === 0 && !onMain;
+		let showInMailing = limits.inMailing || limits.inMailing === 0;
+		let disabledInMailing = limits.inMailing === 0 && !inMailing;
 
-		const showCategories = type !== 20;
+		let showCategories = limits.categories || limits.categoriesSelected.length;
+		let disabledCategories = false;
+		let categoriesLimit = limits.categories + categoriesSelected.length;
+
+		// superbanner
+		if (type === 0) {
+			const isCategoriesSelected = Boolean(categoriesSelected.length);
+			const isLimitCategoriesSelected = Boolean(limits.categoriesSelected.length);
+
+			if (showOnMain) {
+				if (onMain) {
+					disabledOnMain = false;
+				} else if (!disabledOnMain) {
+					if (
+						inMailing ||
+						(!isCategoriesSelected && isLimitCategoriesSelected)
+					) {
+						disabledOnMain = true;
+					}
+				}
+			}
+
+			if (showInMailing) {
+				if (inMailing) {
+					disabledInMailing = false;
+				} else if (!disabledInMailing) {
+					if (
+						onMain ||
+						isCategoriesSelected
+					) {
+						disabledInMailing = true;
+					}
+				}
+			}
+
+			if (showCategories) {
+				if (isCategoriesSelected) {
+					disabledCategories = false;
+
+					if (categoriesSelected.length !== limits.categoriesSelected.length) {
+						categoriesLimit = categoriesSelected.length;
+					}
+				} else if (!disabledCategories) {
+					if (
+						inMailing ||
+						(!isCategoriesSelected && isLimitCategoriesSelected) ||
+						disabledOnMain
+					) {
+						disabledCategories = true;
+					}
+				}
+			}
+		// verticalbanner
+		} else if (type === 20) {
+			showOnMain = false;
+		}
 
 		return (
 			<div className={className}>
@@ -136,10 +191,11 @@ class MerchantBanner extends React.Component {
 									selectedHeader="Выбранные"
 									selectAllText="Выбрать все"
 									deselectAllText="Очистить"
+									disabled={disabledCategories}
 									options={categoriesAvailable}
-									value={selectedCategories}
+									value={categoriesSelected}
 									highlight={categoriesHighlighted}
-									limit={limits.categories + selectedCategories.length}
+									limit={categoriesLimit}
 									labelKey="name"
 									valueKey="id"
 									showControls
