@@ -3,7 +3,6 @@
 import React from 'react';
 import formatThousands from 'format-thousands';
 import b from 'b_';
-import {resolveImgPath} from './utils.js';
 import Price from 'react-price';
 import Link from './link.jsx';
 
@@ -80,7 +79,7 @@ const ShortProduct = React.createClass({
 						href={data.merchant_url}
 						>
 						<img
-							src={resolveImgPath(data.logo)}
+							src={data.logo}
 							alt=""
 							className={b(className, 'logo')}
 							/>

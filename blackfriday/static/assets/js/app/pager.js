@@ -38,8 +38,9 @@ Pager.prototype = {
 		this._generateQueue();
 		if (this._preloadedData) {
 			// Fill preloaded data
-			this._preloadedData.forEach((data, index) => {
-				this._saveToStore(index + 1, [data]);
+			const l = arrayChunk(this._preloadedData, this._perPage);
+			l.forEach((data, index) => {
+				this._saveToStore(index + 1, data);
 			});
 		}
 		this.next();

@@ -185,7 +185,6 @@
 
 <script>
 window.ENV = {
-    imgBaseUrl: '',
     redirectPrefix: '',
     isPreview: {% if is_preview %}true{% else %}false{% endif %}
 };
@@ -225,9 +224,9 @@ window.DATA = {
 {% block data %}{% endblock %}
 </script>
 
-{% block js %}
-    {% render_bundle 'app' 'js' %}
-{% endblock js %}
+{% block js %}{% endblock %}
+
+{% render_bundle 'app' 'js' %}
 
 <script>
 (function () {
