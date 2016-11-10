@@ -1,4 +1,5 @@
 import factory
+from apps.advertisers.models import ModerationStatus, BannerType
 
 
 class AdvertiserProfileFactory(factory.django.DjangoModelFactory):
@@ -29,3 +30,23 @@ class MerchantFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = 'advertisers.Merchant'
+
+
+class BannerFactory(factory.django.DjangoModelFactory):
+
+    id = factory.Sequence(lambda n: n)
+    type = BannerType.ACTION
+    image = factory.SubFactory('apps.mediafiles.tests.factories.ImageFactory')
+    url = factory.Faker('url')
+    on_main = False
+    in_mailing = False
+    merchant = factory.SubFactory(MerchantFactory)
+
+    @classmethod
+    def _adjust_kwargs(cls, **kwargs):
+        if isinstance(kwargs.get('type', None), str):
+            kwargs['type'] = BannerType.get(kwargs['type'])
+        return kwargs
+
+    class Meta:
+        model = 'advertisers.Banner'

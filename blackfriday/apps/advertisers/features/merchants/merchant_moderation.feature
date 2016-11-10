@@ -3,7 +3,7 @@ Feature: Merchant moderation reset
 Scenario: Reset on successfull change of text fields
     Given I am an advertiser
     And I am logged in
-    And I have already moderated merchant
+    And I have moderated merchant
     When I change <field> to <value>
     Then moderation_status is <moderation_status>
 
@@ -19,7 +19,7 @@ Scenario: Reset on successfull change of text fields
 Scenario: Reset on successfull change of image
     Given I am an advertiser
     And I am logged in
-    And I have already moderated merchant
+    And I have moderated merchant
     And there is uploaded image in system with id=<image_id>
     When I change <field> to <value>
     Then moderation_status is <moderation_status>
@@ -32,7 +32,7 @@ Scenario: Reset on successfull change of image
 Scenario: Not reset on change of system fields
     Given I am an admin
     And I am logged in
-    And I have already moderated merchant
+    And I have moderated merchant
     When I change <field> to <value>
     Then moderation_status is <moderation_status>
 
