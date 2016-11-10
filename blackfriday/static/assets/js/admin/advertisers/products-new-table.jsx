@@ -237,7 +237,7 @@ class ProductsNewTable extends React.Component {
 		);
 
 		return (
-			<div className="goods-control">
+			<div className="products-control">
 				<IsLoadingWrapper isLoading={isWaiting}>
 					{uploadPanel}
 
