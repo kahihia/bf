@@ -294,6 +294,21 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			);
 		},
 
+		getCategoryIdByName(name) {
+			let categoryId = null;
+			_.forEach(this.state.categories, category => {
+				if (
+					category.name &&
+					typeof category.name === 'string' &&
+					category.name.toLowerCase() === name
+				) {
+					categoryId = category.id;
+					return false;
+				}
+			});
+			return categoryId;
+		},
+
 		collectCategoriesSelected() {
 			const {
 				banners,
@@ -313,16 +328,6 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					return;
 				}
 				selected.push(item.category.id);
-			});
-
-			// TODO: category name aliasing
-			_.forEach(productsNew, item => {
-				_.forEach(item.categories, item => {
-					if (selected.indexOf(item.id) > -1) {
-						return;
-					}
-					selected.push(item.id);
-				});
 			});
 
 			const extraBannerCategories = limits.extra_banner_categories || 0;
@@ -365,6 +370,17 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					});
 				});
 			}
+
+			_.forEach(productsNew, item => {
+				if (selected.length >= limits.categories) {
+					return false;
+				}
+				const categoryId = this.getCategoryIdByName(item.data.category);
+				if (selected.indexOf(categoryId) > -1) {
+					return;
+				}
+				selected.push(categoryId);
+			});
 
 			selected.sort();
 
