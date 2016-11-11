@@ -2,6 +2,7 @@ import factory
 from apps.catalog.tests.factories import CategoryFactory
 
 from apps.advertisers.models import ModerationStatus, BannerType
+from apps.catalog.models import Category
 
 
 class AdvertiserProfileFactory(factory.django.DjangoModelFactory):
@@ -49,7 +50,13 @@ class BannerFactory(factory.django.DjangoModelFactory):
         if not create:
             return
         if extracted:
-            obj.categories.add(*[CategoryFactory.create(id=i) for i in extracted])
+            for i in extracted:
+                if Category.objects.filter(id=i).exists():
+                    cat = Category.objects.get(id=i)
+                else:
+                    cat = CategoryFactory.create(id=i)
+
+            obj.categories.add(cat)
 
     @classmethod
     def _adjust_kwargs(cls, **kwargs):
