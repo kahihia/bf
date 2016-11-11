@@ -3,10 +3,14 @@ import pytest
 
 from pytest_bdd import given, when, then, parsers
 from apps.advertisers.tests.factories import MerchantFactory
-# from apps.advertisers.models import Merchant
 from django.core.urlresolvers import reverse
 
 pytestmark = pytest.mark.django_db
+
+
+@pytest.fixture
+def pytestbdd_strict_gherkin():
+    return False
 
 
 @given(parsers.parse('I have moderated merchant with id={merchant_id:d}'), target_fixture='moderated_merchant')

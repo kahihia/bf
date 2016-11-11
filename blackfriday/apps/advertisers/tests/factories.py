@@ -1,4 +1,6 @@
 import factory
+from apps.catalog.tests.factories import CategoryFactory
+
 from apps.advertisers.models import ModerationStatus, BannerType
 
 
@@ -41,6 +43,13 @@ class BannerFactory(factory.django.DjangoModelFactory):
     on_main = False
     in_mailing = False
     merchant = factory.SubFactory(MerchantFactory)
+
+    @factory.post_generation
+    def categories(obj, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            obj.categories.add(*[CategoryFactory.create(id=i) for i in extracted])
 
     @classmethod
     def _adjust_kwargs(cls, **kwargs):
