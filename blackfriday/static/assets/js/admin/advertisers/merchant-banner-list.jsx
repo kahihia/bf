@@ -52,7 +52,7 @@ class MerchantBannerList extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					const banners = _.sortBy(data, 'type');
+					const banners = _.sortBy(data, ['id', 'type']);
 					this.setState({banners}, () => {
 						this.props.onChange(banners);
 					});
@@ -264,13 +264,16 @@ class MerchantBannerList extends React.Component {
 		});
 	}
 
-	getLimitByTypeAndName(bannerType, limitName) {
+	getLimitByTypeAndName(bannerType, limitName, prefixLimitName) {
 		const {limits} = this.props;
 		const limitBannerName = BANNER_LIMIT_ALIAS[bannerType];
 		if (Array.isArray(limitBannerName)) {
 			return false;
 		}
-		return limits[`${limitBannerName}${limitName}`];
+		if (!prefixLimitName) {
+			return limits[`${limitBannerName}${limitName}`];
+		}
+		return limits[`${prefixLimitName}${limitBannerName}${limitName}`];
 	}
 
 	getLimitAvailableByTypeAndName(bannerType, limitName, propName) {
@@ -325,11 +328,28 @@ class MerchantBannerList extends React.Component {
 	}
 
 	collectLimits(bannerType) {
+		const apositions = this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories');
+
+		let acategories = this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories');
+		if (acategories === null && apositions !== null) {
+			const limitExtra = this.getLimitByTypeAndName(bannerType, '_categories', 'extra_');
+			if (limitExtra && typeof limitExtra === 'number') {
+				const categoriesLimit = this.props.limits.categories;
+				if (categoriesLimit && typeof categoriesLimit === 'number') {
+					acategories = categoriesLimit + limitExtra;
+				}
+			}
+		}
+
+		const categories = acategories || 0;
+		const categoriesPositions = apositions === null ? categories : apositions;
+
 		const limits = {
 			length: this.getLimitByTypeAndName(bannerType, 's'),
 			onMain: this.getLimitAvailableByTypeAndName(bannerType, '_on_main', 'onMain'),
 			inMailing: this.getLimitAvailableByTypeAndName(bannerType, '_in_mailing', 'inMailing'),
-			categories: this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories') || this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories') || 0,
+			categories,
+			categoriesPositions,
 			categoriesSelected: this.collectCategoriesSelected(bannerType)
 		};
 
@@ -340,17 +360,17 @@ class MerchantBannerList extends React.Component {
 		return _.filter(this.state.banners, {type});
 	}
 
-	collectCategoriesAvailable(bannerType) {
+	collectCategoriesAvailable(bannerType, bannerLimits) {
 		if (bannerType !== 10) {
 			return this.props.categoriesAvailable;
 		}
 
 		const {
 			categories,
-			categoriesSelected,
 			limits
 		} = this.props;
 
+		const categoriesSelected = bannerLimits.categoriesSelected;
 		const categoriesLimit = (limits.categories || 0) + (limits.extra_banner_categories || 0);
 
 		if (categoriesSelected.length < categoriesLimit) {
@@ -395,7 +415,7 @@ class MerchantBannerList extends React.Component {
 						return null;
 					}
 
-					const categoriesAvailable = this.collectCategoriesAvailable(bannerType);
+					const categoriesAvailable = this.collectCategoriesAvailable(bannerType, bannerLimits);
 
 					return (
 						<div
