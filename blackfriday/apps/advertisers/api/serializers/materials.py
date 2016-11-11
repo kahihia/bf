@@ -53,6 +53,7 @@ class BannerSerializer(BannerDetailSerializer):
             if (
                 Banner.objects.exclude(pk=self.instance.pk if self.instance else None).filter(
                     Q(on_main=True) | Q(categories__isnull=False), merchant=self.context['merchant'],
+                    type=BannerType.SUPER
                 ) and (attrs.get('on_main', False) or attrs.get('categories'))
             ):
                 raise ValidationError('В категориях и на главной можно разместить только один супербаннер')
