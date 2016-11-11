@@ -408,7 +408,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							/>
 					) : null}
 
-					<p>
+					<div style={{marginBottom: '10px'}}>
 						{isAdmin ? (
 							<div className="pull-right">
 								<NotificationHandler
@@ -421,7 +421,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							onClick={this.handleClickViewSwitcher}
 							view={view}
 							/>
-					</p>
+					</div>
 
 					{view === 'list' ? (
 						<MerchantList
