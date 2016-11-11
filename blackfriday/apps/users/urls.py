@@ -10,7 +10,12 @@ urlpatterns = [
     url(r'^registration/$', TemplateView.as_view(template_name='users/registration.html')),
     url(r'^verification/$', VerificationView.as_view(), name='verification'),
 
-    url(r'^login/$', login_no_csrf, {'template_name': 'users/login.html', 'redirect_authenticated_user': True}),
+    url(r'^login/$', auth_views.login, {'template_name': 'users/login.html', 'redirect_authenticated_user': True}),
+    url(
+        r'^landing-login/$',
+        login_no_csrf,
+        {'template_name': 'users/login.html', 'redirect_authenticated_user': True}
+    ),
     url(r'^logout/$', auth_views.logout_then_login, name='logout'),
 
     url(r'^users/$', UserListView.as_view(), name='user-list'),
