@@ -738,7 +738,7 @@ class ProductsNewTableRow extends React.Component {
 					>
 					<Select
 						options={categoriesAvailable}
-						selected={typeof data.category === 'string' ? data.category.toLowerCase() : data.category}
+						selected={data.category}
 						onChange={this.handleChangeCategory}
 						/>
 				</ProductsTableCell>
