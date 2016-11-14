@@ -7,7 +7,6 @@
     "prepush": "npm test"
   },
   "devDependencies": {
-    "api-toggler": "0.1.1",
     "array-shuffle": "1.0.1",
     "array.chunk": "1.1.0",
     "autoprefixer-stylus": "0.11.0",
