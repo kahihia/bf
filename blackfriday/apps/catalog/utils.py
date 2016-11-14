@@ -27,15 +27,18 @@ def xls_dict_reader(f, sheet_index=0):
         book = xlrd.open_workbook(file_contents=f.read())
         sheet = book.sheet_by_index(sheet_index)
         headers = dict(
-            (i, str.lower(sheet.cell_value(0, i)).strip()) for i in range(sheet.ncols) if sheet.cell_value(0, i)
+            (str.lower(sheet.cell_value(0, i)).strip(), i) for i in range(sheet.ncols) if sheet.cell_value(0, i)
         )
-        diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(headers.values())
+        diff = set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys()) - set(headers.keys())
         if diff:
             raise ValidationError('некорректный формат данных, отсутствуют колонки: {}'.format(','.join(diff)))
+        for field in (set(headers.keys()) - set(settings.PRODUCT_FILE_COLUMNS_MAPPING.keys())):
+            del headers[field]
+
         return [
             dict(
-                (settings.PRODUCT_FILE_COLUMNS_MAPPING[headers[column]], sheet.cell_value(row, column))
-                for column in headers
+                (settings.PRODUCT_FILE_COLUMNS_MAPPING[key], sheet.cell_value(row, column))
+                for key, column in headers.items()
             ) for row in range(1, sheet.nrows)
         ]
     except (xlrd.XLRDError, UnicodeDecodeError):
