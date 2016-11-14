@@ -66,6 +66,7 @@ class MerchantBannerBackgroundList extends React.Component {
 
 				{limit - bannerGroups.length > 0 ? (
 					<MerchantBannerBackground
+						key={`create-background${limit - bannerGroups.length}`}
 						categoriesAvailable={categoriesAvailableOptions}
 						onUpload={this.handleUploadBannerBackground}
 						{...{
