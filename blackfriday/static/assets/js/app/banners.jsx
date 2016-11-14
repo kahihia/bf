@@ -86,7 +86,6 @@ Banners.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number

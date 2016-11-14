@@ -13,7 +13,7 @@
 {% endblock content %}
 
 {% block superbanner %}
-pages: {{ superbanners|length }},
+// pagesCount: {{ superbanners|length }},
 isRandom: false,
 isControlsShown: true,
 isPagerShown: true,
@@ -27,8 +27,8 @@ data: [
 {% block data %}
 window.DATA.products = {
     ajaxUrl: 'products',
-    perPage: 4,
-    pages: 1,
+    perPage: 10,
+    // pagesCount: 1,
     data: [
         {% for item in merchant.products.all %}
         {
