@@ -13,22 +13,22 @@ Feature: Управление флагами видимости баннеров
     Scenario: Нельзя создать баннер с категориями, на главной и в рассылке
         Given I am logged in
         When I create banner with:
-            | on_main | in_mailing | categories |  
-            | true    | true       | [1, 2]       |  
+            | on_main | in_mailing | categories | type    |  
+            | true    | true       | [1, 2]     | "super" |  
         Then response status is 400
 
     Scenario: Нельзя создать баннер в рассылке и на главной
         Given I am logged in
         When I create banner with:
-            | on_main | in_mailing |  
-            | true    | true       |  
+            | on_main | in_mailing | type    |  
+            | true    | true       | "super" |  
         Then response status is 400
 
     Scenario: Нельзя создать баннер с категорями и в рассылке
         Given I am logged in
         When I create banner with:
-            | in_mailing | categories |  
-            | true       | [1, 2]    |  
+            | in_mailing | categories | type    |  
+            | true       | [1, 2]     | "super" |  
         Then response status is 400
 
     Scenario: Нельзя ставить существующий баннер на главную и в рассылку
@@ -63,7 +63,7 @@ Feature: Управление флагами видимости баннеров
 
 
     Scenario: Нельзя разместить баннер на главную, если уже существует баннер на главной
-        And I am logged in
+        Given I am logged in
         And I have banner:
             | type    | in_mailing | on_main | categories |  
             | "super" | false      | true    | null       |  
@@ -75,7 +75,7 @@ Feature: Управление флагами видимости баннеров
         Then response status is 400
 
     Scenario: Нельзя разместить баннер в рассылку, если он уже размещен в категориях
-        And I am logged in
+        Given I am logged in
         And I have banner:
             | type    | in_mailing | on_main | categories |  
             | "super" | false      | false   | [1, 2]     |  
@@ -86,7 +86,7 @@ Feature: Управление флагами видимости баннеров
         Then response status is 400
 
     Scenario: Нельзя разместить баннер на главную, если он уже в рассылке
-        And I am logged in
+        Given I am logged in
         And I have banner:
             | type    | in_mailing | on_main | categories |  
             | "super" | true      | false   | null     |  
@@ -98,7 +98,7 @@ Feature: Управление флагами видимости баннеров
         Then response status is 400
 
     Scenario: Нельзя добавить категории к баннеру, если он уже в рассылке
-        And I am logged in
+        Given I am logged in
         And I have banner:
             | type    | in_mailing | on_main | categories |  
             | "super" | true      | false   | null     |  

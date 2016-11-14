@@ -1,13 +1,14 @@
-from django.db.models import F, Q
+from django.db.models import F, Q, Prefetch, Count
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+from bulk_update.helper import bulk_update
 
 from libs.api.permissions import IsAuthenticated, IsAdmin
 
 from apps.landing.models import LandingLogo
-from apps.advertisers.models import Merchant, ModerationStatus
+from apps.advertisers.models import Merchant, ModerationStatus, Banner, BannerType
 from apps.promo.models import PromoOption
 from apps.orders.models import InvoiceOption
 
@@ -49,12 +50,19 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
                 promo__invoice__merchant__moderation_status=ModerationStatus.confirmed
             ).values_list('promo__invoice__merchant__id', flat=True)
         ).update(banner_mailings_count=F('banner_mailings_count') + 1)
-        Merchant.objects.filter(
+        merchants = Merchant.objects.prefetch_related(
+            Prefetch('banners', Banner.objects.filter(type=BannerType.SUPER, was_mailed=False), 'not_mailed_banners')
+        ).filter(
             id__in=InvoiceOption.objects.filter(
                 option__tech_name='superbanner_at_mailing',
                 invoice__is_paid=True,
                 invoice__merchant__moderation_status=ModerationStatus.confirmed,
                 invoice__merchant__superbanner_mailings_count__lt=F('value')
             ).values_list('invoice__merchant__id', flat=True)
-        ).update(superbanner_mailings_count=F('superbanner_mailings_count') + 1)
+        )
+        for m in merchants:
+            m.superbanner_mailings_count = len(m.not_mailed_banners) + m.superbanner_mailings_count
+
+        bulk_update(merchants, update_fields=['superbanner_mailings_count'])
+        Banner.objects.filter(merchant__id__in=[m.id for m in merchants]).update(was_mailed=True)
         return Response()
