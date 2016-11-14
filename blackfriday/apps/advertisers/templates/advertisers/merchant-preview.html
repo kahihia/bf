@@ -40,9 +40,7 @@ window.DATA.products = {
             oldPrice: {{ item.old_price|default:'null' }},
             startPrice: {{ item.start_price|default:'null' }},
             discount: {{ item.discount|default:'null' }},
-            category: {
-                name: '{{ item.category }}'
-            },
+            category: '{{ item.category }}' ,
             country: '{{ item.country }}',
             brand: '{{ item.brand }}'
         },
