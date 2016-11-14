@@ -110,7 +110,7 @@ class ShortProduct extends React.Component {
 
 					{data.category ? (
 						<div className={b(className, 'cat')}>
-							{data.category.name}
+							{data.category}
 						</div>
 					) : null}
 
