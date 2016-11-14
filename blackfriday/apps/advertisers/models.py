@@ -345,6 +345,7 @@ class Banner(models.Model):
     in_mailing = models.BooleanField()
     categories = models.ManyToManyField('catalog.Category', related_name='banners')
     merchant = models.ForeignKey(Merchant, related_name='banners')
+    was_mailed = models.BooleanField(default=False)
 
     @property
     def owner_id(self):

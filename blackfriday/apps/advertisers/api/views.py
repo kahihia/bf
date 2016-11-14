@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
@@ -257,7 +257,14 @@ class BannerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(merchant=self.get_parent())
 
+    def update(self, request, *args, **kwargs):
+        if self.get_object().was_mailed:
+            raise PermissionDenied
+        return super().update(request, *args, **kwargs)
+
     def perform_destroy(self, instance):
+        if instance.was_mailed:
+            raise PermissionDenied
         instance.merchant.moderation_status = 0
         instance.merchant.save()
 
