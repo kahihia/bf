@@ -593,17 +593,103 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				}
 			}
 
-			// TODO: Backgrounds
-			// if (limits.main_backgrounds || limits.category_backgrounds) {
-			//     const bannersLeft = _.filter(banners, {type: 30});
-			//     const bannersRight = _.filter(banners, {type: 40});
+			if (limits.main_backgrounds || limits.category_backgrounds) {
+				let backgroundsLeft = 0;
+				let backgroundsRight = 0;
+				let mainBackgroundsLeft = 0;
+				let mainBackgroundsRight = 0;
+				let categoryBackgroundsLeft = 0;
+				let categoryBackgroundsRight = 0;
+				let backgrounds = 0;
+				let backgroundsUTM = 0;
+				banners.forEach(banner => {
+					switch (banner.type) {
+						case 30: {
+							backgrounds += 1;
+							backgroundsLeft += 1;
+							if (banner.onMain) {
+								mainBackgroundsLeft += 1;
+							} else if (banner.categories && banner.categories.length) {
+								categoryBackgroundsLeft += 1;
+							}
+							if (isUTM(banner.url)) {
+								backgroundsUTM += 1;
+							}
+							break;
+						}
+						case 40: {
+							backgrounds += 1;
+							backgroundsRight += 1;
+							if (banner.onMain) {
+								mainBackgroundsRight += 1;
+							} else if (banner.categories && banner.categories.length) {
+								categoryBackgroundsRight += 1;
+							}
+							if (isUTM(banner.url)) {
+								backgroundsUTM += 1;
+							}
+							break;
+						}
+						default: {
+							break;
+						}
+					}
+				});
 
-			//     if (limits.main_backgrounds) {
-			//     }
+				const data = [];
 
-			//     if (limits.category_backgrounds) {
-			//     }
-			// }
+				const backgroundsLimit = (limits.main_backgrounds || 0) + (limits.category_backgrounds || 0);
+				const backgroundsLeftLeft = backgroundsLimit - backgroundsLeft;
+				if (backgroundsLeftLeft) {
+					data.push({
+						name: 'backgrounds_left',
+						value: backgroundsLeftLeft
+					});
+				}
+
+				const backgroundsRightLeft = backgroundsLimit - backgroundsRight;
+				if (backgroundsRightLeft) {
+					data.push({
+						name: 'backgrounds_right',
+						value: backgroundsRightLeft
+					});
+				}
+
+				if (limits.main_backgrounds) {
+					const backgroundsMainLeft = (limits.main_backgrounds * 2) - mainBackgroundsLeft - mainBackgroundsRight;
+					if (backgroundsMainLeft) {
+						data.push({
+							name: 'main_backgrounds',
+							value: backgroundsMainLeft
+						});
+					}
+				}
+
+				if (limits.category_backgrounds) {
+					const backgroundsCategoryLeft = (limits.category_backgrounds * 2) - categoryBackgroundsLeft - categoryBackgroundsRight;
+					if (backgroundsCategoryLeft) {
+						data.push({
+							name: 'category_backgrounds',
+							value: backgroundsCategoryLeft
+						});
+					}
+				}
+
+				const backgroundsUTMLeft = Math.floor((backgrounds - backgroundsUTM) / 2);
+				if (backgroundsUTMLeft) {
+					data.push({
+						name: 'utm',
+						value: backgroundsUTMLeft
+					});
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'backgrounds',
+						data
+					});
+				}
+			}
 
 			return {
 				name: 'banners',
