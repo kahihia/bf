@@ -14,14 +14,18 @@ const LIMIT_NAME = {
 
 const LIMIT_DATA_NAME = {
 	backgrounds: 'Фоны',
+	backgrounds_left: 'Левые',
+	backgrounds_right: 'Правые',
 	banner_count: 'Баннеры',
 	banners: 'Акционные баннеры',
 	categories: 'Уникальные категории',
+	category_backgrounds: 'В категории',
 	description: 'Описание',
 	image: 'Изображение',
 	in_mailing: 'В рассылке',
 	logo: 'Логотип',
 	logo_categories: 'Категории размещения',
+	main_backgrounds: 'На главной',
 	name: 'Название',
 	on_main: 'На главной',
 	positions: 'Позиции',
