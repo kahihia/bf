@@ -60,7 +60,11 @@ import Banners from './app/banners.jsx';
 
 	// Site Superbanner
 	const superbanner = document.getElementById('superbanner');
-	if (superbanner && DATA.superbanners && DATA.superbanners.pages) {
+	if (
+		superbanner &&
+		DATA.superbanners &&
+		(DATA.superbanners.pagesCount || (DATA.superbanners.data && DATA.superbanners.data.length))
+	) {
 		ReactDOM.render(<Superbanner {...DATA.superbanners}/>, superbanner);
 	}
 

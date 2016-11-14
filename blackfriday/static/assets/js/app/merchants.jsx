@@ -46,7 +46,7 @@ const BannerPlaceholder = () => (
 // BannerPlaceholder.defaultProps = {};
 
 const MerchantsCarousel = props => {
-	const {list, perPage, pages} = props;
+	const {list, perPage, pagesCount} = props;
 	const length = list.length;
 	let i = length;
 	const l = list.map((item, index) => (
@@ -58,7 +58,7 @@ const MerchantsCarousel = props => {
 		</div>
 	));
 	let additional = perPage;
-	if (pages === 1 && length <= 4) {
+	if (pagesCount === 1 && length <= 4) {
 		additional = 4;
 	}
 	while (i++ < additional) {
@@ -79,7 +79,7 @@ const MerchantsCarousel = props => {
 };
 MerchantsCarousel.propTypes = {
 	list: React.PropTypes.array,
-	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number
 };
 
@@ -109,7 +109,7 @@ export class Merchants extends React.Component {
 					<MerchantsCarousel
 						list={this.state.data}
 						perPage={this.props.perPage}
-						pages={this.props.pages}
+						pagesCount={this.props.pagesCount}
 						/>
 				</Carousel>
 			</div>
@@ -126,7 +126,6 @@ Merchants.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number
