@@ -2,6 +2,25 @@ import xhr from 'xhr';
 import arrayShuffle from 'array-shuffle';
 import arrayChunk from 'array.chunk';
 
+/**
+ * Pager
+ *
+ * @param {Object} o
+ * @param {Number} o.perPage
+ * @param {Number} [o.pagesCount]
+ * @param {Number} [o.loadPagesCount=1]
+ * @param {Boolean} [o.isCycled=false]
+ * @param {Boolean} [o.isFullfilled=false]
+ * @param {Boolean} [o.isRandom=false]
+ * @param {String} o.ajaxUrl
+ * @param {Boolean} [o.ajaxUrlRoot=false]
+ * @param {Array} [o.preloadedData=null]
+ * @param {Function} o.onNext
+ * @param {Function} [o.onAllLoaded]
+ * @param {Function} [o.onLoadstart]
+ * @param {Function} [o.onLoadend]
+ * @param {Function} [o.onInited]
+ */
 export default function Pager(o) {
 	this._perPage = o.perPage;
 	this._pagesCount = o.pagesCount;
@@ -13,6 +32,10 @@ export default function Pager(o) {
 	this._ajaxUrl = o.ajaxUrl;
 	this._ajaxUrlRoot = o.ajaxUrlRoot || false;
 	this._preloadedData = o.preloadedData || null;
+
+	if (this._preloadedData) {
+		this._pagesCount = Math.ceil(this._preloadedData.length / this._perPage);
+	}
 
 	this._onNext = o.onNext;
 	this._onAllLoaded = o.onAllLoaded || function () {};
@@ -126,15 +149,19 @@ Pager.prototype = {
 	},
 
 	_saveToStore: function (index, data) {
-		data = arrayShuffle(data);
+		if (this._isRandom) {
+			data = arrayShuffle(data);
+		}
 		this._store[this._getPageNumberByIndex(index)] = data;
 	},
 
 	_getPage: function (index) {
 		const existsPage = this._getPageByIndex(index);
 		if (existsPage) {
-			this._currentIndex = index;
-			this._handleNext();
+			setTimeout(() => {
+				this._currentIndex = index;
+				this._handleNext();
+			}, 500);
 			return;
 		}
 
@@ -178,7 +205,7 @@ Pager.prototype = {
 
 		if (!this._isInited) {
 			this._isInited = true;
-			this._onInited();
+			this._onInited({pagesCount: this._pagesCount});
 		}
 
 		if (currentIndex === this._pagesCount) {
@@ -195,10 +222,10 @@ Pager.prototype = {
 	},
 
 	_fillEmptyPages: function (index) {
-		let page = this._getPageByIndex(index);
-		let emptyLength = this._perPage - page.length;
+		const page = this._getPageByIndex(index);
+		const emptyLength = this._perPage - page.length;
 		if (emptyLength) {
-			let randomLoaded = index - 1;
+			const randomLoaded = index - 1;
 			const randomLoadedPage = this._getPageByIndex(randomLoaded);
 			if (randomLoadedPage) {
 				for (let i = 0; i < emptyLength; i += 1) {
