@@ -343,7 +343,7 @@ class Banner(models.Model):
     url = models.URLField()
     on_main = models.BooleanField()
     in_mailing = models.BooleanField()
-    categories = models.ManyToManyField('catalog.Category', related_name='banners')
+    categories = models.ManyToManyField('catalog.Category', related_name='banners', blank=True)
     merchant = models.ForeignKey(Merchant, related_name='banners')
     was_mailed = models.BooleanField(default=False)
 
