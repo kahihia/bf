@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom';
 import xhr from 'xhr';
 import {ENV, TOKEN} from './admin/const.js';
 import {STATUS_DEFICIT_MESSAGE} from './admin/messages.js';
-import {hasRole, processErrors, getUrl} from './admin/utils.js';
+import {hasRole, processErrors, getUrl, isUTM} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
@@ -412,8 +412,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			const required = [
 				'name',
 				'url',
-				'description',
-				'image'
+				'description'
 			];
 			const result = [];
 
@@ -422,6 +421,21 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					result.push(name);
 				}
 			});
+
+			const image = {
+				name: 'logo',
+				data: []
+			};
+			if (!data.image) {
+				image.data.push('image');
+			}
+			const logoCategories = this.validateMerchantLogoCategories();
+			if (logoCategories) {
+				image.data.push(logoCategories);
+			}
+			if (image.data.length) {
+				result.push(image);
+			}
 
 			return {
 				name: 'data',
@@ -434,21 +448,16 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				limits,
 				logoCategories
 			} = this.state;
-			const result = [];
+			let result = null;
 
-			if (limits.logo_categories) {
-				if (limits.logo_categories !== logoCategories.length) {
-					result.push({
-						name: 'logo_categories',
-						value: limits.logo_categories - logoCategories.length
-					});
-				}
+			if (limits.logo_categories && limits.logo_categories !== logoCategories.length) {
+				result = {
+					name: 'logo_categories',
+					value: limits.logo_categories - logoCategories.length
+				};
 			}
 
-			return {
-				name: 'logo_categories',
-				data: result
-			};
+			return result;
 		},
 
 		validateMerchantBanners() {
@@ -458,36 +467,143 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			} = this.state;
 			const result = [];
 
-			let limitCount = 0;
-			const limitNames = [
-				'banners',
-				'superbanners',
-				'vertical_banners'
-			];
-			limitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
-				}
-				limitCount += limits[name];
-			});
+			if (limits.superbanners) {
+				const b = _.filter(banners, {type: 0});
+				const data = [];
 
-			const doubleLimitNames = [
-				'category_backgrounds',
-				'main_backgrounds'
-			];
-			doubleLimitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
+				const count = getBannerLeftCount(b, limits.superbanners);
+				if (count) {
+					data.push(count);
 				}
-				limitCount += (limits[name] * 2);
-			});
 
-			if (limitCount !== banners.length) {
-				result.push({
-					name: 'banners',
-					value: limitCount
-				});
+				const categories = limits.superbanner_categories - b.reduce((counter, banner) => (counter + banner.categories.length), 0);
+				if (categories) {
+					data.push({
+						name: 'categories',
+						value: categories
+					});
+				}
+
+				const onMain = getBannerLeftOnMain(b, limits.superbanner_on_main);
+				if (onMain) {
+					data.push(onMain);
+				}
+
+				const inMailing = getBannerLeftInMailing(b, limits.superbanner_in_mailing);
+				if (inMailing) {
+					data.push(inMailing);
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'superbanners',
+						data
+					});
+				}
 			}
+
+			if (limits.banners) {
+				const b = _.filter(banners, {type: 10});
+				const data = [];
+
+				const count = getBannerLeftCount(b, limits.banners);
+				if (count) {
+					data.push(count);
+				}
+
+				const categoriesSelected = [];
+				let categoriesPositions = limits.banner_positions;
+				b.forEach(banner => {
+					if (banner.categories && banner.categories.length) {
+						banner.categories.forEach(category => {
+							categoriesPositions -= 1;
+
+							const categoryId = category.id;
+							if (categoriesSelected.indexOf(categoryId) === -1) {
+								categoriesSelected.push(categoryId);
+							}
+						});
+					}
+				});
+				const extraCategories = limits.extra_banner_categories || 0;
+				const categories = limits.categories + extraCategories - categoriesSelected.length;
+				if (categories) {
+					data.push({
+						name: 'categories',
+						value: categories
+					});
+				}
+				if (categoriesPositions) {
+					data.push({
+						name: 'positions',
+						value: categoriesPositions
+					});
+				}
+
+				const onMain = getBannerLeftOnMain(b, limits.banner_on_main);
+				if (onMain) {
+					data.push(onMain);
+				}
+
+				const inMailing = getBannerLeftInMailing(b, limits.banner_in_mailing);
+				if (inMailing) {
+					data.push(inMailing);
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'banners',
+						data
+					});
+				}
+			}
+
+			if (limits.vertical_banners) {
+				const b = _.filter(banners, {type: 20});
+				const data = [];
+
+				const count = limits.vertical_banners - b.length;
+				if (count) {
+					data.push({
+						name: 'banner_count',
+						value: count
+					});
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'vertical_banners',
+						data
+					});
+				}
+			}
+
+			// TODO: Backgrounds
+			// if (limits.main_backgrounds || limits.category_backgrounds) {
+			//     const bannersLeft = _.filter(banners, {type: 30});
+			//     const bannersRight = _.filter(banners, {type: 40});
+
+			//     if (limits.main_backgrounds) {
+			//     }
+
+			//     if (limits.category_backgrounds) {
+			//     }
+			// }
 
 			return {
 				name: 'banners',
@@ -505,9 +621,31 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			if (limits.products) {
 				if (products.length < limits.products) {
 					result.push({
-						name: 'products',
+						name: 'positions',
 						value: limits.products - products.length
 					});
+				}
+
+				if (limits.teasers) {
+					const teasers = _.filter(products, {isTeaser: true}).length;
+					const teaserPositions = limits.teasers - teasers;
+					if (teaserPositions > 0) {
+						result.push({
+							name: 'teasers',
+							value: teaserPositions
+						});
+					}
+				}
+
+				if (limits.teasers_on_main) {
+					const teasers = _.filter(products, {isTeaserOnMain: true}).length;
+					const teaserOnMainPositions = limits.teasers_on_main - teasers;
+					if (teaserOnMainPositions > 0) {
+						result.push({
+							name: 'teasers_on_main',
+							value: teaserOnMainPositions
+						});
+					}
 				}
 			}
 
@@ -521,7 +659,6 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			const result = [];
 
 			result.push(this.validateMerchantData());
-			result.push(this.validateMerchantLogoCategories());
 			result.push(this.validateMerchantBanners());
 			result.push(this.validateMerchantProducts());
 
@@ -689,4 +826,36 @@ function processStatusDeficit(deficit) {
 	const messages = deficit.map(name => (STATUS_DEFICIT_MESSAGE[name] || name));
 	const message = '<ul style="padding-left: 18px"><li>' + messages.join('</li><li>') + '</li></ul>';
 	toastr.warning(message, 'Не все данные заполнены');
+}
+
+function getBannerLeftCount(banners, limit) {
+	const value = limit - banners.length;
+	if (value) {
+		return {name: 'banner_count', value};
+	}
+	return null;
+}
+
+function getBannerLeftOnMain(banners, limit) {
+	const value = limit - _.filter(banners, {onMain: true}).length;
+	if (value) {
+		return {name: 'on_main', value};
+	}
+	return null;
+}
+
+function getBannerLeftInMailing(banners, limit) {
+	const value = limit - _.filter(banners, {inMailing: true}).length;
+	if (value) {
+		return {name: 'in_mailing', value};
+	}
+	return null;
+}
+
+function getBannerLeftUTM(banners) {
+	const value = banners.reduce((counter, banner) => (isUTM(banner.url) ? counter : counter + 1), 0);
+	if (value) {
+		return {name: 'utm', value};
+	}
+	return null;
 }

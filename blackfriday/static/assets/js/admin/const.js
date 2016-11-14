@@ -96,8 +96,8 @@ export const FEED_CELL = {
 	oldPrice: 'Старая цена',
 	price: 'Цена',
 	startPrice: 'Цена от',
-	teaser: 'Тизер на первом экране',
-	teaserOnMain: 'Товар на главной',
+	teaser: 'Тизер сквозной',
+	teaserOnMain: 'Тизер на главной',
 	url: 'URL'
 };
 
