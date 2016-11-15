@@ -66,4 +66,13 @@ window.DATA.specialOffers = {
         {% endfor %}
     ]
 };
-{% endblock %}
+
+window.DATA.teasers = {
+    perPage: 5,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: []
+};
+{% endblock data %}
