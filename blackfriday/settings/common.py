@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'apps.specials',
     'apps.mailing',
     'apps.payment',
+    'apps.reports',
 
     'webpack_loader',
     'django_rq',
