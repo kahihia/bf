@@ -1,5 +1,5 @@
 from django.http.response import HttpResponse
-from .utils import main_page, actions
+from .utils import main_page, actions, merchants
 
 
 def main_preview(request):
@@ -8,3 +8,7 @@ def main_preview(request):
 
 def actions_preview(request):
     return HttpResponse(content=actions())
+
+
+def merchants_preview(request):
+    return HttpResponse(content=merchants())

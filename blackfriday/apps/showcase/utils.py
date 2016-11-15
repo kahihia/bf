@@ -25,17 +25,17 @@ def serializer_factory(cls_name, fields, **extra_fields):
 MerchantSerializer = serializer_factory(
     cls_name='advertisers.Merchant',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.url')
+    image=serializers.CharField(source='image.image')
 )
 PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.url')
+    image=serializers.CharField(source='image.image')
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'name', 'url', 'merchant'),
-    image=serializers.CharField(source='image.url'),
+    image=serializers.CharField(source='image.image'),
     merchant=MerchantSerializer(),
 
 )
@@ -53,13 +53,31 @@ CategorySerializer = serializer_factory(
 SuperbannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'image', 'url'),
-    image=serializers.CharField(source='image.url'),
+    image=serializers.CharField(source='image.image'),
 )
+
+
+def merchants():
+    return render_to_string(
+        'showcase/merchants.html',
+        {
+            'merchants': json.dumps(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+            'superbanners': json.dumps(
+                SuperbannerSerializer(
+                    Banner.objects.super().from_moderated_merchants().filter(in_mailing=False),
+                    many=True
+                ).data
+            ),
+            'teasers': json.dumps(
+                ProductSerializer(Product.objects.teasers().from_moderated_merchants(), many=True)),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+        }
+    )
 
 
 def actions():
     return render_to_string(
-        'showcase/actions.py',
+        'showcase/actions.html',
         {
             'superbanners': json.dumps(
                 SuperbannerSerializer(
