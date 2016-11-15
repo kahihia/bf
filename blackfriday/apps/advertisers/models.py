@@ -343,6 +343,12 @@ class BannerQueryset(models.QuerySet):
     def vertical(self):
         return self.filter(type=BannerType.VERTICAL)
 
+    def super(self):
+        return self.filter(type=BannerType.SUPER)
+
+    def action(self):
+        return self.filter(type=BannerType.ACTION)
+
 
 class Banner(models.Model):
     TYPES = (
