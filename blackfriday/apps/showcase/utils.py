@@ -57,6 +57,68 @@ SuperbannerSerializer = serializer_factory(
 )
 
 
+def get_backgrounds(**kwargs):
+    background_qs = Merchant.objects.filter(**kwargs).moderated().annotate(
+        left=Max(Case(When(banners__type=30, then=F('banners__image__image')), output_field=CharField())),
+        right=Max(Case(When(banners__type=40, then=F('banners__image__image')), output_field=CharField()))
+    ).values(
+        'left', 'right', 'banners__url', 'id'
+    ).filter(Q(right__isnull=False) | Q(left__isnull=False))
+    backgrounds = {}
+    for b in background_qs:
+        b_id = b['id']
+        if b_id not in backgrounds:
+            backgrounds[b_id] = {}
+        if b['left']:
+            backgrounds[b_id]['left'] = b['left']
+        if b['right']:
+            backgrounds[b_id]['right'] = b['right']
+        backgrounds[b_id]['id'] = b_id
+        backgrounds[b_id]['url'] = b['banners__url']
+    return [value for _, value in backgrounds.items()]
+
+
+def category(category_id):
+    return render_to_string(
+        'showcase/category.html',
+        {
+            'superbanners': json.dumps(
+                SuperbannerSerializer(
+                    Banner.objects.super().from_moderated_merchants().filter(
+                        in_mailing=False, categories__id=category_id),
+                    many=True
+                ).data
+            ),
+            'merchants': json.dumps(
+                MerchantSerializer(
+                    Merchant.objects.moderated().filter(logo_categories__id=category_id),
+                    many=True
+                ).data
+            ),
+            'banners': json.dumps(
+                BannerSerializer(
+                    Banner.objects.action().from_moderated_merchants().filter(categories__id=category_id),
+                    many=True
+                ).data
+            ),
+            'products': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().filter(category__id=category_id),
+                    many=True
+                ).data
+            ),
+            'backgrounds': get_backgrounds(categories__id=category_id),
+            'teasers': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().teasers(),
+                    many=True
+                ).data
+            ),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+        }
+    )
+
+
 def merchants():
     return render_to_string(
         'showcase/merchants.html',
@@ -86,7 +148,7 @@ def actions():
                 ).data
             ),
             'banners': json.dumps(
-                BannerSerializer(Banner.objects.action(), many=True).data),
+                BannerSerializer(Banner.objects.action().from_moderated_merchants(), many=True).data),
             'products': json.dumps(
                 ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
             'teasers': json.dumps(
@@ -98,24 +160,6 @@ def actions():
 
 
 def main_page():
-    background_qs = Merchant.objects.moderated().annotate(
-        left=Max(Case(When(banners__type=30, then=F('banners__image__image')), output_field=CharField())),
-        right=Max(Case(When(banners__type=40, then=F('banners__image__image')), output_field=CharField()))
-    ).values(
-        'left', 'right', 'banners__url', 'id'
-    ).filter(Q(right__isnull=False) | Q(left__isnull=False))
-    backgrounds = {}
-    for b in background_qs:
-        b_id = b['id']
-        if b_id not in backgrounds:
-            backgrounds[b_id] = {}
-        if b['left']:
-            backgrounds[b_id]['left'] = b['left']
-        if b['right']:
-            backgrounds[b_id]['right'] = b['right']
-        backgrounds[b_id]['id'] = b_id
-        backgrounds[b_id]['url'] = b['banners__url']
-
     return render_to_string(
         'showcase/main.html',
         {
@@ -131,7 +175,7 @@ def main_page():
             'verticalbanners': json.dumps(
                 BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
             'products': json.dumps(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
-            'backgrounds': [value for _, value in backgrounds.items()],
+            'backgrounds': get_backgrounds(),
             'teasersOnMain': json.dumps(
                 ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
             'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
