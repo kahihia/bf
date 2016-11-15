@@ -72,7 +72,7 @@ class MerchantBanner extends React.Component {
 		let disabledCategories = false;
 
 		let categoriesLimit = limits.categories;
-		if ((limits.categoriesPositions + categoriesSelected.length) < limits.categories) {
+		if (limits.categoriesPositions <= limits.categories) {
 			categoriesLimit = limits.categoriesPositions + categoriesSelected.length;
 		}
 
