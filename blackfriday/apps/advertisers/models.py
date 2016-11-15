@@ -106,6 +106,11 @@ class AdvertiserProfile(models.Model):
             return 'Без ИНН'
 
 
+class ModeratedMerchantsQueryset(models.QuerySet):
+    def moderated(self):
+        return self.filter(moderation_status=ModerationStatus.confirmed)
+
+
 class Merchant(models.Model):
     MODERATION_STATUSES = (
         (ModerationStatus.new, 'Не модерировался'),
@@ -138,6 +143,8 @@ class Merchant(models.Model):
     receives_notifications = models.BooleanField(default=True, verbose_name='Получает уведомления')
     banner_mailings_count = models.IntegerField(default=0)
     superbanner_mailings_count = models.IntegerField(default=0)
+
+    objects = models.Manager.from_queryset(ModeratedMerchantsQueryset)()
 
     class Meta:
         verbose_name = 'Магазин'
@@ -329,6 +336,14 @@ class BannerType:
         return getattr(self, key.upper())
 
 
+class BannerQueryset(models.QuerySet):
+    def from_moderated_merchants(self):
+        return self.filter(merchant__moderation_status=ModerationStatus.confirmed)
+
+    def vertical(self):
+        return self.filter(type=BannerType.VERTICAL)
+
+
 class Banner(models.Model):
     TYPES = (
         (BannerType.SUPER, 'Супербаннер'),
@@ -346,6 +361,8 @@ class Banner(models.Model):
     categories = models.ManyToManyField('catalog.Category', related_name='banners', blank=True)
     merchant = models.ForeignKey(Merchant, related_name='banners')
     was_mailed = models.BooleanField(default=False)
+
+    objects = models.Manager.from_queryset(BannerQueryset)()
 
     @property
     def owner_id(self):

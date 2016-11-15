@@ -35,14 +35,14 @@ window.DATA.products = {
             id: {{ item.id }},
             url: '{{ item.url|escapejs }}',
             image: '{{ item.image }}',
-            name: '{{ item.name }}',
+            name: '{{ item.name|escapejs }}',
             price: {{ item.price|default:'null' }},
             oldPrice: {{ item.old_price|default:'null' }},
             startPrice: {{ item.start_price|default:'null' }},
             discount: {{ item.discount|default:'null' }},
-            category: '{{ item.category }}' ,
-            country: '{{ item.country }}',
-            brand: '{{ item.brand }}'
+            category: '{{ item.category|escapejs }}' ,
+            country: '{{ item.country|escapejs }}',
+            brand: '{{ item.brand|escapejs }}'
         },
         {% endfor %}
     ]
