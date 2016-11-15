@@ -33,11 +33,17 @@ class MailingViewSet(viewsets.GenericViewSet):
     def banners(self, request, *args, **kwargs):
         data = {}
 
-        action_banners = Banner.objects.filter(type=BannerType.ACTION, in_mailing=True).annotate(
+        action_banners = Banner.objects.filter(
+            merchant__moderation_status=ModerationStatus.confirmed,
+            type=BannerType.ACTION, in_mailing=True
+        ).annotate(
             sum=Sum(Case(When(merchant__invoices__is_paid=True, then=F('merchant__invoices__sum'))))
         ).order_by('-sum')
 
-        super_banners = Banner.objects.filter(type=BannerType.SUPER, in_mailing=True, was_mailed=False).annotate(
+        super_banners = Banner.objects.filter(
+            merchant__moderation_status=ModerationStatus.confirmed,
+            type=BannerType.SUPER, in_mailing=True, was_mailed=False
+        ).annotate(
             sum=Sum(Case(When(merchant__invoices__is_paid=True, then=F('merchant__invoices__sum'))))
         ).order_by('-sum')
 

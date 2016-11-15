@@ -11,7 +11,7 @@ class BannerSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['image'] = instance['id'].image
+        data['image'] = str(instance['id'])
         return data
 
 
