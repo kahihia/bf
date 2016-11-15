@@ -17,11 +17,7 @@
                         {% block teasers__body %}
                             <div class="teasers__title">Лучшие предложения</div>
                             {% block category_retailrocket %}{% endblock %}
-                            <div class="sidebar-teaser" id="sidebar-teasers" style="visibility: hidden;">
-                                <!--# include virtual="/teasers/" -->
-                                <!--# include virtual="/teasers/" -->
-                                <!--# include virtual="/teasers/" -->
-                            </div>
+                            <div class="sidebar-teaser" id="sidebar-teasers"></div>
                         {% endblock teasers__body %}
 
                         <a class="teasers__all" href="{% if not is_preview %}/merchants{% endif %}">Все участники</a>

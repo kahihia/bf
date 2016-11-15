@@ -1,5 +1,4 @@
 /* global window document */
-/* eslint react/no-danger: 0 */
 
 require('css/app.styl');
 
@@ -9,7 +8,7 @@ import ReactDOM from 'react-dom';
 import Scroll from 'react-scroll';
 
 import Tabs from './app/react-simpletabs.jsx';
-import {categoriesSorting, convertNodeToDangerouslyHTML, toggleClass} from './app/utils.js';
+import {categoriesSorting, toggleClass} from './app/utils.js';
 
 import SimpleMenu from './app/simple-menu.jsx';
 import Header from './app/header.jsx';
@@ -310,148 +309,15 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<Wrotator {...DATA.backgrounds}/>, wrotator);
 	}
 
-	const teasers = document.querySelectorAll('.js-teaser .short-product__link');
-	if (teasers) {
-		Array.prototype.forEach.call(teasers, teaser => {
-			teaser.addEventListener('click', () => {
-				if (!window.rrApiOnReady) {
-					return;
-				}
-
-				const id = teaser.dataset.id;
-				window.rrApiOnReady.push(function () {
-					try {
-						window.rrApi.view(id);
-					} catch (e) {}
-				});
-			});
-		});
+	const teasersOnMain = document.getElementById('teasers-on-main');
+	if (teasersOnMain && DATA.teasersOnMain && DATA.teasersOnMain.data && DATA.teasersOnMain.data.length) {
+		const TeasersOnMain = require('./app/teasers-on-main');
+		ReactDOM.render(<TeasersOnMain {...DATA.teasersOnMain}/>, teasersOnMain);
 	}
 
-	const mainTeasers = document.getElementById('main-teasers');
-	if (mainTeasers) {
-		let teasers = document.querySelectorAll('#main-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
-			<div
-				key={index}
-				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-				/>
-		));
-		const Slider = require('react-slick');
-		const MainTeasers = React.createClass({
-			componentDidMount() {
-				mainTeasers.style.display = 'block';
-			},
-
-			render() {
-				const settings = {
-					infinite: false,
-					draggable: false,
-					swipe: false,
-					speed: 500,
-					slidesToShow: 5,
-					slidesToScroll: 5,
-					responsive: [
-						{
-							breakpoint: 991,
-							settings: {
-								slidesToShow: 4,
-								slidesToScroll: 4
-							}
-						},
-						{
-							breakpoint: 767,
-							settings: {
-								slidesToShow: 3,
-								slidesToScroll: 3
-							}
-						},
-						{
-							breakpoint: 608,
-							settings: {
-								slidesToShow: 2,
-								slidesToScroll: 2
-							}
-						},
-						{
-							breakpoint: 440,
-							settings: {
-								slidesToShow: 1,
-								slidesToScroll: 1
-							}
-						}
-					]
-				};
-
-				return (
-					<Slider {...settings}>
-						{teasers}
-					</Slider>
-				);
-			}
-		});
-
-		ReactDOM.render(<MainTeasers/>, mainTeasers);
-	}
-
-	const sidebarTeasers = document.getElementById('sidebar-teasers');
-	if (sidebarTeasers) {
-		let teasers = document.querySelectorAll('#sidebar-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
-			<div
-				key={index}
-				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-				/>
-		));
-		const Slider = require('react-slick');
-		const SidebarTeasers = React.createClass({
-			componentDidMount() {
-				sidebarTeasers.style.visibility = 'visible';
-			},
-
-			render() {
-				const settings = {
-					infinite: false,
-					draggable: false,
-					vertical: true,
-					swipe: false,
-					speed: 500,
-					slidesToShow: 3,
-					slidesToScroll: 3,
-					responsive: [
-						{
-							breakpoint: 991,
-							settings: {
-								vertical: false,
-								slidesToShow: 3,
-								slidesToScroll: 3
-							}
-						},
-						{
-							breakpoint: 608,
-							settings: {
-								slidesToShow: 2,
-								slidesToScroll: 2
-							}
-						},
-						{
-							breakpoint: 440,
-							settings: {
-								slidesToShow: 1,
-								slidesToScroll: 1
-							}
-						}
-					]
-				};
-
-				return (
-					<Slider {...settings}>
-						{teasers}
-					</Slider>
-				);
-			}
-		});
-
-		ReactDOM.render(<SidebarTeasers/>, sidebarTeasers);
+	const teasers = document.getElementById('sidebar-teasers');
+	if (teasers && DATA.teasers && DATA.teasers.data && DATA.teasers.data.length) {
+		const Teasers = require('./app/teasers');
+		ReactDOM.render(<Teasers {...DATA.teasers}/>, teasers);
 	}
 })();
