@@ -19,7 +19,7 @@
     </div>
 
     <div style="background-color: #fff; padding: 25px 0 30px">
-        <div style="width: 570px; margin: 0 auto">
+        <div style="width: 900px; margin: 0 auto">
             {% if top_banner %}
                 <a href="{{ top_banner.url }}" style="text-decoration: none;">
                     <img src="{{ SITE_URL }}{{ top_banner.image.url }}" alt="">
@@ -68,8 +68,8 @@
 
             {% for banner_block in banners %}
                 {% for banner in banner_block.banners %}
-                    <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 190px; height: 118px">
-                        <img src="{{ SITE_URL }}{{ banner.image }}" alt="" style="max-width: 90%; max-height: 90%">
+                    <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 435px; height: 250px">
+                        <img src="{{ SITE_URL }}{{ banner.image }}" alt="">
                     </a>
 
                     {% cycle False True as newrow silent %}
@@ -94,7 +94,7 @@
 
         {% if bottom_text %}
             <a href="{{ bottom_text.url }}"
-               style="margin: 0 auto; display: block; width: 570px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">{{ bottom_text.text }}</a>
+               style="margin: 0 auto; display: block; width: 900px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">{{ bottom_text.text }}</a>
         {% else %}
             <a href="{{ SITE_URL }}"
                style="margin: 0 auto; display: block; width: 570px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">Посмотреть
