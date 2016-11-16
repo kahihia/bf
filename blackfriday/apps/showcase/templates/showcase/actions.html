@@ -8,14 +8,14 @@
 
 {% block data %}
 window.DATA.banners = {
-    perPage: 10,
+    perPage: 8,
     isRandom: true,
     ajaxUrl: 'banners',
     data: {{ banners|safe|default:"[]" }}
 };
 
 window.DATA.products = {
-    perPage: 10,
+    perPage: 20,
     isRandom: true,
     ajaxUrl: 'products',
     data: {{ products|safe|default:"[]" }}

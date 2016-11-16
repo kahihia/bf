@@ -1,0 +1,38 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h1 class="title-2">
+    Товары российского производства{% if cat %} - {{cat.name}}{% endif %}
+</h1>
+<div class="category-tabs" id="products"></div>
+
+{% endblock content %}
+
+{% block superbanner %}
+pagesCount: 1,
+isRandom: false,
+data: [{
+    "id": 1,
+    "image": "{% static '/images/superbanner_rf.png' %}"
+}],
+{% endblock %}
+
+{% block data %}
+window.isSideMenuHidden = true;
+
+window.DATA.products = {
+    perPage: 20,
+    isRandom: true,
+    ajaxUrl: 'products',
+    data: {{ products|safe|default:"[]" }}
+};
+
+window.DATA.categoriesRus = [];
+
+window.DATA.teasers = {
+    data: {{ teasers|safe|default:"[]" }}
+};
+{% endblock data %}

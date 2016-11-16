@@ -1,0 +1,96 @@
+{% extends "layouts/app-main-layout.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="main-teaser">
+    <div class="main-teaser__body">
+        <div class="product-list" id="teasers-on-main"></div>
+    </div>
+
+    <div id="main-teaser-footer"></div>
+</div>
+
+<div class="main-merchants-row">
+    <div class="main-merchants-row__merchants">
+        <div class="title-2"><strong>Участники</strong> Настоящей Черной Пятницы</div>
+        <div id="merchants"></div>
+    </div>
+
+    <div class="main-merchants-row__banner">
+        <div id="verticalbanners"></div>
+    </div>
+</div>
+
+<div id="partners"></div>
+
+<div id="main-tabs" class="main-tabs"></div>
+
+<div class="main-all-links">
+    <a href="/actions/">Все акции</a>
+    <a href="/actions/#tab=2">Все товары</a>
+</div>
+{% endblock content %}
+
+{% block data %}
+window.DATA.merchants = {
+    perPage: 12,
+    // pagesCount: 1,
+    isRandom: true,
+	isControlsShown: true,
+	isPagerShown: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'merchants',
+    data: {{ merchants|safe|default:"[]" }},
+    speed: 7000
+};
+window.DATA.partners = {
+    perPage: 6,
+    // pagesCount: 2,
+    isRandom: true,
+	isControlsShown: true,
+	isPagerShown: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'partners',
+    data: {{ partners|safe|default:"[]" }},
+    speed: 6000
+};
+window.DATA.banners = {
+    perPage: 6,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'banners',
+    data: {{ banners|safe|default:"[]" }}
+};
+window.DATA.verticalbanners = {
+    perPage: 1,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 1,
+    ajaxUrl: 'verticalbanners',
+    data: {{ verticalbanners|safe|default:"[]" }},
+    speed: 5000
+};
+window.DATA.products = {
+    perPage: 20,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: {{ products|safe|default:"[]" }}
+};
+
+window.DATA.teasersOnMain = {
+    perPage: 5,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: {{ teasersOnMain|safe|default:"[]" }}
+};
+
+window.DATA.backgrounds = {
+    data: {{ backgrounds|safe|default:"[]" }}
+};
+{% endblock data %}
