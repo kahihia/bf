@@ -20,15 +20,16 @@
 
     <div style="background-color: #fff; padding: 25px 0 30px">
         <div style="width: 640px; margin: 0 auto">
-            {% if top_banner %}
-                <a href="{{ top_banner.url }}" style="text-decoration: none;">
-                    <img src="{{ SITE_URL }}{{ top_banner.image }}" alt="">
-                </a>
-            {% else %}
-                <img src="{{ SITE_URL }}{% static 'mailing/img/main_banner.png' %}" alt="">
-            {% endif %}
 
             <div style="width: 570px; margin: 0 auto">
+                {% if top_banner %}
+                    <a href="{{ top_banner.url }}" style="text-decoration: none;">
+                        <img src="{{ SITE_URL }}{{ top_banner.image }}" alt="">
+                    </a>
+                {% else %}
+                    <img src="{{ SITE_URL }}{% static 'mailing/img/main_banner.png' %}" alt="">
+                {% endif %}
+
                 {% if top_text %}
                     {{ top_text|safe }}
                 {% else %}
