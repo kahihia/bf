@@ -25,20 +25,27 @@ def serializer_factory(cls_name, fields, **extra_fields):
     )
 
 
+def get_image(self, obj):
+    return obj.image and '{}{}'.format(settings.SITE_URL, obj.image.image.url)
+
+
 MerchantSerializer = serializer_factory(
     cls_name='advertisers.Merchant',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.image')
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
 )
 PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.url')
+    image=serializers.SerializerMethodField(),
+    get_image=lambda _, obj: '{}{}'.format(settings.SITE_URL, obj.image.url)
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'url', 'merchant', 'image'),
-    image=serializers.CharField(source='image.image'),
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
     merchant=MerchantSerializer(),
 
 )
@@ -56,7 +63,8 @@ CategorySerializer = serializer_factory(
 SuperbannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'image', 'url'),
-    image=serializers.CharField(source='image.image'),
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
 )
 
 
