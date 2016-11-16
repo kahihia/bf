@@ -203,3 +203,6 @@ HTML_VALIDATOR_ALLOWED_TAGS = {
     'div', 'span', 'strike'
 }
 MNOGO_LEADS_MANAGERS = []
+RUSSIAN_PRODUCTS_KEYWORDS = (
+    'россия', 'russia', 'рф', 'российская федерация'
+)
