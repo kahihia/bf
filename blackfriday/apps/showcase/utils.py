@@ -165,7 +165,8 @@ def category(category_id):
                     many=True
                 ).data
             ),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+            'category': json.dumps(CategorySerializer(Category.objects.get(id=category_id)).data),
         }
     )
 
