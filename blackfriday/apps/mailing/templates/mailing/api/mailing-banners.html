@@ -72,7 +72,7 @@
                 <div style="width: 570px; margin: 0 auto">
                     {% for banner in banner_block.banners %}
                         <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 272px;">
-                            <img src="{{ SITE_URL }}{{ banner.image }}" alt="">
+                            <img width="272" src="{{ SITE_URL }}{{ banner.image }}" alt="">
                         </a>
 
                         {% cycle False True as newrow silent %}
@@ -84,7 +84,7 @@
                 {% if banner_block.superbanner %}
                     <div style="width: 620px; margin: 0 auto">
                         <a href="{{ banner_block.superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
-                            <img src="{{ SITE_URL }}{{ banner_block.superbanner.image }}" alt="">
+                            <img width="620" src="{{ SITE_URL }}{{ banner_block.superbanner.image }}" alt="">
                         </a>
                         <div style="clear: both"></div>
                     </div>
@@ -94,7 +94,7 @@
             <div style="width: 640px; margin: 0 auto">
                 {% for superbanner in superbanners %}
                     <a href="{{ superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
-                        <img src="{{ SITE_URL }}{{ superbanner.image }}" alt="">
+                        <img width="620" src="{{ SITE_URL }}{{ superbanner.image }}" alt="">
                     </a>
                     <div style="clear: both"></div>
                 {% endfor %}
