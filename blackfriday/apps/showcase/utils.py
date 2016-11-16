@@ -10,7 +10,7 @@ from django.conf import settings
 from rest_framework import serializers
 
 from apps.banners.models import Partner
-from apps.advertisers.models import Merchant, Banner
+from apps.advertisers.models import Merchant, Banner, BannerType
 from apps.catalog.models import Product, Category
 
 
@@ -73,8 +73,12 @@ SuperbannerSerializer = serializer_factory(
 
 def get_backgrounds(**kwargs):
     background_qs = Merchant.objects.filter(**kwargs).moderated().annotate(
-        left=Max(Case(When(banners__type=30, then=F('banners__image__image')), output_field=CharField())),
-        right=Max(Case(When(banners__type=40, then=F('banners__image__image')), output_field=CharField()))
+        left=Max(Case(When(
+            banners__type=BannerType.BG_LEFT, then=F('banners__image__image')), output_field=CharField())
+        ),
+        right=Max(Case(When(
+            banners__type=BannerType.BG_RIGHT, then=F('banners__image__image')), output_field=CharField())
+        )
     ).values(
         'left', 'right', 'banners__url', 'id'
     ).filter(Q(right__isnull=False) | Q(left__isnull=False))
@@ -84,9 +88,9 @@ def get_backgrounds(**kwargs):
         if b_id not in backgrounds:
             backgrounds[b_id] = {}
         if b['left']:
-            backgrounds[b_id]['left'] = b['left']
+            backgrounds[b_id]['left'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['left'])
         if b['right']:
-            backgrounds[b_id]['right'] = b['right']
+            backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
         backgrounds[b_id]['id'] = b_id
         backgrounds[b_id]['url'] = b['banners__url']
     return [value for _, value in backgrounds.items()]
@@ -218,7 +222,12 @@ def main_page():
             ),
             'merchants': json.dumps(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
             'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
-            'banners': json.dumps(BannerSerializer(Banner.objects.from_moderated_merchants(), many=True).data),
+            'banners': json.dumps(
+                BannerSerializer(
+                    Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION),
+                    many=True
+                ).data
+            ),
             'verticalbanners': json.dumps(
                 BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
             'products': json.dumps(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
