@@ -1,22 +1,35 @@
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from apps.users.mixins import RolePermissionMixin
+from django.views.generic import View
+
+
 from .utils import main_page, actions, merchants, category
 
-from apps.catalog.models import Category
+
+class MainPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request):
+        return HttpResponse(content=main_page())
 
 
-def main_preview(request):
-    return HttpResponse(content=main_page())
+class ActionsPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request):
+        return HttpResponse(content=actions())
 
 
-def actions_preview(request):
-    return HttpResponse(content=actions())
+class MerchantsPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request):
+        return HttpResponse(content=merchants())
 
 
-def merchants_preview(request):
-    return HttpResponse(content=merchants())
+class CategoryPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
 
-
-def category_preview(request, pk):
-    get_object_or_404(Category, pk=pk)
-    return HttpResponse(content=category(pk))
+    def get(self, request, pk):
+        return HttpResponse(content=category(pk))
