@@ -1,8 +1,11 @@
 import json
+import operator
 
+from functools import reduce
 from django.template.loader import render_to_string
 from django.db.models import *
 from django.apps import apps
+from django.conf import settings
 
 from rest_framework import serializers
 
@@ -76,6 +79,39 @@ def get_backgrounds(**kwargs):
         backgrounds[b_id]['id'] = b_id
         backgrounds[b_id]['url'] = b['banners__url']
     return [value for _, value in backgrounds.items()]
+
+
+def partners():
+    return render_to_string(
+        'showcase/partners.html',
+        {
+            'teasers': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().teasers(),
+                    many=True
+                ).data
+            ),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+            'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
+        }
+    )
+
+
+def russiangoods():
+    qs = Product.objects.from_moderated_merchants().filter(
+        reduce(
+            operator.__or__,
+            [Q(name__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+        )
+    )
+    return render_to_string(
+        'showcase/russiangoods.html',
+        {
+            'products': json.dumps(ProductSerializer(qs, many=True).data),
+            'teasers': json.dumps(ProductSerializer(qs.teasers(), many=True).data),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+        }
+    )
 
 
 def category(category_id):
