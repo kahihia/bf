@@ -25,20 +25,27 @@ def serializer_factory(cls_name, fields, **extra_fields):
     )
 
 
+def get_image(self, obj):
+    return obj.image and '{}{}'.format(settings.SITE_URL, obj.image.image.url)
+
+
 MerchantSerializer = serializer_factory(
     cls_name='advertisers.Merchant',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.image')
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
 )
 PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.url')
+    image=serializers.SerializerMethodField(),
+    get_image=lambda _, obj: '{}{}'.format(settings.SITE_URL, obj.image.url)
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'url', 'merchant', 'image'),
-    image=serializers.CharField(source='image.image'),
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
     merchant=MerchantSerializer(),
 
 )
@@ -56,7 +63,8 @@ CategorySerializer = serializer_factory(
 SuperbannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'image', 'url'),
-    image=serializers.CharField(source='image.image'),
+    image=serializers.SerializerMethodField(),
+    get_image=get_image,
 )
 
 
@@ -79,6 +87,22 @@ def get_backgrounds(**kwargs):
         backgrounds[b_id]['id'] = b_id
         backgrounds[b_id]['url'] = b['banners__url']
     return [value for _, value in backgrounds.items()]
+
+
+def partners():
+    return render_to_string(
+        'showcase/partners.html',
+        {
+            'teasers': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().teasers(),
+                    many=True
+                ).data
+            ),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+            'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
+        }
+    )
 
 
 def russiangoods():

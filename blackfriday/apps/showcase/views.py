@@ -4,7 +4,7 @@ from apps.users.mixins import RolePermissionMixin
 from django.views.generic import View
 
 
-from .utils import main_page, actions, merchants, category, russiangoods
+from .utils import main_page, actions, merchants, category, russiangoods, partners
 
 
 class MainPreview(LoginRequiredMixin, RolePermissionMixin, View):
@@ -40,3 +40,10 @@ class RussianGoodsPreview(LoginRequiredMixin, RolePermissionMixin, View):
 
     def get(self, request):
         return HttpResponse(content=russiangoods())
+
+
+class PartnersPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request):
+        return HttpResponse(content=partners())
