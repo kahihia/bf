@@ -1,5 +1,4 @@
 /* global _ */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import MerchantBannerBackground from './merchant-banner-background.jsx';
@@ -67,6 +66,7 @@ class MerchantBannerBackgroundList extends React.Component {
 
 				{limit - bannerGroups.length > 0 ? (
 					<MerchantBannerBackground
+						key={`create-background${limit - bannerGroups.length}`}
 						categoriesAvailable={categoriesAvailableOptions}
 						onUpload={this.handleUploadBannerBackground}
 						{...{

@@ -15,6 +15,8 @@ class UserFactory(factory.django.DjangoModelFactory):
     created_datetime = factory.Faker('date_time_this_month')
     updated_datetime = factory.Faker('date_time_this_month')
 
+    profile = None
+
     class Meta:
         model = 'users.User'
 

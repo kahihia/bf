@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 
 export default class ChangeManyInvoiceStatusesBtn extends React.Component {

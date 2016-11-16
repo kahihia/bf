@@ -1,5 +1,4 @@
 /* global window */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import SimpleMenu from './simple-menu.jsx';

@@ -17,7 +17,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ SITE_URL }}" />
-    <meta property="og:title" content="Настоящая Черная Пятница 24 и 25 ноября 2016 - официальный сайт BLACK FRIDAY" />
+    <meta property="og:title" content="Настоящая Черная Пятница 24 и 25 ноября 2016 - официальный сайт" />
     <meta property="og:description" content="Успейте получить скидку 90% от крупнейших интернет-магазинов раньше всех" />
     <meta property="og:image" content="{{ SITE_URL }}{% static 'images/landing/share-image.jpg' %}" />
 
@@ -76,16 +76,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </span>
             </div>
 
-            {% comment %}
             <div class="site-header-info__rpt">
                 <span class="rpt">
                     <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
                     <span class="rpt__text">
-                        При поддержке <strong>Роспотребнадзора</strong>
+                        При поддержке
+                        <strong><a href="http://minpromtorg.gov.ru/press-centre/news/#!vpervye_sostoitsya_masshtabnaya_onlaynrasprodazha_nastoyashhaya_chernaya_pyatnica" target="_blank">МИНПРОМТОРГА</a></strong>
                     </span>
                 </span>
             </div>
-            {% endcomment %}
 
             {% if SHOW_LOGIN_ON_LANDING %}
             <div class="site-header-info__auth">
@@ -143,7 +142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="counter-block">
                         <div class="counter-block__title">
-                            До начала акции осталось:
+                            До начала распродажи осталось:
                         </div>
 
                         <div class="counter-block__counter">
@@ -184,6 +183,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 required
                                 >
 
+                            <div class="checkbox">
+                                <label>
+                                    <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                                </label>
+                            </div>
+
                             <button class="btn btn-primary btn-lg" type="submit">
                                 <img
                                     src="{% static 'images/landing/aa-section__subscribe-submit-icon.png' %}"
@@ -197,6 +202,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                 </div>
             </div>
+        </div>
+
+        <div class="aa-section__msg">
+            <p>
+                Всем подписавшимся подарок <strong>прямо сейчас!</strong>
+            </p>
         </div>
 
         <div class="aa-section__footer">
@@ -220,11 +231,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-about"></a>
 
     <div class="container">
-        <img
-            class="about-section__copter"
-            src="{% static 'images/landing/action-section__copter.png' %}"
-            alt=""
-            />
+        <a href="http://project79232.tilda.ws/konkurs" target="_blank">
+            <img
+                class="about-section__gift"
+                src="{% static 'images/landing/action-section__gift.png' %}"
+                alt=""
+                />
+        </a>
     </div>
 
     <div class="about-section__carousel js-about-section__carousel">
@@ -239,8 +252,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
 
                         <div class="about-section__text">
-                            Настоящая Черная Пятница — это масштабная<br>
-                            онлайн-распродажа в ведущих<br>
+                            <strong>Настоящая Черная Пятница 2016</strong>&nbsp;&mdash;<br>
+                            это масштабная онлайн-распродажа в ведущих<br>
                             интернет-магазинах и онлайн-сервисах<br>
                             России, Белоруссии и Казахстана.<br>
                             Мы собрали все предложения на одном<br>
@@ -1066,6 +1079,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             >
                     </div>
 
+                    <div class="checkbox">
+                        <label>
+                            <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                        </label>
+                    </div>
+
                     <div class="form-group">
                         <button class="btn btn-primary btn-lg btn-block" type="submit">
                             Подписаться
@@ -1193,18 +1212,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </ul>
                     </div>
                 </div>
-
-                <a class="text-section__subtitle collapsed" href="#collapse-text-6" aria-controls="collapse-text-6" role="button" data-toggle="collapse" aria-expanded="false">
-                    <i class="text-section__collapse-icon"></i>
-                    <span class="text-section__collapse-text">Есть ли у вас предложения для молодых российских брендов?</span>
-                </a>
-                <div class="collapse" id="collapse-text-6">
-                    <div class="text-section__subtext">
-                        <p>
-                            Для них действует акция <strong>SUPERNOVA</strong> — конкурс для молодых российских брендов, итогом которого станет бесплатное размещение товаров компании на нашем сайте. <a href="http://b2b.realblackfriday.ru/#rec8998464" target="_blank" rel="nofollow">Подробнее об условиях конкурса</a>
-                        </p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -1307,10 +1314,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     «Настоящую Черную Пятницу», заполните заявку. Наши менеджеры<br>
                     свяжутся с вами в кратчайшее время.
                 </p>
-
-                <a class="party-section__supernova" href="http://b2b.realblackfriday.ru/#rec8998464" target="_blank" rel="nofollow">
-                    <strong>SUPERNOVA</strong> &ndash; <span>Конкурс для молодых российских брендов</span>
-                </a>
             </div>
 
             <div class="col-xs-6">
@@ -1434,6 +1437,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </a>
                     </li>
                 </ul>
+
+                {% comment %}
+                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" style="display: inline-block; margin: 0 0 0 0;">
+                    <img src="{% static 'images/landing/footer-mnogo-1.png' %}" alt="">
+                </a>
+                {% endcomment %}
             </div>
 
             <div class="col-xs-3">
@@ -1462,6 +1471,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <a class="akit-copy" href="http://www.akit.ru" target="_blank">
                     <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
                 </a>
+
+                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" style="display: inline-block; margin: 10px 0 0 12px;">
+                    <img src="{% static 'images/landing/footer-mnogo-3.png' %}" alt="">
+                </a>
             </div>
 
             <div class="col-xs-12">
@@ -1476,7 +1489,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </div>
 
                 <div class="site-footer__offer-text">
-                    Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank" rel="nofollow">договора-оферты</a>.
+                    <p>
+                        Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank" rel="nofollow">договора-оферты</a>.
+                    </p>
+
+                    <p style="font-size: 12px;">
+                        * Вступление в Клуб Много.ру подразумевает, что Вы согласны с правилами участия в Клубе и с фактом передачи указанных Вами имени и адреса электронной почты в Клуб Много.ру (www.mnogo.ru) для создания профиля в программе Много.ру
+                    </p>
                 </div>
             </div>
         </div>
@@ -1534,6 +1553,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </div>
 
                     <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <button
                             class="btn btn-default btn-block btn-lg"
                             type="submit"
@@ -1554,6 +1581,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 </div>
+
+{% comment %}
+<div class="mnogoru-gift" id="mnogoru-gift">
+    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
+</div>
+{% endcomment %}
 
 {% if SHOW_LOGIN_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}

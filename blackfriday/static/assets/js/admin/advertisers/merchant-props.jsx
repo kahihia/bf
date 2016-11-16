@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import {MODERATION_STATUS, PAYMENT_STATUS} from '../const.js';
 import {getUrl, hasRole, getCssClassForModerationStatus} from '../utils.js';

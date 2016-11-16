@@ -1,0 +1,38 @@
+.mnogoru-gift
+	position: fixed
+	right: 0
+	top: 130px
+	z-index: 9999
+	padding-left: 62px
+	transition: margin ease 0.15s
+
+	&.active
+		margin-right: 260px
+
+	& > img
+		top: 47px
+		left: 0
+		max-height: 132px
+		position: absolute
+		z-index: 1
+
+	a
+		position: absolute
+		top: 0
+		left: 100%
+		display: block
+
+		img
+			max-width: 260px
+
+	+above(992px)
+		padding-left: 102px
+
+		&.active
+			margin-right: 347px
+
+		& > img
+			max-height: none
+
+		a img
+			max-width: none

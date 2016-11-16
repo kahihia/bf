@@ -35,9 +35,7 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    status = serializers.CharField()
-    message = serializers.CharField()
 
     class Meta:
         model = Payment
-        fields = ('invoice_id', 'status', 'message')
+        fields = ('invoice_id', 'error_status', 'error_message', 'order_status', 'order_message')

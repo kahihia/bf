@@ -58,13 +58,14 @@ class ImagesUpload extends React.Component {
 		const {
 			ext,
 			width,
-			height
+			height,
+			size
 		} = this.props;
 
 		return (
 			<div className="">
 				<button
-					className="btn btn-default"
+					className={`btn btn-default${size ? ` btn-${size}` : ''}`}
 					onClick={this.handleClickModalOpen}
 					type="button"
 					>
@@ -83,17 +84,22 @@ class ImagesUpload extends React.Component {
 	}
 }
 ImagesUpload.propTypes = {
-	onUpload: React.PropTypes.func.isRequired,
-	width: React.PropTypes.oneOfType([
-		React.PropTypes.string,
-		React.PropTypes.number
-	]),
-	height: React.PropTypes.oneOfType([
-		React.PropTypes.string,
-		React.PropTypes.number
-	]),
+	exactSize: React.PropTypes.bool,
 	ext: React.PropTypes.array,
-	exactSize: React.PropTypes.bool
+	height: React.PropTypes.oneOfType([
+		React.PropTypes.number,
+		React.PropTypes.string
+	]),
+	width: React.PropTypes.oneOfType([
+		React.PropTypes.number,
+		React.PropTypes.string
+	]),
+	onUpload: React.PropTypes.func.isRequired,
+	size: React.PropTypes.oneOf([
+		'lg',
+		'sm',
+		'xs'
+	])
 };
 ImagesUpload.defaultProps = {
 };

@@ -14,6 +14,18 @@ class Category(models.Model):
         return self.name
 
 
+class ProductQueryset(models.QuerySet):
+    def from_moderated_merchants(self):
+        from apps.advertisers.models import ModerationStatus
+        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
+
+    def teasers_on_main(self):
+        return self.filter(is_teaser_on_main=True)
+
+    def teasers(self):
+        return self.filter(is_teaser=True)
+
+
 class Product(models.Model):
     merchant = models.ForeignKey('advertisers.Merchant', related_name='products')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products')
@@ -31,6 +43,8 @@ class Product(models.Model):
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     image = models.URLField()
     currency = models.CharField(max_length=10)
+
+    objects = models.Manager.from_queryset(ProductQueryset)()
 
     class Meta:
         verbose_name = 'Товар'

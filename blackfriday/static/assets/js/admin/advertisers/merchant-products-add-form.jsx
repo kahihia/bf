@@ -52,7 +52,17 @@ class MerchantProductsAddForm extends Form {
 					this.resetForm();
 
 					if (this.props.onSubmit) {
-						this.props.onSubmit(JSON.parse(data));
+						data = JSON.parse(data);
+						data.forEach(item => {
+							if (!item.data) {
+								return;
+							}
+							if (typeof item.data.category !== 'string') {
+								return;
+							}
+							item.data.category = item.data.category.toLowerCase();
+						});
+						this.props.onSubmit(data);
 					}
 
 					break;

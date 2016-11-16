@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'apps.specials',
     'apps.mailing',
     'apps.payment',
+    'apps.showcase',
 
     'webpack_loader',
     'django_rq',
@@ -182,7 +183,7 @@ LIMITS_RULES = {
     'teasers': ['teaser', 'additional_teaser'],
     'teasers_on_main': ['teaser_on_main'],
     'vertical_banners': ['vertical_banner_on_main'],
-    'banner_in_mailing': ['mailing']
+    'banner_in_mailing': [1]
 }
 
 LIMITS_RULES_COEFS = {
@@ -201,3 +202,7 @@ HTML_VALIDATOR_ALLOWED_TAGS = {
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'blockquote', 'ul', 'li', 'b', 'i', 'u', 'ol', 'p', 'a', 'body', 'html',
     'div', 'span', 'strike'
 }
+MNOGO_LEADS_MANAGERS = []
+RUSSIAN_PRODUCTS_KEYWORDS = (
+    'россия', 'russia', 'рф', 'российская федерация'
+)

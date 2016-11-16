@@ -1,6 +1,5 @@
 /* global window document jQuery _ toastr */
 /* eslint-disable no-alert */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -53,7 +52,7 @@ class MerchantBannerList extends React.Component {
 
 			switch (resp.statusCode) {
 				case 200: {
-					const banners = _.sortBy(data, 'type');
+					const banners = _.sortBy(data, ['id', 'type']);
 					this.setState({banners}, () => {
 						this.props.onChange(banners);
 					});
@@ -265,38 +264,89 @@ class MerchantBannerList extends React.Component {
 		});
 	}
 
-	getLimitByTypeAndName(bannerType, limitName) {
+	getLimitByTypeAndName(bannerType, limitName, prefixLimitName) {
 		const {limits} = this.props;
 		const limitBannerName = BANNER_LIMIT_ALIAS[bannerType];
 		if (Array.isArray(limitBannerName)) {
 			return false;
 		}
-		return limits[`${limitBannerName}${limitName}`];
+		if (!prefixLimitName) {
+			return limits[`${limitBannerName}${limitName}`];
+		}
+		return limits[`${prefixLimitName}${limitBannerName}${limitName}`];
 	}
 
 	getLimitAvailableByTypeAndName(bannerType, limitName, propName) {
 		let limit = this.getLimitByTypeAndName(bannerType, limitName);
-		if (typeof limit !== 'number') {
-			return null;
-		}
-		this.state.banners.forEach(banner => {
-			if (banner.type === bannerType && banner[propName]) {
-				if (Array.isArray(banner[propName])) {
-					limit -= banner[propName].length;
-				} else {
-					limit -= 1;
+		if (typeof limit === 'number') {
+			this.state.banners.forEach(banner => {
+				if (banner.type === bannerType && banner[propName]) {
+					if (Array.isArray(banner[propName])) {
+						limit -= banner[propName].length;
+					} else {
+						limit -= 1;
+					}
 				}
+			});
+			return limit;
+		} else if (typeof limit === 'boolean') {
+			let available = 1;
+			_.forEach(this.state.banners, banner => {
+				if (banner.type === bannerType && banner[propName]) {
+					available = 0;
+					return false;
+				}
+			});
+			return available;
+		}
+
+		return null;
+	}
+
+	collectCategoriesSelected(bannerType) {
+		const banners = _.filter(this.state.banners, {type: bannerType});
+		if (!banners.length) {
+			return [];
+		}
+		const categoriesSelected = banners.reduce((categoriesSelected, banner) => {
+			if (banner.categories && banner.categories.length) {
+				banner.categories.forEach(category => {
+					const categoryId = category.id;
+					if (categoriesSelected.indexOf(categoryId) > -1) {
+						return;
+					}
+					categoriesSelected.push(categoryId);
+				});
 			}
-		});
-		return limit;
+			return categoriesSelected;
+		}, []);
+		if (!categoriesSelected.length) {
+			return [];
+		}
+		categoriesSelected.sort();
+		return categoriesSelected;
 	}
 
 	collectLimits(bannerType) {
+		const apositions = this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories');
+
+		let acategories = this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories');
+		if (acategories === null && apositions !== null) {
+			const limitExtra = this.getLimitByTypeAndName(bannerType, '_categories', 'extra_') || 0;
+			const categoriesLimit = this.props.limits.categories || 0;
+			acategories = categoriesLimit + limitExtra;
+		}
+
+		const categories = acategories || 0;
+		const categoriesPositions = apositions === null ? categories : apositions;
+
 		const limits = {
 			length: this.getLimitByTypeAndName(bannerType, 's'),
 			onMain: this.getLimitAvailableByTypeAndName(bannerType, '_on_main', 'onMain'),
 			inMailing: this.getLimitAvailableByTypeAndName(bannerType, '_in_mailing', 'inMailing'),
-			categories: this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories') || this.getLimitAvailableByTypeAndName(bannerType, '_positions', 'categories') || 0
+			categories,
+			categoriesPositions,
+			categoriesSelected: this.collectCategoriesSelected(bannerType)
 		};
 
 		return limits;
@@ -306,9 +356,36 @@ class MerchantBannerList extends React.Component {
 		return _.filter(this.state.banners, {type});
 	}
 
+	collectCategoriesAvailable(bannerType, bannerLimits) {
+		if (bannerType !== 10) {
+			return this.props.categoriesAvailable;
+		}
+
+		const {
+			categories,
+			limits
+		} = this.props;
+
+		const categoriesSelected = bannerLimits.categoriesSelected;
+		const categoriesLimit = (limits.categories || 0) + (limits.extra_banner_categories || 0);
+
+		if (categoriesSelected.length < categoriesLimit) {
+			return categories;
+		}
+
+		const categoriesAvailable = categories.reduce((a, b) => {
+			if (categoriesSelected.indexOf(b.id) > -1) {
+				a.push(b);
+			}
+			return a;
+		}, []);
+
+		return categoriesAvailable;
+	}
+
 	render() {
 		const {
-			categoriesAvailable,
+			categoriesHighlighted,
 			limits
 		} = this.props;
 
@@ -333,6 +410,8 @@ class MerchantBannerList extends React.Component {
 					if (!bannerLimits.length) {
 						return null;
 					}
+
+					const categoriesAvailable = this.collectCategoriesAvailable(bannerType, bannerLimits);
 
 					return (
 						<div
@@ -376,7 +455,8 @@ class MerchantBannerList extends React.Component {
 															onUploadImage={this.handleUploadImage}
 															limits={bannerLimits}
 															{...{
-																categoriesAvailable
+																categoriesAvailable,
+																categoriesHighlighted
 															}}
 															{...banner}
 															/>
@@ -409,7 +489,7 @@ class MerchantBannerList extends React.Component {
 						type="category"
 						limit={limits.category_backgrounds}
 						banners={bannersCategoryBackgrounds}
-						categoriesAvailable={categoriesAvailable}
+						categoriesAvailable={this.props.categoriesAvailable}
 						onUpload={this.handleUploadBannerBackground}
 						onDelete={this.handleDeleteBannerBackground}
 						onChange={this.handleChangeBannerBackground}
@@ -420,7 +500,10 @@ class MerchantBannerList extends React.Component {
 	}
 }
 MerchantBannerList.propTypes = {
+	categories: React.PropTypes.array.isRequired,
 	categoriesAvailable: React.PropTypes.array.isRequired,
+	categoriesHighlighted: React.PropTypes.array,
+	categoriesSelected: React.PropTypes.array,
 	limits: React.PropTypes.object,
 	merchantId: React.PropTypes.number.isRequired,
 	onChange: React.PropTypes.func

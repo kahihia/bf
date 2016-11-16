@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Paged from './paged.jsx';
 import ShortProduct from './short-product.jsx';
@@ -24,7 +22,7 @@ ProductList.propTypes = {
 	data: React.PropTypes.array
 };
 
-class Goods extends React.Component {
+class Products extends React.Component {
 	constructor() {
 		super();
 		this.state = {
@@ -40,7 +38,7 @@ class Goods extends React.Component {
 
 	render() {
 		// For merchant preview
-		if (this.props.data.length && this.props.pages === 1) {
+		if (this.props.data.length && this.props.pagesCount === 1) {
 			return <ProductList data={this.props.data}/>;
 		}
 
@@ -50,12 +48,14 @@ class Goods extends React.Component {
 				loadMoreText={'Показать больше товаров'}
 				onNext={this.handleNext}
 				>
-				<ProductList data={this.state.data}/>
+				{this.state.data.length ? (
+					<ProductList data={this.state.data}/>
+				) : null}
 			</Paged>
 		);
 	}
 }
-Goods.propTypes = {
+Products.propTypes = {
 	ajaxUrl: React.PropTypes.string,
 	ajaxUrlRoot: React.PropTypes.bool,
 	data: React.PropTypes.array,
@@ -63,10 +63,9 @@ Goods.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number
 };
 
-export default Goods;
+export default Products;

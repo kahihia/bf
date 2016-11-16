@@ -57,8 +57,93 @@
 		max-height: 42px
 		background-color: #fff
 
-.special-offers
-	.sticker-supernova
+	.slick-slider
+		margin-bottom: 35px
+
+	.slick-slide
+		.special-offers__item
+			margin-bottom: 0
+
+	&:hover
+		.slick-prev
+		.slick-next
+			opacity: 0.25
+
+	.slick-prev
+	.slick-next
 		position: absolute
-		top: 0
-		left: 0
+		top: 50%
+		transform: translate(0, -50%)
+		width: 30px
+		height: 50px
+		line-height: 46px
+		text-align: center
+		background-color: rgba(0, 0, 0, 0.4)
+		transition: opacity ease 0.15s
+		opacity: 0.1
+		border: none
+		outline: none
+		font: 0/0 a
+		color: transparent
+		text-shadow: none
+
+		&:hover
+			opacity: 1
+
+		&:after
+			content: ''
+			display: inline-block
+			vertical-align: middle
+			width: 12px
+			height: 20px
+
+	.slick-prev
+		left: floor($grid-gutter-width / 2)
+
+		&:after
+			background-position: 50% 50%
+			background-repeat: no-repeat
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAUCAQAAAAT+RSaAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgARgMKilWnkrCAAAAvUlEQVQY022RoQ7CMBRF78Y8bhKLHgkSAW6QgAQBmoQETxD8AIIPQCD5BeAj8FjkEgQhgSVbOAgytrW0ouk97WvvfULWrHKi58kcvg4KFJmna1yALZWyXOcKrHFQUW4QAUscVAQt7sAs22dylxcp4/z+dxmRENMvvifElDcP2uX/iQVwo2nadIUkybGM/kp1zFJCDEmIGdhAhDxJmdggMzi3gQiIgJUZSR7iBtcEWew7PLt/Pmdgr7+tPRJ+AAKvBb9wHlucAAAAAElFTkSuQmCC")
+
+	.slick-next
+		right: floor($grid-gutter-width / 2)
+
+		&:after
+			background-position: 50% 50%
+			background-repeat: no-repeat
+			background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAUCAQAAAAT+RSaAAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfgARgMKhlwR3puAAAAqklEQVQY03XRIW6CQRAG0Pmhvg6JRbcJsgIckIAsotUkTfBNBRdAcABETZOeoRwCj0WSIJomlATSV83usiPfZmfnmzCwcivSCh9Ya+RQt8RGM4VQmWOrlUKovGHnPoUQXvDtIYfw5OxXP4cwdHQyziF0/PgzySG07fFai/RUEVG43y0/NXJ08pg2f3Z20Eu/Oy0NWJlh5+4ykppFKcQb7+XYP68tquertNp/A5ASTS9RfdAAAAAASUVORK5CYII=")
+
+	.slick-dots
+		position: absolute
+		top: 6px
+		right: 6px + floor($grid-gutter-width / 2)
+		margin: 0
+		padding: 0
+
+		button
+			display: inline-block
+			width: 8px
+			height: 8px
+			padding: 0
+			border-radius: 50%
+			background-color: #e4e5e6
+			transition: background-color 0.15s ease
+			vertical-align: middle
+			border: none
+			outline: none
+			font: 0/0 a
+			color: transparent
+			text-shadow: none
+
+			&:hover
+				background-color: $link-hover-color
+
+		li
+			list-style-type: none
+			display: inline-block
+			text-align: center
+			width: 16px
+
+			&.slick-active
+				button
+					background-color: $link-color

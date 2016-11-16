@@ -5,9 +5,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
-import {TOKEN} from './admin/const.js';
+import {ENV, TOKEN} from './admin/const.js';
 import {STATUS_DEFICIT_MESSAGE} from './admin/messages.js';
-import {ENV, hasRole, processErrors, getUrl} from './admin/utils.js';
+import {hasRole, processErrors, getUrl, isUTM} from './admin/utils.js';
 import ControlLabel from './admin/components/control-label.jsx';
 import ImagesUpload from './admin/common/images-upload.jsx';
 import MerchantEditForm from './admin/advertisers/merchant-edit-form.jsx';
@@ -113,7 +113,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			}, (err, resp, data) => {
 				switch (resp.statusCode) {
 					case 200: {
-						this.setState({categories: data});
+						this.setState({categories: _.sortBy(data, 'name')});
 						break;
 					}
 					case 400: {
@@ -278,11 +278,13 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				promo
 			} = data;
 			const activePromoId = promo ? promo.id : null;
+			const isCustomPromo = promo ? promo.isCustom : false;
 
 			ReactDOM.render(
 				<MerchantEditPromoSelect
 					{...{
 						activePromoId,
+						isCustomPromo,
 						merchantId,
 						paymentStatus
 					}}
@@ -292,31 +294,31 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			);
 		},
 
+		getCategoryIdByName(name) {
+			let categoryId = null;
+			_.forEach(this.state.categories, category => {
+				if (
+					category.name &&
+					typeof category.name === 'string' &&
+					category.name.toLowerCase() === name
+				) {
+					categoryId = category.id;
+					return false;
+				}
+			});
+			return categoryId;
+		},
+
 		collectCategoriesSelected() {
 			const {
 				banners,
+				limits,
 				logoCategories,
 				products,
 				productsNew
 			} = this.state;
 
 			const selected = [];
-
-			_.forEach(banners, item => {
-				_.forEach(item.categories, item => {
-					if (selected.indexOf(item.id) > -1) {
-						return;
-					}
-					selected.push(item.id);
-				});
-			});
-
-			_.forEach(logoCategories, item => {
-				if (selected.indexOf(item) > -1) {
-					return;
-				}
-				selected.push(item);
-			});
 
 			_.forEach(products, item => {
 				if (!item.category) {
@@ -328,14 +330,56 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				selected.push(item.category.id);
 			});
 
-			// TODO: category name aliasing
-			_.forEach(productsNew, item => {
+			const extraBannerCategories = limits.extra_banner_categories || 0;
+
+			_.forEach(banners, item => {
+				if (extraBannerCategories && item.type === 10) {
+					return;
+				}
 				_.forEach(item.categories, item => {
 					if (selected.indexOf(item.id) > -1) {
 						return;
 					}
 					selected.push(item.id);
 				});
+			});
+
+			_.forEach(logoCategories, item => {
+				if (selected.length >= limits.categories) {
+					return false;
+				}
+				if (selected.indexOf(item) > -1) {
+					return;
+				}
+				selected.push(item);
+			});
+
+			if (extraBannerCategories) {
+				_.forEach(banners, item => {
+					if (item.type !== 10) {
+						return;
+					}
+					_.forEach(item.categories, item => {
+						if (selected.length >= limits.categories) {
+							return false;
+						}
+						if (selected.indexOf(item.id) > -1) {
+							return;
+						}
+						selected.push(item.id);
+					});
+				});
+			}
+
+			_.forEach(productsNew, item => {
+				if (selected.length >= limits.categories) {
+					return false;
+				}
+				const categoryId = this.getCategoryIdByName(item.data.category);
+				if (selected.indexOf(categoryId) > -1) {
+					return;
+				}
+				selected.push(categoryId);
 			});
 
 			selected.sort();
@@ -368,8 +412,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			const required = [
 				'name',
 				'url',
-				'description',
-				'image'
+				'description'
 			];
 			const result = [];
 
@@ -378,6 +421,21 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					result.push(name);
 				}
 			});
+
+			const image = {
+				name: 'logo',
+				data: []
+			};
+			if (!data.image) {
+				image.data.push('image');
+			}
+			const logoCategories = this.validateMerchantLogoCategories();
+			if (logoCategories) {
+				image.data.push(logoCategories);
+			}
+			if (image.data.length) {
+				result.push(image);
+			}
 
 			return {
 				name: 'data',
@@ -390,21 +448,16 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 				limits,
 				logoCategories
 			} = this.state;
-			const result = [];
+			let result = null;
 
-			if (limits.logo_categories) {
-				if (limits.logo_categories !== logoCategories.length) {
-					result.push({
-						name: 'logo_categories',
-						value: limits.logo_categories - logoCategories.length
-					});
-				}
+			if (limits.logo_categories && limits.logo_categories !== logoCategories.length) {
+				result = {
+					name: 'logo_categories',
+					value: limits.logo_categories - logoCategories.length
+				};
 			}
 
-			return {
-				name: 'logo_categories',
-				data: result
-			};
+			return result;
 		},
 
 		validateMerchantBanners() {
@@ -414,35 +467,228 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			} = this.state;
 			const result = [];
 
-			let limitCount = 0;
-			const limitNames = [
-				'banners',
-				'superbanners',
-				'vertical_banners'
-			];
-			limitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
-				}
-				limitCount += limits[name];
-			});
+			if (limits.superbanners) {
+				const b = _.filter(banners, {type: 0});
+				const data = [];
 
-			const doubleLimitNames = [
-				'category_backgrounds',
-				'main_backgrounds'
-			];
-			doubleLimitNames.forEach(name => {
-				if (!limits[name]) {
-					return;
+				const count = getBannerLeftCount(b, limits.superbanners);
+				if (count) {
+					data.push(count);
 				}
-				limitCount += (limits[name] * 2);
-			});
 
-			if (limitCount !== banners.length) {
-				result.push({
-					name: 'banners',
-					value: limitCount
+				const categories = limits.superbanner_categories - b.reduce((counter, banner) => (counter + banner.categories.length), 0);
+				if (categories) {
+					data.push({
+						name: 'categories',
+						value: categories
+					});
+				}
+
+				const onMain = getBannerLeftOnMain(b, limits.superbanner_on_main);
+				if (onMain) {
+					data.push(onMain);
+				}
+
+				const inMailing = getBannerLeftInMailing(b, limits.superbanner_in_mailing);
+				if (inMailing) {
+					data.push(inMailing);
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'superbanners',
+						data
+					});
+				}
+			}
+
+			if (limits.banners) {
+				const b = _.filter(banners, {type: 10});
+				const data = [];
+
+				const count = getBannerLeftCount(b, limits.banners);
+				if (count) {
+					data.push(count);
+				}
+
+				const categoriesSelected = [];
+				let categoriesPositions = limits.banner_positions;
+				b.forEach(banner => {
+					if (banner.categories && banner.categories.length) {
+						banner.categories.forEach(category => {
+							categoriesPositions -= 1;
+
+							const categoryId = category.id;
+							if (categoriesSelected.indexOf(categoryId) === -1) {
+								categoriesSelected.push(categoryId);
+							}
+						});
+					}
 				});
+				const extraCategories = limits.extra_banner_categories || 0;
+				const categories = limits.categories + extraCategories - categoriesSelected.length;
+				if (categories) {
+					data.push({
+						name: 'categories',
+						value: categories
+					});
+				}
+				if (categoriesPositions) {
+					data.push({
+						name: 'positions',
+						value: categoriesPositions
+					});
+				}
+
+				const onMain = getBannerLeftOnMain(b, limits.banner_on_main);
+				if (onMain) {
+					data.push(onMain);
+				}
+
+				const inMailing = getBannerLeftInMailing(b, limits.banner_in_mailing);
+				if (inMailing) {
+					data.push(inMailing);
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'banners',
+						data
+					});
+				}
+			}
+
+			if (limits.vertical_banners) {
+				const b = _.filter(banners, {type: 20});
+				const data = [];
+
+				const count = limits.vertical_banners - b.length;
+				if (count) {
+					data.push({
+						name: 'banner_count',
+						value: count
+					});
+				}
+
+				const utm = getBannerLeftUTM(b);
+				if (utm) {
+					data.push(utm);
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'vertical_banners',
+						data
+					});
+				}
+			}
+
+			if (limits.main_backgrounds || limits.category_backgrounds) {
+				let backgroundsLeft = 0;
+				let backgroundsRight = 0;
+				let mainBackgroundsLeft = 0;
+				let mainBackgroundsRight = 0;
+				let categoryBackgroundsLeft = 0;
+				let categoryBackgroundsRight = 0;
+				let backgrounds = 0;
+				let backgroundsUTM = 0;
+				banners.forEach(banner => {
+					switch (banner.type) {
+						case 30: {
+							backgrounds += 1;
+							backgroundsLeft += 1;
+							if (banner.onMain) {
+								mainBackgroundsLeft += 1;
+							} else if (banner.categories && banner.categories.length) {
+								categoryBackgroundsLeft += 1;
+							}
+							if (isUTM(banner.url)) {
+								backgroundsUTM += 1;
+							}
+							break;
+						}
+						case 40: {
+							backgrounds += 1;
+							backgroundsRight += 1;
+							if (banner.onMain) {
+								mainBackgroundsRight += 1;
+							} else if (banner.categories && banner.categories.length) {
+								categoryBackgroundsRight += 1;
+							}
+							if (isUTM(banner.url)) {
+								backgroundsUTM += 1;
+							}
+							break;
+						}
+						default: {
+							break;
+						}
+					}
+				});
+
+				const data = [];
+
+				const backgroundsLimit = (limits.main_backgrounds || 0) + (limits.category_backgrounds || 0);
+				const backgroundsLeftLeft = backgroundsLimit - backgroundsLeft;
+				if (backgroundsLeftLeft) {
+					data.push({
+						name: 'backgrounds_left',
+						value: backgroundsLeftLeft
+					});
+				}
+
+				const backgroundsRightLeft = backgroundsLimit - backgroundsRight;
+				if (backgroundsRightLeft) {
+					data.push({
+						name: 'backgrounds_right',
+						value: backgroundsRightLeft
+					});
+				}
+
+				if (limits.main_backgrounds) {
+					const backgroundsMainLeft = (limits.main_backgrounds * 2) - mainBackgroundsLeft - mainBackgroundsRight;
+					if (backgroundsMainLeft) {
+						data.push({
+							name: 'main_backgrounds',
+							value: backgroundsMainLeft
+						});
+					}
+				}
+
+				if (limits.category_backgrounds) {
+					const backgroundsCategoryLeft = (limits.category_backgrounds * 2) - categoryBackgroundsLeft - categoryBackgroundsRight;
+					if (backgroundsCategoryLeft) {
+						data.push({
+							name: 'category_backgrounds',
+							value: backgroundsCategoryLeft
+						});
+					}
+				}
+
+				const backgroundsUTMLeft = Math.floor((backgrounds - backgroundsUTM) / 2);
+				if (backgroundsUTMLeft) {
+					data.push({
+						name: 'utm',
+						value: backgroundsUTMLeft
+					});
+				}
+
+				if (data.length) {
+					result.push({
+						name: 'backgrounds',
+						data
+					});
+				}
 			}
 
 			return {
@@ -461,9 +707,31 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			if (limits.products) {
 				if (products.length < limits.products) {
 					result.push({
-						name: 'products',
+						name: 'positions',
 						value: limits.products - products.length
 					});
+				}
+
+				if (limits.teasers) {
+					const teasers = _.filter(products, {isTeaser: true}).length;
+					const teaserPositions = limits.teasers - teasers;
+					if (teaserPositions > 0) {
+						result.push({
+							name: 'teasers',
+							value: teaserPositions
+						});
+					}
+				}
+
+				if (limits.teasers_on_main) {
+					const teasers = _.filter(products, {isTeaserOnMain: true}).length;
+					const teaserOnMainPositions = limits.teasers_on_main - teasers;
+					if (teaserOnMainPositions > 0) {
+						result.push({
+							name: 'teasers_on_main',
+							value: teaserOnMainPositions
+						});
+					}
 				}
 			}
 
@@ -477,7 +745,6 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 			const result = [];
 
 			result.push(this.validateMerchantData());
-			result.push(this.validateMerchantLogoCategories());
 			result.push(this.validateMerchantBanners());
 			result.push(this.validateMerchantProducts());
 
@@ -486,6 +753,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 		render() {
 			const {
+				categories,
 				data,
 				limits
 			} = this.state;
@@ -495,6 +763,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 
 			const categoriesSelected = this.collectCategoriesSelected();
 			const categoriesAvailable = this.collectCategoriesAvailable(categoriesSelected);
+			const categoriesHighlighted = categoriesSelected;
 
 			const {
 				image,
@@ -560,14 +829,14 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 										<ControlLabel name="Логотип"/>
 
 										<div>
-											<p>
-												{image ? (
+											{image ? (
+												<p>
 													<img
 														src={image.url}
 														alt=""
 														/>
-												) : null}
-											</p>
+												</p>
+											) : null}
 
 											<ImagesUpload
 												onUpload={this.handleImagesUploadUpload}
@@ -584,10 +853,11 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 											<ControlLabel name="Категории размещения логотипа"/>
 
 											<MerchantLogoCategoriesSelect
-												categories={categoriesAvailable}
+												categoriesAvailable={categoriesAvailable.length >= limits.logo_categories ? categoriesAvailable : categories}
 												limit={limits.logo_categories}
 												onChange={this.handleChangeLogoCategories}
 												{...{
+													categoriesHighlighted,
 													merchantId
 												}}
 												/>
@@ -610,7 +880,10 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 					<MerchantBannerList
 						onChange={this.handleChangeBanners}
 						{...{
+							categories,
 							categoriesAvailable,
+							categoriesHighlighted,
+							categoriesSelected,
 							limits,
 							merchantId
 						}}
@@ -639,4 +912,36 @@ function processStatusDeficit(deficit) {
 	const messages = deficit.map(name => (STATUS_DEFICIT_MESSAGE[name] || name));
 	const message = '<ul style="padding-left: 18px"><li>' + messages.join('</li><li>') + '</li></ul>';
 	toastr.warning(message, 'Не все данные заполнены');
+}
+
+function getBannerLeftCount(banners, limit) {
+	const value = limit - banners.length;
+	if (value) {
+		return {name: 'banner_count', value};
+	}
+	return null;
+}
+
+function getBannerLeftOnMain(banners, limit) {
+	const value = limit - _.filter(banners, {onMain: true}).length;
+	if (value) {
+		return {name: 'on_main', value};
+	}
+	return null;
+}
+
+function getBannerLeftInMailing(banners, limit) {
+	const value = limit - _.filter(banners, {inMailing: true}).length;
+	if (value) {
+		return {name: 'in_mailing', value};
+	}
+	return null;
+}
+
+function getBannerLeftUTM(banners) {
+	const value = banners.reduce((counter, banner) => (isUTM(banner.url) ? counter : counter + 1), 0);
+	if (value) {
+		return {name: 'utm', value};
+	}
+	return null;
 }

@@ -75,7 +75,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </span>
         </div>{% comment %}
 
-        {% endcomment %}<div class="site-header-info__rpt">
+        {% endcomment %}
+        {% comment %}
+        <div class="site-header-info__rpt">
             <span class="rpt">
                 <img class="rpt__icon" src="{% static 'images/landing/site-header__rpt.png' %}" alt="">
                 <span class="rpt__text">
@@ -83,6 +85,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </span>
             </span>
         </div>
+        {% endcomment %}
 
         {% comment %}
         <div class="site-header-info__auth">
@@ -213,11 +216,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-about"></a>
 
     <div class="container">
-        <img
-            class="about-section__copter"
-            src="{% static 'images/landing/action-section__copter.png' %}"
-            alt=""
-            />
+        <a href="http://project79232.tilda.ws/konkurs" target="_blank">
+            <img
+                class="about-section__gift"
+                src="{% static 'images/landing/action-section__gift.png' %}"
+                alt=""
+                />
+        </a>
     </div>
 
     <div class="about-section__carousel js-about-section__carousel">

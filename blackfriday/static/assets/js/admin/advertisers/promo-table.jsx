@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Price from 'react-price';
 import {formatPrice} from '../utils.js';

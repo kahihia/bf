@@ -17,37 +17,39 @@ class Paged extends React.Component {
 	}
 
 	componentDidMount() {
-		const props = this.props;
+		const {
+			ajaxUrl,
+			ajaxUrlRoot,
+			data,
+			isRandom,
+			loadPagesCount,
+			pagesCount,
+			perPage
+		} = this.props;
 
 		this.pager = new Pager({
-			perPage: props.perPage,
-			pagesCount: props.pages,
-			loadPagesCount: props.loadPagesCount,
+			ajaxUrl,
+			ajaxUrlRoot,
 			isCycled: false,
-			isRandom: props.isRandom,
-			ajaxUrl: props.ajaxUrl,
+			isRandom,
+			loadPagesCount,
+			pagesCount,
+			perPage,
+			preloadedData: data && data.length ? data : null,
 			onNext: (data, page) => {
 				this.handleNext(data, page);
 			},
 			onAllLoaded: () => {
-				this.setState({
-					isAllLoaded: true
-				});
+				this.setState({isAllLoaded: true});
 			},
 			onLoadstart: () => {
-				this.setState({
-					isLoading: true
-				});
+				this.setState({isLoading: true});
 			},
 			onLoadend: () => {
-				this.setState({
-					isLoading: false
-				});
+				this.setState({isLoading: false});
 			},
 			onInited: () => {
-				this.setState({
-					isInited: true
-				});
+				this.setState({isInited: true});
 			}
 		});
 	}
@@ -84,7 +86,7 @@ class Paged extends React.Component {
 			);
 		}
 
-		return (<div/>);
+		return null;
 	}
 }
 Paged.propTypes = {
@@ -97,10 +99,8 @@ Paged.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
-	perPage: React.PropTypes.number,
-	speed: React.PropTypes.number
+	perPage: React.PropTypes.number
 };
 
 export default Paged;

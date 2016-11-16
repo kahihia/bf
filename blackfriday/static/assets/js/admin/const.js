@@ -2,7 +2,7 @@
 
 import Cookie from 'js-cookie';
 
-const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
+export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export const REGEXP = {
 	password: /^[A-Za-z0-9]{8,}$/,
@@ -96,8 +96,8 @@ export const FEED_CELL = {
 	oldPrice: 'Старая цена',
 	price: 'Цена',
 	startPrice: 'Цена от',
-	teaser: 'Товар на главной',
-	teaserOnMain: 'Тизер на первом экране',
+	teaser: 'Тизер сквозной',
+	teaserOnMain: 'Тизер на главной',
 	url: 'URL'
 };
 

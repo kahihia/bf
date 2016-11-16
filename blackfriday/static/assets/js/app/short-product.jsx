@@ -1,22 +1,70 @@
 /* global window */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import formatThousands from 'format-thousands';
 import b from 'b_';
-import {resolveImgPath} from './utils.js';
 import Price from 'react-price';
 import Link from './link.jsx';
-import StickerSupernova from './sticker-supernova.jsx';
 
 const CURRENCY = 'руб.';
 
 const className = 'short-product';
 
-const ShortProduct = React.createClass({
-	propTypes: {
-		data: React.PropTypes.object.isRequired
-	},
+const ShortProductPrice = props => (
+	<div className={b(className, 'price')}>
+		{props.oldPrice ? (
+			<Price
+				cost={formatThousands(props.oldPrice)}
+				currency={CURRENCY}
+				type="old"
+				/>
+		) : (
+			<del className="price price_old"/>
+		)}
+
+		{props.price ? (
+			<Price
+				cost={formatThousands(props.price)}
+				currency={CURRENCY}
+				className="price_theme_normal"
+				/>
+		) : null}
+
+		{props.discount ? (
+			<Price
+				cost={props.discount}
+				currency="%"
+				className="price_theme_normal"
+				prefix="скидка "
+				/>
+		) : null}
+
+		{props.startPrice ? (
+			<Price
+				cost={formatThousands(props.startPrice)}
+				currency={CURRENCY}
+				className="price_theme_normal"
+				prefix="от "
+				/>
+		) : null}
+	</div>
+);
+ShortProductPrice.propTypes = {
+	discount: React.PropTypes.number,
+	oldPrice: React.PropTypes.number,
+	price: React.PropTypes.number,
+	startPrice: React.PropTypes.number
+};
+ShortProductPrice.defaultProps = {
+};
+
+class ShortProduct extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {};
+
+		this.handleClick = this.handleClick.bind(this);
+	}
 
 	handleClick() {
 		if (!window.rrApiOnReady) {
@@ -29,7 +77,7 @@ const ShortProduct = React.createClass({
 				window.rrApi.view(id);
 			} catch (e) {}
 		});
-	},
+	}
 
 	render() {
 		const {data} = this.props;
@@ -62,7 +110,7 @@ const ShortProduct = React.createClass({
 
 					{data.category ? (
 						<div className={b(className, 'cat')}>
-							{data.category.name}
+							{data.category}
 						</div>
 					) : null}
 
@@ -76,84 +124,26 @@ const ShortProduct = React.createClass({
 						/>
 				</Link>
 
-				{data.merchant_url ? (
+				{data.merchant && data.merchant.url ? (
 					<a
 						className={b(className, 'shop')}
-						href={data.merchant_url}
+						href={data.merchant.url}
 						>
 						<img
-							src={resolveImgPath(data.logo)}
+							src={data.merchant.image}
 							alt=""
 							className={b(className, 'logo')}
 							/>
 					</a>
 				) : null}
-
-				{data.isSupernova ? (
-					<StickerSupernova size="sm"/>
-				) : null}
-			</div>
-		);
-	}
-});
-
-export default ShortProduct;
-
-class ShortProductPrice extends React.Component {
-	render() {
-		const {
-			discount,
-			oldPrice,
-			price,
-			startPrice
-		} = this.props;
-
-		return (
-			<div className={b(className, 'price')}>
-				{oldPrice ? (
-					<Price
-						cost={formatThousands(oldPrice)}
-						currency={CURRENCY}
-						type="old"
-						/>
-				) : (
-					<del className="price price_old"/>
-				)}
-
-				{price ? (
-					<Price
-						cost={formatThousands(price)}
-						currency={CURRENCY}
-						className="price_theme_normal"
-						/>
-				) : null}
-
-				{discount ? (
-					<Price
-						cost={discount}
-						currency="%"
-						className="price_theme_normal"
-						prefix="скидка "
-						/>
-				) : null}
-
-				{startPrice ? (
-					<Price
-						cost={formatThousands(startPrice)}
-						currency={CURRENCY}
-						className="price_theme_normal"
-						prefix="от "
-						/>
-				) : null}
 			</div>
 		);
 	}
 }
-ShortProductPrice.propTypes = {
-	discount: React.PropTypes.number,
-	oldPrice: React.PropTypes.number,
-	price: React.PropTypes.number,
-	startPrice: React.PropTypes.number
+ShortProduct.propTypes = {
+	data: React.PropTypes.object.isRequired
 };
-ShortProductPrice.defaultProps = {
+ShortProduct.defaultProps = {
 };
+
+export default ShortProduct;

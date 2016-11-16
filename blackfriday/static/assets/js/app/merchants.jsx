@@ -1,91 +1,85 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import arrayShuffle from 'array-shuffle';
-import {resolveImgPath} from './utils.js';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
 
-class Banner extends React.Component {
-	render() {
-		const item = this.props.data;
-		let url = item.url;
-		let isExternal = false;
-		if (item.url === '/merchant/') {
-			url = item.merchant_url;
-			isExternal = true;
-		}
+const BANNER_PLACEHOLDER_IMAGE = '/static/images/banner-placeholder.png';
 
-		return (
-			<Link
-				href={url}
-				className="party-carousel-content__image-placeholder embed-responsive"
-				isExternal={isExternal}
-				>
-				<img
-					className="party-carousel-content__image embed-responsive-item"
-					src={resolveImgPath(item.logo)}
-					alt=""
-					/>
-			</Link>
-		);
+const Banner = props => {
+	const {data} = props;
+	let url = data.url;
+	let isExternal = false;
+	if (data.url === '/merchant/') {
+		url = data.merchant_url;
+		isExternal = true;
 	}
-}
+
+	return (
+		<Link
+			href={url}
+			title={data.name}
+			className="party-carousel-content__image-placeholder embed-responsive"
+			isExternal={isExternal}
+			>
+			<img
+				className="party-carousel-content__image embed-responsive-item"
+				src={data.image || BANNER_PLACEHOLDER_IMAGE}
+				alt=""
+				/>
+		</Link>
+	);
+};
 Banner.propTypes = {
 	data: React.PropTypes.object
 };
 
-class BannerPlaceholder extends React.Component {
-	render() {
-		return (
-			<span className="party-carousel-content__image-placeholder embed-responsive">
-				<img
-					className="party-carousel-content__image embed-responsive-item"
-					src="/static/images/banner-placeholder.png"
-					alt=""
-					/>
-			</span>
-		);
-	}
-}
+const BannerPlaceholder = () => (
+	<span className="party-carousel-content__image-placeholder embed-responsive">
+		<img
+			className="party-carousel-content__image embed-responsive-item"
+			src={BANNER_PLACEHOLDER_IMAGE}
+			alt=""
+			/>
+	</span>
+);
+// BannerPlaceholder.propTypes = {};
+// BannerPlaceholder.defaultProps = {};
 
-class MerchantsCarousel extends React.Component {
-	render() {
-		const {list, perPage, pages} = this.props;
-		const length = list.length;
-		let i = length;
-		const l = list.map((item, index) => (
+const MerchantsCarousel = props => {
+	const {list, perPage, pagesCount} = props;
+	const length = list.length;
+	let i = length;
+	const l = list.map((item, index) => (
+		<div
+			key={`${index}${item.logo}`}
+			className="party-carousel-content__item"
+			>
+			<Banner data={item}/>
+		</div>
+	));
+	let additional = perPage;
+	if (pagesCount === 1 && length <= 4) {
+		additional = 4;
+	}
+	while (i++ < additional) {
+		l.push(
 			<div
-				key={`${index}${item.logo}`}
+				key={i}
 				className="party-carousel-content__item"
 				>
-				<Banner data={item}/>
-			</div>
-		));
-		let additional = perPage;
-		if (pages === 1 && length <= 4) {
-			additional = 4;
-		}
-		while (i++ < additional) {
-			l.push(
-				<div
-					key={i}
-					className="party-carousel-content__item"
-					>
-					<BannerPlaceholder/>
-				</div>
-			);
-		}
-		return (
-			<div className="party-carousel-content">
-				{l}
+				<BannerPlaceholder/>
 			</div>
 		);
 	}
-}
+	return (
+		<div className="party-carousel-content">
+			{l}
+		</div>
+	);
+};
 MerchantsCarousel.propTypes = {
 	list: React.PropTypes.array,
-	pages: React.PropTypes.number,
+	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number
 };
 
@@ -115,7 +109,7 @@ export class Merchants extends React.Component {
 					<MerchantsCarousel
 						list={this.state.data}
 						perPage={this.props.perPage}
-						pages={this.props.pages}
+						pagesCount={this.props.pagesCount}
 						/>
 				</Carousel>
 			</div>
@@ -132,7 +126,6 @@ Merchants.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number

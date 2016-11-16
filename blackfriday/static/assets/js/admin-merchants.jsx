@@ -28,6 +28,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 				filterByStatus: '',
 				filterByDate: 'ASC',
 				filterByPromo: 0,
+				filterByModerationStatus: -1,
 				filterBySupernovaAdvertiser: false,
 				filterByInnerAdvertiser: '',
 				view: CURRENT_VIEW
@@ -198,6 +199,10 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			this.setState({filterByPromo: value});
 		},
 
+		handleFilterByModerationStatus(value) {
+			this.setState({filterByModerationStatus: value});
+		},
+
 		handleFilterBySupernovaAdvertiser(value) {
 			this.setState({filterBySupernovaAdvertiser: value});
 		},
@@ -259,6 +264,17 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 
 					return false;
 				}
+			});
+		},
+
+		filterByModerationStatus(merchants) {
+			const {filterByModerationStatus} = this.state;
+			if (filterByModerationStatus < 0) {
+				return merchants;
+			}
+
+			return _.filter(merchants, item => {
+				return item.moderation && (item.moderation.status === filterByModerationStatus);
 			});
 		},
 
@@ -334,6 +350,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 				filterByDate,
 				filterByName,
 				filterByPromo,
+				filterByModerationStatus,
 				filterByStatus,
 				filterBySupernovaAdvertiser,
 				filterByInnerAdvertiser,
@@ -346,6 +363,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 			filteredMerchants = this.filterByStatus(filteredMerchants);
 			filteredMerchants = this.filterByDate(filteredMerchants);
 			filteredMerchants = this.filterByPromo(filteredMerchants);
+			filteredMerchants = this.filterByModerationStatus(filteredMerchants);
 			filteredMerchants = this.filterBySupernovaAdvertiser(filteredMerchants);
 			filteredMerchants = this.filterByInnerAdvertiser(filteredMerchants);
 
@@ -374,6 +392,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							onFilterByDate={this.handleFilterByDate}
 							onFilterByName={this.handleFilterByName}
 							onFilterByPromo={this.handleFilterByPromo}
+							onFilterByModerationStatus={this.handleFilterByModerationStatus}
 							onFilterByStatus={this.handleFilterByStatus}
 							onFilterBySupernovaAdvertiser={this.handleFilterBySupernovaAdvertiser}
 							onFilterByInnerAdvertiser={this.handleFilterByInnerAdvertiser}
@@ -381,6 +400,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 								filterByDate,
 								filterByName,
 								filterByPromo,
+								filterByModerationStatus,
 								filterByStatus,
 								filterBySupernovaAdvertiser,
 								filterByInnerAdvertiser
@@ -388,7 +408,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							/>
 					) : null}
 
-					<p>
+					<div style={{marginBottom: '10px'}}>
 						{isAdmin ? (
 							<div className="pull-right">
 								<NotificationHandler
@@ -401,7 +421,7 @@ const CURRENT_VIEW = window.localStorage.getItem('merchant-list-view') || 'grid'
 							onClick={this.handleClickViewSwitcher}
 							view={view}
 							/>
-					</p>
+					</div>
 
 					{view === 'list' ? (
 						<MerchantList

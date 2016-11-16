@@ -1,6 +1,7 @@
 import pytest
 from apps.users.tests.fixtures import *
 from apps.catalog.feeds.tests.fixtures import *
+from apps.advertisers.tests.fixtures import *
 
 
 @pytest.fixture(autouse=True)

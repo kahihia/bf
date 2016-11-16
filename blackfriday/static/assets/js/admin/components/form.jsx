@@ -12,6 +12,8 @@ class Form extends React.Component {
 			isChanged: false,
 			isLoading: false,
 			fields: {
+			},
+			cache: {
 			}
 		};
 		this.handleChange = this.handleChange.bind(this);
@@ -83,6 +85,18 @@ class Form extends React.Component {
 		});
 	}
 
+	getDataPatch() {
+		const {cache} = this.state;
+		const newData = this.serialize();
+
+		return _.reduce(newData, (patch, value, key) => {
+			if (value !== cache[key]) {
+				patch[key] = value;
+			}
+			return patch;
+		}, {});
+	}
+
 	buildRow(name) {
 		const {
 			fields,
@@ -120,17 +134,13 @@ class Form extends React.Component {
 		);
 	}
 
-	serialize() {
-		const fields = this.state.fields;
-		const json = _.reduce(fields, (a, b, key) => {
-			if (!b.excluded) {
-				a[key] = b.value;
+	serialize(fields = this.state.fields) {
+		return _.reduce(fields, (json, field, name) => {
+			if (!field.excluded) {
+				json[name] = field.value;
 			}
-
-			return a;
+			return json;
 		}, {});
-
-		return json;
 	}
 
 	processErrors(errors) {

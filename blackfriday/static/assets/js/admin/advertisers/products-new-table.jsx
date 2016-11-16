@@ -1,6 +1,5 @@
 /* global toastr _ jQuery */
 /* eslint camelcase: ["error", {properties: "never"}] */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import Price from 'react-price';
@@ -238,7 +237,7 @@ class ProductsNewTable extends React.Component {
 		);
 
 		return (
-			<div className="goods-control">
+			<div className="products-control">
 				<IsLoadingWrapper isLoading={isWaiting}>
 					{uploadPanel}
 

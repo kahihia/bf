@@ -1,21 +1,16 @@
 /* global window */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import Waypoint from 'react-waypoint';
 
 class LoadMore extends React.Component {
 	render() {
-		let content = (<div/>);
+		let content = (<div className="load-more-waypoint-placeholder"/>);
 		if (window.pageYOffset === undefined) {
 			// If it IE8 show button
 			content = (<LoadMoreBtn {...this.props}/>);
 		} else if (!this.props.disabled) {
-			content = (
-				<Waypoint
-					onEnter={this.props.onClick}
-					/>
-			);
+			content = (<Waypoint onEnter={this.props.onClick}/>);
 		}
 		return content;
 	}

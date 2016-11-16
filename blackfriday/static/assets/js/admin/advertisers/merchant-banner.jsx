@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import b from 'b_';
 import MultiselectTwoSides from 'react-multiselect-two-sides';
@@ -51,25 +49,92 @@ class MerchantBanner extends React.Component {
 
 	render() {
 		const {
-			categoriesAvailable,
 			categories,
+			categoriesAvailable,
+			categoriesHighlighted,
 			image,
 			inMailing,
 			limits,
 			onMain,
 			type,
-			url
+			url,
+			wasMailed
 		} = this.props;
 		const banner = BANNER_TYPE[type];
-		const selectedCategories = categories.map(item => item.id);
+		const categoriesSelected = categories.map(item => item.id);
 
-		const showInMailing = limits.inMailing || limits.inMailing === 0;
-		const disabledInMailing = limits.inMailing === 0 && !inMailing;
+		const readonly = Boolean(wasMailed);
 
-		const showOnMain = type !== 20 && (limits.onMain || limits.onMain === 0);
-		const disabledOnMain = limits.onMain === 0 && !onMain;
+		let showOnMain = limits.onMain || limits.onMain === 0;
+		let disabledOnMain = limits.onMain === 0 && !onMain;
 
-		const showCategories = type !== 20;
+		let showInMailing = limits.inMailing || limits.inMailing === 0;
+		let disabledInMailing = limits.inMailing === 0 && !inMailing;
+
+		let showCategories = limits.categories || limits.categoriesSelected.length;
+		let disabledCategories = false;
+
+		let categoriesLimit = limits.categories;
+		if (limits.categoriesPositions <= limits.categories) {
+			categoriesLimit = limits.categoriesPositions + categoriesSelected.length;
+		}
+
+		if (categoriesSelected.length >= categoriesLimit) {
+			categoriesLimit = categoriesSelected.length;
+		}
+
+		// superbanner
+		if (type === 0) {
+			const isCategoriesSelected = Boolean(categoriesSelected.length);
+			const isLimitCategoriesSelected = Boolean(limits.categoriesSelected.length);
+
+			if (showOnMain) {
+				if (onMain) {
+					disabledOnMain = false;
+				} else if (!disabledOnMain) {
+					if (
+						inMailing ||
+						(!isCategoriesSelected && isLimitCategoriesSelected)
+					) {
+						disabledOnMain = true;
+					}
+				}
+			}
+
+			if (showInMailing) {
+				if (inMailing) {
+					disabledInMailing = false;
+				} else if (!disabledInMailing) {
+					if (
+						onMain ||
+						isCategoriesSelected
+					) {
+						disabledInMailing = true;
+					}
+				}
+			}
+
+			if (showCategories) {
+				if (isCategoriesSelected) {
+					disabledCategories = false;
+
+					if (categoriesSelected.length !== limits.categoriesSelected.length) {
+						categoriesLimit = categoriesSelected.length;
+					}
+				} else if (!disabledCategories) {
+					if (
+						inMailing ||
+						(!isCategoriesSelected && isLimitCategoriesSelected) ||
+						disabledOnMain
+					) {
+						disabledCategories = true;
+					}
+				}
+			}
+		// verticalbanner
+		} else if (type === 20) {
+			showOnMain = false;
+		}
 
 		return (
 			<div className={className}>
@@ -83,21 +148,30 @@ class MerchantBanner extends React.Component {
 									alt=""
 									/>
 
-								<ImagesUpload
-									onUpload={this.handleUploadImage}
-									ext={['png', 'jpg']}
-									width={banner.width}
-									height={banner.height}
-									exactSize
-									/>
+								{readonly ? (
+									<span className="text-muted">
+										{'Баннер участвовал в рассылке.'}
+									</span>
+								) : (
+									<ImagesUpload
+										onUpload={this.handleUploadImage}
+										ext={['png', 'jpg']}
+										size="sm"
+										width={banner.width}
+										height={banner.height}
+										exactSize
+										/>
+								)}
 
-								<span
-									className={b(className, 'remove')}
-									onClick={this.handleClickDelete}
-									title="Удалить баннер"
-									>
-									<Glyphicon name="remove"/>
-								</span>
+								{readonly ? null : (
+									<span
+										className={b(className, 'remove')}
+										onClick={this.handleClickDelete}
+										title="Удалить баннер"
+										>
+										<Glyphicon name="remove"/>
+									</span>
+								)}
 							</div>
 						</div>
 
@@ -111,7 +185,7 @@ class MerchantBanner extends React.Component {
 										text="На главной"
 										isChecked={onMain}
 										onChange={this.handleCheckOnMain}
-										disabled={disabledOnMain}
+										disabled={disabledOnMain || readonly}
 										/>
 								) : null}
 
@@ -121,7 +195,7 @@ class MerchantBanner extends React.Component {
 										text="В рассылке"
 										isChecked={inMailing}
 										onChange={this.handleCheckInMailing}
-										disabled={disabledInMailing}
+										disabled={disabledInMailing || readonly}
 										/>
 								) : null}
 							</div>
@@ -136,9 +210,11 @@ class MerchantBanner extends React.Component {
 									selectedHeader="Выбранные"
 									selectAllText="Выбрать все"
 									deselectAllText="Очистить"
+									disabled={disabledCategories || readonly}
 									options={categoriesAvailable}
-									value={selectedCategories}
-									limit={limits.categories}
+									value={categoriesSelected}
+									highlight={categoriesHighlighted}
+									limit={categoriesLimit}
 									labelKey="name"
 									valueKey="id"
 									showControls
@@ -159,6 +235,7 @@ class MerchantBanner extends React.Component {
 								</span>
 							)}
 							name="url"
+							disabled={readonly}
 							onChange={this.handleChangeUrl}
 							value={url}
 							type="url"
@@ -173,6 +250,7 @@ class MerchantBanner extends React.Component {
 MerchantBanner.propTypes = {
 	categories: React.PropTypes.array,
 	categoriesAvailable: React.PropTypes.array,
+	categoriesHighlighted: React.PropTypes.array,
 	id: React.PropTypes.number,
 	image: React.PropTypes.object,
 	inMailing: React.PropTypes.bool,
@@ -185,7 +263,8 @@ MerchantBanner.propTypes = {
 	onMain: React.PropTypes.bool,
 	onUploadImage: React.PropTypes.func,
 	type: React.PropTypes.number,
-	url: React.PropTypes.string
+	url: React.PropTypes.string,
+	wasMailed: React.PropTypes.bool
 };
 MerchantBanner.defaultProps = {
 };

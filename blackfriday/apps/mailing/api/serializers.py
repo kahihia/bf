@@ -11,7 +11,7 @@ class BannerSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        data['image'] = instance['id'].image
+        data['image'] = str(instance['id'])
         return data
 
 
@@ -36,3 +36,11 @@ class LogoMailingSerializer(serializers.Serializer):
         if not instance.get('include_admitad'):
             data['logos'] = data['logos'].exclude(url__icontains='admitad')
         return data
+
+
+class BannersMailingSerializer(serializers.Serializer):
+    top_banner = BannerSerializer(required=False)
+    middle_banner = BannerSerializer(required=False)
+
+    top_text = serializers.CharField(required=False, validators=[html_validator])
+    bottom_text = ButtonSerializer(required=False)

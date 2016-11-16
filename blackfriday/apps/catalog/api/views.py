@@ -54,8 +54,17 @@ class ProductViewSet(
     def get_merchant(self):
         return get_object_or_404(Merchant, pk=self.kwargs.get('merchant_pk'))
 
+    def perform_destroy(self, instance):
+        super().perform_destroy(instance)
+        merchant = self.get_merchant()
+        merchant.moderation_status = ModerationStatus.new
+        merchant.save()
+
     def delete(self, request, *args, **kwargs):
-        self.queryset.filter(merchant=self.get_merchant()).delete()
+        merchant = self.get_merchant()
+        self.queryset.filter(merchant=merchant).delete()
+        merchant.moderation_status = ModerationStatus.new
+        merchant.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def validate_schema(self, data, in_list=True):
@@ -114,6 +123,9 @@ class ProductViewSet(
             ) for row in result
         ]
         Product.objects.bulk_create(qs)
+        if len(qs):
+            merchant.moderation_status = ModerationStatus.new
+            merchant.save()
         return Response(self.get_serializer(qs, many=True).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
@@ -146,10 +158,16 @@ class ProductViewSet(
                 'is_teaser_on_main': request.data.get('is_teaser_on_main', False),
             }
         )
+        changed = False
         for field, value in data.items():
+            if getattr(instance, field) != value and not changed:
+                changed = True
             setattr(instance, field, value)
 
         instance.save()
+        if changed:
+            instance.merchant.moderation_status = ModerationStatus.new
+            instance.merchant.save()
 
         return Response(self.get_serializer(instance).data)
 

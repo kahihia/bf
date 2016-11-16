@@ -5,6 +5,7 @@ from django.conf import settings
 class Subscriber(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Имя')
     email = models.EmailField(max_length=255, verbose_name='E-mail')
+    join_mnogo_ru = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Подписчик'

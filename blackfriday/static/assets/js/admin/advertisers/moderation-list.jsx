@@ -1,5 +1,4 @@
-/* global toastr, _ */
-/* eslint react/require-optimization: 0 */
+/* global toastr _ */
 
 import React from 'react';
 import b from 'b_';

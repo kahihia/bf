@@ -19,6 +19,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     inn = serializers.CharField(max_length=12, allow_blank=True, allow_null=True, validators=[
         validators.UniqueValidator(queryset=AdvertiserProfile.objects.all(), message='not_unique')
     ])
+    inner = serializers.CharField(required=False, allow_null=True)
+    is_supernova = serializers.BooleanField(required=False)
 
     class Meta:
         model = AdvertiserProfile
@@ -26,17 +28,6 @@ class ProfileSerializer(serializers.ModelSerializer):
                   'contact_name', 'contact_phone', 'head_name', 'head_appointment', 'head_basis',
                   'inner', 'is_supernova')
         extra_kwargs = {}
-
-    def get_extra_kwargs(self):
-        kwargs = super().get_extra_kwargs()
-        request = self.context.get('request')
-        if request and request.user and request.user.is_authenticated and request.user.role != 'admin':
-            kwargs['inner'] = kwargs.get('inner') or {}
-            kwargs['inner']['read_only'] = True
-            kwargs['is_supernova'] = kwargs.get('is_supernova') or {}
-            kwargs['is_supernova']['read_only'] = True
-
-        return kwargs
 
     def bind(self, field_name, parent):
         super().bind(field_name, parent)
@@ -71,7 +62,10 @@ class ProfileSerializer(serializers.ModelSerializer):
                     attrs['type'] = AdvertiserType.REGULAR
 
         elif 'inner' in attrs or 'is_supernova' in attrs:
-            raise PermissionDenied('Только администратору доступны эти параметры')
+            # Because we have property-disease. I mean is_supernova and inner are properties, so their
+            # 'read_only' kwarg cannot be modified correct.
+            attrs.pop('inner', None)
+            attrs.pop('is_supernova', None)
 
         if 'type' not in attrs:
             attrs['type'] = self.instance.type if self.instance else AdvertiserType.REGULAR
@@ -141,20 +135,13 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
                 user.role in ['manager', 'advertiser'] and
                 value in [ModerationStatus.waiting, ModerationStatus.confirmed]
             ):
-                unused_limits = [
-                    {
-                        'tech_name': limit,
-                        'value': value
-                    }
-                    for limit, value in self.instance.unused_limits.items() if value
-                ]
                 requirements = {
                     'name': self.instance.name,
                     'description': self.instance.description,
                     'url': self.instance.url,
                     'image': self.instance.image,
                     'promo': self.instance.promo,
-                    'limits': not unused_limits,
+                    'limits': all(self.instance.unused_limits.values()),
                     'utm_in_banners': self.instance.banners.filter(
                         Q(url__contains='utm_medium') & Q(url__contains='utm_source') & Q(url__contains='utm_campaign')
                     ).count() == self.instance.banners.count()
@@ -183,9 +170,12 @@ class MerchantSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ('id', 'name', 'url', 'slug', 'description', 'promocode', 'image', 'partners', 'advertiser',
                   'payment_status', 'promo', 'options_count', 'is_active', 'is_previewable',
-                  'moderation', 'preview_url', 'receives_notifications')
+                  'moderation', 'preview_url', 'receives_notifications', 'banner_mailings_count',
+                  'superbanner_mailings_count')
         extra_kwargs = {
-            'slug': {'allow_blank': False}
+            'slug': {'allow_blank': False},
+            'superbanner_mailings_count': {'read_only': True},
+            'banner_mailings_count': {'read_only': True}
         }
 
     def get_moderation(self, obj):
@@ -259,6 +249,17 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
             validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
     url = serializers.URLField(validators=[
         validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
+
+    def update(self, instance, validated_data):
+        if any(
+            [
+                getattr(instance, key) != validated_data.get(key)
+                for key in ['url', 'name', 'description', 'promocode'] if key in validated_data
+            ]
+        ) or validated_data.get('image', instance.image) != instance.image:
+            instance.moderation_status = ModerationStatus.new
+            instance.save()
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Merchant

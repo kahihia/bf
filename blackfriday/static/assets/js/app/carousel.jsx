@@ -1,5 +1,3 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Pager from './pager.js';
 
@@ -12,6 +10,7 @@ class Carousel extends React.Component {
 			isInited: false,
 			isLoading: false,
 			page: null,
+			pagesCount: null,
 			timer: null
 		};
 
@@ -21,28 +20,37 @@ class Carousel extends React.Component {
 	}
 
 	componentDidMount() {
-		const props = this.props;
+		const {
+			ajaxUrl,
+			ajaxUrlRoot,
+			data,
+			isRandom,
+			loadPagesCount,
+			onNext,
+			pagesCount,
+			perPage
+		} = this.props;
 
 		// if preloaded carousel data
-		if (props.data && props.data.length === 1 && props.pages === 1) {
+		if (data && data.length === 1 && pagesCount === 1) {
 			this.setState({
 				isInited: true
 			}, () => {
-				props.onNext(props.data);
+				onNext(data);
 			});
 			return;
 		}
 
 		this.pager = new Pager({
-			preloadedData: (props.data && props.data.length === props.pages) ? props.data : null,
-			perPage: props.perPage,
-			pagesCount: props.pages,
-			loadPagesCount: props.loadPagesCount,
+			preloadedData: data && data.length ? data : null,
+			perPage,
+			pagesCount,
+			loadPagesCount,
 			isCycled: true,
 			isFullfilled: true,
-			isRandom: props.isRandom,
-			ajaxUrl: props.ajaxUrl,
-			ajaxUrlRoot: props.ajaxUrlRoot,
+			isRandom,
+			ajaxUrl,
+			ajaxUrlRoot,
 			onNext: (data, page) => {
 				this._handleNext(data, page);
 			},
@@ -50,7 +58,7 @@ class Carousel extends React.Component {
 				this.setState({
 					isAllLoaded: true
 				}, () => {
-					if (props.pages === 1) {
+					if (pagesCount === 1) {
 						this._pause();
 					}
 				});
@@ -61,9 +69,10 @@ class Carousel extends React.Component {
 			onLoadend: () => {
 				this.setState({isLoading: false});
 			},
-			onInited: () => {
+			onInited: ({pagesCount: initedPagesCount}) => {
 				this.setState({
-					isInited: true
+					isInited: true,
+					pagesCount: pagesCount || initedPagesCount || 0
 				}, () => {
 					this._play();
 				});
@@ -117,14 +126,14 @@ class Carousel extends React.Component {
 		const {
 			children,
 			isControlsShown,
-			isPagerShown,
-			pages
+			isPagerShown
 		} = this.props;
 		const {
 			page,
 			isInited
 		} = this.state;
-		const isPaged = pages > 1;
+		const pagesCount = this.state.pagesCount || this.props.pagesCount;
+		const isPaged = pagesCount > 1;
 
 		let controls = '';
 		let className = 'carousel';
@@ -149,7 +158,7 @@ class Carousel extends React.Component {
 		if (isPaged && isPagerShown) {
 			pager = (
 				<CarouselPager
-					pages={pages}
+					pagesCount={pagesCount}
 					page={page}
 					onPage={this.handleClickPage}
 					/>
@@ -184,7 +193,6 @@ Carousel.propTypes = {
 	isRandom: React.PropTypes.bool,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number
@@ -206,7 +214,7 @@ class CarouselPager extends React.Component {
 	render() {
 		let pagerPages = [];
 		const page = this.props.page;
-		for (let i = 1; i <= this.props.pages; i += 1) {
+		for (let i = 1; i <= this.props.pagesCount; i += 1) {
 			pagerPages.push(
 				<CarouselPage
 					key={i}
@@ -227,7 +235,7 @@ class CarouselPager extends React.Component {
 CarouselPager.propTypes = {
 	onPage: React.PropTypes.func,
 	page: React.PropTypes.number,
-	pages: React.PropTypes.number
+	pagesCount: React.PropTypes.number
 };
 
 class CarouselPage extends React.Component {

@@ -64,13 +64,28 @@
                 <div class="col-md-3">
 
                     <a href="/" class="logo">
-                        <img src="{% static 'images/logo.png' %}" alt="">
+                        <img class="logo__img logo__img_xs" src="{% static 'images/logo_xs.png' %}" alt="">
+                        <img class="logo__img logo__img_lg" src="{% static 'images/logo.png' %}" alt="">
                     </a>
 
+                    <a class="super-header__share-toggler" href="#"></a>
+
                     <div class="super-header__share share">
-                        <div class="share__content">
-                            <script src="//yastatic.net/share2/share.js"></script>
-                            <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
+                        <a class="super-header__share-close" href="#"></a>
+
+                        <div class="share__container">
+                            <div class="share__prefix">
+                                <strong>Поделиться</strong> с друзьями
+                            </div>
+
+                            <div class="share__content">
+                                <script src="//yastatic.net/share2/share.js"></script>
+                                <div class="ya-share2" data-services="vkontakte,twitter,facebook,odnoklassniki,gplus" data-size="s"></div>
+                            </div>
+
+                            <div class="share__postfix">
+                                Приятного шопинга!
+                            </div>
                         </div>
                     </div>
 
@@ -122,7 +137,7 @@
 
                     {% comment %}
                     <div class="footer-mnogo-left">
-                        <a href="http://www.mnogo.ru/anketa.html?range=1062" target="_blank" rel="noopener noreferrer">
+                        <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" rel="noopener noreferrer">
                             <img src="{% static 'images/footer-mnogo-1.png' %}" alt="">
                         </a>
                     </div>
@@ -148,13 +163,11 @@
                                 <img src="{% static 'images/footer-copy.png' %}" alt="retail hotline" class="akit-copy__logo" title="" />© 2015 Ассоциация компаний интернет-торговли
                             </a>
 
-                            {% comment %}
                             <div class="footer-mnogo-right">
-                                <span>При поддержке программы:</span>
-                                <a href="http://www.mnogo.ru/business/" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/footer-mnogo-3.png' %}" alt=""></a>
-                                <img src="{% static 'images/footer-qiwi.png' %}" alt="">
+                                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" rel="noopener noreferrer">
+                                    <img src="{% static 'images/footer-mnogo-3.png' %}" alt="">
+                                </a>
                             </div>
-                            {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -164,18 +177,16 @@
 </div>
 <!-- end site__footer -->
 
-{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
-    <a href="http://www.mnogo.ru/anketa.html?range=1063" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
-{% endcomment %}
 
 
 <script>
 window.ENV = {
-    imgBaseUrl: '',
     redirectPrefix: '',
+    isPreview: {% if is_preview %}true{% else %}false{% endif %}
 };
 
 window.DATA = {
@@ -194,7 +205,6 @@ window.DATA = {
     },
     headerMenu: [
         {name: 'Российские товары', url: '/russian-goods/'},
-        {name: 'Supernova', url: '/supernova/'},
         {name: 'Все акции', url: '/actions/'},
         {name: 'Все товары', url: '/merchants/'}
     ],
@@ -214,7 +224,7 @@ window.DATA = {
 {% block data %}{% endblock %}
 </script>
 
-{% block js %}{% endblock js %}
+{% block js %}{% endblock %}
 
 {% render_bundle 'app' 'js' %}
 

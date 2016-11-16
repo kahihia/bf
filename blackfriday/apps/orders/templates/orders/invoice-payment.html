@@ -317,7 +317,7 @@
             <font>{{ option.price|floatformat:"2" }}</span>
         </td>
         <td colspan=14 class="bt br2 bl tar vat">
-            <font>{{ option.total_price }}</span>
+            <font>{{ option.total_price|floatformat:"2" }}</span>
         </td>
     </tr>
     {% endfor %}

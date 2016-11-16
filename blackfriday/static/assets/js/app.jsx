@@ -1,6 +1,4 @@
 /* global window document */
-/* eslint react/no-danger: 0 */
-/* eslint react/require-optimization: 0 */
 
 require('css/app.styl');
 
@@ -10,16 +8,14 @@ import ReactDOM from 'react-dom';
 import Scroll from 'react-scroll';
 
 import Tabs from './app/react-simpletabs.jsx';
-import {categoriesSorting, convertNodeToDangerouslyHTML} from './app/utils.js';
+import {categoriesSorting, toggleClass} from './app/utils.js';
 
 import SimpleMenu from './app/simple-menu.jsx';
 import Header from './app/header.jsx';
 import SidebarCats from './app/sidebar-cats.jsx';
 
 import Superbanner from './app/superbanner.jsx';
-import Goods from './app/goods.jsx';
-import {Merchants, AllMerchants} from './app/merchants.jsx';
-import Partners from './app/partners.jsx';
+import Products from './app/products.jsx';
 import Banners from './app/banners.jsx';
 
 (function () {
@@ -39,7 +35,7 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<SidebarCats list={DATA.categories} isSideShown={DATA.isSideShown}/>, sidebarCats);
 	}
 
-	// Russian Goods page Sidebar menu
+	// Russian Products page Sidebar menu
 	const categoriesRus = document.getElementById('categories-rus');
 	if (categoriesRus && DATA.categoriesRus) {
 		const sideHiddenBlock = document.getElementById('sidebar-hidden-block');
@@ -49,7 +45,7 @@ import Banners from './app/banners.jsx';
 		const m = (
 			<div className="categories-rus">
 				<div className="categories-rus__title">
-					'Товары российского производства'
+					{'Товары российского производства'}
 				</div>
 
 				<SimpleMenu
@@ -63,7 +59,11 @@ import Banners from './app/banners.jsx';
 
 	// Site Superbanner
 	const superbanner = document.getElementById('superbanner');
-	if (superbanner && DATA.superbanners && DATA.superbanners.pages) {
+	if (
+		superbanner &&
+		DATA.superbanners &&
+		(DATA.superbanners.pagesCount || (DATA.superbanners.data && DATA.superbanners.data.length))
+	) {
 		ReactDOM.render(<Superbanner {...DATA.superbanners}/>, superbanner);
 	}
 
@@ -111,9 +111,9 @@ import Banners from './app/banners.jsx';
 			return (
 				<div className="main-teaser__footer">
 					<PseudoLink
-						anchorName="anchor-goods"
+						anchorName="anchor-products"
 						onClick={this.handleClick}
-						key={'anchor-goods'}
+						key={'anchor-products'}
 						>
 						{'Все лучшие товары'}
 					</PseudoLink>
@@ -153,7 +153,7 @@ import Banners from './app/banners.jsx';
 		render() {
 			return (
 				<div>
-					<Scroll.Element name="anchor-goods"/>
+					<Scroll.Element name="anchor-products"/>
 
 					<Tabs tabActive={this.props.tabActive}>
 						<Tabs.Panel title={(<span>Лучшие акции</span>)}>
@@ -172,7 +172,7 @@ import Banners from './app/banners.jsx';
 								id="571e13c565bf192790e915fc"
 								/>
 
-							<Goods {...DATA.goods}/>
+							<Products {...DATA.products}/>
 						</Tabs.Panel>
 					</Tabs>
 				</div>
@@ -218,7 +218,7 @@ import Banners from './app/banners.jsx';
 								/>
 						) : null}
 
-						<Goods {...DATA.goods}/>
+						<Products {...DATA.products}/>
 					</Tabs.Panel>
 				</Tabs>
 			);
@@ -234,29 +234,32 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<MyTabs tabActive={activeTab} withRr={tabs.getAttribute('data-with-rr') === 'true'}/>, tabs);
 	}
 
-	// Russian Goods page
+	// Russian Products page
 	// Merchant page
-	const goods = document.getElementById('goods');
-	if (DATA.goods && goods) {
-		ReactDOM.render(<Goods {...DATA.goods}/>, goods);
+	const products = document.getElementById('products');
+	if (DATA.products && products) {
+		ReactDOM.render(<Products {...DATA.products}/>, products);
 	}
 
 	// Main page
 	// Category page
 	const merchants = document.getElementById('merchants');
 	if (DATA.merchants && merchants) {
+		const Merchants = require('./app/merchants').Merchants;
 		ReactDOM.render(<Merchants {...DATA.merchants}/>, merchants);
 	}
 
 	// All Merchants page
 	const allMerchants = document.getElementById('all-merchants');
 	if (DATA.allMerchants && allMerchants) {
+		const AllMerchants = require('./app/merchants').AllMerchants;
 		ReactDOM.render(<AllMerchants {...DATA.allMerchants}/>, allMerchants);
 	}
 
 	// Main page
 	const partners = document.getElementById('partners');
 	if (DATA.partners && partners) {
+		const Partners = require('./app/partners');
 		ReactDOM.render(<Partners {...DATA.partners}/>, partners);
 	}
 
@@ -268,17 +271,18 @@ import Banners from './app/banners.jsx';
 		});
 	}
 
-	function toggleClass(elem, className) {
-		let classString = elem.className;
-		let nameIndex = classString.indexOf(className);
-
-		if (nameIndex === -1) {
-			classString += ' ' + className;
-		} else {
-			classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length);
-		}
-
-		elem.className = classString;
+	const shareToggler = document.querySelector('.super-header__share-toggler');
+	if (shareToggler) {
+		const share = document.querySelector('.super-header__share');
+		const shareClose = document.querySelector('.super-header__share-close');
+		shareToggler.addEventListener('click', e => {
+			e.preventDefault();
+			toggleClass(share, 'active');
+		});
+		shareClose.addEventListener('click', e => {
+			e.preventDefault();
+			toggleClass(share, 'active');
+		});
 	}
 
 	const verticalbanners = document.getElementById('verticalbanners');
@@ -305,148 +309,15 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<Wrotator {...DATA.backgrounds}/>, wrotator);
 	}
 
-	const teasers = document.querySelectorAll('.js-teaser .short-product__link');
-	if (teasers) {
-		Array.prototype.forEach.call(teasers, teaser => {
-			teaser.addEventListener('click', () => {
-				if (!window.rrApiOnReady) {
-					return;
-				}
-
-				const id = teaser.dataset.id;
-				window.rrApiOnReady.push(function () {
-					try {
-						window.rrApi.view(id);
-					} catch (e) {}
-				});
-			});
-		});
+	const teasersOnMain = document.getElementById('teasers-on-main');
+	if (teasersOnMain && DATA.teasersOnMain && DATA.teasersOnMain.data && DATA.teasersOnMain.data.length) {
+		const TeasersOnMain = require('./app/teasers-on-main');
+		ReactDOM.render(<TeasersOnMain {...DATA.teasersOnMain}/>, teasersOnMain);
 	}
 
-	const mainTeasers = document.getElementById('main-teasers');
-	if (mainTeasers) {
-		let teasers = document.querySelectorAll('#main-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
-			<div
-				key={index}
-				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-				/>
-		));
-		const Slider = require('react-slick');
-		const MainTeasers = React.createClass({
-			componentDidMount() {
-				mainTeasers.style.display = 'block';
-			},
-
-			render() {
-				const settings = {
-					infinite: false,
-					draggable: false,
-					swipe: false,
-					speed: 500,
-					slidesToShow: 5,
-					slidesToScroll: 5,
-					responsive: [
-						{
-							breakpoint: 991,
-							settings: {
-								slidesToShow: 4,
-								slidesToScroll: 4
-							}
-						},
-						{
-							breakpoint: 767,
-							settings: {
-								slidesToShow: 3,
-								slidesToScroll: 3
-							}
-						},
-						{
-							breakpoint: 608,
-							settings: {
-								slidesToShow: 2,
-								slidesToScroll: 2
-							}
-						},
-						{
-							breakpoint: 440,
-							settings: {
-								slidesToShow: 1,
-								slidesToScroll: 1
-							}
-						}
-					]
-				};
-
-				return (
-					<Slider {...settings}>
-						{teasers}
-					</Slider>
-				);
-			}
-		});
-
-		ReactDOM.render(<MainTeasers/>, mainTeasers);
-	}
-
-	const sidebarTeasers = document.getElementById('sidebar-teasers');
-	if (sidebarTeasers) {
-		let teasers = document.querySelectorAll('#sidebar-teasers > div');
-		teasers = Array.prototype.map.call(teasers, (teaser, index) => (
-			<div
-				key={index}
-				dangerouslySetInnerHTML={convertNodeToDangerouslyHTML(teaser)}
-				/>
-		));
-		const Slider = require('react-slick');
-		const SidebarTeasers = React.createClass({
-			componentDidMount() {
-				sidebarTeasers.style.visibility = 'visible';
-			},
-
-			render() {
-				const settings = {
-					infinite: false,
-					draggable: false,
-					vertical: true,
-					swipe: false,
-					speed: 500,
-					slidesToShow: 3,
-					slidesToScroll: 3,
-					responsive: [
-						{
-							breakpoint: 991,
-							settings: {
-								vertical: false,
-								slidesToShow: 3,
-								slidesToScroll: 3
-							}
-						},
-						{
-							breakpoint: 608,
-							settings: {
-								slidesToShow: 2,
-								slidesToScroll: 2
-							}
-						},
-						{
-							breakpoint: 440,
-							settings: {
-								slidesToShow: 1,
-								slidesToScroll: 1
-							}
-						}
-					]
-				};
-
-				return (
-					<Slider {...settings}>
-						{teasers}
-					</Slider>
-				);
-			}
-		});
-
-		ReactDOM.render(<SidebarTeasers/>, sidebarTeasers);
+	const teasers = document.getElementById('sidebar-teasers');
+	if (teasers && DATA.teasers && DATA.teasers.data && DATA.teasers.data.length) {
+		const Teasers = require('./app/teasers');
+		ReactDOM.render(<Teasers {...DATA.teasers}/>, teasers);
 	}
 })();

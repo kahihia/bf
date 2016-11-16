@@ -99,6 +99,17 @@ class AdvertiserProfile(models.Model):
     def inner(self, value):
         self.type = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, self.TYPES))).get(value)
 
+    def __str__(self):
+        if self.inn:
+            return 'ИНН {}'.format(self.inn)
+        else:
+            return 'Без ИНН'
+
+
+class ModeratedMerchantsQueryset(models.QuerySet):
+    def moderated(self):
+        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False)
+
 
 class Merchant(models.Model):
     MODERATION_STATUSES = (
@@ -132,6 +143,8 @@ class Merchant(models.Model):
     receives_notifications = models.BooleanField(default=True, verbose_name='Получает уведомления')
     banner_mailings_count = models.IntegerField(default=0)
     superbanner_mailings_count = models.IntegerField(default=0)
+
+    objects = models.Manager.from_queryset(ModeratedMerchantsQueryset)()
 
     class Meta:
         verbose_name = 'Магазин'
@@ -192,10 +205,15 @@ class Merchant(models.Model):
         banners = self.banners.prefetch_related('categories')
         limits = self.limits
         return {
-            'banner_on_main': len([b for b in banners if b.on_main]) == limits['banner_on_main'],
+            'banner_on_main': (
+                len(
+                    [b for b in banners if b.on_main and b.type == BannerType.ACTION]
+                ) == limits['banner_on_main']
+            ),
             'banner_positions': (
                 len(
-                    [b for b in banners if b.type == BannerType.ACTION and b.categories.all()]
+                    [cat for cat in itertools.chain.from_iterable(
+                        [b.categories.all() for b in banners if b.type == BannerType.ACTION])]
                 ) == limits['banner_positions']
             ),
             'banners': (
@@ -205,25 +223,36 @@ class Merchant(models.Model):
             ),
             'categories': (
                 Category.objects.filter(
-                    banners__merchant=self, products__merchant=self).distinct().count() >= limits['categories']
+                    Q(banners__merchant=self) | Q(products__merchant=self)
+                ).distinct().count() >= limits['categories']
             ),
             'category_backgrounds': (
                 len(
-                    [b for b in banners if b.type == BannerType.BG_LEFT]
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT if not b.on_main],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT if not b.on_main],
+                        )
+                    )
                 ) == limits['category_backgrounds']
             ),
             'extra_banner_categories': (
                 len(
                     {cat for cat in itertools.chain.from_iterable(
                         [b.categories.all() for b in banners if b.type == BannerType.ACTION])}
-                ) == limits['extra_banner_categories']
+                ) == (limits['extra_banner_categories'] + limits['categories'])
             ),
             'logo_categories': (
                 len({cat.id for cat in self.logo_categories.all()}) == limits['logo_categories']
             ),
             'main_backgrounds': (
                 len(
-                    [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main]
+                    list(
+                        zip(
+                            [b for b in banners if b.type == BannerType.BG_LEFT and b.on_main],
+                            [b for b in banners if b.type == BannerType.BG_RIGHT and b.on_main],
+                        )
+                    )
                 ) == limits['main_backgrounds']
             ),
             'superbanner_categories': (
@@ -240,7 +269,7 @@ class Merchant(models.Model):
             'superbanner_on_main': (
                 bool(
                     len([b for b in banners if b.type == BannerType.SUPER and b.on_main])
-                ) == bool(limits['superbanner_in_mailing'])
+                ) == bool(limits['superbanner_on_main'])
             ),
             'superbanners': (
                 len([b for b in banners if b.type == BannerType.SUPER]) == limits['superbanners']
@@ -249,7 +278,7 @@ class Merchant(models.Model):
                 len([p for p in products if p.is_teaser]) == limits['teasers']
             ),
             'teasers_on_main': (
-                len([p for p in products if p.is_teaser_on_main]) == limits['teasers']
+                len([p for p in products if p.is_teaser_on_main]) == limits['teasers_on_main']
             ),
             'vertical_banners': (
                 len([b for b in banners if b.type == BannerType.VERTICAL]) == limits['vertical_banners']
@@ -302,6 +331,24 @@ class BannerType:
     BG_LEFT = 30
     BG_RIGHT = 40
 
+    @classmethod
+    def get(self, key):
+        return getattr(self, key.upper())
+
+
+class BannerQueryset(models.QuerySet):
+    def from_moderated_merchants(self):
+        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
+
+    def vertical(self):
+        return self.filter(type=BannerType.VERTICAL)
+
+    def super(self):
+        return self.filter(type=BannerType.SUPER)
+
+    def action(self):
+        return self.filter(type=BannerType.ACTION)
+
 
 class Banner(models.Model):
     TYPES = (
@@ -317,8 +364,11 @@ class Banner(models.Model):
     url = models.URLField()
     on_main = models.BooleanField()
     in_mailing = models.BooleanField()
-    categories = models.ManyToManyField('catalog.Category', related_name='banners')
+    categories = models.ManyToManyField('catalog.Category', related_name='banners', blank=True)
     merchant = models.ForeignKey(Merchant, related_name='banners')
+    was_mailed = models.BooleanField(default=False)
+
+    objects = models.Manager.from_queryset(BannerQueryset)()
 
     @property
     def owner_id(self):

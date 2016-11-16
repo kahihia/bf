@@ -1,7 +1,5 @@
 {% extends "layouts/app-page-layout.html" %}
 
-{% load render_bundle from webpack_loader %}
-
 {% block content %}
 
 <div id="card-description"></div>
@@ -10,44 +8,41 @@
 {% if merchant.products.all %}
 <div class="title-2">Лучшие товары</div>
 {% endif %}
-<div id="goods" class="card-product-list"></div>
+<div id="products" class="card-product-list"></div>
 
 {% endblock content %}
 
 {% block superbanner %}
-pages: {{ superbanners|length }},
+// pagesCount: {{ superbanners|length }},
 isRandom: false,
 isControlsShown: true,
 isPagerShown: true,
 data: [
     {% for item in superbanners %}
-    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}', isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}},
+    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
     {% endfor %}
 ],
 {% endblock superbanner %}
 
 {% block data %}
-window.DATA.goods = {
-    ajaxUrl: 'goods',
-    perPage: 4,
-    pages: 1,
+window.DATA.products = {
+    ajaxUrl: 'products',
+    perPage: 10,
+    // pagesCount: 1,
     data: [
         {% for item in merchant.products.all %}
         {
             id: {{ item.id }},
             url: '{{ item.url|escapejs }}',
             image: '{{ item.image }}',
-            name: '{{ item.name }}',
+            name: '{{ item.name|escapejs }}',
             price: {{ item.price|default:'null' }},
             oldPrice: {{ item.old_price|default:'null' }},
             startPrice: {{ item.start_price|default:'null' }},
             discount: {{ item.discount|default:'null' }},
-            category: {
-                name: '{{ item.category }}'
-            },
-            country: '{{ item.country }}',
-            brand: '{{ item.brand }}',
-            isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}
+            category: '{{ item.category|escapejs }}' ,
+            country: '{{ item.country|escapejs }}',
+            brand: '{{ item.brand|escapejs }}'
         },
         {% endfor %}
     ]
@@ -65,14 +60,19 @@ window.DATA.cardDescription = {
     ]
 };
 window.DATA.specialOffers = {
-    banners: [
+    data: [
         {% for item in actionbanners %}
-        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}', isSupernova: {% if merchant.advertiser.profile.is_supernova %}true{% else %}false{% endif %}},
+        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
         {% endfor %}
     ]
 };
-{% endblock %}
 
-{% block js %}
-    {% render_bundle 'app' 'js' %}
-{% endblock js %}
+window.DATA.teasers = {
+    perPage: 5,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: []
+};
+{% endblock data %}

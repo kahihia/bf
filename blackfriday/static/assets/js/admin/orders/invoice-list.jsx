@@ -1,6 +1,5 @@
 /* global window moment _ toastr */
 /* eslint camelcase: ["error", {properties: "never"}] */
-/* eslint react/require-optimization: 0 */
 
 import React from 'react';
 import xhr from 'xhr';
@@ -365,10 +364,11 @@ export class InvoiceList extends React.Component {
 				return false;
 			}
 
-			if (
-				contains(name, advertiser.name) ||
-				contains(name, merchant.name)
-			) {
+			if (advertiser.name && contains(name, advertiser.name)) {
+				return true;
+			}
+
+			if (merchant.name && contains(name, merchant.name)) {
 				return true;
 			}
 
@@ -720,16 +720,18 @@ export class InvoiceList extends React.Component {
 				</table>
 
 				{(sortedData.length >= 10) ? (
-					<InvoiceListSelectedAction
-						onChangeNewStatus={this.handleChangeNewStatus}
-						onClickChangeStatuses={this.handleClickChangeStatuses}
-						selectedItemsIds={filteredSelectedItemsIds}
-						{...{
-							isLoading,
-							newStatus,
-							noSelectedItems
-						}}
-						/>
+					<div className="row">
+						<InvoiceListSelectedAction
+							onChangeNewStatus={this.handleChangeNewStatus}
+							onClickChangeStatuses={this.handleClickChangeStatuses}
+							selectedItemsIds={filteredSelectedItemsIds}
+							{...{
+								isLoading,
+								newStatus,
+								noSelectedItems
+							}}
+							/>
+					</div>
 				) : null}
 			</div>
 		);

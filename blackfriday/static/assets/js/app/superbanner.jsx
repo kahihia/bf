@@ -1,9 +1,6 @@
-/* eslint react/require-optimization: 0 */
-
 import React from 'react';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
-import StickerSupernova from './sticker-supernova.jsx';
 
 class Superbanner extends React.Component {
 	constructor() {
@@ -38,20 +35,12 @@ class Superbanner extends React.Component {
 						isExternal
 						>
 						{img}
-
-						{item.isSupernova ? (
-							<StickerSupernova size="lg"/>
-						) : null}
 					</Link>
 				);
 			} else {
 				content = (
 					<span>
 						{img}
-
-						{item.isSupernova ? (
-							<StickerSupernova size="lg"/>
-						) : null}
 					</span>
 				);
 			}
@@ -83,7 +72,6 @@ Superbanner.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number
