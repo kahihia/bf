@@ -204,7 +204,10 @@ class MerchantViewSet(viewsets.ModelViewSet):
         materials = []
 
         if instance.image:
-            on_main = instance.promo and instance.promo.options.filter(option__tech_name='logo_on_main').exists()
+            on_main = (
+                instance.promo and
+                instance.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()
+            )
             materials.append(('Логотип', None, on_main))
 
         banners = instance.banners.all()
