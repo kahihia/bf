@@ -17,7 +17,7 @@ class Category(models.Model):
 class ProductQueryset(models.QuerySet):
     def from_moderated_merchants(self):
         from apps.advertisers.models import ModerationStatus
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed)
+        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
 
     def teasers_on_main(self):
         return self.filter(is_teaser_on_main=True)
