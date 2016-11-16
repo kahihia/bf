@@ -114,7 +114,7 @@ class MailingBannersForm extends Form {
 			url: '/api/mailing/banners/',
 			method: 'POST',
 			headers: {
-				'Accept': 'text/html',
+				Accept: 'text/html',
 				'X-CSRFToken': TOKEN.csrftoken
 			},
 			json
