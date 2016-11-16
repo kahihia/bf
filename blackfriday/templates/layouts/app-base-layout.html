@@ -195,11 +195,11 @@ window.DATA = {
         ajaxUrl: 'super_banners',
         ajaxUrlRoot: true,
         {% block superbanner %}
-            pages: 0,
+            // pagesCount: 0,
             isRandom: true,
             isControlsShown: true,
             isPagerShown: false,
-            data: [],
+            data: {{ superbanners|safe|default:"[]" }},
         {% endblock %}
         speed: 3000
     },
@@ -208,11 +208,7 @@ window.DATA = {
         {name: 'Все акции', url: '/actions/'},
         {name: 'Все товары', url: '/merchants/'}
     ],
-    categories: [
-        {% for item in categories %}
-        {id: {{ item.id }}, url: '/categories/{{ item.slug }}/', name: '{{ item.name }}'},
-        {% endfor %}
-    ],
+    categories: {{ categories|safe|default:"[]" }},
     footerCats: [
         {name: 'Российские товары', url: '/russian-goods/'},
         {name: 'Все акции', url: '/actions/'},

@@ -263,6 +263,13 @@ import Banners from './app/banners.jsx';
 		ReactDOM.render(<Partners {...DATA.partners}/>, partners);
 	}
 
+	// Partners
+	const partnerList = document.getElementById('partner-list');
+	if (DATA.partners && partnerList) {
+		const PartnerList = require('./app/partner-list');
+		ReactDOM.render(<PartnerList {...DATA.partners}/>, partnerList);
+	}
+
 	// Site Mnogoru Gift
 	const mnogoGift = document.getElementById('mnogoru-gift');
 	if (mnogoGift) {
