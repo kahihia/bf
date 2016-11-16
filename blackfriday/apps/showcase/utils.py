@@ -81,6 +81,22 @@ def get_backgrounds(**kwargs):
     return [value for _, value in backgrounds.items()]
 
 
+def partners():
+    return render_to_string(
+        'showcase/partners.html',
+        {
+            'teasers': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().teasers(),
+                    many=True
+                ).data
+            ),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+            'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
+        }
+    )
+
+
 def russiangoods():
     qs = Product.objects.from_moderated_merchants().filter(
         reduce(
