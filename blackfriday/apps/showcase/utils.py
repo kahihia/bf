@@ -13,7 +13,7 @@ from apps.catalog.models import Product, Category
 
 def serializer_factory(cls_name, fields, **extra_fields):
     return type(
-        '{}ContextSerializer'.format(cls_name),
+        '{}ContextSerializer'.format(cls_name.split('.')[1]),
         (serializers.ModelSerializer, ),
         dict(
             **extra_fields,
@@ -30,11 +30,11 @@ MerchantSerializer = serializer_factory(
 PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
     fields=('id', 'name', 'url', 'image'),
-    image=serializers.CharField(source='image.image')
+    image=serializers.CharField(source='image.url')
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
-    fields=('id', 'name', 'url', 'merchant'),
+    fields=('id', 'name', 'url', 'merchant', 'image'),
     image=serializers.CharField(source='image.image'),
     merchant=MerchantSerializer(),
 
@@ -107,7 +107,7 @@ def category(category_id):
                     many=True
                 ).data
             ),
-            'backgrounds': get_backgrounds(categories__id=category_id),
+            'backgrounds': json.dumps(get_backgrounds(categories__id=category_id)),
             'teasers': json.dumps(
                 ProductSerializer(
                     Product.objects.from_moderated_merchants().teasers(),
@@ -131,7 +131,7 @@ def merchants():
                 ).data
             ),
             'teasers': json.dumps(
-                ProductSerializer(Product.objects.teasers().from_moderated_merchants(), many=True)),
+                ProductSerializer(Product.objects.teasers().from_moderated_merchants(), many=True).data),
             'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
         }
     )
