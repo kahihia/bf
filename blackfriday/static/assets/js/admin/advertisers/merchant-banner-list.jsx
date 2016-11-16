@@ -332,13 +332,9 @@ class MerchantBannerList extends React.Component {
 
 		let acategories = this.getLimitAvailableByTypeAndName(bannerType, '_categories', 'categories');
 		if (acategories === null && apositions !== null) {
-			const limitExtra = this.getLimitByTypeAndName(bannerType, '_categories', 'extra_');
-			if (limitExtra && typeof limitExtra === 'number') {
-				const categoriesLimit = this.props.limits.categories;
-				if (categoriesLimit && typeof categoriesLimit === 'number') {
-					acategories = categoriesLimit + limitExtra;
-				}
-			}
+			const limitExtra = this.getLimitByTypeAndName(bannerType, '_categories', 'extra_') || 0;
+			const categoriesLimit = this.props.limits.categories || 0;
+			acategories = categoriesLimit + limitExtra;
 		}
 
 		const categories = acategories || 0;

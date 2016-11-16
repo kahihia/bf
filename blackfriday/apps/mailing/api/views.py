@@ -1,4 +1,9 @@
+from math import ceil
+
+from django.db.models import Case
 from django.db.models import F, Q, Prefetch, Count
+from django.db.models import Sum
+from django.db.models import When
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -12,18 +17,65 @@ from apps.advertisers.models import Merchant, ModerationStatus, Banner, BannerTy
 from apps.promo.models import PromoOption
 from apps.orders.models import InvoiceOption
 
-from .serializers import LogoMailingSerializer
+from .serializers import LogoMailingSerializer, BannersMailingSerializer
 
 
 class MailingViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def get_serializer_class(self):
-        return LogoMailingSerializer
+        return {
+            'logos': LogoMailingSerializer,
+            'banners': BannersMailingSerializer
+        }[self.action]
 
-    @list_route(methods=['get'], renderer_classes=[TemplateHTMLRenderer])
+    @list_route(methods=['get', 'post'], renderer_classes=[TemplateHTMLRenderer])
     def banners(self, request, *args, **kwargs):
-        return Response({}, template_name='mailing/api/mailing.html')
+        data = {}
+
+        action_banners = Banner.objects.filter(
+            merchant__moderation_status=ModerationStatus.confirmed,
+            type=BannerType.ACTION, in_mailing=True
+        ).annotate(
+            sum=Sum(Case(When(merchant__invoices__is_paid=True, then=F('merchant__invoices__sum'))))
+        ).order_by('-sum')
+
+        super_banners = Banner.objects.filter(
+            merchant__moderation_status=ModerationStatus.confirmed,
+            type=BannerType.SUPER, in_mailing=True, was_mailed=False
+        ).annotate(
+            sum=Sum(Case(When(merchant__invoices__is_paid=True, then=F('merchant__invoices__sum'))))
+        ).order_by('-sum')
+
+        action_banners = list(filter(
+            lambda x: x.merchant.banner_mailings_count < x.merchant.limits['banner_in_mailing'],
+            action_banners
+        ))
+
+        super_banners = list(filter(
+            lambda x: x.merchant.superbanner_mailings_count < x.merchant.limits['superbanner_in_mailing'],
+            super_banners
+        ))
+
+        if request.method == 'POST':
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.data
+            middle_banner = data.pop('middle_banner', None)
+            if middle_banner:
+                super_banners = [middle_banner] + super_banners
+
+        banners = []
+        for banner_group in [action_banners[i*4:i*4+4] for i in range(ceil(len(action_banners) / 4))]:
+            try:
+                super_banner = super_banners.pop(0)
+            except IndexError:
+                super_banner = None
+            banners.append({'banners': banner_group, 'superbanner': super_banner})
+
+        data.update({'banners': banners, 'superbanners': super_banners})
+
+        return Response(data, template_name='mailing/api/mailing-banners.html')
 
     @list_route(methods=['get', 'post'], renderer_classes=[TemplateHTMLRenderer])
     def logos(self, request, *args, **kwargs):
@@ -34,7 +86,7 @@ class MailingViewSet(viewsets.GenericViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             data = serializer.data
-        return Response(data, template_name='mailing/api/mailing.html')
+        return Response(data, template_name='mailing/api/mailing-logos.html')
 
 
 class MailingBannersViewSet(viewsets.GenericViewSet):

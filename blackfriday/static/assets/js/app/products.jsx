@@ -38,7 +38,7 @@ class Products extends React.Component {
 
 	render() {
 		// For merchant preview
-		if (this.props.data.length && this.props.pages === 1) {
+		if (this.props.data.length && this.props.pagesCount === 1) {
 			return <ProductList data={this.props.data}/>;
 		}
 
@@ -48,7 +48,9 @@ class Products extends React.Component {
 				loadMoreText={'Показать больше товаров'}
 				onNext={this.handleNext}
 				>
-				<ProductList data={this.state.data}/>
+				{this.state.data.length ? (
+					<ProductList data={this.state.data}/>
+				) : null}
 			</Paged>
 		);
 	}
@@ -61,7 +63,6 @@ Products.propTypes = {
 	loadMoreText: React.PropTypes.string,
 	loadPagesCount: React.PropTypes.number,
 	onNext: React.PropTypes.func,
-	pages: React.PropTypes.number,
 	pagesCount: React.PropTypes.number,
 	perPage: React.PropTypes.number,
 	speed: React.PropTypes.number

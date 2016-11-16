@@ -6,12 +6,13 @@ const ADMITAD_REGEX = /ad.admitad.com/;
 
 const Link = React.createClass({
 	propTypes: {
-		children: React.PropTypes.node.isRequired,
+		children: React.PropTypes.node,
 		className: React.PropTypes.string,
 		href: React.PropTypes.string.isRequired,
 		isExternal: React.PropTypes.bool,
-		title: React.PropTypes.string,
-		onClick: React.PropTypes.func
+		onClick: React.PropTypes.func,
+		style: React.PropTypes.object,
+		title: React.PropTypes.string
 	},
 
 	handleClick() {
@@ -39,6 +40,7 @@ const Link = React.createClass({
 				className={props.className || ''}
 				href={href}
 				title={props.title}
+				style={props.style}
 				target={props.isExternal ? '_blank' : ''}
 				onClick={this.handleClick}
 				rel="nofollow"

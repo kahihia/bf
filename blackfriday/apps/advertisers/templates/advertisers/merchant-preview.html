@@ -13,7 +13,7 @@
 {% endblock content %}
 
 {% block superbanner %}
-pages: {{ superbanners|length }},
+// pagesCount: {{ superbanners|length }},
 isRandom: false,
 isControlsShown: true,
 isPagerShown: true,
@@ -27,24 +27,22 @@ data: [
 {% block data %}
 window.DATA.products = {
     ajaxUrl: 'products',
-    perPage: 4,
-    pages: 1,
+    perPage: 10,
+    // pagesCount: 1,
     data: [
         {% for item in merchant.products.all %}
         {
             id: {{ item.id }},
             url: '{{ item.url|escapejs }}',
             image: '{{ item.image }}',
-            name: '{{ item.name }}',
+            name: '{{ item.name|escapejs }}',
             price: {{ item.price|default:'null' }},
             oldPrice: {{ item.old_price|default:'null' }},
             startPrice: {{ item.start_price|default:'null' }},
             discount: {{ item.discount|default:'null' }},
-            category: {
-                name: '{{ item.category }}'
-            },
-            country: '{{ item.country }}',
-            brand: '{{ item.brand }}'
+            category: '{{ item.category|escapejs }}' ,
+            country: '{{ item.country|escapejs }}',
+            brand: '{{ item.brand|escapejs }}'
         },
         {% endfor %}
     ]
@@ -68,4 +66,13 @@ window.DATA.specialOffers = {
         {% endfor %}
     ]
 };
-{% endblock %}
+
+window.DATA.teasers = {
+    perPage: 5,
+    // pagesCount: 1,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: []
+};
+{% endblock data %}

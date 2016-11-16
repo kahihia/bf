@@ -115,7 +115,7 @@ class ProductRow(Row):
                 Required(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
-            'image', pipes=(str,),
+            'image', pipes=(str, str.strip,),
             validators=(
                 Required(), Substring(rule=('http://', 'https://')),
                 GenericValidator(message='Данный формат не поддерживается', rule=is_image))),
