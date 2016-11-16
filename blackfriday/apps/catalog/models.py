@@ -17,7 +17,7 @@ class Category(models.Model):
 class ProductQueryset(models.QuerySet):
     def from_moderated_merchants(self):
         from apps.advertisers.models import ModerationStatus
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed)
+        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
 
     def teasers_on_main(self):
         return self.filter(is_teaser_on_main=True)
@@ -29,7 +29,7 @@ class ProductQueryset(models.QuerySet):
 class Product(models.Model):
     merchant = models.ForeignKey('advertisers.Merchant', related_name='products')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products')
-    name = models.CharField(max_length=120, verbose_name='Название')
+    name = models.CharField(max_length=255, verbose_name='Название')
 
     price = models.IntegerField(verbose_name='Цена', null=True)
     old_price = models.IntegerField(verbose_name='Старая цена', null=True)

@@ -33,7 +33,9 @@ MerchantSerializer = serializer_factory(
     cls_name='advertisers.Merchant',
     fields=('id', 'name', 'url', 'image'),
     image=serializers.SerializerMethodField(),
+    url=serializers.SerializerMethodField(),
     get_image=get_image,
+    get_url=lambda self, obj: '/merchant/{}'.format(obj.slug),
 )
 PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
@@ -53,6 +55,7 @@ ProductSerializer = serializer_factory(
     cls_name='catalog.Product',
     fields=('id', 'category', 'name', 'price', 'old_price', 'start_price', 'discount', 'merchant', 'url', 'image'),
     merchant=MerchantSerializer(),
+    category=serializers.CharField(source='category.name')
 )
 CategorySerializer = serializer_factory(
     cls_name='catalog.Category',
