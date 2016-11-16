@@ -34,7 +34,7 @@ PartnerSerializer = serializer_factory(
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
-    fields=('id', 'name', 'url', 'merchant', 'image'),
+    fields=('id', 'url', 'merchant', 'image'),
     image=serializers.CharField(source='image.image'),
     merchant=MerchantSerializer(),
 
