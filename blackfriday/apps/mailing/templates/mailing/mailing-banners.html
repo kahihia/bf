@@ -20,14 +20,9 @@
 
 	<div id="admin-mailing-banners"></div>
 
-	{% comment %}
-	{% include "specials/includes/add-special-modal.html"  %}
-	{% include "specials/includes/edit-special-modal.html"  %}
-	{% endcomment %}
+	{% include "includes/images-upload-modal.html" %}
 {% endblock content %}
 
-{% comment %}
 {% block js %}
-	{% render_bundle 'admin-mailing' 'js' %}
+	{% render_bundle 'admin-mailing-banners' 'js' %}
 {% endblock js %}
-{% endcomment %}
