@@ -1,0 +1,18 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% block content %}
+
+<div id="partner-list"></div>
+
+{% endblock content %}
+
+{% block data %}
+window.DATA.partners = {
+    isRandom: true,
+    data: {{ partners|safe|default:"[]" }}
+};
+
+window.DATA.teasers = {
+    data: {{ teasers|safe|default:"[]" }}
+};
+{% endblock data %}

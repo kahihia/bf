@@ -11,7 +11,7 @@
 </head>
 
 <body style="background: url({{ SITE_URL }}{% static 'mailing/img/pattern.gif' %}); font-family: 'Arial'">
-<div id="main_wrap" style="width: 900px; margin: 0 auto">
+<div id="main_wrap" style="width: 640px; margin: 0 auto">
     <div style="height: 150px">
         <a href="{{ SITE_URL }}" style="text-decoration: none;">
             <img src="{{ SITE_URL }}{% static 'mailing/img/header.png' %}" alt="">
@@ -19,7 +19,7 @@
     </div>
 
     <div style="background-color: #fff; padding: 25px 0 30px">
-        <div style="width: 900px; margin: 0 auto">
+        <div style="width: 640px; margin: 0 auto">
             {% if top_banner %}
                 <a href="{{ top_banner.url }}" style="text-decoration: none;">
                     <img src="{{ SITE_URL }}{{ top_banner.image }}" alt="">
@@ -28,76 +28,85 @@
                 <img src="{{ SITE_URL }}{% static 'mailing/img/main_banner.png' %}" alt="">
             {% endif %}
 
-            {% if top_text %}
-                {{ top_text|safe }}
-            {% else %}
-                <h3>Посетите все распродажи за один день, не выходя из дома!</h3>
+            <div style="width: 570px; margin: 0 auto">
+                {% if top_text %}
+                    {{ top_text|safe }}
+                {% else %}
+                    <h3>Посетите все распродажи за один день, не выходя из дома!</h3>
 
-                <p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном сайте.</p>
+                    <p style="line-height: 1.4;">Для вашего удобства мы собрали все акции от ведущих интернет-компаний на одном сайте.</p>
 
-                <p style="line-height: 1.4;">
-                    Только 24 и 25 ноября 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -
+                    <p style="line-height: 1.4;">
+                        Только 24 и 25 ноября 2016 г. вы сможете купить все что угодно - от пылесоса до массажа -
 
-                    <span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>
-                </p>
+                        <span style="background-color:#45cc0b;color:white;font-size:16px;font-weight:bold;padding:3px;">со скидкой до 90%.</span>
+                    </p>
 
-                <p>
-                    <b>Проведите лучшую пятницу года с пользой!</b>
-                </p>
-            {% endif %}
+                    <p>
+                        <b>Проведите лучшую пятницу года с пользой!</b>
+                    </p>
+                {% endif %}
 
-            <div>
-                <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
+                <div>
+                    <span style="height: 50px;vertical-align: middle;display: inline-block;color: #656565;">Организаторы акции:</span>
 
-                <a href="http://www.akit.ru" style="text-decoration: none;">
-                    <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/akit-logo.png' %}" alt="">
-                </a>
+                    <a href="http://www.akit.ru" style="text-decoration: none;">
+                        <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/akit-logo.png' %}" alt="">
+                    </a>
 
-                <a href="http://www.mnogo.ru" style="text-decoration: none;">
-                    <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/mnogo-logo.jpg' %}" alt="">
-                </a>
+                    <a href="http://www.mnogo.ru" style="text-decoration: none;">
+                        <img style="margin-left: 15px;" src="{{ SITE_URL }}{% static 'mailing/img/mnogo-logo.jpg' %}" alt="">
+                    </a>
+                </div>
+
+                <h2>
+                    Лучшие предложения
+
+                    <br>
+
+                    от участников Настоящей Чёрной пятницы
+                </h2>
+
             </div>
-
-            <h2>
-                Лучшие предложения
-
-                <br>
-
-                от участников Настоящей Чёрной пятницы
-            </h2>
-
             {% for banner_block in banners %}
-                {% for banner in banner_block.banners %}
-                    <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 435px; height: 250px">
-                        <img src="{{ SITE_URL }}{{ banner.image }}" alt="">
-                    </a>
+                <div style="width: 570px; margin: 0 auto">
+                    {% for banner in banner_block.banners %}
+                        <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 272px;">
+                            <img src="{{ SITE_URL }}{{ banner.image }}" alt="">
+                        </a>
 
-                    {% cycle False True as newrow silent %}
-                    {% if newrow or forloop.last %}
-                        <div style="clear: both"></div>
-                    {% endif %}
-                {% endfor %}
+                        {% cycle False True as newrow silent %}
+                        {% if newrow or forloop.last %}
+                            <div style="clear: both"></div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
                 {% if banner_block.superbanner %}
-                    <a href="{{ banner_block.superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 900px">
-                        <img src="{{ SITE_URL }}{{ banner_block.superbanner.image }}" alt="">
-                    </a>
-                    <div style="clear: both"></div>
+                    <div style="width: 620px; margin: 0 auto">
+                        <a href="{{ banner_block.superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
+                            <img src="{{ SITE_URL }}{{ banner_block.superbanner.image }}" alt="">
+                        </a>
+                        <div style="clear: both"></div>
+                    </div>
                 {% endif %}
             {% endfor %}
-            {% for superbanner in superbanners %}
-                <a href="{{ superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 900px">
-                    <img src="{{ SITE_URL }}{{ superbanner.image }}" alt="">
-                </a>
-                <div style="clear: both"></div>
-            {% endfor %}
+
+            <div style="width: 640px; margin: 0 auto">
+                {% for superbanner in superbanners %}
+                    <a href="{{ superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
+                        <img src="{{ SITE_URL }}{{ superbanner.image }}" alt="">
+                    </a>
+                    <div style="clear: both"></div>
+                {% endfor %}
+            </div>
         </div>
 
         {% if bottom_text %}
             <a href="{{ bottom_text.url }}"
-               style="margin: 0 auto; display: block; width: 900px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">{{ bottom_text.text }}</a>
+               style="margin: 0 auto; display: block; width: 620px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">{{ bottom_text.text }}</a>
         {% else %}
             <a href="{{ SITE_URL }}"
-               style="margin: 0 auto; display: block; width: 900px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">Посмотреть
+               style="margin: 0 auto; display: block; width: 620px; text-align: center; text-transform: uppercase; background-color: #7408e8; color: #fff; text-decoration: none; font-family: 'Arial'; font-weight: 700; padding: 15px 0">Посмотреть
                 все предложения</a>
         {% endif %}
     </div>
