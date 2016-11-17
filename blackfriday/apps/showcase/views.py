@@ -4,7 +4,7 @@ from apps.users.mixins import RolePermissionMixin
 from django.views.generic import View
 
 
-from .utils import main_page, actions, merchants, category, russiangoods, partners
+from apps.showcase.controllers import main_page, actions, merchants, category, russiangoods, partners
 
 
 class MainPreview(LoginRequiredMixin, RolePermissionMixin, View):

@@ -206,3 +206,4 @@ MNOGO_LEADS_MANAGERS = []
 RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
 )
+SHOWCASE_ROOT = os.path.join(PROJECT_ROOT, 'showcase')
