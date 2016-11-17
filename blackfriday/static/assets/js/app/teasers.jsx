@@ -43,6 +43,7 @@ const Teasers = props => (
 				key={item.id}
 				data={item}
 				showCategory={props.showCategory}
+				showMerchant={props.showMerchant}
 				/>
 		))}
 	</Slider>

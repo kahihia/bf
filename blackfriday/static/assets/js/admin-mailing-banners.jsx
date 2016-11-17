@@ -1,8 +1,10 @@
-/* global document, Blob, moment, saveAs, toastr */
+/* global window document Blob moment saveAs toastr */
+/* eslint-disable no-alert */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import xhr from 'xhr';
+import {TOKEN} from './admin/const.js';
 import MailingBannersForm from './admin/mailing/mailing-banners-form.jsx';
 import MailingTemplatePreview from './admin/mailing/mailing-template-preview.jsx';
 
@@ -12,7 +14,8 @@ import MailingTemplatePreview from './admin/mailing/mailing-template-preview.jsx
 	const AdminMailingBanners = React.createClass({
 		getInitialState() {
 			return {
-				markup: ''
+				markup: '',
+				incrementDisabled: false
 			};
 		},
 
@@ -42,6 +45,35 @@ import MailingTemplatePreview from './admin/mailing/mailing-template-preview.jsx
 			saveAs(this.state.blob, `rbf_banner_${d}.html`);
 		},
 
+		handleIncrementCounters() {
+			if (!this.state.incrementDisabled) {
+				const msg = 'Значения счётчиков рассылок у магазинов будут увеличены.\n' +
+							'Это действие повлияет на последующие рассылки, и его невозможно обратить.\n' +
+							'Вы уверены?';
+
+				if (window.confirm(msg)) {
+					this.setState({
+						incrementDisabled: true
+					}, () => {
+						xhr({
+							url: '/api/mailing/banners/increment-counters/',
+							method: 'POST',
+							headers: {
+								'X-CSRFToken': TOKEN.csrftoken
+							}
+						}, (err, resp) => {
+							if (!err && resp.statusCode === 200) {
+								toastr.success('Значения счётчиков рассылок у магазинов обновлены.');
+							} else {
+								toastr.error('Не удалось обновить значения счётчиков рассылок у магазинов.');
+							}
+							this.setState({incrementDisabled: false});
+						});
+					});
+				}
+			}
+		},
+
 		render() {
 			const {markup} = this.state;
 			const downloadEnabled = Boolean(markup);
@@ -59,6 +91,17 @@ import MailingTemplatePreview from './admin/mailing/mailing-template-preview.jsx
 							downloadable={downloadEnabled}
 							onClickDownload={this.handleClickDownload}
 							/>
+					</div>
+
+					<div className="form-group">
+						<button
+							className="btn btn-danger"
+							type="button"
+							disabled={this.state.incrementDisabled}
+							onClick={this.handleIncrementCounters}
+							>
+							Подтвердить совершение рассылки
+						</button>
 					</div>
 				</div>
 			);

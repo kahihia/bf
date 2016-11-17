@@ -51,6 +51,7 @@ const TeasersOnMain = props => (
 				<ShortProduct
 					data={item}
 					showCategory={props.showCategory}
+					showMerchant={props.showMerchant}
 					/>
 			</div>
 		))}

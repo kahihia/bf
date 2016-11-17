@@ -8,12 +8,8 @@ const className = 'card-description';
 
 const CardDescription = React.createClass({
 	propTypes: {
-		description: React.PropTypes.string,
-		linkedPartners: React.PropTypes.array,
-		image: React.PropTypes.string,
-		name: React.PropTypes.string,
-		promocode: React.PropTypes.string,
-		url: React.PropTypes.string
+		data: React.PropTypes.object,
+		linkedPartners: React.PropTypes.array
 	},
 
 	getInitialState() {
@@ -37,13 +33,16 @@ const CardDescription = React.createClass({
 
 	render() {
 		const {
+			data,
+			linkedPartners
+		} = this.props;
+		const {
 			description,
-			linkedPartners,
 			image,
 			name,
 			promocode,
 			url
-		} = this.props;
+		} = data;
 
 		const descriptionRef = node => {
 			this.description = node;
