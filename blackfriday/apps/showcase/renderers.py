@@ -28,11 +28,11 @@ def render_main():
 
 def render_merchant(merchant_id):
     try:
-        Merchant.objects.moderated().get(id=merchant_id)
+        merch = Merchant.objects.moderated().get(id=merchant_id)
     except Merchant.DoesNotExist:
         print('Такого магазина не существует или он не прошел модерацию')
     else:
-        render_to_file('merchant/{}/index.html'.format(merchant_id), merchant(merchant_id))
+        render_to_file('merchant/{}/index.html'.format(merch.slug), merchant(merchant_id))
 
 
 def render_partners():
