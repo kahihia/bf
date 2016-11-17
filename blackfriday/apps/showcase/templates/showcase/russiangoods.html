@@ -5,7 +5,7 @@
 {% block content %}
 
 <h1 class="title-2">
-    Товары российского производства{% if cat %} - {{cat.name}}{% endif %}
+    Товары российского производства{% if category %} - <span id="category-name"></span>{% endif %}
 </h1>
 <div class="category-tabs" id="products"></div>
 
@@ -25,14 +25,19 @@ window.isSideMenuHidden = true;
 
 window.DATA.products = {
     perPage: 20,
+    // pagesCount: ,
     isRandom: true,
     ajaxUrl: 'products',
-    data: {{ products|safe|default:"[]" }}
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
 };
 
 window.DATA.categoriesRus = [];
 
 window.DATA.teasers = {
-    data: {{ teasers|safe|default:"[]" }}
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
 };
+
+window.DATA.category = {{ category|safe|default:"null" }};
 {% endblock data %}

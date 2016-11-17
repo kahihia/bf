@@ -26,9 +26,7 @@ const PartnerList = props => {
 	return (
 		<div>
 			<div className="title-2">
-				<strong>
-					{'Партнёры'}
-				</strong>
+				{'Партнёры'}
 			</div>
 
 			<div className="partners-list">

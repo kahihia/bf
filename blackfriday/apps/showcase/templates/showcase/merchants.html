@@ -13,6 +13,7 @@ window.DATA.allMerchants = {
 };
 
 window.DATA.teasers = {
-    data: {{ teasers|safe|default:"[]" }}
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
 };
 {% endblock data %}

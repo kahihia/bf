@@ -48,13 +48,18 @@ const TeasersOnMain = props => (
 				key={item.id}
 				className="product-list__item"
 				>
-				<ShortProduct data={item}/>
+				<ShortProduct
+					data={item}
+					showCategory={props.showCategory}
+					/>
 			</div>
 		))}
 	</Slider>
 );
 TeasersOnMain.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 TeasersOnMain.defaultProps = {
 	data: []

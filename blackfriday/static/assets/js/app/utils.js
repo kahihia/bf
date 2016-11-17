@@ -13,10 +13,16 @@ export function categoriesSorting(catA, catB) {
 		return 0;
 	}
 
-	if (catA.name.toLowerCase() === 'другое') {
+	if (
+		catA.name.toLowerCase() === 'другое' ||
+		catA.name.toLowerCase() === 'разное'
+	) {
 		return 1;
 	}
-	if (catB.name.toLowerCase() === 'другое') {
+	if (
+		catB.name.toLowerCase() === 'другое' ||
+		catB.name.toLowerCase() === 'разное'
+	) {
 		return -1;
 	}
 

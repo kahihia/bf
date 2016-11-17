@@ -80,7 +80,11 @@ class ShortProduct extends React.Component {
 	}
 
 	render() {
-		const {data} = this.props;
+		const {
+			data,
+			showCategory,
+			showMerchant
+		} = this.props;
 		const {
 			discount,
 			oldPrice,
@@ -108,7 +112,7 @@ class ShortProduct extends React.Component {
 						{data.name}
 					</div>
 
-					{data.category ? (
+					{showCategory && data.category ? (
 						<div className={b(className, 'cat')}>
 							{data.category}
 						</div>
@@ -124,7 +128,7 @@ class ShortProduct extends React.Component {
 						/>
 				</Link>
 
-				{data.merchant && data.merchant.url ? (
+				{showMerchant && data.merchant && data.merchant.url ? (
 					<a
 						className={b(className, 'shop')}
 						href={data.merchant.url}
@@ -141,9 +145,13 @@ class ShortProduct extends React.Component {
 	}
 }
 ShortProduct.propTypes = {
-	data: React.PropTypes.object.isRequired
+	data: React.PropTypes.object.isRequired,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 ShortProduct.defaultProps = {
+	showCategory: true,
+	showMerchant: true
 };
 
 export default ShortProduct;
