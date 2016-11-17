@@ -10,7 +10,7 @@ class CategoryQueryset(models.QuerySet):
         return self.filter(
             reduce(
                 operator.__or__,
-                [models.Q(products__name__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+                [models.Q(products__country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
             )
         )
 
@@ -45,7 +45,7 @@ class ProductQueryset(models.QuerySet):
         return self.filter(
             reduce(
                 operator.__or__,
-                [models.Q(name__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+                [models.Q(country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
             )
         )
 
