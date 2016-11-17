@@ -61,7 +61,7 @@ def russiangoods():
             'products': json.dumps(ProductSerializer(qs, many=True).data),
             'teasers': json.dumps(ProductSerializer(qs.teasers(), many=True).data),
             'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-            'categories_rus': json.dumps(RussianCategorySerializer(Category.objects.russians(), many=True).data)
+            'categoriesRus': json.dumps(RussianCategorySerializer(Category.objects.russians(), many=True).data)
         }
     )
 
@@ -107,7 +107,7 @@ def category(category_id, russian=False):
         'category': json.dumps(CategorySerializer(Category.objects.get(id=category_id)).data),
     }
     if russian:
-        data['categories_rus'] = json.dumps(
+        data['categoriesRus'] = json.dumps(
             RussianCategorySerializer(
                 Category.objects.russians(),
                 many=True
