@@ -26,7 +26,7 @@ class ActionsPreview(LoginRequiredMixin, RolePermissionMixin, View):
 
 
 class MerchantsPreview(LoginRequiredMixin, RolePermissionMixin, View):
-    allowed_roles = ['admin', 'advertiser', 'manager']
+    allowed_roles = ['admin']
 
     def get(self, request):
         return HttpResponse(content=merchants())
@@ -55,7 +55,7 @@ class PartnersPreview(LoginRequiredMixin, RolePermissionMixin, View):
 
 
 class MerchantPreview(LoginRequiredMixin, RolePermissionMixin, View):
-    allowed_roles = ['admin']
+    allowed_roles = ['admin', 'advertiser', 'manager']
 
     def get(self, request, pk):
         get_object_or_404(Merchant, pk=pk)
