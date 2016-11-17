@@ -204,3 +204,5 @@ HTML_VALIDATOR_ALLOWED_TAGS = {
     'div', 'span', 'strike'
 }
 MNOGO_LEADS_MANAGERS = []
+
+BATCH_SIZE = 1000
