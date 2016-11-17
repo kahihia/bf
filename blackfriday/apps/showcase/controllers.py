@@ -70,44 +70,52 @@ def category(category_id, russian=False):
     products = Product.objects.from_moderated_merchants().filter(category__id=category_id)
     if russian:
         products = products.russians()
+    data = {
+        'superbanners': json.dumps(
+            SuperbannerSerializer(
+                Banner.objects.super().from_moderated_merchants().filter(
+                    in_mailing=False, categories__id=category_id),
+                many=True
+            ).data
+        ),
+        'merchants': json.dumps(
+            MerchantSerializer(
+                Merchant.objects.moderated().filter(logo_categories__id=category_id),
+                many=True
+            ).data
+        ),
+        'banners': json.dumps(
+            BannerSerializer(
+                Banner.objects.action().from_moderated_merchants().filter(categories__id=category_id),
+                many=True
+            ).data
+        ),
+        'products': json.dumps(
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().filter(category__id=category_id),
+                many=True
+            ).data
+        ),
+        'backgrounds': json.dumps(get_backgrounds(categories__id=category_id)),
+        'teasers': json.dumps(
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().teasers(),
+                many=True
+            ).data
+        ),
+        'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+        'category': json.dumps(CategorySerializer(Category.objects.get(id=category_id)).data),
+    }
+    if russian:
+        data['categories_rus'] = json.dumps(
+            RussianCategorySerializer(
+                Category.objects.russians(),
+                many=True
+            ).data
+        )
     return render_to_string(
         'showcase/category.html',
-        {
-            'superbanners': json.dumps(
-                SuperbannerSerializer(
-                    Banner.objects.super().from_moderated_merchants().filter(
-                        in_mailing=False, categories__id=category_id),
-                    many=True
-                ).data
-            ),
-            'merchants': json.dumps(
-                MerchantSerializer(
-                    Merchant.objects.moderated().filter(logo_categories__id=category_id),
-                    many=True
-                ).data
-            ),
-            'banners': json.dumps(
-                BannerSerializer(
-                    Banner.objects.action().from_moderated_merchants().filter(categories__id=category_id),
-                    many=True
-                ).data
-            ),
-            'products': json.dumps(
-                ProductSerializer(
-                    Product.objects.from_moderated_merchants().filter(category__id=category_id),
-                    many=True
-                ).data
-            ),
-            'backgrounds': json.dumps(get_backgrounds(categories__id=category_id)),
-            'teasers': json.dumps(
-                ProductSerializer(
-                    Product.objects.from_moderated_merchants().teasers(),
-                    many=True
-                ).data
-            ),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-            'category': json.dumps(CategorySerializer(Category.objects.get(id=category_id)).data),
-        }
+        data
     )
 
 
