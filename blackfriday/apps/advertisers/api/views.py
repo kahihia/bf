@@ -13,8 +13,9 @@ from rest_framework.response import Response
 
 from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
 from apps.advertisers.models import BannerType
-from apps.mailing.utils import send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, \
-    send_moderation_fail_mail
+from apps.mailing.utils import (
+    send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, send_moderation_fail_mail
+)
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -24,6 +25,7 @@ from apps.banners.models import Partner
 from apps.catalog.models import Category
 from apps.promo.models import Option
 from apps.users.models import User
+from apps.showcase.renderers import render_all_pages
 
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
@@ -126,6 +128,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
+            render_all_pages()
             if instance.receives_notifications:
                 send_moderation_success_mail(instance)
         elif instance.moderation_status == ModerationStatus.rejected:
