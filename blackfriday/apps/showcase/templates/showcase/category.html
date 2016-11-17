@@ -1,13 +1,12 @@
 {% extends "layouts/app-page-layout.html" %}
 
-{% block category_retailrocket %}
-<div data-retailrocket-markup-block="571e185a9872e50edcded39a" data-category-id="{{ category.id }}"></div>
-{% endblock category_retailrocket %}
-
 {% block content %}
 
 <div class="category-party">
-    <div class="title-2">{{ category }}</div>
+    <div class="title-2">
+        <span id="category-name"></span>
+    </div>
+
     <div id="merchants"></div>
 </div>
 
@@ -18,6 +17,7 @@
 {% block data %}
 window.DATA.merchants = {
     perPage: 8,
+    // pagesCount: ,
     isRandom: true,
 	isControlsShown: true,
 	isPagerShown: true,
@@ -28,6 +28,7 @@ window.DATA.merchants = {
 
 window.DATA.banners = {
     perPage: 8,
+    // pagesCount: ,
     isRandom: true,
     ajaxUrl: 'banners',
     data: {{ banners|safe|default:"[]" }}
@@ -35,30 +36,21 @@ window.DATA.banners = {
 
 window.DATA.products = {
     perPage: 20,
+    // pagesCount: ,
     isRandom: true,
     ajaxUrl: 'products',
-    data: {{ products|safe|default:"[]" }}
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
 };
 
 window.DATA.backgrounds = {
     data: {{ backgrounds }}
 };
 
-window.DATA.categoryId = '{{ category.id }}';
+window.DATA.category = {{ category|safe|default:"null" }};
 
 window.DATA.teasers = {
-    data: {{ teasers|safe|default:"[]" }}
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
 };
 {% endblock data %}
-
-{% block rr_additional %}
-<script>
-(function () {
-    window.rrApiOnReady.push(function () {
-        try {
-            window.rrApi.categoryView({{ category.id }});
-        } catch (e) {}
-    });
-}());
-</script>
-{% endblock rr_additional %}

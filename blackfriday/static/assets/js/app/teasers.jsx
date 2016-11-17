@@ -42,12 +42,15 @@ const Teasers = props => (
 			<ShortProduct
 				key={item.id}
 				data={item}
+				showCategory={props.showCategory}
 				/>
 		))}
 	</Slider>
 );
 Teasers.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 Teasers.defaultProps = {
 	data: []

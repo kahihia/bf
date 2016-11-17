@@ -83,7 +83,7 @@ import Banners from './app/banners.jsx';
 				<Scroll.Link
 					className="pseudo-link"
 					to={this.props.anchorName}
-					offset={-100}
+					offset={-120}
 					smooth
 					onClick={this.handleClick}
 					>
@@ -192,7 +192,7 @@ import Banners from './app/banners.jsx';
 	// Category page
 	class MyTabs extends React.Component {
 		render() {
-			const categoryId = DATA.categoryId || 'category_id';
+			const categoryId = (DATA.category && DATA.category.id) ? DATA.category.id : 'category_id';
 			const virtualCategoryId = `${categoryId}0`;
 
 			return (
@@ -326,5 +326,10 @@ import Banners from './app/banners.jsx';
 	if (teasers && DATA.teasers && DATA.teasers.data && DATA.teasers.data.length) {
 		const Teasers = require('./app/teasers');
 		ReactDOM.render(<Teasers {...DATA.teasers}/>, teasers);
+	}
+
+	const categoryName = document.getElementById('category-name');
+	if (categoryName && DATA.category && DATA.category.name) {
+		categoryName.innerHTML = DATA.category.name;
 	}
 })();
