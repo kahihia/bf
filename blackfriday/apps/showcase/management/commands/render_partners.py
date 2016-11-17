@@ -1,9 +1,8 @@
 from django.core.management.base import BaseCommand
-from apps.showcase.controllers import partners
-from apps.showcase.utils import render_to_file
+from apps.showcase.renderers import render_partners
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        render_to_file('partners/index.html', partners())
+        render_partners()
