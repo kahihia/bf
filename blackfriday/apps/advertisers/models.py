@@ -300,7 +300,7 @@ class Merchant(models.Model):
 
     @property
     def preview_url(self):
-        return reverse('advertisers:merchant-preview', args=(self.id,))
+        return reverse('showcase:merchant-preview', args=(self.id,))
 
     @property
     def payment_status(self):
