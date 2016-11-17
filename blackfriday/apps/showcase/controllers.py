@@ -113,6 +113,46 @@ def category(category_id, russian=False):
     )
 
 
+def merchant(merchant_id):
+    return render_to_string(
+        'showcase/merchant.html',
+        {
+            'superbanners': json.dumps(
+                SuperbannerSerializer(
+                    Banner.objects.super().from_moderated_merchants().filter(
+                        in_mailing=False, merchant_id=merchant_id),
+                    many=True
+                ).data
+            ),
+            'banners': json.dumps(
+                BannerSerializer(
+                    Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id),
+                    many=True
+                ).data
+            ),
+            'products': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id),
+                    many=True
+                ).data
+            ),
+            'partners': json.dumps(
+                PartnerSerializer(
+                    Partner.objects.filter(merchants__id=merchant_id),
+                    many=True
+                ).data
+            ),
+            'teasers': json.dumps(
+                ProductSerializer(
+                    Product.objects.from_moderated_merchants().teasers(),
+                    many=True
+                ).data
+            ),
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+        }
+    )
+
+
 def merchants():
     return render_to_string(
         'showcase/merchants.html',
