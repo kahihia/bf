@@ -9,19 +9,23 @@
 {% block data %}
 window.DATA.banners = {
     perPage: 8,
+    // pagesCount: ,
     isRandom: true,
     ajaxUrl: 'banners',
-    data: {{ banners|safe|default:"[]" }}
+    data: {{ banners|safe|default:"[]" }},
 };
 
 window.DATA.products = {
     perPage: 20,
+    // pagesCount: ,
     isRandom: true,
     ajaxUrl: 'products',
-    data: {{ products|safe|default:"[]" }}
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
 };
 
 window.DATA.teasers = {
-    data: {{ teasers|safe|default:"[]" }}
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
 };
 {% endblock data %}

@@ -35,7 +35,7 @@
 {% block data %}
 window.DATA.merchants = {
     perPage: 12,
-    // pagesCount: 1,
+    // pagesCount: ,
     isRandom: true,
 	isControlsShown: true,
 	isPagerShown: true,
@@ -44,9 +44,10 @@ window.DATA.merchants = {
     data: {{ merchants|safe|default:"[]" }},
     speed: 7000
 };
+
 window.DATA.partners = {
     perPage: 6,
-    // pagesCount: 2,
+    // pagesCount: ,
     isRandom: true,
 	isControlsShown: true,
 	isPagerShown: true,
@@ -55,26 +56,29 @@ window.DATA.partners = {
     data: {{ partners|safe|default:"[]" }},
     speed: 6000
 };
+
 window.DATA.banners = {
-    perPage: 6,
-    // pagesCount: 1,
+    perPage: 12,
+    // pagesCount: ,
     isRandom: true,
     loadPagesCount: 3,
     ajaxUrl: 'banners',
     data: {{ banners|safe|default:"[]" }}
 };
+
 window.DATA.verticalbanners = {
     perPage: 1,
-    // pagesCount: 1,
+    // pagesCount: ,
     isRandom: true,
     loadPagesCount: 1,
     ajaxUrl: 'verticalbanners',
     data: {{ verticalbanners|safe|default:"[]" }},
     speed: 5000
 };
+
 window.DATA.products = {
     perPage: 20,
-    // pagesCount: 1,
+    // pagesCount: ,
     isRandom: true,
     loadPagesCount: 3,
     ajaxUrl: 'products',
@@ -83,11 +87,12 @@ window.DATA.products = {
 
 window.DATA.teasersOnMain = {
     perPage: 5,
-    // pagesCount: 1,
+    // pagesCount: ,
     isRandom: true,
     loadPagesCount: 3,
     ajaxUrl: 'products',
-    data: {{ teasersOnMain|safe|default:"[]" }}
+    data: {{ teasersOnMain|safe|default:"[]" }},
+    showCategory: false,
 };
 
 window.DATA.backgrounds = {

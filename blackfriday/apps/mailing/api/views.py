@@ -103,7 +103,13 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
             ).values_list('promo__invoice__merchant__id', flat=True)
         ).update(banner_mailings_count=F('banner_mailings_count') + 1)
         merchants = Merchant.objects.prefetch_related(
-            Prefetch('banners', Banner.objects.filter(type=BannerType.SUPER, was_mailed=False), 'not_mailed_banners')
+            Prefetch(
+                'banners',
+                Banner.objects.filter(
+                    type=BannerType.SUPER, was_mailed=False, in_mailing=True
+                ),
+                'not_mailed_banners'
+            )
         ).filter(
             id__in=InvoiceOption.objects.filter(
                 option__tech_name='superbanner_at_mailing',
@@ -116,5 +122,7 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
             m.superbanner_mailings_count = len(m.not_mailed_banners) + m.superbanner_mailings_count
 
         bulk_update(merchants, update_fields=['superbanner_mailings_count'])
-        Banner.objects.filter(merchant__id__in=[m.id for m in merchants]).update(was_mailed=True)
+        Banner.objects.filter(
+            in_mailing=True, type=BannerType.SUPER, merchant__id__in=[m.id for m in merchants]
+        ).update(was_mailed=True)
         return Response()

@@ -1,10 +1,26 @@
+import operator
+
+from functools import reduce
 from django.db import models
+from django.conf import settings
+
+
+class CategoryQueryset(models.QuerySet):
+    def russians(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(products__name__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+            )
+        )
 
 
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
     merchant = models.ForeignKey('advertisers.Merchant', blank=True, null=True, related_name='categories')
+
+    objects = models.Manager.from_queryset(CategoryQueryset)()
 
     class Meta:
         verbose_name = 'Категория'
@@ -24,6 +40,14 @@ class ProductQueryset(models.QuerySet):
 
     def teasers(self):
         return self.filter(is_teaser=True)
+
+    def russians(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(name__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+            )
+        )
 
 
 class Product(models.Model):

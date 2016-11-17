@@ -5,7 +5,7 @@
 <div id="card-description"></div>
 <div id="special-offers"></div>
 
-{% if merchant.products.all %}
+{% if products %}
 <div class="title-2">Лучшие товары</div>
 {% endif %}
 <div id="products" class="card-product-list"></div>
@@ -13,7 +13,7 @@
 {% endblock content %}
 
 {% block superbanner %}
-// pagesCount: {{ superbanners|length }},
+// pagesCount: ,
 isRandom: false,
 isControlsShown: true,
 isPagerShown: true,
@@ -29,6 +29,7 @@ window.DATA.products = {
     showMerchant: false,
 };
 
+{{name}}
 window.DATA.cardDescription = {
     name: '{{ merchant.name|default:''|escapejs }}',
     url: '{{ merchant.url|default:''|escapejs }}',
