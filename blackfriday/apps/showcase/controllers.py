@@ -1,7 +1,4 @@
 import json
-import operator
-
-from functools import reduce
 from django.template.loader import render_to_string
 from django.db.models import *
 
@@ -12,6 +9,7 @@ from apps.advertisers.models import Merchant, Banner, BannerType
 from apps.catalog.models import Product, Category
 
 from apps.showcase.serializers import *
+from apps.showcase.utils import serializer_factory
 
 
 def get_backgrounds(**kwargs):
@@ -148,7 +146,17 @@ def merchant(merchant_id):
                     many=True
                 ).data
             ),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
+            'merchant': json.dumps(
+                serializer_factory(
+                    cls_name='advertisers.Merchant',
+                    fields=('name', 'url', 'description', 'image', 'promocode'),
+                    image=serializers.SerializerMethodField(),
+                    get_image=get_image,
+                )(
+                    Merchant.objects.get(id=merchant_id)
+                ).data
+            )
         }
     )
 
