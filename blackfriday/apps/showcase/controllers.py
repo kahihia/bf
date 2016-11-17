@@ -1,8 +1,7 @@
-import json
 from django.template.loader import render_to_string
 from django.db.models import *
 
-from django.conf import settings
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
 from apps.banners.models import Partner
 from apps.advertisers.models import Merchant, Banner, BannerType
@@ -38,76 +37,79 @@ def get_backgrounds(**kwargs):
 
 
 def partners():
+    json = CamelCaseJSONRenderer()
     return render_to_string(
         'showcase/partners.html',
         {
-            'teasers': json.dumps(
+            'teasers': json.render(
                 ProductSerializer(
                     Product.objects.from_moderated_merchants().teasers(),
                     many=True
                 ).data
             ),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-            'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
+            'partners': json.render(PartnerSerializer(Partner.objects.all(), many=True).data),
         }
     )
 
 
 def russiangoods():
+    json = CamelCaseJSONRenderer()
     qs = Product.objects.from_moderated_merchants().russians()
     return render_to_string(
         'showcase/russiangoods.html',
         {
-            'products': json.dumps(ProductSerializer(qs, many=True).data),
-            'teasers': json.dumps(ProductSerializer(qs.teasers(), many=True).data),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-            'categoriesRus': json.dumps(RussianCategorySerializer(Category.objects.russians(), many=True).data)
+            'products': json.render(ProductSerializer(qs, many=True).data),
+            'teasers': json.render(ProductSerializer(qs.teasers(), many=True).data),
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
+            'categoriesRus': json.render(RussianCategorySerializer(Category.objects.russians(), many=True).data)
         }
     )
 
 
 def category(category_id, russian=False):
+    json = CamelCaseJSONRenderer()
     products = Product.objects.from_moderated_merchants().filter(category__id=category_id)
     if russian:
         products = products.russians()
     data = {
-        'superbanners': json.dumps(
+        'superbanners': json.render(
             SuperbannerSerializer(
                 Banner.objects.super().from_moderated_merchants().filter(
                     in_mailing=False, categories__id=category_id),
                 many=True
             ).data
         ),
-        'merchants': json.dumps(
+        'merchants': json.render(
             MerchantSerializer(
                 Merchant.objects.moderated().filter(logo_categories__id=category_id),
                 many=True
             ).data
         ),
-        'banners': json.dumps(
+        'banners': json.render(
             BannerSerializer(
                 Banner.objects.action().from_moderated_merchants().filter(categories__id=category_id),
                 many=True
             ).data
         ),
-        'products': json.dumps(
+        'products': json.render(
             ProductSerializer(
                 Product.objects.from_moderated_merchants().filter(category__id=category_id),
                 many=True
             ).data
         ),
-        'backgrounds': json.dumps(get_backgrounds(categories__id=category_id)),
-        'teasers': json.dumps(
+        'backgrounds': json.render(get_backgrounds(categories__id=category_id)),
+        'teasers': json.render(
             ProductSerializer(
                 Product.objects.from_moderated_merchants().teasers(),
                 many=True
             ).data
         ),
-        'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-        'category': json.dumps(CategorySerializer(Category.objects.get(id=category_id)).data),
+        'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
+        'category': json.render(CategorySerializer(Category.objects.get(id=category_id)).data),
     }
     if russian:
-        data['categoriesRus'] = json.dumps(
+        data['categoriesRus'] = json.render(
             RussianCategorySerializer(
                 Category.objects.russians(),
                 many=True
@@ -120,42 +122,43 @@ def category(category_id, russian=False):
 
 
 def merchant(merchant_id):
+    json = CamelCaseJSONRenderer()
     return render_to_string(
         'showcase/merchant.html',
         {
-            'superbanners': json.dumps(
+            'superbanners': json.render(
                 SuperbannerSerializer(
                     Banner.objects.super().from_moderated_merchants().filter(
                         in_mailing=False, merchant_id=merchant_id),
                     many=True
                 ).data
             ),
-            'banners': json.dumps(
+            'banners': json.render(
                 BannerSerializer(
                     Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id),
                     many=True
                 ).data
             ),
-            'products': json.dumps(
+            'products': json.render(
                 ProductSerializer(
                     Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id),
                     many=True
                 ).data
             ),
-            'partners': json.dumps(
+            'partners': json.render(
                 PartnerSerializer(
                     Partner.objects.filter(merchants__id=merchant_id),
                     many=True
                 ).data
             ),
-            'teasers': json.dumps(
+            'teasers': json.render(
                 ProductSerializer(
                     Product.objects.from_moderated_merchants().teasers(),
                     many=True
                 ).data
             ),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data),
-            'merchant': json.dumps(
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
+            'merchant': json.render(
                 serializer_factory(
                     cls_name='advertisers.Merchant',
                     fields=('name', 'url', 'description', 'image', 'promocode'),
@@ -170,69 +173,73 @@ def merchant(merchant_id):
 
 
 def merchants():
+    json = CamelCaseJSONRenderer()
     return render_to_string(
         'showcase/merchants.html',
         {
-            'merchants': json.dumps(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
-            'superbanners': json.dumps(
+            'is_preview': True,
+            'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+            'superbanners': json.render(
                 SuperbannerSerializer(
                     Banner.objects.super().from_moderated_merchants().filter(in_mailing=False),
                     many=True
                 ).data
             ),
-            'teasers': json.dumps(
+            'teasers': json.render(
                 ProductSerializer(Product.objects.teasers().from_moderated_merchants(), many=True).data),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
         }
     )
 
 
 def actions():
+    json = CamelCaseJSONRenderer()
     return render_to_string(
         'showcase/actions.html',
         {
-            'superbanners': json.dumps(
+            'superbanners': json.render(
                 SuperbannerSerializer(
                     Banner.objects.super().from_moderated_merchants().filter(in_mailing=False),
                     many=True
                 ).data
             ),
-            'banners': json.dumps(
+            'banners': json.render(
                 BannerSerializer(Banner.objects.action().from_moderated_merchants(), many=True).data),
-            'products': json.dumps(
+            'products': json.render(
                 ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
-            'teasers': json.dumps(
+            'teasers': json.render(
                 ProductSerializer(Product.objects.from_moderated_merchants().teasers(), many=True).data),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
 
         }
     )
 
 
 def main_page():
+    json = CamelCaseJSONRenderer()
     return render_to_string(
         'showcase/main.html',
         {
-            'superbanners': json.dumps(
+            'superbanners': json.render(
                 SuperbannerSerializer(
                     Banner.objects.super().from_moderated_merchants().filter(on_main=True),
                     many=True
                 ).data
             ),
-            'merchants': json.dumps(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
-            'partners': json.dumps(PartnerSerializer(Partner.objects.all(), many=True).data),
-            'banners': json.dumps(
+            'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+            'partners': json.render(PartnerSerializer(Partner.objects.all(), many=True).data),
+            'banners': json.render(
                 BannerSerializer(
                     Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION),
                     many=True
                 ).data
             ),
-            'verticalbanners': json.dumps(
+            'verticalbanners': json.render(
                 BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
-            'products': json.dumps(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
+            'products': json.render(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
             'backgrounds': get_backgrounds(),
-            'teasersOnMain': json.dumps(
+            'teasersOnMain': json.render(
                 ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
-            'categories': json.dumps(CategorySerializer(Category.objects.all(), many=True).data)
+            'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
         }
     )
