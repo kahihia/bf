@@ -104,7 +104,7 @@ module.exports = {
 			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
-				exclude: /(dnd-core|disposables|consolidated-events|waypoint)/
+				exclude: /(dnd-core|disposables|consolidated-events|waypoint|react-simple-dropdown)/
 			},
 			// CSS
 			{

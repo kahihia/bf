@@ -6,7 +6,8 @@ class ProductList extends React.Component {
 	render() {
 		const {
 			data,
-			showCategory
+			showCategory,
+			showMerchant
 		} = this.props;
 
 		return (
@@ -19,6 +20,7 @@ class ProductList extends React.Component {
 						<ShortProduct
 							data={item}
 							showCategory={showCategory}
+							showMerchant={showMerchant}
 							/>
 					</div>
 				))}
@@ -28,10 +30,10 @@ class ProductList extends React.Component {
 }
 ProductList.propTypes = {
 	data: React.PropTypes.array,
-	showCategory: React.PropTypes.bool
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 ProductList.defaultProps = {
-	showCategory: true
 };
 
 class Products extends React.Component {
@@ -71,6 +73,7 @@ class Products extends React.Component {
 					<ProductList
 						data={this.state.data}
 						showCategory={props.showCategory}
+						showMerchant={props.showMerchant}
 						/>
 				) : null}
 			</Paged>

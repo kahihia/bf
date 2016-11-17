@@ -32,7 +32,7 @@ window.DATA.products = {
     showCategory: false,
 };
 
-window.DATA.categoriesRus = [];
+window.DATA.categoriesRus = {{ categoriesRus|safe|default:"[]" }};
 
 window.DATA.teasers = {
     data: {{ teasers|safe|default:"[]" }},

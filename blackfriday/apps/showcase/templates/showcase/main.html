@@ -82,7 +82,8 @@ window.DATA.products = {
     isRandom: true,
     loadPagesCount: 3,
     ajaxUrl: 'products',
-    data: {{ products|safe|default:"[]" }}
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
 };
 
 window.DATA.teasersOnMain = {

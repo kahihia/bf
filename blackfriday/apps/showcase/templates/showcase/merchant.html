@@ -29,18 +29,13 @@ window.DATA.products = {
     showMerchant: false,
 };
 
-{{name}}
 window.DATA.cardDescription = {
-    name: '{{ merchant.name|default:''|escapejs }}',
-    url: '{{ merchant.url|default:''|escapejs }}',
-    description: '{{ merchant.description|default:''|escapejs }}',
-    image: '{{ merchant.image.image.url|default:'' }}',
-    promocode: '{{ merchant.promocode|default:'' }}',
-    linkedPartners: {{ partners|safe|default:"[]" }}
+    data: {{ merchant|safe|default:"null" }},
+    linkedPartners: {{ partners|safe|default:"[]" }},
 };
 
 window.DATA.specialOffers = {
-    data: {{ banners|safe|default:"[]" }}
+    data: {{ banners|safe|default:"[]" }},
 };
 
 window.DATA.teasers = {
