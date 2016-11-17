@@ -72,11 +72,12 @@
             {% for banner_block in banners %}
                 <div style="width: 570px; margin: 0 auto">
                     {% for banner in banner_block.banners %}
-                        <a href="{{ banner.url }}" style="text-decoration: none; float: left; margin-bottom: 20px; width: 272px;">
+                        {% cycle False True as newrow silent %}
+
+                        <a href="{{ banner.url }}" style="text-decoration: none; float: {% if newrow %}right{% else %}left{% endif %}; margin-bottom: 20px; width: 272px;">
                             <img width="272" src="{{ SITE_URL }}{{ banner.image }}" alt="">
                         </a>
 
-                        {% cycle False True as newrow silent %}
                         {% if newrow or forloop.last %}
                             <div style="clear: both"></div>
                         {% endif %}
