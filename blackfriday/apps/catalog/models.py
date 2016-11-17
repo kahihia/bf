@@ -12,7 +12,7 @@ class CategoryQueryset(models.QuerySet):
                 operator.__or__,
                 [models.Q(products__country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
             )
-        ).discount()
+        ).distinct()
 
 
 class Category(models.Model):
