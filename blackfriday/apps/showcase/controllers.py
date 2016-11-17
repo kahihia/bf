@@ -128,25 +128,28 @@ def category(category_id, russian=False, is_preview=False):
 
 
 def merchant(merchant_id, is_preview=False):
+    if is_preview:
+        superbanners_queryset = Banner.objects.super().filter(in_mailing=False, merchant_id=merchant_id)
+        banners_queryset = Banner.objects.action().filter(merchant_id=merchant_id)
+        products_queryset = Product.objects.filter(merchant_id=merchant_id)
+        teasers_queryset = Product.objects.teasers()
+    else:
+        superbanners_queryset = Banner.objects.super().from_moderated_merchants().filter(
+            in_mailing=False, merchant_id=merchant_id
+        )
+        banners_queryset = Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id)
+        products_queryset = Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id)
+        teasers_queryset = Product.objects.from_moderated_merchants().teasers()
+
     context = {
         'superbanners': json.render(
-            SuperbannerSerializer(
-                Banner.objects.super().from_moderated_merchants().filter(
-                    in_mailing=False, merchant_id=merchant_id),
-                many=True
-            ).data
+            SuperbannerSerializer(superbanners_queryset, many=True).data
         ),
         'banners': json.render(
-            BannerSerializer(
-                Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id),
-                many=True
-            ).data
+            BannerSerializer(banners_queryset, many=True).data
         ),
         'products': json.render(
-            ProductSerializer(
-                Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id),
-                many=True
-            ).data
+            ProductSerializer(products_queryset, many=True).data
         ),
         'partners': json.render(
             PartnerSerializer(
@@ -155,10 +158,7 @@ def merchant(merchant_id, is_preview=False):
             ).data
         ),
         'teasers': json.render(
-            ProductSerializer(
-                Product.objects.from_moderated_merchants().teasers(),
-                many=True
-            ).data
+            ProductSerializer(teasers_queryset, many=True).data
         ),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
         'merchant': json.render(
