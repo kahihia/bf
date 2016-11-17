@@ -63,9 +63,9 @@ class Product(models.Model):
     is_teaser = models.BooleanField(verbose_name='Товар является тизером', default=False)
     is_teaser_on_main = models.BooleanField(verbose_name='Товар является тизером на главной', default=False)
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
-    url = models.CharField(verbose_name='Ссылка', max_length=255)
+    url = models.TextField(verbose_name='Ссылка')
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    image = models.URLField()
+    image = models.TextField()
     currency = models.CharField(max_length=10)
 
     objects = models.Manager.from_queryset(ProductQueryset)()
