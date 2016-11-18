@@ -96,10 +96,14 @@ class MerchantEditForm extends Form {
 			return;
 		}
 
+		const json = this.getDataPatch();
+		if (!_.size(json)) {
+			return;
+		}
+
 		this.setState({isLoading: true});
 
 		const {merchantId} = this.props;
-		const json = this.getDataPatch();
 
 		xhr({
 			url: `/api/merchants/${merchantId}/`,
@@ -148,6 +152,8 @@ class MerchantEditForm extends Form {
 	handleChangeDescription(e) {
 		this.setState(previousState => {
 			previousState.fields.description.value = e.target.value;
+			previousState.fields.description.hasError = false;
+			previousState.fields.description.helpError = null;
 			previousState.isChanged = true;
 			return previousState;
 		}, () => {
@@ -178,7 +184,7 @@ class MerchantEditForm extends Form {
 					{this.buildRow('url')}
 					{this.buildRow('slug')}
 
-					<div className="form-group">
+					<div className={`form-group${fields.description.hasError ? ' has-error' : ''}`}>
 						<ControlLabel
 							name={fields.description.label}
 							required={fields.description.required}
@@ -189,6 +195,12 @@ class MerchantEditForm extends Form {
 							maxlength={fields.description.maxlength}
 							onChange={this.handleChangeDescription}
 							/>
+
+						{fields.description.helpError ? (
+							<span className="help-block">
+								{fields.description.helpError}
+							</span>
+						) : null}
 
 						<span className="help-block">
 							{fields.description.help}
