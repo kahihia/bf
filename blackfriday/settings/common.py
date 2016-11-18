@@ -207,3 +207,5 @@ RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
 )
 SHOWCASE_ROOT = os.path.join(PROJECT_ROOT, 'showcase')
+
+POST_RENDERING_EXEC_PATH = None
