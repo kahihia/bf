@@ -3,6 +3,7 @@ from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import View
+from django.views.generic.base import TemplateView
 
 from apps.users.mixins import RolePermissionMixin
 from apps.catalog.models import Category
@@ -71,3 +72,8 @@ class RussianCategoryPreview(LoginRequiredMixin, RolePermissionMixin, View):
         except Category.DoesNotExist:
             raise Http404
         return HttpResponse(content=category(pk, True))
+
+
+class RenderingView(LoginRequiredMixin, RolePermissionMixin, TemplateView):
+    template_name = 'showcase/rendering.html'
+    allowed_roles = ['admin']
