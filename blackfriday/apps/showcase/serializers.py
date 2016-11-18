@@ -50,7 +50,8 @@ RussianCategorySerializer = serializer_factory(
 )
 SuperbannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
-    fields=('id', 'image', 'url'),
+    fields=('id', 'image', 'url', 'merchant'),
     image=serializers.SerializerMethodField(),
+    merchant=MerchantSerializer(),
     get_image=get_image,
 )

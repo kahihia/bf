@@ -108,7 +108,7 @@ class AdvertiserProfile(models.Model):
 
 class ModeratedMerchantsQueryset(models.QuerySet):
     def moderated(self):
-        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False)
+        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False).exclude(slug='')
 
 
 class Merchant(models.Model):
@@ -338,7 +338,9 @@ class BannerType:
 
 class BannerQueryset(models.QuerySet):
     def from_moderated_merchants(self):
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
+        return self.filter(
+            merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False
+        ).exclude(merchant__slug='')
 
     def vertical(self):
         return self.filter(type=BannerType.VERTICAL)
