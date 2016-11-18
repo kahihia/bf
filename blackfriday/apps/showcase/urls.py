@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from .views import (
     MainPreview, ActionsPreview, MerchantsPreview, CategoryPreview, RussianGoodsPreview, PartnersPreview,
-    MerchantPreview, RussianCategoryPreview
+    MerchantPreview, RussianCategoryPreview, RenderingView
 )
 
 
@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'russiangoods/preview/$', RussianGoodsPreview.as_view(), name='russiangoods_preview'),
     url(r'russiangoods/(?P<pk>\d+)/preview/$', RussianCategoryPreview.as_view(), name='russiangoods_category_preview'),
     url(r'partners/preview/$', PartnersPreview.as_view(), name='partners_preview'),
+    url(r'rendering/$', RenderingView.as_view(), name='rendering')
 ]
