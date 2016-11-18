@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.db.models import When
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from bulk_update.helper import bulk_update
@@ -92,8 +93,10 @@ class MailingViewSet(viewsets.GenericViewSet):
 class MailingBannersViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdmin]
 
-    @list_route(methods=['post'], url_path='increment-counters')
+    @list_route(methods=['post', 'options'], url_path='increment-counters')
     def increment_counters(self, request, *args, **kwargs):
+        if request.method == 'OPTIONS':
+            raise MethodNotAllowed(request.method)
         Merchant.objects.filter(
             id__in=PromoOption.objects.filter(
                 option__tech_name='mailing',
