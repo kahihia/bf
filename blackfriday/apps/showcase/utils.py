@@ -1,6 +1,7 @@
 import os
 from django.apps import apps
 from django.conf import settings
+from django_rq import job
 
 from rest_framework import serializers
 
@@ -16,6 +17,7 @@ def serializer_factory(cls_name, fields, **extra_fields):
     )
 
 
+@job
 def render_to_file(template_name, content):
     os.makedirs(os.path.join(settings.SHOWCASE_ROOT, *template_name.split('/')[:-1]), exist_ok=True)
     with open(os.path.join(settings.SHOWCASE_ROOT, template_name), 'w') as f:
