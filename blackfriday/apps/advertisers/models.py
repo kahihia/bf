@@ -122,7 +122,7 @@ class Merchant(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
-    url = models.URLField(null=True, blank=True, unique=True, verbose_name='URL')
+    url = models.TextField(null=True, blank=True, unique=True, verbose_name='URL')
     slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
