@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import Cookie from 'js-cookie';
+
 initialize();
 
 // 1. Основной трекинг-код системы
@@ -83,10 +85,18 @@ export function action5({
 	id = null,
 	price = null
 }) {
+	const transactionHash = Cookie.get('rrpusid');
+	if (!transactionHash) {
+		return;
+	}
+	let transactionCount = parseInt(localStorage.getItem('rrTransactionId'), 10) || 0;
+	transactionCount += 1;
+	localStorage.setItem('rrTransactionId', transactionCount);
+
 	(window["rrApiOnReady"] = window["rrApiOnReady"] || []).push(function() {
 		try {
 			rrApi.order({
-				transaction: null,
+				transaction: `${transactionHash}b${transactionCount}`,
 				items: [
 					{ id: id, qnt: 1,  price: price }
 				]
