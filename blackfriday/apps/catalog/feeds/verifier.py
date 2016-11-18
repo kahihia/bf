@@ -42,6 +42,11 @@ def clear_category(category, context):
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
+def clear_currency(currency):
+    if currency not in settings.CURRENCY_IDS:
+        return 'rur'
+    else:
+        return currency
 
 clear_category.null = True
 
@@ -99,7 +104,7 @@ class ProductRow(Row):
             validators=[GenericValidator(message='Укажите хотя бы одну цену', rule=lambda **data: any(data.values()))]
         ),
         Column(
-            'currency', pipes=(str, str.lower),
+            'currency', pipes=(clear_currency, str, str.lower),
             validators=(Required(), Choices(rule=settings.CURRENCY_IDS,),)),
         Column(
             'brand', pipes=(str,),

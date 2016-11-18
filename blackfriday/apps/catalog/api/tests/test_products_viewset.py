@@ -43,7 +43,7 @@ FAIL_SAMPLE = {
             "country": "country",
             "brand": "Brand",
             "url": "http://product_url",
-            "currency": "bar"
+            "currency": "rur"
         },
         'warnings': [
             {'field': 'price', 'message': 'Старая цена должна быть больше новой'},
@@ -51,7 +51,6 @@ FAIL_SAMPLE = {
             {'field': 'url', 'message': 'Отсутствуют utm метки'}
         ],
         'errors': [
-            {'field': 'currency', 'message': 'Значение должно соответствовать одному из rur, usd, uah, kzt'},
             {'field': 'start_price', 'message': 'Отсутствует числовое значение'},
             {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"}
         ]

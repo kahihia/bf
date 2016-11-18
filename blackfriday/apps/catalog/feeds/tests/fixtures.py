@@ -66,10 +66,9 @@ FAIL_DATA = {
             "country": "country",
             "brand": "Brand",
             "url": "http://product_url",
-            "currency": "bar"
+            "currency": "rur"
         },
         [
-            {'field': 'currency', 'message': 'Значение должно соответствовать одному из rur, usd, uah, kzt'},
             {'field': 'start_price', 'message': 'Отсутствует числовое значение'},
             {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"}
         ],
