@@ -230,11 +230,25 @@ def main_page(is_preview=False):
                 many=True
             ).data
         ),
-        'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+        'merchants': json.render(
+            MerchantSerializer(
+                Merchant.objects.moderated().annotate(
+                    logo_on_main=Max(
+                        Case(
+                            When(
+                                invoices__promo__options__option__tech_name='logo_on_main',
+                                then=F('invoices__promo__options__value')
+                            ),
+                            output_field=IntegerField())
+                    )
+                ).filter(logo_on_main__gt=0),
+                many=True
+            ).data
+        ),
         'partners': json.render(PartnerSerializer(Partner.objects.all(), many=True).data),
         'banners': json.render(
             BannerSerializer(
-                Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION),
+                Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION, on_main=True),
                 many=True
             ).data
         ),
