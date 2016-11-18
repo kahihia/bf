@@ -1,7 +1,7 @@
 from django.views.generic import DetailView
 from django.http import HttpResponseRedirect
 
-from libs.api.exceptions import ServiceUnavailable
+from apps.advertisers.models import ModerationStatus
 from apps.orders.models import InvoiceStatus
 
 
@@ -20,4 +20,6 @@ class PaymentFinishedView(DetailView):
         if self.object.order_status == '2':
             self.object.invoice.status = InvoiceStatus.paid
             self.object.invoice.save()
+            self.object.invoice.merchant.moderation_status = ModerationStatus.new
+            self.object.invoice.merchant.save()
         return HttpResponseRedirect(self.object.get_success_url())
