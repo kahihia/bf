@@ -1,5 +1,8 @@
 /* global window */
 
+import arrayShuffle from 'array-shuffle';
+import arrayChunk from 'array.chunk';
+
 export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function categoriesSorting(catA, catB) {
@@ -52,4 +55,8 @@ export function toggleClass(elem, className) {
 	}
 
 	elem.className = classString;
+}
+
+export function getRandomItems(items, size) {
+	return arrayChunk(arrayShuffle(items), size);
 }
