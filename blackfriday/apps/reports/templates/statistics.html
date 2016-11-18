@@ -93,74 +93,16 @@ http://realblackfriday.ru/ в рамках рекламной акции
             <p>Кол-во переходов</p>
         </th>
     </tr>
+    {% for element in elements %}
     <tr>
         <td>
-            <p>Супербаннер</p>
+            <p>{{ element.name }}</p>
         </td>
         <td>
-            <p>1000</p>
+            <p>{{ element.shown }}</p>
         </td>
         <td>
-            <p>200</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>Акционный баннер №1</p>
-        </td>
-        <td>
-            <p>200</p>
-        </td>
-        <td>
-            <p>14</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>Акционный баннер №2</p>
-        </td>
-        <td>
-            <p>200</p>
-        </td>
-        <td>
-            <p>14</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>Логотип</p>
-        </td>
-        <td>
-            <p>300</p>
-        </td>
-        <td>
-            <p>15</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>....</p>
-        </td>
-        <td>
-            <p><br/>
-
-            </p>
-        </td>
-        <td>
-            <p><br/>
-
-            </p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <p>ИТОГО</p>
-        </td>
-        <td>
-            <p>2600</p>
-        </td>
-        <td>
-            <p>356</p>
+            <p>{{ element.clicked }}</p>
         </td>
     </tr>
 </table>

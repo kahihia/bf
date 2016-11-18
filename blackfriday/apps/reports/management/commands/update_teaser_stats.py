@@ -35,4 +35,4 @@ class Command(BaseCommand):
         )
         created_stats_number, updated_stats_number = updater.run()
         self.stdout.write(self.style.SUCCESS(
-            'Tease statistics: %d created, %d updated' % (created_stats_number, updated_stats_number)))
+            'Teaser statistics: %d created, %d updated' % (created_stats_number, updated_stats_number)))
