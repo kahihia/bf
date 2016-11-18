@@ -17,9 +17,9 @@ def create_report(report_name):
         f.write(output.read())
 
 
-def get_act_report():
+def get_act_report(user):
     create_report('act_report')
 
 
-def get_statistics():
+def get_statistics(user):
     create_report('statistics')

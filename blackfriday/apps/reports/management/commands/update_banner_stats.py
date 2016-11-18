@@ -1,7 +1,7 @@
 import os
 
 from django.core.management.base import BaseCommand, CommandError
-from apps.reports.utils import update_stats
+from apps.reports.utils import StatsUpdater
 from apps.reports.models import BannerStats
 
 
@@ -19,5 +19,20 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print(os.path.exists(options['shown-log-file']), os.path.isfile(options['shown-log-file']))
-        # update_stats(BannerStats, 'banner_id')
+        shown_log_file = options['shown-log-file']
+        clicked_log_file = options['clicked-log-file']
+        error_msg = 'File %s does not exist'
+        if not os.path.isfile(shown_log_file):
+            raise CommandError(error_msg % shown_log_file)
+        if not os.path.isfile(clicked_log_file):
+            raise CommandError(error_msg % clicked_log_file)
+
+        updater = StatsUpdater(
+            stats_cls=BannerStats,
+            related_model_id_name='banner_id',
+            clicked_file=clicked_log_file,
+            shown_file=shown_log_file
+        )
+        created_stats_number, updated_stats_number = updater.run()
+        self.stdout.write(self.style.SUCCESS(
+            'Banner statistics: %d created, %d updated' % (created_stats_number, updated_stats_number)))
