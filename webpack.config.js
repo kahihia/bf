@@ -78,6 +78,7 @@ module.exports = {
 		'admin-partners': path.resolve(PATH_SRC, 'js/admin-partners.jsx'),
 		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
 		'admin-promo-maker': path.resolve(PATH_SRC, 'js/admin-promo-maker.jsx'),
+		'admin-rendering': path.resolve(PATH_SRC, 'js/admin-rendering.jsx'),
 		'admin-specials': path.resolve(PATH_SRC, 'js/admin-specials.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
 		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
