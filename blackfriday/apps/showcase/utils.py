@@ -22,5 +22,10 @@ def render_to_file(template_name, content):
         f.seek(0)
         f.write(content)
         f.truncate()
-    if settings.POST_RENDERING_EXEC_PATH:
+    if (
+        settings.POST_RENDERING_EXEC_PATH and
+        os.path.exists(settings.POST_RENDERING_EXEC_PATH) and
+        os.path.isfile(settings.POST_RENDERING_EXEC_PATH) and
+        os.access(settings.POST_RENDERING_EXEC_PATH, os.X_OK)
+    ):
         os.system(settings.POST_RENDERING_EXEC_PATH)
