@@ -36,6 +36,10 @@ export function action2({
 	categoryPaths = null,
 	brand = null
 }) {
+	if (!price) {
+		return;
+	}
+
     (window["rrApiOnReady"] = window["rrApiOnReady"] || []).push(function() {
         // Передача данных о просматриваемом товаре
         retailrocket.products.post({
