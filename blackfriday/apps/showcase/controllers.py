@@ -13,7 +13,7 @@ from apps.showcase.utils import serializer_factory
 json = CamelCaseJSONRenderer()
 
 
-def get_backgrounds(**kwargs):
+def get_backgrounds(on_main=False, **kwargs):
     background_qs = Merchant.objects.filter(**kwargs).moderated().annotate(
         left=Max(Case(When(
             banners__type=BannerType.BG_LEFT, then=F('banners__image__image')), output_field=CharField())
@@ -22,19 +22,20 @@ def get_backgrounds(**kwargs):
             banners__type=BannerType.BG_RIGHT, then=F('banners__image__image')), output_field=CharField())
         )
     ).values(
-        'left', 'right', 'banners__url', 'id'
-    ).filter(Q(right__isnull=False) | Q(left__isnull=False))
+        'left', 'right', 'banners__url', 'id', 'banners__on_main'
+    ).filter(Q(right__isnull=False) | Q(left__isnull=False),)
     backgrounds = {}
     for b in background_qs:
-        b_id = b['id']
-        if b_id not in backgrounds:
-            backgrounds[b_id] = {}
-        if b['left']:
-            backgrounds[b_id]['left'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['left'])
-        if b['right']:
-            backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
-        backgrounds[b_id]['id'] = b_id
-        backgrounds[b_id]['url'] = b['banners__url']
+        if b['banners__on_main'] == on_main:
+            b_id = b['id']
+            if b_id not in backgrounds:
+                backgrounds[b_id] = {}
+            if b['left']:
+                backgrounds[b_id]['left'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['left'])
+            if b['right']:
+                backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
+            backgrounds[b_id]['id'] = b_id
+            backgrounds[b_id]['url'] = b['banners__url']
     return [value for _, value in backgrounds.items()]
 
 
@@ -255,7 +256,7 @@ def main_page(is_preview=False):
         'verticalbanners': json.render(
             BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
         'products': json.render(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
-        'backgrounds': get_backgrounds(),
+        'backgrounds': get_backgrounds(on_main=True),
         'teasersOnMain': json.render(
             ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
