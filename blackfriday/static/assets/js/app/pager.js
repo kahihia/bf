@@ -27,7 +27,6 @@ export default function Pager(o) {
 	this._loadPagesCount = o.loadPagesCount || 1;
 	this._isCycled = o.isCycled || false;
 	// When perPage > page content - fill empty items with random loaded items
-	this._isFullfilled = (o.isFullfilled && this._pagesCount > 1) || false;
 	this._isRandom = o.isRandom || false;
 	this._ajaxUrl = o.ajaxUrl;
 	this._ajaxUrlRoot = o.ajaxUrlRoot || false;
@@ -36,6 +35,8 @@ export default function Pager(o) {
 	if (this._preloadedData) {
 		this._pagesCount = Math.ceil(this._preloadedData.length / this._perPage);
 	}
+
+	this._isFullfilled = (o.isFullfilled && this._pagesCount > 1) || false;
 
 	this._onNext = o.onNext;
 	this._onAllLoaded = o.onAllLoaded || function () {};
