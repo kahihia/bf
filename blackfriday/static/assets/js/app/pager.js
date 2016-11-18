@@ -61,7 +61,11 @@ Pager.prototype = {
 		this._generateQueue();
 		if (this._preloadedData) {
 			// Fill preloaded data
-			const l = arrayChunk(this._preloadedData, this._perPage);
+			let l = this._preloadedData;
+			if (this._isRandom) {
+				l = arrayShuffle(l);
+			}
+			l = arrayChunk(this._preloadedData, this._perPage);
 			l.forEach((data, index) => {
 				this._saveToStore(index + 1, data);
 			});
