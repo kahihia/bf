@@ -17,8 +17,14 @@ class MerchantProductsAddForm extends Form {
 					label: 'Файл',
 					value: null,
 					type: 'file',
-					accept: '.csv, .xml, .xls, .xlsx',
-					help: '.csv, .xml, .xls, .xlsx',
+					accept: '.xml, .xls, .xlsx',
+					help: (
+						<div>
+							{'.xml, .xls, .xlsx'}
+							<br/>
+							{'Загрузка .csv временно недоступна'}
+						</div>
+					),
 					required: true
 				}
 			}

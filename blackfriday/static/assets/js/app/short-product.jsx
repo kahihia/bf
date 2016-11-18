@@ -1,10 +1,9 @@
-/* global window */
-
 import React from 'react';
 import formatThousands from 'format-thousands';
 import b from 'b_';
 import Price from 'react-price';
 import Link from './link.jsx';
+import {action2, action5} from './retailrocket.js';
 
 const CURRENCY = 'руб.';
 
@@ -47,6 +46,10 @@ const ShortProductPrice = props => (
 				prefix="от "
 				/>
 		) : null}
+
+		{props.price || props.discount || props.startPrice ? null : (
+			<span className="price price_theme_normal"/>
+		)}
 	</div>
 );
 ShortProductPrice.propTypes = {
@@ -67,15 +70,40 @@ class ShortProduct extends React.Component {
 	}
 
 	handleClick() {
-		if (!window.rrApiOnReady) {
-			return;
+		const {
+			data
+		} = this.props;
+		const {
+			id,
+			name,
+			price,
+			oldPrice,
+			image,
+			url,
+			category,
+			merchant,
+			brand
+		} = data;
+
+		const categoryPaths = [category];
+		if (merchant && merchant.name) {
+			categoryPaths.unshift(merchant.name);
 		}
 
-		const id = this.props.data.id;
-		window.rrApiOnReady.push(function () {
-			try {
-				window.rrApi.view(id);
-			} catch (e) {}
+		action2({
+			id,
+			name,
+			price,
+			oldPrice,
+			imageUrl: image,
+			url,
+			categoryPaths,
+			brand
+		});
+
+		action5({
+			id,
+			price
 		});
 	}
 

@@ -10,7 +10,7 @@ def serializer_factory(cls_name, fields, **extra_fields):
         '{}ContextSerializer'.format(cls_name.split('.')[1]),
         (serializers.ModelSerializer, ),
         dict(
-            **extra_fields,
+            extra_fields,
             **{'Meta': type('Meta', (), {'model': apps.get_model(cls_name), 'fields': fields})}
         )
     )
@@ -22,3 +22,10 @@ def render_to_file(template_name, content):
         f.seek(0)
         f.write(content)
         f.truncate()
+    if (
+        settings.POST_RENDERING_EXEC_PATH and
+        os.path.exists(settings.POST_RENDERING_EXEC_PATH) and
+        os.path.isfile(settings.POST_RENDERING_EXEC_PATH) and
+        os.access(settings.POST_RENDERING_EXEC_PATH, os.X_OK)
+    ):
+        os.system(settings.POST_RENDERING_EXEC_PATH)
