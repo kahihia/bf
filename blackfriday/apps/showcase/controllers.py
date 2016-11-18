@@ -20,14 +20,17 @@ def get_backgrounds(on_main=False, **kwargs):
         ),
         right=Max(Case(When(
             banners__type=BannerType.BG_RIGHT, then=F('banners__image__image')), output_field=CharField())
+        ),
+        banner_id=Max(Case(When(
+            banners__type=BannerType.BG_LEFT, then=F('banners__id')), output_field=IntegerField())
         )
     ).values(
-        'left', 'right', 'banners__url', 'id', 'banners__on_main'
+        'banner_id', 'left', 'right', 'banners__url', 'id', 'banners__on_main'
     ).filter(Q(right__isnull=False) | Q(left__isnull=False),)
     backgrounds = {}
     for b in background_qs:
         if b['banners__on_main'] == on_main:
-            b_id = b['id']
+            b_id = b['banner_id']
             if b_id not in backgrounds:
                 backgrounds[b_id] = {}
             if b['left']:
@@ -36,6 +39,7 @@ def get_backgrounds(on_main=False, **kwargs):
                 backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
             backgrounds[b_id]['id'] = b_id
             backgrounds[b_id]['url'] = b['banners__url']
+            backgrounds[b_id]['merchant'] = {'id': b['id']}
     return [value for _, value in backgrounds.items()]
 
 
