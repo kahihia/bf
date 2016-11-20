@@ -128,7 +128,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
-            render_all_pages()
+            render_all_pages.delay(True)
             if instance.receives_notifications:
                 send_moderation_success_mail(instance)
         elif instance.moderation_status == ModerationStatus.rejected:
