@@ -124,10 +124,6 @@ import {action3} from './app/retailrocket.js';
 			);
 		}
 	});
-	const mainTeaserFooter = document.getElementById('main-teaser-footer');
-	if (mainTeaserFooter) {
-		ReactDOM.render(<MainTeaserFooter/>, mainTeaserFooter);
-	}
 
 	// Retail Rocket
 	const RRMarkupBlock = ({id, categoryId}) => (
@@ -322,7 +318,7 @@ import {action3} from './app/retailrocket.js';
 	const teasersOnMain = document.getElementById('teasers-on-main');
 	if (teasersOnMain && DATA.teasersOnMain && DATA.teasersOnMain.data && DATA.teasersOnMain.data.length) {
 		const TeasersOnMain = require('./app/teasers-on-main');
-		ReactDOM.render(<TeasersOnMain {...DATA.teasersOnMain}/>, teasersOnMain);
+		ReactDOM.render(<TeasersOnMain footer={<MainTeaserFooter/>} {...DATA.teasersOnMain}/>, teasersOnMain);
 	}
 
 	const teasers = document.getElementById('sidebar-teasers');
