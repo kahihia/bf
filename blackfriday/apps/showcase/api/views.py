@@ -18,42 +18,42 @@ class StaticGeneratorViewSet(viewsets.GenericViewSet):
     def main(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_main()
+        render_main.delay(True)
         return Response()
 
     @list_route(methods=['post', 'options'])
     def actions(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_actions()
+        render_actions.delay(True)
         return Response()
 
     @list_route(methods=['post', 'options'], url_path='all-merchants')
     def all_merchants(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_all_merchants()
+        render_all_merchants.delay(True)
         return Response()
 
     @list_route(methods=['post', 'options'])
     def partners(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_partners()
+        render_partners.delay(True)
         return Response()
 
     @list_route(methods=['post', 'options'])
     def russiangoods(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_russiangoods()
+        render_russiangoods.delay(True)
         return Response()
 
     @list_route(methods=['post', 'options'], url_path='all-pages')
     def all_pages(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
             raise MethodNotAllowed(request.method)
-        render_all_pages()
+        render_all_pages.delay(True)
         return Response()
 
 
@@ -66,7 +66,7 @@ class StaticGeneratorCategoriesView(views.APIView):
         except:
             raise NotFound
 
-        render_category(pk)
+        render_category.delay(pk, True)
         return Response()
 
 
@@ -79,7 +79,7 @@ class StaticGeneratorRussianCategoriesView(views.APIView):
         except:
             raise NotFound
 
-        render_russian_category(pk)
+        render_russian_category.delay(pk, True)
         return Response()
 
 
@@ -92,5 +92,5 @@ class StaticGeneratorMerchantView(views.APIView):
         except:
             raise NotFound
 
-        render_merchant(pk)
+        render_merchant.delay(pk, True)
         return Response()
