@@ -153,6 +153,8 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        if not self.instance.promo:
+            raise ValidationError({'promo': 'Для прохождения модерации необходимо оплатить рекламный пакет'})
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
         attrs['last_save'] = timezone.now()

@@ -195,7 +195,7 @@ class Merchant(models.Model):
         options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=self, invoice__is_paid=True)))
 
         return {
-            limit: reduce(operator.add, map(get_value, rules), 0)
+            limit: reduce(operator.add, map(get_value, rules), 0) if self.promo else 0
             for limit, rules in settings.LIMITS_RULES.items()
         }
 
