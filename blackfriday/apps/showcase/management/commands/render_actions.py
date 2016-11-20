@@ -5,4 +5,4 @@ from apps.showcase.renderers import render_actions
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        render_actions(True)
+        render_actions.delay(True)
