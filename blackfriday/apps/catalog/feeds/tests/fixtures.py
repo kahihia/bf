@@ -51,7 +51,6 @@ FAIL_DATA = {
         "country": "Country",
         "brand": "Brand",
         "url": "http://product_url",
-        "currency": "bar"
     },
     'output': (
         {
