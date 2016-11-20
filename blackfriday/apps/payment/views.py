@@ -17,7 +17,7 @@ class PaymentFinishedView(DetailView):
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
-        if self.object.order_status == '2':
+        if self.object.order_status == '2' and not self.object.invoice.is_paid:
             self.object.invoice.status = InvoiceStatus.paid
             self.object.invoice.save()
             self.object.invoice.merchant.moderation_status = ModerationStatus.new
