@@ -42,23 +42,32 @@ const settings = {
 };
 
 const TeasersOnMain = props => (
-	<Slider {...settings}>
-		{props.data.map(item => (
-			<div
-				key={item.id}
-				className="product-list__item"
-				>
-				<ShortProduct
-					data={item}
-					showCategory={props.showCategory}
-					showMerchant={props.showMerchant}
-					/>
+	<div className="main-teaser">
+		<div className="main-teaser__body">
+			<div className="product-list">
+				<Slider {...settings}>
+					{props.data.map(item => (
+						<div
+							key={item.id}
+							className="product-list__item"
+							>
+							<ShortProduct
+								data={item}
+								showCategory={props.showCategory}
+								showMerchant={props.showMerchant}
+								/>
+						</div>
+					))}
+				</Slider>
 			</div>
-		))}
-	</Slider>
+		</div>
+
+		{props.footer}
+	</div>
 );
 TeasersOnMain.propTypes = {
 	data: React.PropTypes.array,
+	footer: React.PropTypes.any,
 	showCategory: React.PropTypes.bool,
 	showMerchant: React.PropTypes.bool
 };
