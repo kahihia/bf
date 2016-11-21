@@ -24,8 +24,12 @@ const CardDescription = React.createClass({
 			this.setState({isDescCollapsed: true});
 		}
 
-		if (this.props.data.merchant) {
-			trackers.merchant.showed(this.props.data.merchant.id);
+		const {
+			data
+		} = this.props;
+
+		if (data.merchant) {
+			trackers.merchant.shown(data.merchant.id);
 		}
 	},
 
@@ -34,6 +38,16 @@ const CardDescription = React.createClass({
 			return;
 		}
 		this.setState({isDescCollapsed: false});
+	},
+
+	handleClickMerchantUrl() {
+		const {
+			data
+		} = this.props;
+
+		if (data.merchant) {
+			trackers.merchant.clicked(data.merchant.id);
+		}
 	},
 
 	render() {
@@ -58,6 +72,7 @@ const CardDescription = React.createClass({
 				<h1 className={b(className, 'title')}>
 					<Link
 						href={url}
+						onClick={this.handleClickMerchantUrl}
 						isExternal
 						>
 						{name}
