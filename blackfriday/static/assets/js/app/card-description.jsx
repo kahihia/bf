@@ -28,9 +28,7 @@ const CardDescription = React.createClass({
 			data
 		} = this.props;
 
-		if (data.merchant) {
-			trackers.merchant.shown(data.merchant.id);
-		}
+		trackers.merchant.shown(data.id);
 	},
 
 	handleClickDesc() {
