@@ -17,7 +17,7 @@ PartnerSerializer = serializer_factory(
     cls_name='banners.Partner',
     fields=('id', 'name', 'url', 'image'),
     image=serializers.SerializerMethodField(),
-    get_image=lambda _, obj: str(obj.image)
+    get_image=lambda _, obj: obj.image.url
 )
 BannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
