@@ -41,30 +41,42 @@ const settings = {
 	]
 };
 
-const TeasersOnMain = props => (
-	<div className="main-teaser">
-		<div className="main-teaser__body">
-			<div className="product-list">
-				<Slider {...settings}>
-					{props.data.map(item => (
-						<div
-							key={item.id}
-							className="product-list__item"
-							>
-							<ShortProduct
-								data={item}
-								showCategory={props.showCategory}
-								showMerchant={props.showMerchant}
-								/>
-						</div>
-					))}
-				</Slider>
-			</div>
-		</div>
+class TeasersOnMain extends React.Component {
+	render() {
+		const {
+			data,
+			footer,
+			showCategory,
+			showMerchant
+		} = this.props;
 
-		{props.footer}
-	</div>
-);
+		return (
+			<div className="main-teaser">
+				<div className="main-teaser__body">
+					<div className="product-list">
+						<Slider {...settings}>
+							{data.map(item => (
+								<div
+									key={item.id}
+									className="product-list__item"
+									>
+									<ShortProduct
+										data={item}
+										showCategory={showCategory}
+										showMerchant={showMerchant}
+										isTeaser
+										/>
+								</div>
+							))}
+						</Slider>
+					</div>
+				</div>
+
+				{footer}
+			</div>
+		);
+	}
+}
 TeasersOnMain.propTypes = {
 	data: React.PropTypes.array,
 	footer: React.PropTypes.any,

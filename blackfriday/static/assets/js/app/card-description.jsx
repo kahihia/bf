@@ -3,6 +3,7 @@
 import React from 'react';
 import b from 'b_';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
 const className = 'card-description';
 
@@ -22,6 +23,12 @@ const CardDescription = React.createClass({
 		if (this.description.offsetHeight > 100) {
 			this.setState({isDescCollapsed: true});
 		}
+
+		const {
+			data
+		} = this.props;
+
+		trackers.merchant.shown(data.id);
 	},
 
 	handleClickDesc() {
@@ -29,6 +36,16 @@ const CardDescription = React.createClass({
 			return;
 		}
 		this.setState({isDescCollapsed: false});
+	},
+
+	handleClickMerchantUrl() {
+		const {
+			data
+		} = this.props;
+
+		if (data.merchant) {
+			trackers.merchant.clicked(data.merchant.id);
+		}
 	},
 
 	render() {
@@ -53,6 +70,7 @@ const CardDescription = React.createClass({
 				<h1 className={b(className, 'title')}>
 					<Link
 						href={url}
+						onClick={this.handleClickMerchantUrl}
 						isExternal
 						>
 						{name}

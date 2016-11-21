@@ -37,22 +37,31 @@ const settings = {
 	]
 };
 
-const Teasers = props => {
-	const products = getRandomItems(props.data, 3)[0];
+class Teasers extends React.Component {
+	render() {
+		const {
+			data,
+			showCategory,
+			showMerchant
+		} = this.props;
 
-	return (
-		<Slider {...settings}>
-			{products.map(item => (
-				<ShortProduct
-					key={item.id}
-					data={item}
-					showCategory={props.showCategory}
-					showMerchant={props.showMerchant}
-					/>
-			))}
-		</Slider>
-	);
-};
+		const products = getRandomItems(data, 3)[0];
+
+		return (
+			<Slider {...settings}>
+				{products.map(item => (
+					<ShortProduct
+						key={item.id}
+						data={item}
+						showCategory={showCategory}
+						showMerchant={showMerchant}
+						isTeaser
+						/>
+				))}
+			</Slider>
+		);
+	}
+}
 Teasers.propTypes = {
 	data: React.PropTypes.array,
 	showCategory: React.PropTypes.bool,

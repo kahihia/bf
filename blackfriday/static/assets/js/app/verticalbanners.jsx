@@ -1,39 +1,56 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
-const Banner = props => (
-	<Link
-		href={props.data.url}
-		className="item"
-		isExternal
-		>
-		<img
-			className="img-responsive"
-			src={props.data.image}
-			alt=""
-			/>
-	</Link>
-);
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	componentDidMount() {
+		trackers.banner.shown(this.props.data.id);
+	}
+
+	handleClick() {
+		const {
+			data
+		} = this.props;
+
+		trackers.banner.clicked(data.id);
+
+		if (data.merchant) {
+			trackers.merchant.clicked(data.merchant.id);
+		}
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+
+		return (
+			<Link
+				href={data.url}
+				className="item"
+				onClick={this.handleClick}
+				isExternal
+				>
+				<img
+					className="img-responsive"
+					src={data.image}
+					alt=""
+					/>
+			</Link>
+		);
+	}
+}
 Banner.propTypes = {
 	data: React.PropTypes.object
 };
 // Banner.defaultProps = {};
-
-const VerticalbannersCarousel = props => (
-	<div>
-		{props.data.map(item => (
-			<Banner
-				key={item.id}
-				data={item}
-				/>
-		))}
-	</div>
-);
-VerticalbannersCarousel.propTypes = {
-	data: React.PropTypes.array
-};
-// VerticalbannersCarousel.defaultProps = {};
 
 const Verticalbanners = React.createClass({
 	propTypes: {
@@ -62,13 +79,20 @@ const Verticalbanners = React.createClass({
 	},
 
 	render() {
+		const {
+			data
+		} = this.state;
+		const banner = data[0];
+
 		return (
 			<div className="verticalbanners-carousel">
 				<Carousel
 					onNext={this.handleNext}
 					{...this.props}
 					>
-					<VerticalbannersCarousel data={this.state.data}/>
+					{banner ? (
+						<Banner key={banner.id} data={banner}/>
+					) : null}
 				</Carousel>
 			</div>
 		);

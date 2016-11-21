@@ -4,6 +4,7 @@ import b from 'b_';
 import Price from 'react-price';
 import Link from './link.jsx';
 import {action2, action5} from './retailrocket.js';
+import trackers from './trackers.js';
 
 const CURRENCY = 'руб.';
 
@@ -64,14 +65,25 @@ ShortProductPrice.defaultProps = {
 class ShortProduct extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
 
 		this.handleClick = this.handleClick.bind(this);
 	}
 
+	componentDidMount() {
+		const {
+			data,
+			isTeaser
+		} = this.props;
+
+		if (isTeaser) {
+			trackers.teaser.shown(data.id);
+		}
+	}
+
 	handleClick() {
 		const {
-			data
+			data,
+			isTeaser
 		} = this.props;
 		const {
 			id,
@@ -105,6 +117,14 @@ class ShortProduct extends React.Component {
 			id,
 			price
 		});
+
+		if (isTeaser) {
+			trackers.teaser.clicked(id);
+		}
+
+		if (merchant) {
+			trackers.merchant.clicked(merchant.id);
+		}
 	}
 
 	render() {
@@ -174,6 +194,7 @@ class ShortProduct extends React.Component {
 }
 ShortProduct.propTypes = {
 	data: React.PropTypes.object.isRequired,
+	isTeaser: React.PropTypes.bool,
 	showCategory: React.PropTypes.bool,
 	showMerchant: React.PropTypes.bool
 };
