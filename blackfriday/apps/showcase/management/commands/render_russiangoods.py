@@ -5,4 +5,4 @@ from apps.showcase.renderers import render_russiangoods
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        render_russiangoods()
+        render_russiangoods.delay(True)

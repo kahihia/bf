@@ -42,13 +42,18 @@ def clear_category(category, context):
         return settings.DEFAULT_CATEGORY_NAME
     return category
 
+
+clear_category.null = True
+
+
 def clear_currency(currency):
     if currency not in settings.CURRENCY_IDS:
         return 'rur'
     else:
         return currency
 
-clear_category.null = True
+
+clear_currency.null = True
 
 
 def optional_required(_id, context):

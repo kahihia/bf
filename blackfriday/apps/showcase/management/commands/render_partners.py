@@ -5,4 +5,4 @@ from apps.showcase.renderers import render_partners
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        render_partners()
+        render_partners.delay(True)

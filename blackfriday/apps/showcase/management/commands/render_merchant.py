@@ -8,4 +8,4 @@ class Command(BaseCommand):
         parser.add_argument('merchant_id', type=int)
 
     def handle(self, merchant_id, *args, **options):
-        render_merchant(merchant_id)
+        render_merchant.delay(merchant_id, True)

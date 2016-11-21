@@ -59,7 +59,10 @@ class MerchantPreview(LoginRequiredMixin, RolePermissionMixin, View):
     allowed_roles = ['admin', 'advertiser', 'manager']
 
     def get(self, request, pk):
-        get_object_or_404(Merchant, pk=pk)
+        try:
+            Merchant.objects.filter(invoice__promo__isnull=False, invoice__is_paid=True).get(pk=pk)
+        except Merchant.DoesNotExist:
+            raise Http404
         return HttpResponse(content=merchant(pk, is_preview=True))
 
 

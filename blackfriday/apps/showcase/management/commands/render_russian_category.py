@@ -8,4 +8,4 @@ class Command(BaseCommand):
         parser.add_argument('category_id', type=int)
 
     def handle(self, category_id, *args, **options):
-        render_russian_category(category_id)
+        render_russian_category.delay(category_id, True)

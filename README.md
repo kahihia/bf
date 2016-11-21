@@ -34,7 +34,7 @@ cd blackfriday
 cd /sites/blackfriday
 virtualenv --python=python3.5 .env
 source .env/bin/activate
-sudo apt-get install python3.5-dev gcc
+sudo apt-get install python3.5-dev gcc libffi-dev
 pip install -r requirements.txt
 ```
 
