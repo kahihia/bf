@@ -20,3 +20,11 @@ class LogoStats(models.Model):
     merchant = models.OneToOneField(Merchant)
     times_shown = models.IntegerField(default=0)
     times_clicked = models.IntegerField(default=0)
+
+
+class MerchantStats(models.Model):
+    merchant = models.OneToOneField(Merchant)
+    times_shown = models.IntegerField(default=0)
+    times_clicked = models.IntegerField(default=0)
+    unique_visitors_shown = models.IntegerField(default=0)
+    unique_visitors_clicked = models.IntegerField(default=0)

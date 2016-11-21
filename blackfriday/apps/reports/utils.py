@@ -7,11 +7,9 @@ from django.conf import settings
 
 class StatsUpdater:
 
-    def __init__(self, stats_cls, related_model_id_name, clicked_file, shown_file):
+    def __init__(self, stats_cls, related_model_id_name):
         self.stats_cls = stats_cls
         self.related_model_id_name = related_model_id_name
-        self.clicked_file = clicked_file
-        self.shown_file = shown_file
 
         self.current_stats = {
             getattr(stats_obj, related_model_id_name): stats_obj for stats_obj in stats_cls.objects.all()}
@@ -40,9 +38,9 @@ class StatsUpdater:
                 counter[int(line.strip())] += 1
         return counter
 
-    def run(self):
-        shown_counter = self.parse_logs(self.shown_file)
-        clicked_counter = self.parse_logs(self.clicked_file)
+    def run(self, clicked_file, shown_file):
+        shown_counter = self.parse_logs(shown_file)
+        clicked_counter = self.parse_logs(clicked_file)
         counter_keys = set(list(shown_counter.keys()) + list(clicked_counter.keys()))
 
         for stats_id in counter_keys:
