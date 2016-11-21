@@ -5,10 +5,15 @@ import uuid
 
 from PIL import Image, ImageFile
 
-from django.db.models import ImageField
+from django.db.models import ImageField, TextField, validators
 from django.core.files.base import ContentFile
 
 from rest_framework.exceptions import ValidationError
+
+
+class LongUrlField(TextField):
+    default_validators = [validators.URLValidator()]
+    description = 'URL'
 
 
 class ResizedImageFieldFile(ImageField.attr_class):
