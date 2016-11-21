@@ -1,21 +1,26 @@
+import Cookie from 'js-cookie';
 import xhr from 'xhr';
 
-const NAMES = [
+const ACTION_NAMES = [
 	'merchant',
 	'banner',
 	'logo',
 	'teaser'
 ];
 
-const TYPES = [
+const ACTION_TYPES = [
 	'shown',
 	'clicked'
 ];
 
+const WITH_CLIENT_ID = [
+	'merchant'
+];
+
 const trackers = {};
 
-NAMES.forEach(name => {
-	TYPES.forEach(type => {
+ACTION_NAMES.forEach(name => {
+	ACTION_TYPES.forEach(type => {
 		if (!trackers[name]) {
 			trackers[name] = {};
 		}
@@ -25,10 +30,19 @@ NAMES.forEach(name => {
 
 function makeRequest(type, name) {
 	const action = [`${type}-${name}s`];
+	const withClientId = WITH_CLIENT_ID.indexOf(name) > -1;
 
 	return function () {
 		var args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-		const urlItems = Array.prototype.concat.call(action, Array.prototype.slice.call(args));
+		const urlItems = action.concat(args.slice());
+		if (withClientId) {
+			const clientId = getClientId();
+			if (!clientId) {
+				console.log('Client ID is empty');
+				return;
+			}
+			urlItems.push(clientId);
+		}
 		const url = `/${urlItems.join('/')}/`;
 		request(url);
 	};
@@ -36,6 +50,10 @@ function makeRequest(type, name) {
 
 function request(url) {
 	xhr(url, () => {});
+}
+
+function getClientId() {
+	return Cookie.get('rrpusid') || null;
 }
 
 export default trackers;

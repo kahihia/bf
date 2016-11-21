@@ -4,6 +4,7 @@ import b from 'b_';
 import Price from 'react-price';
 import Link from './link.jsx';
 import {action2, action5} from './retailrocket.js';
+import trackers from './trackers.js';
 
 const CURRENCY = 'руб.';
 
@@ -105,6 +106,10 @@ class ShortProduct extends React.Component {
 			id,
 			price
 		});
+
+		if (merchant) {
+			trackers.merchant.clicked(merchant.id);
+		}
 
 		if (onClick) {
 			onClick(id);

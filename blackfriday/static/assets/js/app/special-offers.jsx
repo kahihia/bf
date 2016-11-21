@@ -13,7 +13,15 @@ class Banner extends React.Component {
 	}
 
 	handleClick() {
-		trackers.banner.clicked(this.props.data.id);
+		const {
+			data
+		} = this.props;
+
+		trackers.banner.clicked(data.id);
+
+		if (data.merchant) {
+			trackers.merchant.clicked(data.merchant.id);
+		}
 	}
 
 	render() {
