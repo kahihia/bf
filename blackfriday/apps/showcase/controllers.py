@@ -171,7 +171,7 @@ def merchant(merchant_id, is_preview=False):
                 cls_name='advertisers.Merchant',
                 fields=('name', 'url', 'description', 'image', 'promocode'),
                 image=serializers.SerializerMethodField(),
-                get_image=get_image,
+                get_image=lambda _, o: str(o.image),
             )(
                 Merchant.objects.get(id=merchant_id)
             ).data
