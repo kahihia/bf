@@ -69,10 +69,21 @@ class ShortProduct extends React.Component {
 		this.handleClick = this.handleClick.bind(this);
 	}
 
+	componentDidMount() {
+		const {
+			data,
+			isTeaser
+		} = this.props;
+
+		if (isTeaser) {
+			trackers.teaser.shown(data.id);
+		}
+	}
+
 	handleClick() {
 		const {
 			data,
-			onClick
+			isTeaser
 		} = this.props;
 		const {
 			id,
@@ -107,12 +118,12 @@ class ShortProduct extends React.Component {
 			price
 		});
 
-		if (merchant) {
-			trackers.merchant.clicked(merchant.id);
+		if (isTeaser) {
+			trackers.teaser.clicked(id);
 		}
 
-		if (onClick) {
-			onClick(id);
+		if (merchant) {
+			trackers.merchant.clicked(merchant.id);
 		}
 	}
 
@@ -183,7 +194,7 @@ class ShortProduct extends React.Component {
 }
 ShortProduct.propTypes = {
 	data: React.PropTypes.object.isRequired,
-	onClick: React.PropTypes.func,
+	isTeaser: React.PropTypes.bool,
 	showCategory: React.PropTypes.bool,
 	showMerchant: React.PropTypes.bool
 };

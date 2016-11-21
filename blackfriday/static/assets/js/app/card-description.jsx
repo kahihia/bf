@@ -3,6 +3,7 @@
 import React from 'react';
 import b from 'b_';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
 const className = 'card-description';
 
@@ -21,6 +22,10 @@ const CardDescription = React.createClass({
 	componentDidMount() {
 		if (this.description.offsetHeight > 100) {
 			this.setState({isDescCollapsed: true});
+		}
+
+		if (this.props.data.merchant) {
+			trackers.merchant.showed(this.props.data.merchant.id);
 		}
 	},
 

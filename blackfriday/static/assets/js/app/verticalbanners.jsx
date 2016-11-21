@@ -10,6 +10,10 @@ class Banner extends React.Component {
 		this.handleClick = this.handleClick.bind(this);
 	}
 
+	componentDidMount() {
+		trackers.banner.shown(this.props.data.id);
+	}
+
 	handleClick() {
 		const {
 			data
@@ -48,21 +52,6 @@ Banner.propTypes = {
 };
 // Banner.defaultProps = {};
 
-const VerticalbannersCarousel = props => (
-	<div>
-		{props.data.map(item => (
-			<Banner
-				key={item.id}
-				data={item}
-				/>
-		))}
-	</div>
-);
-VerticalbannersCarousel.propTypes = {
-	data: React.PropTypes.array
-};
-// VerticalbannersCarousel.defaultProps = {};
-
 const Verticalbanners = React.createClass({
 	propTypes: {
 		ajaxUrl: React.PropTypes.string,
@@ -90,13 +79,20 @@ const Verticalbanners = React.createClass({
 	},
 
 	render() {
+		const {
+			data
+		} = this.state;
+		const banner = data[0];
+
 		return (
 			<div className="verticalbanners-carousel">
 				<Carousel
 					onNext={this.handleNext}
 					{...this.props}
 					>
-					<VerticalbannersCarousel data={this.state.data}/>
+					{banner ? (
+						<Banner key={banner.id} data={banner}/>
+					) : null}
 				</Carousel>
 			</div>
 		);

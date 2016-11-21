@@ -12,6 +12,10 @@ class Banner extends React.Component {
 		this.handleClick = this.handleClick.bind(this);
 	}
 
+	componentDidMount() {
+		trackers.banner.shown(this.props.data.id);
+	}
+
 	handleClick() {
 		const {
 			data

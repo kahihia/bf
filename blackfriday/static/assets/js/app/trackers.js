@@ -43,7 +43,20 @@ function makeRequest(type, name) {
 			}
 			urlItems.push(clientId);
 		}
+
 		const url = `/${urlItems.join('/')}/`;
+
+		// Single shown request
+		if (type === 'shown') {
+			if (!this.showed) {
+				this.showed = [];
+			}
+			if (this.showed.indexOf(url) > -1) {
+				return;
+			}
+			this.showed.push(url);
+		}
+
 		request(url);
 	};
 }

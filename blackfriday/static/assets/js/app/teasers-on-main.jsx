@@ -1,7 +1,6 @@
 import React from 'react';
 import ShortProduct from './short-product.jsx';
 import Slider from 'react-slick';
-import trackers from './trackers.js';
 
 const settings = {
 	infinite: false,
@@ -43,16 +42,6 @@ const settings = {
 };
 
 class TeasersOnMain extends React.Component {
-	constructor(props) {
-		super(props);
-
-		this.handleClick = this.handleClick.bind(this);
-	}
-
-	handleClick(id) {
-		trackers.teaser.clicked(id);
-	}
-
 	render() {
 		const {
 			data,
@@ -75,7 +64,7 @@ class TeasersOnMain extends React.Component {
 										data={item}
 										showCategory={showCategory}
 										showMerchant={showMerchant}
-										onClick={this.handleClick}
+										isTeaser
 										/>
 								</div>
 							))}
