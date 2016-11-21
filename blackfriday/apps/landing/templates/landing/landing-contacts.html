@@ -301,12 +301,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-xs-3">
                 <ul class="simple-menu">
                     <li class="simple-menu__item">
-                        <a class="simple-menu__link" href="#anchor-about" data-offset="0">
+                        <a class="simple-menu__link" href="/#anchor-about" data-offset="0">
                             О «Настоящей Черной Пятнице»
                         </a>
                     </li>
                     <li class="simple-menu__item">
-                        <a class="simple-menu__link" href="#anchor-buyer" data-offset="65">
+                        <a class="simple-menu__link" href="/#anchor-buyer" data-offset="65">
                             Покупателям
                         </a>
                     </li>
@@ -321,7 +321,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="col-xs-3">
                 <ul class="simple-menu">
                     <li class="simple-menu__item">
-                        <a class="simple-menu__link" href="#anchor-shops" data-offset="30">
+                        <a class="simple-menu__link" href="/#anchor-shops" data-offset="30">
                             Участники
                         </a>
                     </li>
@@ -402,86 +402,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 </footer><!-- site-footer -->
-
-
-<div
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="subscribe-modal-label"
-    id="subscribe-modal"
-    >
-    <div
-        class="modal-dialog"
-        role="document"
-        >
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="subscribe-modal-label">
-                    Получить скидку
-                </h4>
-            </div>
-
-            <div class="modal-body">
-
-                <form
-                    class="js-form-ajax"
-                    id="subscribe-form-3"
-                    method="POST"
-                    action="/api/subscribers/"
-                    >
-                    <div class="form-group">
-                        <input
-                            class="form-control input-lg"
-                            placeholder="Ваше имя"
-                            name="name"
-                            type="text"
-                            maxlength="255"
-                            required
-                            >
-                    </div>
-
-                    <div class="form-group">
-                        <input
-                            class="form-control input-lg"
-                            placeholder="E-mail"
-                            name="email"
-                            type="email"
-                            maxlength="255"
-                            required
-                            >
-                    </div>
-
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <button
-                            class="btn btn-default btn-block btn-lg"
-                            type="submit"
-                            >
-                            Отправить
-                            <img
-                                src="{% static 'images/landing/submit-icon_light.png' %}"
-                                width="15"
-                                height="14"
-                                style="margin: 0 0 0 3px; vertical-align: text-top;"
-                                alt=""
-                                />
-                        </button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/landing/mnogoru-gift-toggler.png' %}" alt="">
