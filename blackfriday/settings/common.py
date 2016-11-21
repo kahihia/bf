@@ -1,11 +1,7 @@
 import os
 import sys
 
-ADMINS = [
-    ('Artem', 'sukhanon@220-volt.ru'),
-    ('Nikita', 'merkulov.nikita@220-volt.ru'),
-    ('Victor', 'vsmirnov@220-volt.ru')
-]
+ADMINS = []
 
 DEBUG = False
 ALLOWED_HOSTS = []
