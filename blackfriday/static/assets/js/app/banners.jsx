@@ -1,37 +1,57 @@
 import React from 'react';
 import Paged from './paged.jsx';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
-const Banner = props => (
-	<div className="special-offers__item">
-		<Link
-			href={props.data.url}
-			className="special-offers__link embed-responsive"
-			isExternal
-			>
-			<img
-				src={props.data.image}
-				alt=""
-				className="special-offers__banner embed-responsive-item"
-				/>
-		</Link>
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
 
-		{props.data.merchant ? (
-			<a
-				className="special-offers__shop"
-				href={props.data.merchant.url}
-				>
-				<img
-					src={props.data.merchant.image}
-					alt=""
-					className="special-offers__logo"
-					/>
+		this.handleClick = this.handleClick.bind(this);
+	}
 
-				{'К магазину'}
-			</a>
-		) : null}
-	</div>
-);
+	handleClick() {
+		trackers.banner.clicked(this.props.data.id);
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+
+		return (
+			<div className="special-offers__item">
+				<Link
+					href={data.url}
+					className="special-offers__link embed-responsive"
+					onClick={this.handleClick}
+					isExternal
+					>
+					<img
+						src={data.image}
+						alt=""
+						className="special-offers__banner embed-responsive-item"
+						/>
+				</Link>
+
+				{data.merchant ? (
+					<a
+						className="special-offers__shop"
+						href={data.merchant.url}
+						>
+						<img
+							src={data.merchant.image}
+							alt=""
+							className="special-offers__logo"
+							/>
+
+						{'К магазину'}
+					</a>
+				) : null}
+			</div>
+		);
+	}
+}
 Banner.propTypes = {
 	data: React.PropTypes.object.isRequired
 };

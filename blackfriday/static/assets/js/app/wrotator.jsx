@@ -1,32 +1,59 @@
 import React from 'react';
 import arrayShuffle from 'array-shuffle';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
-const Wrotator = props => {
-	const backgrounds = arrayShuffle(props.data)[0];
+class BackgroundsLinked extends React.Component {
+	constructor(props) {
+		super(props);
 
-	if (backgrounds.url) {
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	handleClick() {
+		trackers.banner.clicked(this.props.data.id);
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+
 		return (
 			<div className="container wrotator__i">
 				<Link
 					className="wrotator__left"
-					href={backgrounds.url}
+					href={data.url}
 					style={{
-						backgroundImage: `url(${backgrounds.left})`
+						backgroundImage: `url(${data.left})`
 					}}
+					onClick={this.handleClick}
 					isExternal
 					/>
 
 				<Link
 					className="wrotator__right"
-					href={backgrounds.url}
+					href={data.url}
 					style={{
-						backgroundImage: `url(${backgrounds.right})`
+						backgroundImage: `url(${data.right})`
 					}}
+					onClick={this.handleClick}
 					isExternal
 					/>
 			</div>
 		);
+	}
+}
+BackgroundsLinked.propTypes = {
+	data: React.PropTypes.object
+};
+// BackgroundsLinked.defaultProps = {};
+
+const Wrotator = props => {
+	const backgrounds = arrayShuffle(props.data)[0];
+
+	if (backgrounds.url) {
+		return (<BackgroundsLinked data={backgrounds}/>);
 	}
 
 	return (

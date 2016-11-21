@@ -1,6 +1,7 @@
 import React from 'react';
 import ShortProduct from './short-product.jsx';
 import Slider from 'react-slick';
+import trackers from './trackers.js';
 
 const settings = {
 	infinite: false,
@@ -41,30 +42,52 @@ const settings = {
 	]
 };
 
-const TeasersOnMain = props => (
-	<div className="main-teaser">
-		<div className="main-teaser__body">
-			<div className="product-list">
-				<Slider {...settings}>
-					{props.data.map(item => (
-						<div
-							key={item.id}
-							className="product-list__item"
-							>
-							<ShortProduct
-								data={item}
-								showCategory={props.showCategory}
-								showMerchant={props.showMerchant}
-								/>
-						</div>
-					))}
-				</Slider>
-			</div>
-		</div>
+class TeasersOnMain extends React.Component {
+	constructor(props) {
+		super(props);
 
-		{props.footer}
-	</div>
-);
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	handleClick(id) {
+		trackers.teaser.clicked(id);
+	}
+
+	render() {
+		const {
+			data,
+			footer,
+			showCategory,
+			showMerchant
+		} = this.props;
+
+		return (
+			<div className="main-teaser">
+				<div className="main-teaser__body">
+					<div className="product-list">
+						<Slider {...settings}>
+							{data.map(item => (
+								<div
+									key={item.id}
+									className="product-list__item"
+									>
+									<ShortProduct
+										data={item}
+										showCategory={showCategory}
+										showMerchant={showMerchant}
+										onClick={this.handleClick}
+										/>
+								</div>
+							))}
+						</Slider>
+					</div>
+				</div>
+
+				{footer}
+			</div>
+		);
+	}
+}
 TeasersOnMain.propTypes = {
 	data: React.PropTypes.array,
 	footer: React.PropTypes.any,

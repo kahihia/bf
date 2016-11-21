@@ -2,6 +2,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import ShortProduct from './short-product.jsx';
 import {getRandomItems} from './utils.js';
+import trackers from './trackers.js';
 
 const settings = {
 	infinite: false,
@@ -37,22 +38,41 @@ const settings = {
 	]
 };
 
-const Teasers = props => {
-	const products = getRandomItems(props.data, 3)[0];
+class Teasers extends React.Component {
+	constructor(props) {
+		super(props);
 
-	return (
-		<Slider {...settings}>
-			{products.map(item => (
-				<ShortProduct
-					key={item.id}
-					data={item}
-					showCategory={props.showCategory}
-					showMerchant={props.showMerchant}
-					/>
-			))}
-		</Slider>
-	);
-};
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	handleClick(id) {
+		trackers.teaser.clicked(id);
+	}
+
+	render() {
+		const {
+			data,
+			showCategory,
+			showMerchant
+		} = this.props;
+
+		const products = getRandomItems(data, 3)[0];
+
+		return (
+			<Slider {...settings}>
+				{products.map(item => (
+					<ShortProduct
+						key={item.id}
+						data={item}
+						showCategory={showCategory}
+						showMerchant={showMerchant}
+						onClick={this.handleClick}
+						/>
+				))}
+			</Slider>
+		);
+	}
+}
 Teasers.propTypes = {
 	data: React.PropTypes.array,
 	showCategory: React.PropTypes.bool,

@@ -1,20 +1,40 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
-const Banner = props => (
-	<Link
-		href={props.data.url}
-		className="item"
-		isExternal
-		>
-		<img
-			className="img-responsive"
-			src={props.data.image}
-			alt=""
-			/>
-	</Link>
-);
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	handleClick() {
+		trackers.banner.clicked(this.props.data.id);
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+
+		return (
+			<Link
+				href={data.url}
+				className="item"
+				onClick={this.handleClick}
+				isExternal
+				>
+				<img
+					className="img-responsive"
+					src={data.image}
+					alt=""
+					/>
+			</Link>
+		);
+	}
+}
 Banner.propTypes = {
 	data: React.PropTypes.object
 };

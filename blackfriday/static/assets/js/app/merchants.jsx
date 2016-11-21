@@ -2,33 +2,49 @@ import React from 'react';
 import arrayShuffle from 'array-shuffle';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
+import trackers from './trackers.js';
 
 const BANNER_PLACEHOLDER_IMAGE = '/static/images/banner-placeholder.png';
 
-const Banner = props => {
-	const {data} = props;
-	let url = data.url;
-	let isExternal = false;
-	if (data.url === '/merchant/') {
-		url = data.merchant_url;
-		isExternal = true;
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleClick = this.handleClick.bind(this);
 	}
 
-	return (
-		<Link
-			href={url}
-			title={data.name}
-			className="party-carousel-content__image-placeholder embed-responsive"
-			isExternal={isExternal}
-			>
-			<img
-				className="party-carousel-content__image embed-responsive-item"
-				src={data.image || BANNER_PLACEHOLDER_IMAGE}
-				alt=""
-				/>
-		</Link>
-	);
-};
+	handleClick() {
+		trackers.merchant.clicked(this.props.data.id);
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+		let url = data.url;
+		let isExternal = false;
+		if (data.url === '/merchant/') {
+			url = data.merchant_url;
+			isExternal = true;
+		}
+
+		return (
+			<Link
+				href={url}
+				title={data.name}
+				className="party-carousel-content__image-placeholder embed-responsive"
+				onClick={this.handleClick}
+				isExternal={isExternal}
+				>
+				<img
+					className="party-carousel-content__image embed-responsive-item"
+					src={data.image || BANNER_PLACEHOLDER_IMAGE}
+					alt=""
+					/>
+			</Link>
+		);
+	}
+}
 Banner.propTypes = {
 	data: React.PropTypes.object
 };

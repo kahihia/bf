@@ -1,6 +1,41 @@
 import React from 'react';
 import Carousel from './carousel.jsx';
 import Link from './link.jsx';
+import trackers from './trackers.js';
+
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	handleClick() {
+		trackers.banner.clicked(this.props.data.id);
+	}
+
+	render() {
+		const {
+			children,
+			data
+		} = this.props;
+
+		return (
+			<Link
+				href={data.url}
+				onClick={this.handleClick}
+				isExternal
+				>
+				{children}
+			</Link>
+		);
+	}
+}
+Banner.propTypes = {
+	children: React.PropTypes.any,
+	data: React.PropTypes.object
+};
+// Banner.defaultProps = {};
 
 class Superbanner extends React.Component {
 	constructor() {
@@ -30,12 +65,9 @@ class Superbanner extends React.Component {
 
 			if (item.url) {
 				content = (
-					<Link
-						href={item.url}
-						isExternal
-						>
+					<Banner data={item}>
 						{img}
-					</Link>
+					</Banner>
 				);
 			} else {
 				content = (

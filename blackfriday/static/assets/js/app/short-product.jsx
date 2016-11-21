@@ -64,14 +64,14 @@ ShortProductPrice.defaultProps = {
 class ShortProduct extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
 
 		this.handleClick = this.handleClick.bind(this);
 	}
 
 	handleClick() {
 		const {
-			data
+			data,
+			onClick
 		} = this.props;
 		const {
 			id,
@@ -105,6 +105,10 @@ class ShortProduct extends React.Component {
 			id,
 			price
 		});
+
+		if (onClick) {
+			onClick(id);
+		}
 	}
 
 	render() {
@@ -174,6 +178,7 @@ class ShortProduct extends React.Component {
 }
 ShortProduct.propTypes = {
 	data: React.PropTypes.object.isRequired,
+	onClick: React.PropTypes.func,
 	showCategory: React.PropTypes.bool,
 	showMerchant: React.PropTypes.bool
 };

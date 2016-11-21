@@ -15,12 +15,12 @@ const Link = React.createClass({
 		title: React.PropTypes.string
 	},
 
-	handleClick() {
+	handleClick(e) {
 		if (!this.props.onClick) {
 			return;
 		}
 
-		this.props.onClick();
+		this.props.onClick(e);
 	},
 
 	render() {
