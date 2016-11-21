@@ -17,9 +17,13 @@ class PaymentFinishedView(DetailView):
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
-        if self.object.order_status == '2' and not self.object.invoice.is_paid:
-            self.object.invoice.status = InvoiceStatus.paid
-            self.object.invoice.save()
-            self.object.invoice.merchant.moderation_status = ModerationStatus.new
-            self.object.invoice.merchant.save()
+        invoice = self.object.invoice
+        merchant = invoice.merchant
+
+        if self.object.order_status == '2' and not invoice.is_paid:
+            merchant.moderation_status = ModerationStatus.new
+            invoice.status = InvoiceStatus.paid
+            merchant.save()
+            invoice.save()
+
         return HttpResponseRedirect(self.object.get_success_url())
