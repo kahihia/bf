@@ -29,7 +29,7 @@ def render_landing(raise_exception=True):
     for filename, template in [
         ('index.html', 'landing/landing.html'),
         ('index-cn.html', 'landing/landing-cn.html'),
-        ('kontakty', 'landing/landing-contacts.html'),
+        ('kontakty.html', 'landing/landing-contacts.html'),
     ]:
         with open(os.path.join(path, filename), 'w') as f:
             f.seek(0)
