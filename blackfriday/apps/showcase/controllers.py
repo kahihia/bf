@@ -169,7 +169,7 @@ def merchant(merchant_id, is_preview=False):
         'merchant': json.render(
             serializer_factory(
                 cls_name='advertisers.Merchant',
-                fields=('name', 'url', 'description', 'image', 'promocode'),
+                fields=('id', 'name', 'url', 'description', 'image', 'promocode'),
                 image=serializers.SerializerMethodField(),
                 get_image=lambda _, o: str(o.image),
             )(
