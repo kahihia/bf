@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.db.models import Q
 from django.utils import timezone
 
@@ -187,6 +188,23 @@ class MerchantSerializer(serializers.ModelSerializer):
         if obj.promo:
             return PromoTinySerializer(obj.promo).data
         return None
+
+    def validate_description(self, value):
+        allowed_attrs = {
+            'a': ['href', 'target']
+        }
+
+        def _clean(node):
+            try:
+                list(map(_clean, node.children))
+                allowed = allowed_attrs.get(node.name)
+                node.name.attrs = {k: v for k, v in node.attrs.items() if k in allowed} if allowed else {}
+            except AttributeError:
+                pass
+
+        soup = BeautifulSoup(value, 'html.parser')
+        _clean(soup)
+        return str(soup)
 
 
 class MerchantListSerializer(serializers.ModelSerializer):
