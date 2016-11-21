@@ -42,6 +42,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'libs.recaptcha.context_processors.captcha_keys',
                 'libs.templates.context_processors.site_url',
+                'libs.templates.context_processors.showcase_enabled',
                 'apps.advertisers.context_processors.moderation',
                 'apps.catalog.context_processors.categories',
             ],
@@ -207,3 +208,6 @@ RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
 )
 SHOWCASE_ROOT = os.path.join(PROJECT_ROOT, 'showcase')
+SHOWCASE_ENABLED = False
+
+POST_RENDERING_EXEC_PATH = None

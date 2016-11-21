@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% endcomment %}
 
-    <title>Черная Пятница 2016 в России - официальный сайт Real Black Friday</title>
+    <title>➤ Настоящая Черная пятница 2016 в России — Real Black Friday 2016</title>
     <meta name="description" content="Настоящая Черная Пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов" />
     <meta name="keywords" content="" />
 
@@ -53,6 +53,8 @@
     <script src="{% static 'js/es5-sham.min.js' %}"></script>
     <script src="{% static 'js/ie8.js' %}"></script>
     <![endif]-->
+
+    <script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
 </head>
 <body>
 <!-- Google Tag Manager -->
@@ -72,7 +74,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="site-header-info__content">
             <div class="site-header-info__about">
                 <span class="site-header-info__text">
-                    Официальный сайт распродажи "Настоящая Черная Пятница" 2016 в России
+                    "Настоящая Черная Пятница" 2016 в России - официальный сайт Real Black Friday
                 </span>
             </div>
 
@@ -252,7 +254,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
 
                         <div class="about-section__text">
-                            <strong>Настоящая Черная Пятница 2016</strong>&nbsp;&mdash;<br>
+                            <strong>★Настоящая Черная Пятница 2016</strong>&nbsp;&mdash;<br>
                             это масштабная онлайн-распродажа в ведущих<br>
                             интернет-магазинах и онлайн-сервисах<br>
                             России, Белоруссии и Казахстана.<br>
@@ -1104,6 +1106,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div><!-- subscribe-section -->
 
 
+<div id="anchor-mnogoru"></div>
+<script>
+(function(d){var s = d.createElement('script');s.type = 'text/javascript';
+var get_params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){get_params[key] = value;});
+s.src = 'https://www.mnogo.ru/partners_widgets/sample/?i=1&charset=utf-8'+"&date=" + (get_params.date==undefined?'':get_params.date);;d.getElementsByTagName('head')[0].appendChild(s);})(document);
+</script>
+<div id="mnogoru_block" class="adaptive"></div>
+
+
 <div class="text-section">
     <a name="anchor-text"></a>
 
@@ -1216,6 +1227,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 </div><!-- text-section -->
+
+
+<div class="text-center" style="margin-top: 50px;">
+    <iframe width="886" height="498" src="https://www.youtube.com/embed/I9QhaYYX1Eg" frameborder="0" allowfullscreen></iframe>
+</div>
 
 
 <div class="discount-section">
@@ -1582,19 +1598,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div>
 
-{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
-    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
-    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
+    <img src="{% static 'images/landing/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/landing/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
-{% endcomment %}
 
 {% if SHOW_LOGIN_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}
 {% endif %}
 
 
-<script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
 <script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
 <script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>

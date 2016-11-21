@@ -13,28 +13,33 @@ from apps.showcase.utils import serializer_factory
 json = CamelCaseJSONRenderer()
 
 
-def get_backgrounds(**kwargs):
+def get_backgrounds(on_main=False, **kwargs):
     background_qs = Merchant.objects.filter(**kwargs).moderated().annotate(
         left=Max(Case(When(
             banners__type=BannerType.BG_LEFT, then=F('banners__image__image')), output_field=CharField())
         ),
         right=Max(Case(When(
             banners__type=BannerType.BG_RIGHT, then=F('banners__image__image')), output_field=CharField())
+        ),
+        banner_id=Max(Case(When(
+            banners__type=BannerType.BG_LEFT, then=F('banners__id')), output_field=IntegerField())
         )
     ).values(
-        'left', 'right', 'banners__url', 'id'
-    ).filter(Q(right__isnull=False) | Q(left__isnull=False))
+        'banner_id', 'left', 'right', 'banners__url', 'id', 'banners__on_main'
+    ).filter(Q(right__isnull=False) | Q(left__isnull=False),)
     backgrounds = {}
     for b in background_qs:
-        b_id = b['id']
-        if b_id not in backgrounds:
-            backgrounds[b_id] = {}
-        if b['left']:
-            backgrounds[b_id]['left'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['left'])
-        if b['right']:
-            backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
-        backgrounds[b_id]['id'] = b_id
-        backgrounds[b_id]['url'] = b['banners__url']
+        if b['banners__on_main'] == on_main:
+            b_id = b['banner_id']
+            if b_id not in backgrounds:
+                backgrounds[b_id] = {}
+            if b['left']:
+                backgrounds[b_id]['left'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['left'])
+            if b['right']:
+                backgrounds[b_id]['right'] = '{}{}{}'.format(settings.SITE_URL, settings.MEDIA_URL, b['right'])
+            backgrounds[b_id]['id'] = b_id
+            backgrounds[b_id]['url'] = b['banners__url']
+            backgrounds[b_id]['merchant'] = {'id': b['id']}
     return [value for _, value in backgrounds.items()]
 
 
@@ -128,25 +133,28 @@ def category(category_id, russian=False, is_preview=False):
 
 
 def merchant(merchant_id, is_preview=False):
+    if is_preview:
+        superbanners_queryset = Banner.objects.super().filter(in_mailing=False, merchant_id=merchant_id)
+        banners_queryset = Banner.objects.action().filter(merchant_id=merchant_id)
+        products_queryset = Product.objects.filter(merchant_id=merchant_id)
+        teasers_queryset = Product.objects.teasers()
+    else:
+        superbanners_queryset = Banner.objects.super().from_moderated_merchants().filter(
+            in_mailing=False, merchant_id=merchant_id
+        )
+        banners_queryset = Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id)
+        products_queryset = Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id)
+        teasers_queryset = Product.objects.from_moderated_merchants().teasers()
+
     context = {
         'superbanners': json.render(
-            SuperbannerSerializer(
-                Banner.objects.super().from_moderated_merchants().filter(
-                    in_mailing=False, merchant_id=merchant_id),
-                many=True
-            ).data
+            SuperbannerSerializer(superbanners_queryset, many=True).data
         ),
         'banners': json.render(
-            BannerSerializer(
-                Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id),
-                many=True
-            ).data
+            BannerSerializer(banners_queryset, many=True).data
         ),
         'products': json.render(
-            ProductSerializer(
-                Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id),
-                many=True
-            ).data
+            ProductSerializer(products_queryset, many=True).data
         ),
         'partners': json.render(
             PartnerSerializer(
@@ -155,10 +163,7 @@ def merchant(merchant_id, is_preview=False):
             ).data
         ),
         'teasers': json.render(
-            ProductSerializer(
-                Product.objects.from_moderated_merchants().teasers(),
-                many=True
-            ).data
+            ProductSerializer(teasers_queryset, many=True).data
         ),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
         'merchant': json.render(
@@ -230,18 +235,32 @@ def main_page(is_preview=False):
                 many=True
             ).data
         ),
-        'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+        'merchants': json.render(
+            MerchantSerializer(
+                Merchant.objects.moderated().annotate(
+                    logo_on_main=Max(
+                        Case(
+                            When(
+                                invoices__promo__options__option__tech_name='logo_on_main',
+                                then=F('invoices__promo__options__value')
+                            ),
+                            output_field=IntegerField())
+                    )
+                ).filter(logo_on_main__gt=0),
+                many=True
+            ).data
+        ),
         'partners': json.render(PartnerSerializer(Partner.objects.all(), many=True).data),
         'banners': json.render(
             BannerSerializer(
-                Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION),
+                Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION, on_main=True),
                 many=True
             ).data
         ),
         'verticalbanners': json.render(
             BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
         'products': json.render(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
-        'backgrounds': get_backgrounds(),
+        'backgrounds': get_backgrounds(on_main=True),
         'teasersOnMain': json.render(
             ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)

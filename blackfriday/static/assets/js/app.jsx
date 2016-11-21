@@ -18,6 +18,9 @@ import Superbanner from './app/superbanner.jsx';
 import Products from './app/products.jsx';
 import Banners from './app/banners.jsx';
 
+// Retail Rocket
+import {action3} from './app/retailrocket.js';
+
 (function () {
 	'use strict';
 
@@ -121,10 +124,6 @@ import Banners from './app/banners.jsx';
 			);
 		}
 	});
-	const mainTeaserFooter = document.getElementById('main-teaser-footer');
-	if (mainTeaserFooter) {
-		ReactDOM.render(<MainTeaserFooter/>, mainTeaserFooter);
-	}
 
 	// Retail Rocket
 	const RRMarkupBlock = ({id, categoryId}) => (
@@ -192,7 +191,7 @@ import Banners from './app/banners.jsx';
 	// Category page
 	class MyTabs extends React.Component {
 		render() {
-			const categoryId = (DATA.category && DATA.category.id) ? DATA.category.id : 'category_id';
+			const categoryId = (DATA.category && DATA.category.id) ? String(DATA.category.id) : 'category_id';
 			const virtualCategoryId = `${categoryId}0`;
 
 			return (
@@ -299,13 +298,13 @@ import Banners from './app/banners.jsx';
 	}
 
 	const cardDescription = document.getElementById('card-description');
-	if (cardDescription) {
+	if (cardDescription && DATA.cardDescription) {
 		const CardDescription = require('./app/card-description');
 		ReactDOM.render(<CardDescription {...DATA.cardDescription}/>, cardDescription);
 	}
 
 	const specialOffers = document.getElementById('special-offers');
-	if (specialOffers) {
+	if (specialOffers && DATA.specialOffers) {
 		const SpecialOffers = require('./app/special-offers');
 		ReactDOM.render(<SpecialOffers {...DATA.specialOffers}/>, specialOffers);
 	}
@@ -319,7 +318,7 @@ import Banners from './app/banners.jsx';
 	const teasersOnMain = document.getElementById('teasers-on-main');
 	if (teasersOnMain && DATA.teasersOnMain && DATA.teasersOnMain.data && DATA.teasersOnMain.data.length) {
 		const TeasersOnMain = require('./app/teasers-on-main');
-		ReactDOM.render(<TeasersOnMain {...DATA.teasersOnMain}/>, teasersOnMain);
+		ReactDOM.render(<TeasersOnMain footer={<MainTeaserFooter/>} {...DATA.teasersOnMain}/>, teasersOnMain);
 	}
 
 	const teasers = document.getElementById('sidebar-teasers');
@@ -331,5 +330,12 @@ import Banners from './app/banners.jsx';
 	const categoryName = document.getElementById('category-name');
 	if (categoryName && DATA.category && DATA.category.name) {
 		categoryName.innerHTML = DATA.category.name;
+	}
+
+	if (DATA.category) {
+		action3(DATA.category.name);
+	}
+	if (DATA.cardDescription) {
+		action3(DATA.cardDescription.data.name);
 	}
 })();

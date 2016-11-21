@@ -265,12 +265,13 @@ class BannerViewSet(viewsets.ModelViewSet):
         serializer.save(merchant=self.get_parent())
 
     def update(self, request, *args, **kwargs):
-        if self.get_object().was_mailed:
+        instance = self.get_object()
+        if instance.was_mailed and instance.type == BannerType.SUPER:
             raise PermissionDenied
         return super().update(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
-        if instance.was_mailed:
+        if instance.was_mailed and instance.type == BannerType.SUPER:
             raise PermissionDenied
         instance.merchant.moderation_status = 0
         instance.merchant.save()

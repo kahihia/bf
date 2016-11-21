@@ -17,7 +17,7 @@ class BannerDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Banner
-        fields = ('id', 'type', 'image', 'url', 'on_main', 'in_mailing', 'categories')
+        fields = ('id', 'type', 'image', 'url', 'on_main', 'in_mailing', 'categories', 'was_mailed')
 
 
 class BannerSerializer(BannerDetailSerializer):

@@ -3,13 +3,7 @@
 {% load static %}
 
 {% block content %}
-<div class="main-teaser">
-    <div class="main-teaser__body">
-        <div class="product-list" id="teasers-on-main"></div>
-    </div>
-
-    <div id="main-teaser-footer"></div>
-</div>
+<div id="teasers-on-main"></div>
 
 <div class="main-merchants-row">
     <div class="main-merchants-row__merchants">
@@ -38,6 +32,7 @@ window.DATA.merchants = {
     // pagesCount: ,
     isRandom: true,
 	isControlsShown: true,
+    isFullfilled: true,
 	isPagerShown: true,
     loadPagesCount: 3,
     ajaxUrl: 'merchants',
@@ -50,6 +45,7 @@ window.DATA.partners = {
     // pagesCount: ,
     isRandom: true,
 	isControlsShown: true,
+    isFullfilled: true,
 	isPagerShown: true,
     loadPagesCount: 3,
     ajaxUrl: 'partners',

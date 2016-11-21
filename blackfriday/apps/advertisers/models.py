@@ -108,7 +108,7 @@ class AdvertiserProfile(models.Model):
 
 class ModeratedMerchantsQueryset(models.QuerySet):
     def moderated(self):
-        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False)
+        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False).exclude(slug='')
 
 
 class Merchant(models.Model):
@@ -122,7 +122,7 @@ class Merchant(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
-    url = models.URLField(null=True, blank=True, unique=True, verbose_name='URL')
+    url = models.TextField(null=True, blank=True, unique=True, verbose_name='URL')
     slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
@@ -338,7 +338,9 @@ class BannerType:
 
 class BannerQueryset(models.QuerySet):
     def from_moderated_merchants(self):
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False)
+        return self.filter(
+            merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False
+        ).exclude(merchant__slug='')
 
     def vertical(self):
         return self.filter(type=BannerType.VERTICAL)
@@ -361,7 +363,7 @@ class Banner(models.Model):
 
     type = models.IntegerField(choices=TYPES)
     image = models.ForeignKey('mediafiles.Image', related_name='banners')
-    url = models.URLField()
+    url = models.TextField()
     on_main = models.BooleanField()
     in_mailing = models.BooleanField()
     categories = models.ManyToManyField('catalog.Category', related_name='banners', blank=True)
