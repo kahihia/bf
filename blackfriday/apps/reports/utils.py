@@ -13,7 +13,7 @@ class StatsUpdater:
 
         self.current_stats = {
             getattr(stats_obj, related_model_id_name): stats_obj for stats_obj in stats_cls.objects.all()}
-        self.current_stats_ids = set(self.current_stats.keys())
+        self.current_stats_ids = set(self.current_stats)
         self.stats_to_create = []
         self.stats_to_update = []
 
@@ -23,20 +23,16 @@ class StatsUpdater:
     def run(self, clicked_file, shown_file):
         shown_counter = self.parse_logs(shown_file)
         clicked_counter = self.parse_logs(clicked_file)
-        counter_keys = set(list(shown_counter.keys()) + list(clicked_counter.keys()))
 
-        for stats_id in counter_keys:
-            times_shown = shown_counter[stats_id]
-            times_clicked = clicked_counter[stats_id]
-
+        for stats_id, times_shown in shown_counter.items():
             if stats_id not in self.current_stats_ids:
                 stats_obj = self.stats_cls()
-                self.update_stats_obj(stats_obj, times_shown, times_clicked)
+                self.update_stats_obj(stats_obj, times_shown, clicked_counter[stats_id])
                 setattr(stats_obj, self.related_model_id_name, stats_id)
                 self.stats_to_create.append(stats_obj)
             else:
                 stats_obj = self.current_stats[stats_id]
-                self.update_stats_obj(stats_obj, times_shown, times_clicked)
+                self.update_stats_obj(stats_obj, times_shown, clicked_counter[stats_id])
                 self.stats_to_update.append(stats_obj)
 
             if len(self.stats_to_create) > settings.BATCH_SIZE:
@@ -49,15 +45,12 @@ class StatsUpdater:
         if self.stats_to_update:
             self.process_batch_to_update()
 
-        return self.created_stats_number, self.updated_stats_number
-
     @classmethod
     def update_stats_obj(cls, stats_obj, times_shown, times_clicked):
-        attr = {
+        cls.update_obj_attr(stats_obj, {
             'times_clicked': times_clicked,
             'times_shown': times_shown
-        }
-        cls.update_obj_attr(stats_obj, attr)
+        })
 
     @staticmethod
     def update_obj_attr(stats_obj, attr):
@@ -95,10 +88,9 @@ class MerchantStatsUpdate(StatsUpdater):
 
     @classmethod
     def update_stats_obj(cls, stats_obj, times_shown, times_clicked):
-        attr = {
+        cls.update_obj_attr(stats_obj, {
             'times_shown': len(times_shown),
             'times_clicked': len(times_clicked),
             'unique_visitors_shown': len(set(times_shown)),
             'unique_visitors_clicked': len(set(times_clicked))
-        }
-        cls.update_obj_attr(stats_obj, attr)
+        })
