@@ -107,7 +107,7 @@ def category(category_id, russian=False, is_preview=False):
                 many=True
             ).data
         ),
-        'backgrounds': json.render(get_backgrounds(categories__id=category_id)),
+        'backgrounds': json.render(get_backgrounds(banners__categories__id=category_id)),
         'teasers': json.render(
             ProductSerializer(
                 Product.objects.from_moderated_merchants().teasers(),
@@ -154,7 +154,7 @@ def merchant(merchant_id, is_preview=False):
             BannerSerializer(banners_queryset, many=True).data
         ),
         'products': json.render(
-            ProductSerializer(products_queryset, many=True).data
+            ProductSerializer(products_queryset.order_by('id'), many=True).data
         ),
         'partners': json.render(
             PartnerSerializer(

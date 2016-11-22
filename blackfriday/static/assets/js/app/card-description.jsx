@@ -39,13 +39,7 @@ const CardDescription = React.createClass({
 	},
 
 	handleClickMerchantUrl() {
-		const {
-			data
-		} = this.props;
-
-		if (data.merchant) {
-			trackers.merchant.clicked(data.merchant.id);
-		}
+		trackers.merchant.clicked(this.props.data.id);
 	},
 
 	render() {
