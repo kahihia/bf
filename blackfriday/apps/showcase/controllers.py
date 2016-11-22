@@ -154,7 +154,7 @@ def merchant(merchant_id, is_preview=False):
             BannerSerializer(banners_queryset, many=True).data
         ),
         'products': json.render(
-            ProductSerializer(products_queryset, many=True).data
+            ProductSerializer(products_queryset.order_by('id'), many=True).data
         ),
         'partners': json.render(
             PartnerSerializer(
