@@ -15,7 +15,7 @@ SUCCESS_DATA = {
         "discount": 20,
         "country": "Country",
         "brand": "Brand",
-        "url": "http://product_url--utm_source--utm_medium--utm_campaign",
+        "url": "http://product-url.com/?utm_source=1&utm_medium=2&utm_campaign=3",
         "currency": "rur"
     },
     'output': (
@@ -30,7 +30,7 @@ SUCCESS_DATA = {
             "discount": 20,
             "country": "country",
             "brand": "Brand",
-            "url": "http://product_url--utm_source--utm_medium--utm_campaign",
+            "url": "http://product-url.com/?utm_source=1&utm_medium=2&utm_campaign=3",
             "currency": "rur"
         },
         [],
@@ -70,7 +70,8 @@ FAIL_DATA = {
         [
             {'field': 'start_price', 'message': 'Отсутствует числовое значение'},
             {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"},
-            {'field': 'country', 'message': "Обязательное поле"}
+            {'field': 'country', 'message': "Обязательное поле"},
+            {'field': 'url', 'message': 'Не является валидным url'},
         ],
         [
             {'field': 'price', 'message': 'Старая цена должна быть больше новой'},
@@ -116,6 +117,7 @@ FAIL_DATA_NO_PRICES = {
             {'field': 'old_price', 'message': 'Укажите хотя бы одну цену'},
             {'field': 'start_price', 'message': 'Укажите хотя бы одну цену'},
             {'field': 'discount', 'message': 'Укажите хотя бы одну цену'},
+            {'field': 'url', 'message': 'Не является валидным url'},
         ],
         []
     )
