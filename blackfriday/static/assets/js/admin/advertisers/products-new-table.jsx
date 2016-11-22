@@ -162,6 +162,11 @@ class ProductsNewTable extends React.Component {
 						if (data.detail === 'out_of_limit') {
 							toastr.warning('Превышен лимит');
 						}
+					} else if (Array.isArray(data) && data[0] && data[0].data) {
+						data.forEach(item => {
+							this.productUpdate(item.data._id, item, false);
+						});
+						this.forceUpdate();
 					} else {
 						processErrors(data);
 					}
@@ -179,7 +184,7 @@ class ProductsNewTable extends React.Component {
 		return _.find(this.state.products, product => product.data._id === id);
 	}
 
-	productUpdate(productId, productData) {
+	productUpdate(productId, productData, update = true) {
 		const {
 			products
 		} = this.state;
@@ -188,7 +193,9 @@ class ProductsNewTable extends React.Component {
 		const index = _.findIndex(products, product);
 		products.splice(index, 1, productData);
 
-		this.forceUpdate();
+		if (update) {
+			this.forceUpdate();
+		}
 	}
 
 	isInvalid() {
