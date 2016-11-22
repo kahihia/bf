@@ -51,13 +51,13 @@ class StatsUpdater:
 
         return self.created_stats_number, self.updated_stats_number
 
-    @staticmethod
-    def update_stats_obj(stats_obj, times_shown, times_clicked):
+    @classmethod
+    def update_stats_obj(cls, stats_obj, times_shown, times_clicked):
         attr = {
             'times_clicked': times_clicked,
             'times_shown': times_shown
         }
-        StatsUpdater.update_obj_attr(stats_obj, attr)
+        cls.update_obj_attr(stats_obj, attr)
 
     @staticmethod
     def update_obj_attr(stats_obj, attr):
@@ -93,12 +93,12 @@ class MerchantStatsUpdate(StatsUpdater):
                 counter[merchant_id].append(client_id)
         return counter
 
-    @staticmethod
-    def update_stats_obj(stats_obj, times_shown, times_clicked):
+    @classmethod
+    def update_stats_obj(cls, stats_obj, times_shown, times_clicked):
         attr = {
             'times_shown': len(times_shown),
             'times_clicked': len(times_clicked),
             'unique_visitors_shown': len(set(times_shown)),
             'unique_visitors_clicked': len(set(times_clicked))
         }
-        StatsUpdater.update_obj_attr(stats_obj, attr)
+        cls.update_obj_attr(stats_obj, attr)
