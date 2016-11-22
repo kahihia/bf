@@ -259,7 +259,12 @@ def main_page(is_preview=False):
         ),
         'verticalbanners': json.render(
             BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
-        'products': json.render(ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
+        'products': json.render(
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().filter(Q(is_teaser_on_main=True) | Q(is_teaser=True)),
+                many=True
+            ).data
+        ),
         'backgrounds': get_backgrounds(on_main=True),
         'teasersOnMain': json.render(
             ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
