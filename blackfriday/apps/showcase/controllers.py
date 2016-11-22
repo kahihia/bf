@@ -107,7 +107,7 @@ def category(category_id, russian=False, is_preview=False):
                 many=True
             ).data
         ),
-        'backgrounds': json.render(get_backgrounds(categories__id=category_id)),
+        'backgrounds': json.render(get_backgrounds(banners__categories__id=category_id)),
         'teasers': json.render(
             ProductSerializer(
                 Product.objects.from_moderated_merchants().teasers(),
