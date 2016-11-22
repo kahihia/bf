@@ -4,6 +4,8 @@ from functools import reduce
 from django.db import models
 from django.conf import settings
 
+from libs.db.fields import LongUrlField
+
 
 class CategoryQueryset(models.QuerySet):
     def russians(self):
@@ -65,7 +67,7 @@ class Product(models.Model):
     is_teaser = models.BooleanField(verbose_name='Товар является тизером', default=False)
     is_teaser_on_main = models.BooleanField(verbose_name='Товар является тизером на главной', default=False)
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
-    url = models.TextField(verbose_name='Ссылка')
+    url = LongUrlField(verbose_name='Ссылка')
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
     image = models.TextField()
     currency = models.CharField(max_length=10)
