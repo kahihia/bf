@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
-    Length, Required, UtmRequired
+    Length, Required, UtmRequired, Url
 )
 from apps.catalog.parser import Row, Column, Grouped, GenericValidator
 from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
@@ -122,7 +122,7 @@ class ProductRow(Row):
         Column(
             'url', pipes=(str,),
             validators=(
-                Required(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
+                Required(), Url(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
             'image', pipes=(str, str.strip,),
