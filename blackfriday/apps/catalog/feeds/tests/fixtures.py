@@ -48,7 +48,7 @@ FAIL_DATA = {
         "start_price": 'foo',
         "old_price": 100,
         "discount": 20,
-        "country": "Country",
+        "country": "",
         "brand": "Brand",
         "url": "http://product_url",
     },
@@ -62,14 +62,15 @@ FAIL_DATA = {
             "start_price": 'foo',
             "old_price": 100,
             "discount": 20,
-            "country": "country",
+            "country": None,
             "brand": "Brand",
             "url": "http://product_url",
             "currency": "rur"
         },
         [
             {'field': 'start_price', 'message': 'Отсутствует числовое значение'},
-            {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"}
+            {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"},
+            {'field': 'country', 'message': "Обязательное поле"}
         ],
         [
             {'field': 'price', 'message': 'Старая цена должна быть больше новой'},

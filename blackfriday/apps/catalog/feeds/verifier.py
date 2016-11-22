@@ -15,6 +15,12 @@ from apps.catalog.models import Category
 logger = logging.getLogger(__name__)
 
 
+def to_none(value):
+    if value in ['']:
+        return None
+    return value
+
+
 def together(**cleaned_data):
     return all(cleaned_data.values()) or not any(cleaned_data.values())
 
@@ -117,7 +123,7 @@ class ProductRow(Row):
         Column(
             'category', pipes=(str, str.lower, clear_category,), validators=(Required(is_warning=True),)),
         Column(
-            'country', pipes=(str, str.lower),
+            'country', pipes=(str, str.lower, to_none),
             validators=(Required(), Length(rule=255))),
         Column(
             'url', pipes=(str,),
