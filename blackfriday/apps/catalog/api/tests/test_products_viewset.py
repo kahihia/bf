@@ -52,7 +52,8 @@ FAIL_SAMPLE = {
         ],
         'errors': [
             {'field': 'start_price', 'message': 'Отсутствует числовое значение'},
-            {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"}
+            {'field': 'image', 'message': "Строка должна содержать ('http://', 'https://')"},
+            {'field': 'url', 'message': 'Не является валидным url'}
         ]
 
     }
@@ -70,7 +71,7 @@ SUCCESS_SAMPLE = {
     "discount": 20,
     "country": "Country",
     "brand": "Brand",
-    "url": "http://product_url--utm_source--utm_medium--utm_campaign",
+    "url": "http://product-url.com/?utm_source=1&utm_medium=2&utm_campaign=3",
     "currency": "rur"
 }
 
