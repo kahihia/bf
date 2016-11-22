@@ -28,23 +28,37 @@ class Banner extends React.Component {
 
 	render() {
 		const {
-			children,
 			data
 		} = this.props;
 
+		const img = (
+			<img
+				className="embed-responsive-item"
+				src={data.image}
+				alt=""
+				/>
+		);
+
+		if (data.url) {
+			return (
+				<Link
+					href={data.url}
+					onClick={this.handleClick}
+					isExternal
+					>
+					{img}
+				</Link>
+			);
+		}
+
 		return (
-			<Link
-				href={data.url}
-				onClick={this.handleClick}
-				isExternal
-				>
-				{children}
-			</Link>
+			<span>
+				{img}
+			</span>
 		);
 	}
 }
 Banner.propTypes = {
-	children: React.PropTypes.any,
 	data: React.PropTypes.object
 };
 // Banner.defaultProps = {};
@@ -65,30 +79,6 @@ class Superbanner extends React.Component {
 
 	render() {
 		const item = this.state.data[0];
-		let content = '';
-		if (item) {
-			const img = (
-				<img
-					className="embed-responsive-item"
-					src={item.image}
-					alt=""
-					/>
-			);
-
-			if (item.url) {
-				content = (
-					<Banner data={item}>
-						{img}
-					</Banner>
-				);
-			} else {
-				content = (
-					<span>
-						{img}
-					</span>
-				);
-			}
-		}
 
 		return (
 			<div className="super-banner-carousel">
@@ -98,7 +88,9 @@ class Superbanner extends React.Component {
 					>
 					<div className="super-banner-carousel-content">
 						<div className="super-banner-carousel-content__item embed-responsive">
-							{content}
+							{item ? (
+								<Banner key={item.id} data={item}/>
+							) : null}
 						</div>
 					</div>
 				</Carousel>
