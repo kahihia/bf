@@ -69,15 +69,16 @@ def optional_required(_id, context):
 
 
 def is_image(image):
-    if image is None:
-        return None
-    try:
-        return requests.head(image).headers['Content-Type'] in [
-            'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
-        ]
-    except Exception as e:
-        logger.error(str(e))
-        return False
+    if settings.CHECK_IMAGE_URL:
+        if image is None:
+            return None
+        try:
+            return requests.head(image).headers['Content-Type'] in [
+                'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
+            ]
+        except Exception as e:
+            logger.error(str(e))
+            return False
 
 
 class ProductRow(Row):
@@ -115,15 +116,15 @@ class ProductRow(Row):
             validators=[GenericValidator(message='Укажите хотя бы одну цену', rule=lambda **data: any(data.values()))]
         ),
         Column(
-            'currency', pipes=(clear_currency, str, str.lower),
+            'currency', pipes=(clear_currency, str, str.lower,),
             validators=(Required(), Choices(rule=settings.CURRENCY_IDS,),)),
         Column(
-            'brand', pipes=(str,),
+            'brand', pipes=(str, str.strip),
             validators=(Required(),)),
         Column(
             'category', pipes=(str, str.lower, clear_category,), validators=(Required(is_warning=True),)),
         Column(
-            'country', pipes=(str, str.lower, to_none),
+            'country', pipes=(str, str.lower, str.strip, to_none),
             validators=(Required(), Length(rule=255))),
         Column(
             'url', pipes=(str,),
