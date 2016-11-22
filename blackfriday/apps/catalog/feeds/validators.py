@@ -1,3 +1,6 @@
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+
 from apps.catalog.parser import BaseValidator
 
 
@@ -66,3 +69,15 @@ class Required(BaseValidator):
     def validate(self, value, **kwargs):
 
         return value is not None
+
+
+class Url(BaseValidator):
+    _message = 'Не является валидным url'
+
+    def validate(self, value, **kwargs):
+        _validate = URLValidator()
+        try:
+            _validate(value)
+            return True
+        except ValidationError:
+            return False
