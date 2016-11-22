@@ -43,7 +43,12 @@ class MerchantBannerBackgroundList extends React.Component {
 			_.forEach(bannerGroups, bannerGroup => {
 				const firstBanner = bannerGroup[0];
 				const categoryId = firstBanner.categories[0].id;
-				_.find(categoriesAvailableOptions, {id: categoryId}).disabled = true;
+				const category = _.find(categoriesAvailableOptions, {id: categoryId});
+				if (!category) {
+					console.log('There is no category category.id', categoryId);
+					return;
+				}
+				category.disabled = true;
 			});
 		}
 
