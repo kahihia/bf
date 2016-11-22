@@ -35,7 +35,7 @@ class StatsUpdater:
                 setattr(stats_obj, self.related_model_id_name, stats_id)
                 self.stats_to_create.append(stats_obj)
             else:
-                stats_obj = self.self.current_stats[stats_id]
+                stats_obj = self.current_stats[stats_id]
                 self.update_stats_obj(stats_obj, times_shown, times_clicked)
                 self.stats_to_update.append(stats_obj)
 
@@ -60,7 +60,7 @@ class StatsUpdater:
         StatsUpdater.update_obj_attr(stats_obj, attr)
 
     @staticmethod
-    def update_obj_attr(stats_obj, attr={}):
+    def update_obj_attr(stats_obj, attr):
         for k, v in attr.items():
             setattr(stats_obj, k, v)
 
