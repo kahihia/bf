@@ -200,9 +200,11 @@ PAYMENT_SERVICE = {
 }
 
 HTML_VALIDATOR_ALLOWED_TAGS = {
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'blockquote', 'ul', 'li', 'b', 'i', 'u', 'ol', 'p', 'a', 'body', 'html',
-    'div', 'span', 'strike'
+    'h1': [], 'h2': [], 'h3': [], 'h4': [], 'h5': [], 'h6': [], 'br': [], 'blockquote': [],
+    'ul': [], 'li': [], 'b': [], 'i': [], 'u': [], 'ol': [], 'p': [], 'a': ['href', 'target'],
+    'body': [], 'html': [], 'div': [], 'span': [], 'strike': []
 }
+
 MNOGO_LEADS_MANAGERS = []
 RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
