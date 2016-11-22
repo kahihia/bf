@@ -1,14 +1,14 @@
 import Cookie from 'js-cookie';
 import xhr from 'xhr';
 
-const ACTION_NAMES = [
+export const ACTION_NAMES = [
 	'merchant',
 	'banner',
 	'logo',
 	'teaser'
 ];
 
-const ACTION_TYPES = [
+export const ACTION_TYPES = [
 	'shown',
 	'clicked'
 ];
@@ -34,6 +34,12 @@ function makeRequest(type, name) {
 
 	return function () {
 		var args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+
+		// Ignore items with id < 0
+		if (args[0] < 0) {
+			return;
+		}
+
 		const urlItems = action.concat(args.slice());
 		if (withClientId) {
 			const clientId = getClientId();
