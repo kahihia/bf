@@ -73,7 +73,7 @@ def is_image(image):
         if image is None:
             return None
         try:
-            return requests.head(image).headers['Content-Type'] in [
+            return requests.head(image, headers=settings.IMAGE_CHECKING_HEADERS).headers['Content-Type'] in [
                 'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
             ]
         except Exception as e:
