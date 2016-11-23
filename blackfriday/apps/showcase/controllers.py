@@ -4,7 +4,7 @@ from django.db.models import *
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 
 from apps.banners.models import Partner
-from apps.advertisers.models import Merchant, Banner, BannerType
+from apps.advertisers.models import Merchant, Banner, BannerType, ModerationStatus
 from apps.catalog.models import Product, Category
 
 from apps.showcase.serializers import *
@@ -135,20 +135,14 @@ def category(category_id, russian=False, is_preview=False):
 
 
 def merchant(merchant_id, is_preview=False):
-    if is_preview:
-        superbanners_queryset = Banner.objects.super().filter(in_mailing=False, merchant_id=merchant_id)
-        banners_queryset = Banner.objects.action().filter(merchant_id=merchant_id)
-        products_queryset = Product.objects.filter(merchant_id=merchant_id)
-        teasers_queryset = Product.objects.teasers()
-    else:
-        superbanners_queryset = Banner.objects.super().from_moderated_merchants().filter(
-            in_mailing=False, merchant_id=merchant_id
-        )
-        banners_queryset = Banner.objects.action().from_moderated_merchants().filter(
-            merchant_id=merchant_id)
-        products_queryset = Product.objects.from_moderated_merchants().filter(
-            merchant_id=merchant_id)
-        teasers_queryset = Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers()
+    superbanners_queryset = Banner.objects.super().filter(in_mailing=False, merchant_id=merchant_id)
+    banners_queryset = Banner.objects.action().filter(merchant_id=merchant_id)
+    products_queryset = Product.objects.filter(merchant_id=merchant_id)
+    teasers_queryset = Product.objects.filter(
+        Q(merchant__moderation__status=ModerationStatus.confirmed) |
+        Q(merchant_id=merchant_id),
+        merchant__is_active=True
+    ).teasers()
 
     context = {
         'superbanners': json.render(
