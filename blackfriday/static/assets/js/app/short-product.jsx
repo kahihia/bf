@@ -3,7 +3,7 @@ import formatThousands from 'format-thousands';
 import b from 'b_';
 import Price from 'react-price';
 import Link from './link.jsx';
-import {action2, action5} from './retailrocket.js';
+import {action2initialize, action2view, action5} from './retailrocket.js';
 import trackers from './trackers.js';
 
 const CURRENCY = 'руб.';
@@ -74,17 +74,6 @@ class ShortProduct extends React.Component {
 			data,
 			isTeaser
 		} = this.props;
-
-		if (isTeaser) {
-			trackers.teaser.shown(data.id);
-		}
-	}
-
-	handleClick() {
-		const {
-			data,
-			isTeaser
-		} = this.props;
 		const {
 			id,
 			name,
@@ -102,7 +91,11 @@ class ShortProduct extends React.Component {
 			categoryPaths.unshift(merchant.name);
 		}
 
-		action2({
+		if (isTeaser) {
+			trackers.teaser.shown(data.id);
+		}
+
+		action2initialize({
 			id,
 			name,
 			price,
@@ -111,6 +104,23 @@ class ShortProduct extends React.Component {
 			url,
 			categoryPaths,
 			brand
+		});
+	}
+
+	handleClick() {
+		const {
+			data,
+			isTeaser
+		} = this.props;
+		const {
+			id,
+			price,
+			merchant
+		} = data;
+
+		action2view({
+			id,
+			price
 		});
 
 		action5({
