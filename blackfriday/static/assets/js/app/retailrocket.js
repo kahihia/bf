@@ -28,7 +28,7 @@ function initialize() {
 }
 
 // 2. Трекер просмотра карточки товара
-export function action2({
+export function action2initialize({
 	id = null,
 	name = null,
 	price = null,
@@ -65,10 +65,18 @@ export function action2({
             // Производитель товара, необязательный параметр
             "vendor": brand
         });
-
-        // Уникальный идентификатор товара, число
-        rrApi.view(id);
     });
+}
+
+export function action2view({
+	id = null,
+	price = null
+}) {
+	if (!price) {
+		return;
+	}
+
+	rrApi.view(id);
 }
 
 // 3. Трекер просмотра страницы товарной категории
