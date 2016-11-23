@@ -44,7 +44,7 @@ window.DATA.products = {
 };
 
 window.DATA.backgrounds = {
-    data: {{ backgrounds }}
+    data: {{ backgrounds|safe|default:"[]" }}
 };
 
 window.DATA.category = {{ category|safe|default:"null" }};
