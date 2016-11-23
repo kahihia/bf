@@ -64,9 +64,9 @@
                                 <a href="{{ password_reset_url }}">Забыли пароль?</a> |
                             {% endif %}
 
-                            {% comment %}
+                            {% if REGISTRATION_IS_AVAILABLE %}
                             <a href="/admin/registration/">Регистрация</a>
-                            {% endcomment %}
+                            {% endif %}
                         </div>
                     </label>
 
