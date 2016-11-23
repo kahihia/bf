@@ -214,3 +214,5 @@ CHECK_IMAGE_URL = True
 IMAGE_CHECKING_HEADERS = {
     'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0'
 }
+# If max_workers is None or not given, it will default to the number of processors on the machine, multiplied by 5
+RENDER_WORKER_COUNT = None
