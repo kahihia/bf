@@ -139,7 +139,7 @@ def merchant(merchant_id, is_preview=False):
     banners_queryset = Banner.objects.action().filter(merchant_id=merchant_id)
     products_queryset = Product.objects.filter(merchant_id=merchant_id)
     teasers_queryset = Product.objects.filter(
-        Q(merchant__moderation__status=ModerationStatus.confirmed) |
+        Q(merchant__moderation_status=ModerationStatus.confirmed) |
         Q(merchant_id=merchant_id),
         merchant__is_active=True
     ).teasers()
