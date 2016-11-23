@@ -1,6 +1,7 @@
 import React from 'react';
 import ShortProduct from './short-product.jsx';
 import Slider from 'react-slick';
+import arrayShuffle from 'array-shuffle';
 
 const settings = {
 	infinite: false,
@@ -44,11 +45,11 @@ const settings = {
 class TeasersOnMain extends React.Component {
 	render() {
 		const {
-			data,
 			footer,
 			showCategory,
 			showMerchant
 		} = this.props;
+		const data = arrayShuffle(this.props.data);
 
 		return (
 			<div className="main-teaser">
