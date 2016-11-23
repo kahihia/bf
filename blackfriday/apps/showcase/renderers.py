@@ -1,6 +1,8 @@
 import os
 import sys
+import concurrent.futures
 
+from django.db import connection
 from django_rq import job
 
 from apps.advertisers.models import Merchant
@@ -75,18 +77,22 @@ def render_russiangoods(exec_script=False):
 
 @job
 def render_all_pages(exec_script=False):
-    render_actions()
-    render_all_merchants()
-    render_main()
-    render_partners()
-    render_russiangoods()
-    for cat in Category.objects.all():
-        render_category(cat.id)
-    for m in Merchant.objects.moderated().all():
-        render_merchant(m.id)
-    for cat in Category.objects.russians():
-        render_russian_category(cat.id)
-
+    category_ids = list(Category.objects.values_list('id', flat=True))
+    merchant_ids = list(Merchant.objects.moderated().values_list('id', flat=True))
+    russian_category_ids = list(Category.objects.russians().values_list('id', flat=True))
+    connection.close()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=settings.RENDER_WORKER_COUNT) as executor:
+        executor.submit(render_actions())
+        executor.submit(render_all_merchants())
+        executor.submit(render_main())
+        executor.submit(render_partners())
+        executor.submit(render_russiangoods())
+        for cat_id in category_ids:
+            executor.submit(render_category, cat_id)
+        for m_id in merchant_ids:
+            executor.submit(render_merchant(m_id))
+        for cat_id in russian_category_ids:
+            executor.submit(render_russian_category(cat_id))
     if (
         exec_script and
         settings.POST_RENDERING_EXEC_PATH and
