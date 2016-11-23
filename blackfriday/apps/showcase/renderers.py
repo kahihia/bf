@@ -81,7 +81,7 @@ def render_all_pages(exec_script=False):
     merchant_ids = list(Merchant.objects.moderated().filter(is_active=True).values_list('id', flat=True))
     russian_category_ids = list(Category.objects.russians().values_list('id', flat=True))
     connection.close()
-    with concurrent.futures.ProcessPoolExecutor(max_workers=10) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=settings.RENDER_WORKER_COUNT) as executor:
         executor.submit(render_actions)
         executor.submit(render_all_merchants)
         executor.submit(render_main)
