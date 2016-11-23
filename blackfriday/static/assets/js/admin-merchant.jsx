@@ -857,6 +857,7 @@ import MerchantFakeSave from './admin/advertisers/merchant-fake-save.jsx';
 												limit={limits.logo_categories}
 												onChange={this.handleChangeLogoCategories}
 												{...{
+													categories,
 													categoriesHighlighted,
 													merchantId
 												}}
