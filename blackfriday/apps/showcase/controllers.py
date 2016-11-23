@@ -13,8 +13,8 @@ from apps.showcase.utils import serializer_factory
 json = CamelCaseJSONRenderer()
 
 
-def get_backgrounds(on_main=False, **kwargs):
-    background_qs = Merchant.objects.filter(**kwargs).moderated().annotate(
+def get_backgrounds(on_main=False, is_active=True, **kwargs):
+    background_qs = Merchant.objects.filter(is_active=is_active, **kwargs).moderated().annotate(
         left=Max(Case(When(
             banners__type=BannerType.BG_LEFT, then=F('banners__image__image')), output_field=CharField())
         ),
@@ -47,7 +47,7 @@ def partners(is_preview=False):
     context = {
         'teasers': json.render(
             ProductSerializer(
-                Product.objects.from_moderated_merchants().teasers(),
+                Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers(),
                 many=True
             ).data
         ),
@@ -62,7 +62,7 @@ def partners(is_preview=False):
 
 
 def russiangoods(is_preview=False):
-    qs = Product.objects.from_moderated_merchants().russians()
+    qs = Product.objects.from_moderated_merchants().filter(merchant__is_active=True).russians()
     context = {
         'products': json.render(ProductSerializer(qs, many=True).data),
         'teasers': json.render(ProductSerializer(qs.teasers(), many=True).data),
@@ -77,7 +77,7 @@ def russiangoods(is_preview=False):
 
 
 def category(category_id, russian=False, is_preview=False):
-    products = Product.objects.from_moderated_merchants().filter(category__id=category_id)
+    products = Product.objects.from_moderated_merchants().filter(category__id=category_id, merchant__is_active=True)
     if russian:
         products = products.russians()
 
@@ -85,7 +85,7 @@ def category(category_id, russian=False, is_preview=False):
         'superbanners': json.render(
             SuperbannerSerializer(
                 Banner.objects.super().from_moderated_merchants().filter(
-                    in_mailing=False, categories__id=category_id),
+                    merchant__is_active=True, in_mailing=False, categories__id=category_id),
                 many=True
             ).data
         ),
@@ -97,20 +97,22 @@ def category(category_id, russian=False, is_preview=False):
         ),
         'banners': json.render(
             BannerSerializer(
-                Banner.objects.action().from_moderated_merchants().filter(categories__id=category_id),
+                Banner.objects.action().from_moderated_merchants().filter(
+                    merchant__is_active=True, categories__id=category_id
+                ),
                 many=True
             ).data
         ),
         'products': json.render(
             ProductSerializer(
-                Product.objects.from_moderated_merchants().filter(category__id=category_id),
+                Product.objects.from_moderated_merchants().filter(merchant__is_active=True, category__id=category_id),
                 many=True
             ).data
         ),
         'backgrounds': json.render(get_backgrounds(banners__categories__id=category_id)),
         'teasers': json.render(
             ProductSerializer(
-                Product.objects.from_moderated_merchants().teasers(),
+                Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers(),
                 many=True
             ).data
         ),
@@ -142,9 +144,11 @@ def merchant(merchant_id, is_preview=False):
         superbanners_queryset = Banner.objects.super().from_moderated_merchants().filter(
             in_mailing=False, merchant_id=merchant_id
         )
-        banners_queryset = Banner.objects.action().from_moderated_merchants().filter(merchant_id=merchant_id)
-        products_queryset = Product.objects.from_moderated_merchants().filter(merchant_id=merchant_id)
-        teasers_queryset = Product.objects.from_moderated_merchants().teasers()
+        banners_queryset = Banner.objects.action().from_moderated_merchants().filter(
+            merchant_id=merchant_id)
+        products_queryset = Product.objects.from_moderated_merchants().filter(
+            merchant_id=merchant_id)
+        teasers_queryset = Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers()
 
     context = {
         'superbanners': json.render(
@@ -189,12 +193,19 @@ def merchants(is_preview=False):
         'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
         'superbanners': json.render(
             SuperbannerSerializer(
-                Banner.objects.super().from_moderated_merchants().filter(in_mailing=False),
+                Banner.objects.super().from_moderated_merchants().filter(
+                    merchant__is_active=True, in_mailing=False),
                 many=True
             ).data
         ),
         'teasers': json.render(
-            ProductSerializer(Product.objects.teasers().from_moderated_merchants(), many=True).data),
+            ProductSerializer(
+                Product.objects.teasers().from_moderated_merchants().filter(
+                    merchant__is_active=True
+                ),
+                many=True
+            ).data
+        ),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
     }
 
@@ -208,16 +219,34 @@ def actions(is_preview=False):
     context = {
         'superbanners': json.render(
             SuperbannerSerializer(
-                Banner.objects.super().from_moderated_merchants().filter(in_mailing=False),
+                Banner.objects.super().from_moderated_merchants().filter(
+                    merchant__is_active=True
+                ).filter(in_mailing=False),
                 many=True
             ).data
         ),
         'banners': json.render(
-            BannerSerializer(Banner.objects.action().from_moderated_merchants(), many=True).data),
+            BannerSerializer(
+                Banner.objects.action().from_moderated_merchants().filter(
+                    merchant__is_active=True
+                ),
+                many=True
+            ).data
+        ),
         'products': json.render(
-            ProductSerializer(Product.objects.from_moderated_merchants(), many=True).data),
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().filter(
+                    merchant__is_active=True),
+                many=True
+            ).data
+        ),
         'teasers': json.render(
-            ProductSerializer(Product.objects.from_moderated_merchants().teasers(), many=True).data),
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().filter(
+                    merchant__is_active=True).teasers(),
+                many=True
+            ).data
+        ),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
     }
 
@@ -231,7 +260,8 @@ def main_page(is_preview=False):
     context = {
         'superbanners': json.render(
             SuperbannerSerializer(
-                Banner.objects.super().from_moderated_merchants().filter(on_main=True),
+                Banner.objects.super().from_moderated_merchants().filter(
+                    merchant__is_active=True).filter(on_main=True),
                 many=True
             ).data
         ),
@@ -253,21 +283,33 @@ def main_page(is_preview=False):
         'partners': json.render(PartnerSerializer(Partner.objects.all(), many=True).data),
         'banners': json.render(
             BannerSerializer(
-                Banner.objects.from_moderated_merchants().filter(type=BannerType.ACTION, on_main=True),
+                Banner.objects.from_moderated_merchants().filter(
+                    merchant__is_active=True, type=BannerType.ACTION, on_main=True
+                ),
                 many=True
             ).data
         ),
         'verticalbanners': json.render(
-            BannerSerializer(Banner.objects.from_moderated_merchants().vertical(), many=True).data),
+            BannerSerializer(
+                Banner.objects.from_moderated_merchants().vertical().filter(merchant__is_active=True),
+                many=True
+            ).data
+        ),
         'products': json.render(
             ProductSerializer(
-                Product.objects.from_moderated_merchants().filter(Q(is_teaser_on_main=True) | Q(is_teaser=True)),
+                Product.objects.from_moderated_merchants().filter(
+                    Q(is_teaser_on_main=True) | Q(is_teaser=True), merchant__is_active=True,
+                ),
                 many=True
             ).data
         ),
         'backgrounds': get_backgrounds(on_main=True),
         'teasersOnMain': json.render(
-            ProductSerializer(Product.objects.from_moderated_merchants().teasers_on_main(), many=True).data),
+            ProductSerializer(
+                Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers_on_main(),
+                many=True
+            ).data
+        ),
         'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data)
     }
 
