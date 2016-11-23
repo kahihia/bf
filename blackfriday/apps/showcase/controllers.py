@@ -91,7 +91,7 @@ def category(category_id, russian=False, is_preview=False):
         ),
         'merchants': json.render(
             MerchantSerializer(
-                Merchant.objects.moderated().filter(logo_categories__id=category_id),
+                Merchant.objects.moderated().filter(logo_categories__id=category_id, is_active=True),
                 many=True
             ).data
         ),
@@ -184,7 +184,12 @@ def merchant(merchant_id, is_preview=False):
 
 def merchants(is_preview=False):
     context = {
-        'merchants': json.render(MerchantSerializer(Merchant.objects.moderated(), many=True).data),
+        'merchants': json.render(
+            MerchantSerializer(
+                Merchant.objects.moderated().filter(is_active=True),
+                many=True
+            ).data
+        ),
         'superbanners': json.render(
             SuperbannerSerializer(
                 Banner.objects.super().from_moderated_merchants().filter(
@@ -270,7 +275,7 @@ def main_page(is_preview=False):
                             ),
                             output_field=IntegerField())
                     )
-                ).filter(logo_on_main__gt=0),
+                ).filter(logo_on_main__gt=0, is_active=True),
                 many=True
             ).data
         ),
