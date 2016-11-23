@@ -1,4 +1,4 @@
-/* global toastr */
+/* global toastr _ */
 
 import React from 'react';
 import xhr from 'xhr';
@@ -95,6 +95,35 @@ class MerchantLogoCategoriesSelect extends React.Component {
 		this.requestMerchantLogoCategoriesUpdate(value);
 	}
 
+	collectCategoriesAvailable() {
+		const {
+			value
+		} = this.state;
+		const {
+			categories,
+			categoriesAvailable
+		} = this.props;
+
+		if (categoriesAvailable.length === categories.length) {
+			return categoriesAvailable;
+		}
+
+		const newCategoriesAvailable = _.clone(categoriesAvailable);
+
+		if (value.length) {
+			value.forEach(id => {
+				if (!_.find(newCategoriesAvailable, {id})) {
+					const category = _.find(categories, {id});
+					if (category) {
+						newCategoriesAvailable.push(category);
+					}
+				}
+			});
+		}
+
+		return newCategoriesAvailable;
+	}
+
 	render() {
 		const {
 			isDisabled,
@@ -102,10 +131,10 @@ class MerchantLogoCategoriesSelect extends React.Component {
 			value
 		} = this.state;
 		const {
-			categoriesAvailable,
 			categoriesHighlighted,
 			limit
 		} = this.props;
+		const categoriesAvailable = this.collectCategoriesAvailable();
 
 		return (
 			<MultiselectTwoSides
@@ -129,6 +158,7 @@ class MerchantLogoCategoriesSelect extends React.Component {
 	}
 }
 MerchantLogoCategoriesSelect.propTypes = {
+	categories: React.PropTypes.array,
 	categoriesAvailable: React.PropTypes.array.isRequired,
 	categoriesHighlighted: React.PropTypes.array,
 	limit: React.PropTypes.number,
