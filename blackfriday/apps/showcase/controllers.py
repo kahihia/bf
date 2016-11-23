@@ -142,12 +142,12 @@ def merchant(merchant_id, is_preview=False):
         teasers_queryset = Product.objects.teasers()
     else:
         superbanners_queryset = Banner.objects.super().from_moderated_merchants().filter(
-            in_mailing=False, merchant_id=merchant_id
+            in_mailing=False, merchant_id=merchant_id, merchant__is_active=True
         )
         banners_queryset = Banner.objects.action().from_moderated_merchants().filter(
-            merchant_id=merchant_id)
+            merchant_id=merchant_id, merchant__is_active=True)
         products_queryset = Product.objects.from_moderated_merchants().filter(
-            merchant_id=merchant_id)
+            merchant_id=merchant_id, merchant__is_active=True)
         teasers_queryset = Product.objects.from_moderated_merchants().filter(merchant__is_active=True).teasers()
 
     context = {
