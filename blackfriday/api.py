@@ -13,5 +13,4 @@ urlpatterns = [
     url('^', include('apps.specials.api.urls', namespace='special')),
     url('^', include('apps.mailing.api.urls', namespace='mailing')),
     url('^', include('apps.payment.api.urls', namespace='payment')),
-    url('^', include('apps.reports.api.urls', namespace='reports')),
 ]
