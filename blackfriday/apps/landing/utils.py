@@ -15,6 +15,8 @@ def get_landing_context():
     return {
         'SITE_URL': settings.SITE_URL,
         'SHOW_LOGIN_ON_LANDING': settings.SHOW_LOGIN_ON_LANDING,
+        'SHOW_MNOGO_BLOCK_ON_LANDING': settings.SHOW_MNOGO_BLOCK_ON_LANDING,
+        'REGISTRATION_IS_AVAILABLE': settings.REGISTRATION_IS_AVAILABLE,
         'partner_list': Partner.objects.all(),
         'logo_list': LandingLogo.objects.all(),
         'logo_stubs': ('*' * (5 - remainder)) if remainder else ''

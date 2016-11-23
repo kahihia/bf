@@ -216,3 +216,6 @@ IMAGE_CHECKING_HEADERS = {
 }
 # If max_workers is None or not given, it will default to the number of processors on the machine, multiplied by 5
 RENDER_WORKER_COUNT = None
+
+SHOW_MNOGO_BLOCK_ON_LANDING = True
+REGISTRATION_IS_AVAILABLE = True

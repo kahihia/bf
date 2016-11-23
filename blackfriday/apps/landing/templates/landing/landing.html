@@ -88,7 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </span>
             </div>
 
-            {% if SHOW_LOGIN_ON_LANDING %}
+            {% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING %}
             <div class="site-header-info__auth">
                 <div class="header-auth">
                     <a
@@ -233,13 +233,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-about"></a>
 
     <div class="container">
-        <a href="http://project79232.tilda.ws/konkurs" target="_blank">
-            <img
-                class="about-section__gift"
-                src="{% static 'images/landing/action-section__gift.png' %}"
-                alt=""
-                />
-        </a>
+        <img
+            class="about-section__copter"
+            src="{% static 'images/landing/action-section__copter.png' %}"
+            alt=""
+            />
     </div>
 
     <div class="about-section__carousel js-about-section__carousel">
@@ -295,7 +293,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 Получи<br>
                                 скидки до 90%
                             </div>
-
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 data-toggle="modal"
@@ -311,6 +309,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -370,6 +369,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-4 col-xs-offset-3">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 100%;"
@@ -386,6 +386,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -443,6 +444,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -459,6 +461,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -515,6 +518,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -531,6 +535,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -587,6 +592,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -603,6 +609,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -660,6 +667,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -676,6 +684,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -733,6 +742,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -749,6 +759,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -807,6 +818,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -823,6 +835,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -879,6 +892,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -895,6 +909,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -951,6 +966,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -967,6 +983,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -1105,8 +1122,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div><!-- subscribe-section -->
 
-{% comment %}
-{# Временно убираем: код Много.ру ломает модальные окна #}
+{% if SHOW_MNOGO_BLOCK_ON_LANDING %}
+{# код Много.ру ломает модальные окна #}
 <a name="anchor-mnogoru"></a>
 <script>
 (function(d){var s = d.createElement('script');s.type = 'text/javascript';
@@ -1116,7 +1133,7 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
 <noindex>
 <div id="mnogoru_block" class="adaptive"></div>
 </noindex>
-{% endcomment %}
+{% endif %}
 
 <div class="text-section">
     <a name="anchor-text"></a>
@@ -1297,6 +1314,7 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
             </li>
         </ul>
 
+        {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
         <div class="discount-section__action">
             <button
                 class="btn btn-primary btn-lg"
@@ -1314,6 +1332,7 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
                     />
             </button>
         </div>
+        {% endif %}
     </div>
 </div><!-- discount-section -->
 
@@ -1526,7 +1545,7 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
     </div>
 </footer><!-- site-footer -->
 
-
+{% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
 <div
     class="modal fade"
     tabindex="-1"
@@ -1605,13 +1624,14 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
         </div>
     </div>
 </div>
+{% endif %}
 
 <div class="mnogoru-gift" id="mnogoru-gift">
     <img src="{% static 'images/landing/mnogoru-gift-toggler.png' %}" alt="">
     <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/landing/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
 
-{% if SHOW_LOGIN_ON_LANDING %}
+{% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}
 {% endif %}
 
