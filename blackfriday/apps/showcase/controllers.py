@@ -173,7 +173,8 @@ def merchant(merchant_id, is_preview=False):
             )(
                 Merchant.objects.get(id=merchant_id)
             ).data
-        )
+        ),
+        'merchant_name': Merchant.objects.get(id=merchant_id).name
     }
 
     if is_preview:
