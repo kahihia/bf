@@ -41,6 +41,7 @@ TEMPLATES = [
                 'libs.templates.context_processors.showcase_enabled',
                 'apps.advertisers.context_processors.moderation',
                 'apps.catalog.context_processors.categories',
+                'apps.reports.context_processors.reports_available',
             ],
         },
     },
@@ -221,3 +222,4 @@ RENDER_WORKER_COUNT = None
 SHOW_MNOGO_BLOCK_ON_LANDING = True
 REGISTRATION_IS_AVAILABLE = True
 BATCH_SIZE = 1000
+REPORTS_ARE_AVAILABLE = False
