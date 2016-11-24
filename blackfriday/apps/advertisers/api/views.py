@@ -1,9 +1,14 @@
+import io
+import weasyprint
+
 from functools import partial
+from collections import defaultdict
 
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.http.response import StreamingHttpResponse
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
@@ -12,10 +17,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
-from apps.advertisers.models import BannerType
 from apps.mailing.utils import (
     send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, send_moderation_fail_mail
 )
+from apps.reports.models import LogoStats, TeaserStats, BannerStats
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -249,6 +254,110 @@ class MerchantViewSet(viewsets.ModelViewSet):
             ),
             message=''
         )
+
+    @staticmethod
+    def create_report(template_name, file_name, params={}):
+        output = io.BytesIO()
+        weasyprint.HTML(
+            string=render_to_string(
+                '{}.html'.format(template_name),
+                params
+            )
+        ).write_pdf(output)
+        output.seek(0)
+        response = StreamingHttpResponse(output, content_type='application/pdf')
+        response['Content-Disposition'] = (
+            'attachment; filename="{}.pdf"'.format(file_name)
+        )
+        return response
+
+    @detail_route(methods=['get'], url_path='statistics-report')
+    def statistics(self, request, *args, **kwargs):
+        merchant = self.get_object()
+
+        banner_stats_dict = defaultdict(list)
+        banner_stats_qs = BannerStats.objects.filter(
+            banner__merchant=merchant).select_related('banner')
+        for stats_obj in banner_stats_qs:
+            banner_stats_dict[stats_obj.banner.type] = stats_obj
+
+        logo_stats_qs = LogoStats.objects.filter(merchant=merchant)
+        teaser_stats_qs = TeaserStats.objects.filter(product__merchant=merchant)
+
+        elements = []
+
+        if logo_stats_qs:
+            logo_stats = logo_stats_qs[0]
+            elements.append(
+                {
+                    'name': 'Логотип',
+                    'shown': logo_stats.times_shown,
+                    'clicked': logo_stats.times_clicked
+                }
+            )
+
+        if banner_stats_qs:
+            for banner_type, banner_type_name in Banner.TYPES:
+                b_type_stats = banner_stats_dict[banner_type]
+                if b_type_stats:
+                    if len(b_type_stats) > 1:
+                        for number, banner_stats in enumerate(b_type_stats, 1):
+                            elements.append(
+                                {
+                                    'name': '{} №{}'.format(banner_type_name, number),
+                                    'shown': banner_stats.times_shown,
+                                    'clicked': banner_stats.times_clicked
+                                }
+                            )
+                    else:
+                        banner_stats = b_type_stats[0]
+                        elements.append(
+                            {
+                                'name': banner_type_name,
+                                'shown': banner_stats.times_shown,
+                                'clicked': banner_stats.times_clicked
+                            }
+                        )
+
+        if teaser_stats_qs:
+            if len(teaser_stats_qs) > 1:
+                for number, teaser_stats in enumerate(teaser_stats_qs, 1):
+                    elements.append(
+                        {
+                            'name': 'Товар-тизер №{}'.format(number),
+                            'shown': teaser_stats.times_shown,
+                            'clicked': teaser_stats.times_clicked
+                        }
+                    )
+            else:
+                teaser_stats = teaser_stats_qs[0]
+                elements.append(
+                    {
+                        'name': 'Товар-тизер',
+                        'shown': teaser_stats.times_shown,
+                        'clicked': teaser_stats.times_clicked
+                    }
+                )
+
+        elements.append(
+            {
+                'name': 'ИТОГО',
+                'shown': sum([el['shown'] for el in elements]),
+                'clicked': sum([el['clicked'] for el in elements])
+            }
+        )
+
+        return self.create_report(
+            'reports/statistics',
+            'Статистика размещения рекламных материалов',
+            {'elements': elements}
+        )
+
+    @detail_route(methods=['get'], url_path='act-report')
+    def act_report(self, request, *args, **kwargs):
+        return self.create_report(
+            'reports/act_report',
+            'Акт-отчет об указании услуг')
 
 
 class BannerViewSet(viewsets.ModelViewSet):

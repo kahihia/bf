@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     'apps.specials',
     'apps.mailing',
     'apps.payment',
+    'apps.reports',
     'apps.showcase',
 
     'webpack_loader',
@@ -219,3 +220,4 @@ RENDER_WORKER_COUNT = None
 
 SHOW_MNOGO_BLOCK_ON_LANDING = True
 REGISTRATION_IS_AVAILABLE = True
+BATCH_SIZE = 1000
