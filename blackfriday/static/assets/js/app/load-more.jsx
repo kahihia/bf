@@ -12,7 +12,7 @@ class LoadMore extends React.Component {
 	}
 
 	handleWaypointEnter(props) {
-		if (!props.event) {
+		if (!props.event && !props.waypointTop) {
 			return;
 		}
 		this.props.onClick();
