@@ -35,7 +35,7 @@ from apps.showcase.renderers import render_all_pages
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant, ModerationStatus
+from ..models import Banner, Merchant, ModerationStatus, BannerType
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
