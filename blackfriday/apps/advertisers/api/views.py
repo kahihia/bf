@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.template.loader import render_to_string
 from django.http.response import StreamingHttpResponse
 
@@ -344,9 +344,45 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['get'], url_path='act-report')
     def act_report(self, request, *args, **kwargs):
+        merchant = self.get_object()
+
+        context = {
+            'super_banner':
+                merchant.banners.filter(type=BannerType.SUPER).count(),
+            'logo':
+                int(bool(merchant.image)),
+            'description':
+                int(bool(merchant.description)),
+            'action_banner':
+                merchant.banners.filter(type=BannerType.ACTION).count(),
+            'showcase':
+                int(merchant.products.exists()),
+            'logo_on_main':
+                int(bool(merchant.image) and
+                    merchant.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()),
+            'logo_at_cat':
+                int(merchant.logo_categories.count() >= 2),
+            'action_banner_at_cat':
+                None,  # ToDo: banners at cats
+            'super_banner_at_cat':
+                int(merchant.banners.filter(type=BannerType.SUPER, categories__isnull=False).exists()),
+            'action_banner_on_main':
+                int(merchant.banners.filter(type=BannerType.ACTION, on_main=True).exists()),
+            'teaser_at_cat':
+                int(merchant.products.filter(is_teaser=True).count() >= 50 and
+                    merchant.products.filter(is_teaser=True).values('category').distinct().count() >= 2),
+            'teaser_on_main':
+                int(merchant.products.filter(is_teaser_on_main=True).exists()),
+            'mailing':
+                None  # ToDo: how?
+
+        }
+
         return self.create_report(
             'reports/act_report',
-            'Акт-отчет об указании услуг')
+            'Акт-отчет об указании услуг',
+            context
+        )
 
 
 class BannerViewSet(viewsets.ModelViewSet):
