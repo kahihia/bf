@@ -322,6 +322,9 @@ class Merchant(models.Model):
     def owner_id(self):
         return self.advertiser.id
 
+    def get_showcase_url(self):
+        return '/merchant/{}'.format(self.slug)
+
 
 ADVERTISER_INNER_TYPES = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))
 
