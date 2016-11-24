@@ -74,7 +74,7 @@
                     {% for banner in banner_block.banners %}
                         {% cycle False True as newrow silent %}
 
-                        <a href="{{ banner.url }}" style="text-decoration: none; float: {% if newrow %}right{% else %}left{% endif %}; margin-bottom: 20px; width: 272px;">
+                        <a href="{{ SITE_URL }}{{ banner.merchant.get_showcase_url }}" style="text-decoration: none; float: {% if newrow %}right{% else %}left{% endif %}; margin-bottom: 20px; width: 272px;">
                             <img width="272" src="{{ SITE_URL }}{{ banner.image }}" alt="">
                         </a>
 
@@ -85,7 +85,7 @@
                 </div>
                 {% if banner_block.superbanner %}
                     <div style="width: 620px; margin: 0 auto 20px auto">
-                        <a href="{{ banner_block.superbanner.url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
+                        <a href="{{ SITE_URL }}{{ banner_block.superbanner.merchant.get_showcase_url }}" style="text-decoration: none; margin: 0 auto; display: block; width: 620px">
                             <img width="620" src="{{ SITE_URL }}{{ banner_block.superbanner.image }}" alt="">
                         </a>
                         <div style="clear: both"></div>
@@ -95,7 +95,7 @@
 
             <div style="width: 640px; margin: 0 auto">
                 {% for superbanner in superbanners %}
-                    <a href="{{ superbanner.url }}" style="text-decoration: none; margin: 0 auto 20px auto; display: block; width: 620px">
+                    <a href="{{ SITE_URL }}{{ superbanner.merchant.get_showcase_url }}" style="text-decoration: none; margin: 0 auto 20px auto; display: block; width: 620px">
                         <img width="620" src="{{ SITE_URL }}{{ superbanner.image }}" alt="">
                     </a>
                     <div style="clear: both"></div>
