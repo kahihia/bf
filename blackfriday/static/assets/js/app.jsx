@@ -322,7 +322,13 @@ import {action3} from './app/retailrocket.js';
 	}
 
 	const teasers = document.getElementById('sidebar-teasers');
-	if (teasers && DATA.teasers && DATA.teasers.data && DATA.teasers.data.length) {
+	if (
+		window.innerWidth > 991 &&
+		teasers &&
+		DATA.teasers &&
+		DATA.teasers.data &&
+		DATA.teasers.data.length
+	) {
 		const Teasers = require('./app/teasers');
 		ReactDOM.render(<Teasers {...DATA.teasers}/>, teasers);
 	}
