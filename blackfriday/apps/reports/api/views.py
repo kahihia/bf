@@ -1,16 +1,22 @@
 import io
+from functools import reduce
+from itertools import groupby
+
 import weasyprint
 
 from collections import defaultdict
 
+from django.db.models import Count
 from django.template.loader import render_to_string
 from django.http.response import StreamingHttpResponse
 
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
 
+from apps.catalog.models import Product
+from apps.promo.models import Option
 from libs.api.permissions import IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser
-from apps.advertisers.models import Banner
+from apps.advertisers.models import Banner, Merchant, BannerType
 from apps.reports.models import BannerStats, LogoStats, TeaserStats
 
 
@@ -113,4 +119,45 @@ class ReportsViewSet(viewsets.GenericViewSet):
 
     @list_route(methods=['get'])
     def act_report(self, request, *args, **kwargs):
+        user = self.request.user
+
+        banners = Banner.objects.filter(merchant__advertiser=user).annotate(cat_count=Count('categories'))
+        merchants = Merchant.objects.filter(advertiser=user).annotate(cat_count=Count('logo_categories'))
+        products = Product.objects.filter(merchant__advertiser=user)
+        options = Option.objects.filter(promos__promo__in=[m.promo for m in merchants], promos__value__gt=0)
+
+        # limits = reduce(
+        #     lambda x, y: {k: x.get(k, 0) + y.get(k, 0) for k in set(x) | set(y)},
+        #     map(lambda x: x.limits, merchants),
+        #     {}
+        # )
+
+        params = {
+            'super_banner':
+                len(list(filter(lambda x: x.type == BannerType.SUPER, banners))),
+            'logo':
+                len(list(filter(lambda x: x.image, merchants))),
+            'description':
+                len(list(filter(lambda x: x.description, merchants))),
+            'action_banner':
+                len(list(filter(lambda x: x.type == BannerType.ACTION, banners))),
+            'showcase':
+                len(set(map(lambda x: x.merchant_id, products))),
+            'logo_at_main':
+                len(list(filter(lambda x: x.tech_name == 'logo_on_main', options))),
+            'logo_at_cat':
+                len(list(filter(lambda x: x.image and x.cat_count >= 2, merchants))),
+            'action_banner_at_cat':  # TODO
+                [len(list(g)) for _, g in groupby(sorted(filter(lambda x: x.cat_count >= 2 and x.type == BannerType.ACTION, banners), key=lambda x: x.merchant_id), key=lambda x: x.merchant_id)],
+                # (banners.annotate(cats=Count('categories')).filter(cats__gte=2, type=BannerType.ACTION)
+                #  .values('merchant').annotate(count=Count('id')).filter(count__gte=4).count())
+            'super_banner_at_cat':
+                (banners.annotate(cats=Count('categories')).filter(cats__gte=1, type=BannerType.SUPER)
+                 .values('merchant').distinct().count()),
+            'action_banner_at_main':
+                ()
+        }
+
+
+
         return self.create_report('act_report')
