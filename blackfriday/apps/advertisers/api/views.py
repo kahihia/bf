@@ -72,6 +72,12 @@ class MerchantViewSet(viewsets.ModelViewSet):
         IsAdmin
     ]
 
+    def perform_update(self, serializer):
+        obj = self.get_object()
+        instance = serializer.save()
+        if obj.is_active != instance.is_active:
+            render_all_pages.delay(True)
+
     def perform_create(self, serializer):
         instance = serializer.save()
         if instance.receives_notifications:
@@ -126,8 +132,6 @@ class MerchantViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         instance = serializer.save()
-        if obj.is_active != instance.is_active:
-            render_all_pages.delay(True)
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
             render_all_pages.delay(True)
