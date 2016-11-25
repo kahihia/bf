@@ -384,7 +384,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'logo_at_cat':
                 int(merchant.logo_categories.count() >= 2),
             'action_banner_at_cat':
-                None,  # ToDo: banners at cats
+                merchant.banners.annotate(c=Count('categories')).filter(type=BannerType.ACTION, c__gte=2).count(),
             'super_banner_at_cat':
                 int(merchant.banners.filter(type=BannerType.SUPER, categories__isnull=False).exists()),
             'action_banner_on_main':
@@ -395,7 +395,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'teaser_on_main':
                 int(merchant.products.filter(is_teaser_on_main=True).exists()),
             'mailing':
-                None,  # ToDo: how?
+                merchant.banner_mailings_count,
             'stats':
                 stats
         }
