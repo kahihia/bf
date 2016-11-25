@@ -1,10 +1,10 @@
-/* global window */
-
 import React from 'react';
 import formatThousands from 'format-thousands';
 import b from 'b_';
 import Price from 'react-price';
 import Link from './link.jsx';
+import {action2initialize, action2view, action5} from './retailrocket.js';
+import trackers from './trackers.js';
 
 const CURRENCY = 'руб.';
 
@@ -47,6 +47,10 @@ const ShortProductPrice = props => (
 				prefix="от "
 				/>
 		) : null}
+
+		{props.price || props.discount || props.startPrice ? null : (
+			<span className="price price_theme_normal"/>
+		)}
 	</div>
 );
 ShortProductPrice.propTypes = {
@@ -61,26 +65,84 @@ ShortProductPrice.defaultProps = {
 class ShortProduct extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
 
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	handleClick() {
-		if (!window.rrApiOnReady) {
-			return;
+	componentDidMount() {
+		const {
+			data,
+			isTeaser
+		} = this.props;
+		const {
+			id,
+			name,
+			price,
+			oldPrice,
+			image,
+			url,
+			category,
+			merchant,
+			brand
+		} = data;
+
+		const categoryPaths = [category];
+		if (merchant && merchant.name) {
+			categoryPaths.unshift(merchant.name);
 		}
 
-		const id = this.props.data.id;
-		window.rrApiOnReady.push(function () {
-			try {
-				window.rrApi.view(id);
-			} catch (e) {}
+		if (isTeaser) {
+			trackers.teaser.shown(data.id);
+		}
+
+		action2initialize({
+			id,
+			name,
+			price,
+			oldPrice,
+			imageUrl: image,
+			url,
+			categoryPaths,
+			brand
 		});
 	}
 
+	handleClick() {
+		const {
+			data,
+			isTeaser
+		} = this.props;
+		const {
+			id,
+			price,
+			merchant
+		} = data;
+
+		action2view({
+			id,
+			price
+		});
+
+		action5({
+			id,
+			price
+		});
+
+		if (isTeaser) {
+			trackers.teaser.clicked(id);
+		}
+
+		if (merchant) {
+			trackers.merchant.clicked(merchant.id);
+		}
+	}
+
 	render() {
-		const {data} = this.props;
+		const {
+			data,
+			showCategory,
+			showMerchant
+		} = this.props;
 		const {
 			discount,
 			oldPrice,
@@ -108,7 +170,7 @@ class ShortProduct extends React.Component {
 						{data.name}
 					</div>
 
-					{data.category ? (
+					{showCategory && data.category ? (
 						<div className={b(className, 'cat')}>
 							{data.category}
 						</div>
@@ -124,7 +186,7 @@ class ShortProduct extends React.Component {
 						/>
 				</Link>
 
-				{data.merchant && data.merchant.url ? (
+				{showMerchant && data.merchant && data.merchant.url ? (
 					<a
 						className={b(className, 'shop')}
 						href={data.merchant.url}
@@ -141,9 +203,14 @@ class ShortProduct extends React.Component {
 	}
 }
 ShortProduct.propTypes = {
-	data: React.PropTypes.object.isRequired
+	data: React.PropTypes.object.isRequired,
+	isTeaser: React.PropTypes.bool,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 ShortProduct.defaultProps = {
+	showCategory: true,
+	showMerchant: true
 };
 
 export default ShortProduct;

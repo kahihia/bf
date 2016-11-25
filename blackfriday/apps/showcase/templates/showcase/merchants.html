@@ -1,0 +1,19 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% block content %}
+
+<div class="title-2">Участники акции</div>
+<div id="all-merchants"></div>
+
+{% endblock content %}
+
+{% block data %}
+window.DATA.allMerchants = {
+    data: {{ merchants|safe|default:"[]" }}
+};
+
+window.DATA.teasers = {
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
+};
+{% endblock data %}

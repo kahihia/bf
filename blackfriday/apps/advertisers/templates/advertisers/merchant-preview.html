@@ -17,62 +17,33 @@
 isRandom: false,
 isControlsShown: true,
 isPagerShown: true,
-data: [
-    {% for item in superbanners %}
-    {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
-    {% endfor %}
-],
+data: {{ superbanners|safe|default:"[]" }},
 {% endblock superbanner %}
 
 {% block data %}
 window.DATA.products = {
+    perPage: 20,
+    // pagesCount: ,
     ajaxUrl: 'products',
-    perPage: 10,
-    // pagesCount: 1,
-    data: [
-        {% for item in merchant.products.all %}
-        {
-            id: {{ item.id }},
-            url: '{{ item.url|escapejs }}',
-            image: '{{ item.image }}',
-            name: '{{ item.name|escapejs }}',
-            price: {{ item.price|default:'null' }},
-            oldPrice: {{ item.old_price|default:'null' }},
-            startPrice: {{ item.start_price|default:'null' }},
-            discount: {{ item.discount|default:'null' }},
-            category: '{{ item.category|escapejs }}' ,
-            country: '{{ item.country|escapejs }}',
-            brand: '{{ item.brand|escapejs }}'
-        },
-        {% endfor %}
-    ]
+    data: {{ products|safe|default:"[]" }},
+    showMerchant: false,
 };
+
 window.DATA.cardDescription = {
     name: '{{ merchant.name|default:''|escapejs }}',
     url: '{{ merchant.url|default:''|escapejs }}',
     description: '{{ merchant.description|default:''|escapejs }}',
     image: '{{ merchant.image.image.url|default:'' }}',
     promocode: '{{ merchant.promocode|default:'' }}',
-    linkedPartners: [
-        {% for item in partners %}
-        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.url }}'},
-        {% endfor %}
-    ]
+    linkedPartners: {{ partners|safe|default:"[]" }}
 };
+
 window.DATA.specialOffers = {
-    data: [
-        {% for item in actionbanners %}
-        {id: {{ item.id }}, url: '{{ item.url|escapejs }}', image: '{{ item.image.image.url }}'},
-        {% endfor %}
-    ]
+    data: {{ banners|safe|default:"[]" }}
 };
 
 window.DATA.teasers = {
-    perPage: 5,
-    // pagesCount: 1,
-    isRandom: true,
-    loadPagesCount: 3,
-    ajaxUrl: 'products',
-    data: []
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
 };
 {% endblock data %}

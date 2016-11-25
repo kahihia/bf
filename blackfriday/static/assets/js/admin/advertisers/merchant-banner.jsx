@@ -63,7 +63,7 @@ class MerchantBanner extends React.Component {
 		const banner = BANNER_TYPE[type];
 		const categoriesSelected = categories.map(item => item.id);
 
-		const readonly = Boolean(wasMailed);
+		const readonly = type === 0 && Boolean(wasMailed);
 
 		let showOnMain = limits.onMain || limits.onMain === 0;
 		let disabledOnMain = limits.onMain === 0 && !onMain;

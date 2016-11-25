@@ -17,6 +17,7 @@ urlpatterns = [
         url(r'^', include('apps.mailing.urls', namespace='mailing')),
         url(r'^', include('apps.payment.urls', namespace='payment')),
         url(r'^', include('apps.showcase.urls', namespace='showcase')),
+        url(r'^', include('apps.reports.urls', namespace='reports')),
     ])),
     url(r'^api/', include('api', namespace='api')),
 

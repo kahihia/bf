@@ -3,7 +3,7 @@ from rest_framework.decorators import list_route
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, MethodNotAllowed
 
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import IsAuthenticated, IsAdmin
@@ -56,8 +56,11 @@ class LandingLogoViewSet(ModelViewSet):
 class StaticGeneratorViewSet(GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdmin]
 
-    @list_route(methods=['post'])
+    @list_route(methods=['post', 'options'])
     def landing(self, request, *args, **kwargs):
+        if request.method == 'OPTIONS':
+            raise MethodNotAllowed(request.method)
+
         try:
             render_landing()
         except NoContent:

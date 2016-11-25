@@ -1,6 +1,7 @@
 import React from 'react';
 import ShortProduct from './short-product.jsx';
 import Slider from 'react-slick';
+import arrayShuffle from 'array-shuffle';
 
 const settings = {
 	infinite: false,
@@ -41,20 +42,47 @@ const settings = {
 	]
 };
 
-const TeasersOnMain = props => (
-	<Slider {...settings}>
-		{props.data.map(item => (
-			<div
-				key={item.id}
-				className="product-list__item"
-				>
-				<ShortProduct data={item}/>
+class TeasersOnMain extends React.Component {
+	render() {
+		const {
+			footer,
+			showCategory,
+			showMerchant
+		} = this.props;
+		const data = arrayShuffle(this.props.data);
+
+		return (
+			<div className="main-teaser">
+				<div className="main-teaser__body">
+					<div className="product-list">
+						<Slider {...settings}>
+							{data.map(item => (
+								<div
+									key={item.id}
+									className="product-list__item"
+									>
+									<ShortProduct
+										data={item}
+										showCategory={showCategory}
+										showMerchant={showMerchant}
+										isTeaser
+										/>
+								</div>
+							))}
+						</Slider>
+					</div>
+				</div>
+
+				{footer}
 			</div>
-		))}
-	</Slider>
-);
+		);
+	}
+}
 TeasersOnMain.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array,
+	footer: React.PropTypes.any,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 TeasersOnMain.defaultProps = {
 	data: []

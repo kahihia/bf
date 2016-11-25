@@ -101,9 +101,9 @@ class FormRow extends React.Component {
 		}
 
 		return (
-			<span className="help-block">
+			<div className="help-block">
 				{typeof help === 'function' ? help() : help}
-			</span>
+			</div>
 		);
 	}
 
@@ -115,9 +115,9 @@ class FormRow extends React.Component {
 		}
 
 		return (
-			<span className="help-block">
+			<div className="help-block">
 				{helpError}
-			</span>
+			</div>
 		);
 	}
 

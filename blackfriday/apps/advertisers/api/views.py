@@ -17,10 +17,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from apps.advertisers.api.serializers.clients import MerchantNotificationsSerializer
-from apps.advertisers.models import BannerType
+from apps.mailing.utils import (
+    send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, send_moderation_fail_mail
+)
 from apps.reports.models import LogoStats, TeaserStats, BannerStats, MerchantStats
-from apps.mailing.utils import send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, \
-    send_moderation_fail_mail
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -30,11 +30,12 @@ from apps.banners.models import Partner
 from apps.catalog.models import Category
 from apps.promo.models import Option
 from apps.users.models import User
+from apps.showcase.renderers import render_all_pages
 
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant, ModerationStatus
+from ..models import Banner, Merchant, ModerationStatus, BannerType
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
@@ -75,6 +76,12 @@ class MerchantViewSet(viewsets.ModelViewSet):
         ) |
         IsAdmin
     ]
+
+    def perform_update(self, serializer):
+        obj = self.get_object()
+        instance = serializer.save()
+        if obj.is_active != instance.is_active:
+            render_all_pages.delay(True)
 
     def perform_create(self, serializer):
         instance = serializer.save()
@@ -132,6 +139,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         if instance.moderation_status == ModerationStatus.confirmed:
             self.send_moderation_report(instance)
+            render_all_pages.delay(True)
             if instance.receives_notifications:
                 send_moderation_success_mail(instance)
         elif instance.moderation_status == ModerationStatus.rejected:
@@ -210,7 +218,10 @@ class MerchantViewSet(viewsets.ModelViewSet):
         materials = []
 
         if instance.image:
-            on_main = instance.promo and instance.promo.options.filter(option__tech_name='logo_on_main').exists()
+            on_main = (
+                instance.promo and
+                instance.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()
+            )
             materials.append(('Логотип', None, on_main))
 
         banners = instance.banners.all()
@@ -245,12 +256,12 @@ class MerchantViewSet(viewsets.ModelViewSet):
         )
 
     @staticmethod
-    def create_report(template_name, file_name, params={}):
+    def create_report(template_name, file_name, context={}):
         output = io.BytesIO()
         weasyprint.HTML(
             string=render_to_string(
                 '{}.html'.format(template_name),
-                params
+                context
             )
         ).write_pdf(output)
         output.seek(0)
@@ -345,6 +356,16 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='act-report')
     def act_report(self, request, *args, **kwargs):
         merchant = self.get_object()
+        stats_qs = MerchantStats.objects.filter(merchant=merchant)
+        if stats_qs:
+            stats = stats_qs[0]
+        else:
+            stats = {
+                'times_shown': 0,
+                'times_clicked': 0,
+                'unique_visitors_shown': 0,
+                'unique_visitors_clicked': 0
+            }
 
         context = {
             'super_banner':
@@ -374,7 +395,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'teaser_on_main':
                 int(merchant.products.filter(is_teaser_on_main=True).exists()),
             'mailing':
-                merchant.banner_mailings_count
+                merchant.banner_mailings_count,
+            'stats':
+                stats
         }
 
         return self.create_report(
@@ -404,12 +427,13 @@ class BannerViewSet(viewsets.ModelViewSet):
         serializer.save(merchant=self.get_parent())
 
     def update(self, request, *args, **kwargs):
-        if self.get_object().was_mailed:
+        instance = self.get_object()
+        if instance.was_mailed and instance.type == BannerType.SUPER:
             raise PermissionDenied
         return super().update(request, *args, **kwargs)
 
     def perform_destroy(self, instance):
-        if instance.was_mailed:
+        if instance.was_mailed and instance.type == BannerType.SUPER:
             raise PermissionDenied
         instance.merchant.moderation_status = 0
         instance.merchant.save()

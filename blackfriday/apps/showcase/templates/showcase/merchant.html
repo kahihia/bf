@@ -1,0 +1,48 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% block title %}{{ merchant_name }} - Черная Пятница 2016, официальная распродажа, скидки, акции{% endblock %}
+{% block desctiption %}Настоящая Черная Пятница 2016 года в интернет-магазине {{ merchant_name }} - официальная распродажа, скидки до 90%{% endblock %}
+
+{% block content %}
+
+<div id="card-description"></div>
+<div id="special-offers"></div>
+
+{% if products %}
+<div class="title-2">Лучшие товары</div>
+{% endif %}
+<div id="products" class="card-product-list"></div>
+
+{% endblock content %}
+
+{% block superbanner %}
+// pagesCount: ,
+isRandom: false,
+isControlsShown: true,
+isPagerShown: true,
+data: {{ superbanners|safe|default:"[]" }},
+{% endblock superbanner %}
+
+{% block data %}
+window.DATA.products = {
+    perPage: 20,
+    // pagesCount: ,
+    ajaxUrl: 'products',
+    data: {{ products|safe|default:"[]" }},
+    showMerchant: false,
+};
+
+window.DATA.cardDescription = {
+    data: {{ merchant|safe|default:"null" }},
+    linkedPartners: {{ partners|safe|default:"[]" }},
+};
+
+window.DATA.specialOffers = {
+    data: {{ banners|safe|default:"[]" }},
+};
+
+window.DATA.teasers = {
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
+};
+{% endblock data %}

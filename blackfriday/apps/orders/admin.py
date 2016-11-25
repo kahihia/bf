@@ -12,3 +12,7 @@ class InvoiceOptionInline(admin.TabularInline):
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     inlines = [InvoiceOptionInline]
+    list_display = ('merchant', 'sum', 'discount', 'is_paid', 'promo')
+    list_filter = ('is_paid', 'promo')
+    search_fields = ('merchant__name', )
+    ordering = ('sum', 'discount')

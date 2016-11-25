@@ -1,0 +1,103 @@
+{% extends "layouts/app-main-layout.html" %}
+
+{% load static %}
+
+{% block title %}Настоящая Черная пятница 2016 в России - Real Black Friday 2016{% endblock %}
+{% block desctiption %}★★★★★ Настоящая Черная Пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки до 90% от крупнейших интернет-магазинов.{% endblock %}
+
+{% block content %}
+<div id="teasers-on-main"></div>
+
+<div class="main-merchants-row">
+    <div class="main-merchants-row__merchants">
+        <div class="title-2"><strong>Участники</strong> Настоящей Черной Пятницы</div>
+        <div id="merchants"></div>
+    </div>
+
+    <div class="main-merchants-row__banner">
+        <div id="verticalbanners"></div>
+    </div>
+</div>
+
+<div id="partners"></div>
+
+<div id="main-tabs" class="main-tabs"></div>
+
+<div class="main-all-links">
+    <a href="/actions/">Все акции</a>
+    <a href="/actions/#tab=2">Все товары</a>
+</div>
+
+<p style="color: #666; text-align: center; margin: 30px 0 0;">★★★★★ Настоящая Черная Пятница 2016 — это масштабная онлайн-распродажа в ведущих интернет-магазинах и онлайн-сервисах России, Белоруссии и Казахстана.</p>
+{% endblock content %}
+
+{% block data %}
+window.DATA.merchants = {
+    perPage: 12,
+    // pagesCount: ,
+    isRandom: true,
+	isControlsShown: true,
+    isFullfilled: true,
+	isPagerShown: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'merchants',
+    data: {{ merchants|safe|default:"[]" }},
+    speed: 7000
+};
+
+window.DATA.partners = {
+    perPage: 6,
+    // pagesCount: ,
+    isRandom: true,
+	isControlsShown: true,
+    isFullfilled: true,
+	isPagerShown: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'partners',
+    data: {{ partners|safe|default:"[]" }},
+    speed: 6000
+};
+
+window.DATA.banners = {
+    perPage: 12,
+    // pagesCount: ,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'banners',
+    data: {{ banners|safe|default:"[]" }}
+};
+
+window.DATA.verticalbanners = {
+    perPage: 1,
+    // pagesCount: ,
+    isRandom: true,
+    loadPagesCount: 1,
+    ajaxUrl: 'verticalbanners',
+    data: {{ verticalbanners|safe|default:"[]" }},
+    speed: 5000
+};
+
+window.DATA.products = {
+    perPage: 20,
+    // pagesCount: ,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
+};
+
+window.DATA.teasersOnMain = {
+    perPage: 5,
+    // pagesCount: ,
+    isRandom: true,
+    loadPagesCount: 3,
+    ajaxUrl: 'products',
+    data: {{ teasersOnMain|safe|default:"[]" }},
+    showCategory: false,
+};
+
+window.DATA.backgrounds = {
+    data: {{ backgrounds|safe|default:"[]" }}
+};
+{% endblock data %}

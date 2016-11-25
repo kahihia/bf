@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from rest_framework import serializers, validators
-from rest_framework.exceptions import ValidationError, PermissionDenied
+from rest_framework.exceptions import ValidationError
 
 from apps.advertisers.models import (
     AdvertiserProfile, Merchant, ModerationStatus, AdvertiserType, ADVERTISER_INNER_TYPES
@@ -12,7 +12,7 @@ from apps.users.models import User
 
 from apps.mediafiles.api.serializers import ImageSerializer
 from apps.promo.api.serializers import PromoTinySerializer
-from libs.api.validators import html_validator
+from libs.api.validators import clean_html
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -153,6 +153,8 @@ class MerchantModerationSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
+        if not self.instance.promo:
+            raise ValidationError({'promo': 'Для прохождения модерации необходимо оплатить рекламный пакет'})
         if attrs['moderation_status'] < ModerationStatus.confirmed:
             attrs.pop('moderation_comment', None)
         attrs['last_save'] = timezone.now()
@@ -211,12 +213,14 @@ class MerchantCreateSerializer(serializers.ModelSerializer):
     url = serializers.URLField(validators=[
         validators.UniqueValidator(queryset=Merchant.objects.all(), message='not_unique')])
 
+    def validate_description(self, value):
+        return clean_html(value)
+
     class Meta:
         model = Merchant
         extra_kwargs = {
             'url': {'allow_null': True, 'allow_blank': False},
-            'name': {'allow_null': False, 'allow_blank': False},
-            'description': {'validators': [html_validator]},
+            'name': {'allow_null': False, 'allow_blank': False}
         }
 
     def get_default_field_names(self, declared_fields, model_info):
@@ -261,10 +265,12 @@ class MerchantUpdateSerializer(serializers.ModelSerializer):
             instance.save()
         return super().update(instance, validated_data)
 
+    def validate_description(self, value):
+        return clean_html(value)
+
     class Meta:
         model = Merchant
         extra_kwargs = {
-            'description': {'validators': [html_validator]},
             'slug': {'allow_blank': False},
         }
 

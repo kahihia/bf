@@ -1,0 +1,56 @@
+{% extends "layouts/app-page-layout.html" %}
+
+{% block content %}
+
+<div class="category-party">
+    <div class="title-2">
+        <span id="category-name"></span>
+    </div>
+
+    <div id="merchants"></div>
+</div>
+
+<div id="tabs" class="category-tabs" data-with-rr="true"></div>
+
+{% endblock content %}
+
+{% block data %}
+window.DATA.merchants = {
+    perPage: 8,
+    // pagesCount: ,
+    isRandom: true,
+	isControlsShown: true,
+	isPagerShown: true,
+    ajaxUrl: 'merchants',
+    data: {{ merchants|safe|default:"[]" }},
+    speed: 7000
+};
+
+window.DATA.banners = {
+    perPage: 8,
+    // pagesCount: ,
+    isRandom: true,
+    ajaxUrl: 'banners',
+    data: {{ banners|safe|default:"[]" }}
+};
+
+window.DATA.products = {
+    perPage: 20,
+    // pagesCount: ,
+    isRandom: true,
+    ajaxUrl: 'products',
+    data: {{ products|safe|default:"[]" }},
+    showCategory: false,
+};
+
+window.DATA.backgrounds = {
+    data: {{ backgrounds|safe|default:"[]" }}
+};
+
+window.DATA.category = {{ category|safe|default:"null" }};
+
+window.DATA.teasers = {
+    data: {{ teasers|safe|default:"[]" }},
+    showCategory: false,
+};
+{% endblock data %}
