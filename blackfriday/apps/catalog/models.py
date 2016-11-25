@@ -55,7 +55,7 @@ class ProductQueryset(models.QuerySet):
 
 
 class Product(models.Model):
-    merchant = models.ForeignKey('advertisers.Merchant', related_name='products')
+    merchant = models.ForeignKey('advertisers.Merchant', related_name='products', verbose_name='Магазин')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products')
     name = models.CharField(max_length=255, verbose_name='Название')
 
