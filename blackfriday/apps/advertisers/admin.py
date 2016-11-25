@@ -34,5 +34,5 @@ class BannerInline(admin.TabularInline):
 class MerchantAdmin(admin.ModelAdmin):
     inlines = [BannerInline]
     list_display = ('name', 'moderation_status', 'is_active', 'slug', 'advertiser')
-    search_fields = ('name', 'advertiser')
+    search_fields = ('name', )
     list_filter = ('moderation_status', 'is_active')
