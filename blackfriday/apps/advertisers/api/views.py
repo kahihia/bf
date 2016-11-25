@@ -279,7 +279,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
         banner_stats_qs = BannerStats.objects.filter(
             banner__merchant=merchant).select_related('banner')
         for stats_obj in banner_stats_qs:
-            banner_stats_dict[stats_obj.banner.type] = stats_obj
+            banner_stats_dict[stats_obj.banner.type].append(stats_obj)
 
         logo_stats_qs = LogoStats.objects.filter(merchant=merchant)
         teaser_stats_qs = TeaserStats.objects.filter(product__merchant=merchant)

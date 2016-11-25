@@ -7,9 +7,11 @@ from django.conf import settings
 
 class StatsUpdater:
 
-    def __init__(self, stats_cls, related_model_id_name):
+    def __init__(self, stats_cls, related_model_cls, related_model_id_name):
         self.stats_cls = stats_cls
         self.related_model_id_name = related_model_id_name
+
+        self.related_model_ids = set(related_model_cls.objects.values_list('id', flat=True))
 
         self.current_stats = {
             getattr(stats_obj, related_model_id_name): stats_obj for stats_obj in stats_cls.objects.all()}
@@ -25,6 +27,9 @@ class StatsUpdater:
         clicked_counter = self.parse_logs(clicked_file)
 
         for stats_id, times_shown in shown_counter.items():
+            if stats_id not in self.related_model_ids:
+                continue
+
             if stats_id not in self.current_stats_ids:
                 stats_obj = self.stats_cls()
                 self.update_stats_obj(stats_obj, times_shown, clicked_counter[stats_id])
@@ -82,8 +87,8 @@ class MerchantStatsUpdater(StatsUpdater):
         counter = defaultdict(list)
         with open(file_name) as log_file:
             for line in log_file:
-                merchant_id, client_id = map(int, line.split())
-                counter[merchant_id].append(client_id)
+                merchant_id, client_id = line.split()
+                counter[int(merchant_id)].append(client_id)
         return counter
 
     @classmethod
