@@ -358,12 +358,12 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'showcase':
                 int(merchant.products.exists()),
             'logo_on_main':
-                int(bool(merchant.image) and merchant.promo and
+                int(bool(merchant.image and merchant.promo) and
                     merchant.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()),
             'logo_at_cat':
                 int(merchant.logo_categories.count() >= 2),
             'action_banner_at_cat':
-                None,  # ToDo: banners at cats
+                merchant.banners.annotate(c=Count('categories')).filter(type=BannerType.ACTION, c__gte=2).count(),
             'super_banner_at_cat':
                 int(merchant.banners.filter(type=BannerType.SUPER, categories__isnull=False).exists()),
             'action_banner_on_main':
@@ -374,8 +374,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'teaser_on_main':
                 int(merchant.products.filter(is_teaser_on_main=True).exists()),
             'mailing':
-                None  # ToDo: how?
-
+                merchant.banner_mailings_count
         }
 
         return self.create_report(
