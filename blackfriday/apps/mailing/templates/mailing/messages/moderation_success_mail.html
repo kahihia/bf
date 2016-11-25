@@ -1,6 +1,7 @@
 {% extends 'mailing/messages/base_mail.html' %}
 
 {% block content %}
-    Ваш магазин{% if merchant.name %} {{ merchant.name }}{% endif %} прошёл модерацию и был опубликован на RealBlackFriday.ru. Распродажа стартует 24 ноября в 19:00. Готовьтесь принимать покупателей!<br>
+    Ваш магазин {% if merchant.name %} {{ merchant.name }}{% endif %} прошёл модерацию и был опубликован на RealBlackFriday.ru.<br>
+    Готовьтесь принимать покупателей!<br>
     Для управления магазином зайдите в <a href="{{ SITE_URL }}{% url 'advertisers:merchant-list' %}" target="_blank">личный кабинет</a>.
 {% endblock %}

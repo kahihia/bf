@@ -397,6 +397,26 @@ class MerchantBannerList extends React.Component {
 		const bannersMainBackgrounds = _.filter(bannerBackgrounds, banner => banner.onMain);
 		const bannersCategoryBackgrounds = _.filter(bannerBackgrounds, banner => Boolean(banner.categories && banner.categories.length));
 
+		let isBannersVisible = false;
+		_.forEach(bannerTypes, bannerType => {
+			if (this.getLimitByTypeAndName(bannerType, 's')) {
+				isBannersVisible = true;
+				return false;
+			}
+		});
+
+		const isMainBackgroundsVisible = limits.main_backgrounds || bannersMainBackgrounds.length;
+		const isCategoryBackgroundsVisible = limits.category_backgrounds || bannersCategoryBackgrounds.length;
+
+		if (
+			!this.state.banners.length &&
+			!isBannersVisible &&
+			!isMainBackgroundsVisible &&
+			!isCategoryBackgroundsVisible
+		) {
+			return null;
+		}
+
 		return (
 			<div className="shop-edit-block">
 				<h2>
@@ -407,7 +427,7 @@ class MerchantBannerList extends React.Component {
 					const banners = this.getBannersByType(bannerType);
 					const bannerLimits = this.collectLimits(bannerType);
 
-					if (!bannerLimits.length) {
+					if (!bannerLimits.length && !banners.length) {
 						return null;
 					}
 
@@ -471,7 +491,7 @@ class MerchantBannerList extends React.Component {
 					);
 				})}
 
-				{limits.main_backgrounds ? (
+				{isMainBackgroundsVisible ? (
 					<MerchantBannerBackgroundList
 						title="Брендирование фона главной страницы"
 						type="main"
@@ -483,7 +503,7 @@ class MerchantBannerList extends React.Component {
 						/>
 				) : null}
 
-				{limits.category_backgrounds ? (
+				{isCategoryBackgroundsVisible ? (
 					<MerchantBannerBackgroundList
 						title="Брендирование фона категории"
 						type="category"

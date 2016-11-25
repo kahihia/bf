@@ -70,6 +70,7 @@ module.exports = {
 		'admin-feed-maker': path.resolve(PATH_SRC, 'js/admin-feed-maker.jsx'),
 		'admin-invoices': path.resolve(PATH_SRC, 'js/admin-invoices.jsx'),
 		'admin-landing': path.resolve(PATH_SRC, 'js/admin-landing.jsx'),
+		'admin-mailing-banners': path.resolve(PATH_SRC, 'js/admin-mailing-banners.jsx'),
 		'admin-mailing-logos': path.resolve(PATH_SRC, 'js/admin-mailing-logos.jsx'),
 		'admin-merchant': path.resolve(PATH_SRC, 'js/admin-merchant.jsx'),
 		'admin-merchants': path.resolve(PATH_SRC, 'js/admin-merchants.jsx'),
@@ -77,6 +78,8 @@ module.exports = {
 		'admin-partners': path.resolve(PATH_SRC, 'js/admin-partners.jsx'),
 		'admin-profile': path.resolve(PATH_SRC, 'js/admin-profile.jsx'),
 		'admin-promo-maker': path.resolve(PATH_SRC, 'js/admin-promo-maker.jsx'),
+		'admin-rendering': path.resolve(PATH_SRC, 'js/admin-rendering.jsx'),
+		'admin-reports': path.resolve(PATH_SRC, 'js/admin-reports.jsx'),
 		'admin-specials': path.resolve(PATH_SRC, 'js/admin-specials.jsx'),
 		'admin-users': path.resolve(PATH_SRC, 'js/admin-users.jsx'),
 		admin: path.resolve(PATH_SRC, 'js/admin.jsx'),
@@ -103,7 +106,7 @@ module.exports = {
 			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
-				exclude: /(dnd-core|disposables)/
+				exclude: /(dnd-core|disposables|consolidated-events|waypoint|react-simple-dropdown)/
 			},
 			// CSS
 			{

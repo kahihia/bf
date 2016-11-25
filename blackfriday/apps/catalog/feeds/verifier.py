@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 from .validators import (
     IsNumeric, MaxValue, Choices, Substring,
-    Length, Required, UtmRequired
+    Length, Required, UtmRequired, Url
 )
 from apps.catalog.parser import Row, Column, Grouped, GenericValidator
 from apps.catalog.utils import xls_dict_reader, yml_dict_reader, csv_dict_reader
@@ -13,6 +13,12 @@ from apps.catalog.models import Category
 
 
 logger = logging.getLogger(__name__)
+
+
+def to_none(value):
+    if value in ['']:
+        return None
+    return value
 
 
 def together(**cleaned_data):
@@ -46,6 +52,16 @@ def clear_category(category, context):
 clear_category.null = True
 
 
+def clear_currency(currency):
+    if currency not in settings.CURRENCY_IDS:
+        return 'rur'
+    else:
+        return currency
+
+
+clear_currency.null = True
+
+
 def optional_required(_id, context):
     if context.get('_id_required', True):
         return _id is not None
@@ -53,15 +69,16 @@ def optional_required(_id, context):
 
 
 def is_image(image):
-    if image is None:
-        return None
-    try:
-        return requests.head(image).headers['Content-Type'] in [
-            'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
-        ]
-    except Exception as e:
-        logger.error(str(e))
-        return False
+    if settings.CHECK_IMAGE_URL:
+        if image is None:
+            return None
+        try:
+            return requests.head(image, headers=settings.IMAGE_CHECKING_HEADERS).headers['Content-Type'] in [
+                'image/jpeg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/jpg', 'image/jpe', 'image/jfif'
+            ]
+        except Exception as e:
+            logger.error(str(e))
+            return False
 
 
 class ProductRow(Row):
@@ -99,20 +116,20 @@ class ProductRow(Row):
             validators=[GenericValidator(message='Укажите хотя бы одну цену', rule=lambda **data: any(data.values()))]
         ),
         Column(
-            'currency', pipes=(str, str.lower),
+            'currency', pipes=(clear_currency, str, str.lower,),
             validators=(Required(), Choices(rule=settings.CURRENCY_IDS,),)),
         Column(
-            'brand', pipes=(str,),
+            'brand', pipes=(str, str.strip),
             validators=(Required(),)),
         Column(
             'category', pipes=(str, str.lower, clear_category,), validators=(Required(is_warning=True),)),
         Column(
-            'country', pipes=(str, str.lower),
+            'country', pipes=(str, str.lower, str.strip, to_none),
             validators=(Required(), Length(rule=255))),
         Column(
             'url', pipes=(str,),
             validators=(
-                Required(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
+                Required(), Url(), Substring(rule=('http://', 'https://')), UtmRequired(is_warning=True),
                 GenericValidator(message='URL повторяется', rule=duplicate_product_urls),)),
         Column(
             'image', pipes=(str, str.strip,),

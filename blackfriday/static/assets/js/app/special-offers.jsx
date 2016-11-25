@@ -3,6 +3,56 @@
 import React from 'react';
 import Slider from 'react-slick';
 import Link from './link.jsx';
+import trackers from './trackers.js';
+
+class Banner extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	componentDidMount() {
+		trackers.banner.shown(this.props.data.id);
+	}
+
+	handleClick() {
+		const {
+			data
+		} = this.props;
+
+		trackers.banner.clicked(data.id);
+
+		if (data.merchant) {
+			trackers.merchant.clicked(data.merchant.id);
+		}
+	}
+
+	render() {
+		const {
+			data
+		} = this.props;
+
+		return (
+			<Link
+				href={data.url}
+				className="special-offers__link embed-responsive"
+				onClick={this.handleClick}
+				isExternal
+				>
+				<img
+					className="special-offers__banner embed-responsive-item"
+					src={data.image}
+					alt=""
+					/>
+			</Link>
+		);
+	}
+}
+Banner.propTypes = {
+	data: React.PropTypes.object
+};
+// Banner.defaultProps = {};
 
 const settings = {
 	infinite: false,
@@ -29,17 +79,7 @@ const renderSpecialOffersList = data => data.map(banner => (
 		className="col-sm-6"
 		>
 		<div className="special-offers__item">
-			<Link
-				href={banner.url}
-				className="special-offers__link embed-responsive"
-				isExternal
-				>
-				<img
-					src={banner.image}
-					alt=""
-					className="special-offers__banner embed-responsive-item"
-					/>
-			</Link>
+			<Banner data={banner}/>
 		</div>
 	</div>
 ));

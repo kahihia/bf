@@ -1,6 +1,7 @@
 import React from 'react';
-import ShortProduct from './short-product.jsx';
 import Slider from 'react-slick';
+import ShortProduct from './short-product.jsx';
+import {getRandomItems} from './utils.js';
 
 const settings = {
 	infinite: false,
@@ -36,18 +37,35 @@ const settings = {
 	]
 };
 
-const Teasers = props => (
-	<Slider {...settings}>
-		{props.data.map(item => (
-			<ShortProduct
-				key={item.id}
-				data={item}
-				/>
-		))}
-	</Slider>
-);
+class Teasers extends React.Component {
+	render() {
+		const {
+			data,
+			showCategory,
+			showMerchant
+		} = this.props;
+
+		const products = getRandomItems(data, 3)[0];
+
+		return (
+			<Slider {...settings}>
+				{products.map(item => (
+					<ShortProduct
+						key={item.id}
+						data={item}
+						showCategory={showCategory}
+						showMerchant={showMerchant}
+						isTeaser
+						/>
+				))}
+			</Slider>
+		);
+	}
+}
 Teasers.propTypes = {
-	data: React.PropTypes.array
+	data: React.PropTypes.array,
+	showCategory: React.PropTypes.bool,
+	showMerchant: React.PropTypes.bool
 };
 Teasers.defaultProps = {
 	data: []

@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.db.models import When
 from rest_framework import viewsets
 from rest_framework.decorators import list_route
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from bulk_update.helper import bulk_update
@@ -92,8 +93,10 @@ class MailingViewSet(viewsets.GenericViewSet):
 class MailingBannersViewSet(viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated, IsAdmin]
 
-    @list_route(methods=['post'], url_path='increment-counters')
+    @list_route(methods=['post', 'options'], url_path='increment-counters')
     def increment_counters(self, request, *args, **kwargs):
+        if request.method == 'OPTIONS':
+            raise MethodNotAllowed(request.method)
         Merchant.objects.filter(
             id__in=PromoOption.objects.filter(
                 option__tech_name='mailing',
@@ -103,7 +106,13 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
             ).values_list('promo__invoice__merchant__id', flat=True)
         ).update(banner_mailings_count=F('banner_mailings_count') + 1)
         merchants = Merchant.objects.prefetch_related(
-            Prefetch('banners', Banner.objects.filter(type=BannerType.SUPER, was_mailed=False), 'not_mailed_banners')
+            Prefetch(
+                'banners',
+                Banner.objects.filter(
+                    type=BannerType.SUPER, was_mailed=False, in_mailing=True
+                ),
+                'not_mailed_banners'
+            )
         ).filter(
             id__in=InvoiceOption.objects.filter(
                 option__tech_name='superbanner_at_mailing',
@@ -116,5 +125,7 @@ class MailingBannersViewSet(viewsets.GenericViewSet):
             m.superbanner_mailings_count = len(m.not_mailed_banners) + m.superbanner_mailings_count
 
         bulk_update(merchants, update_fields=['superbanner_mailings_count'])
-        Banner.objects.filter(merchant__id__in=[m.id for m in merchants]).update(was_mailed=True)
+        Banner.objects.filter(
+            in_mailing=True, type=BannerType.SUPER, merchant__id__in=[m.id for m in merchants]
+        ).update(was_mailed=True)
         return Response()

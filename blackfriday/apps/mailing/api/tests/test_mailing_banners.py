@@ -26,7 +26,7 @@ def test_increment_counters_expect_banner_counters_incremented(admin_logged_clie
 
 def test_increment_counters_expect_superbanner_counters_incremented(admin_logged_client):
     m = MerchantFactory.create()
-    BannerFactory.create_batch(2, type=BannerType.SUPER, merchant=m)
+    BannerFactory.create_batch(2, type=BannerType.SUPER, merchant=m, in_mailing=True)
 
     InvoiceFactory.create(
         options__option__tech_name='superbanner_at_mailing', options__value=2, is_paid=True, merchant=m

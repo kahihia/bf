@@ -14,6 +14,8 @@ from apps.catalog.models import Category
 from apps.promo.models import Option
 from django.utils import timezone
 
+from libs.db.fields import LongUrlField
+
 
 class ModerationStatus:
     new = 0
@@ -49,7 +51,7 @@ class AdvertiserProfile(models.Model):
         (AdvertiserType.SUPERNOVA, 'Сверхновая'),
     )
 
-    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR)
+    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR, verbose_name='Тип')
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
@@ -108,7 +110,7 @@ class AdvertiserProfile(models.Model):
 
 class ModeratedMerchantsQueryset(models.QuerySet):
     def moderated(self):
-        return self.filter(moderation_status=ModerationStatus.confirmed)
+        return self.filter(moderation_status=ModerationStatus.confirmed, slug__isnull=False).exclude(slug='')
 
 
 class Merchant(models.Model):
@@ -122,7 +124,7 @@ class Merchant(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
 
-    url = models.URLField(null=True, blank=True, unique=True, verbose_name='URL')
+    url = LongUrlField(null=True, blank=True, unique=True, verbose_name='URL')
     slug = models.SlugField(null=True, blank=True, unique=True, verbose_name='Слаг')
     promocode = models.CharField(max_length=100, null=True, blank=True, verbose_name='Промо код')
 
@@ -195,7 +197,7 @@ class Merchant(models.Model):
         options.update(get_options(InvoiceOption.objects.filter(invoice__merchant=self, invoice__is_paid=True)))
 
         return {
-            limit: reduce(operator.add, map(get_value, rules), 0)
+            limit: reduce(operator.add, map(get_value, rules), 0) if self.promo else 0
             for limit, rules in settings.LIMITS_RULES.items()
         }
 
@@ -300,7 +302,7 @@ class Merchant(models.Model):
 
     @property
     def preview_url(self):
-        return reverse('advertisers:merchant-preview', args=(self.id,))
+        return reverse('showcase:merchant-preview', args=(self.id,))
 
     @property
     def payment_status(self):
@@ -320,6 +322,9 @@ class Merchant(models.Model):
     def owner_id(self):
         return self.advertiser.id
 
+    def get_showcase_url(self):
+        return '/merchant/{}'.format(self.slug)
+
 
 ADVERTISER_INNER_TYPES = dict(map(reversed, filter(lambda x: 10 <= x[0] < 20, AdvertiserProfile.TYPES)))
 
@@ -338,7 +343,9 @@ class BannerType:
 
 class BannerQueryset(models.QuerySet):
     def from_moderated_merchants(self):
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed)
+        return self.filter(
+            merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False
+        ).exclude(merchant__slug='')
 
     def vertical(self):
         return self.filter(type=BannerType.VERTICAL)
@@ -361,7 +368,7 @@ class Banner(models.Model):
 
     type = models.IntegerField(choices=TYPES)
     image = models.ForeignKey('mediafiles.Image', related_name='banners')
-    url = models.URLField()
+    url = LongUrlField()
     on_main = models.BooleanField()
     in_mailing = models.BooleanField()
     categories = models.ManyToManyField('catalog.Category', related_name='banners', blank=True)

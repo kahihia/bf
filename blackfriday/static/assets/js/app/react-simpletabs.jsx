@@ -27,13 +27,20 @@ const Tabs = React.createClass({
 
 	getInitialState() {
 		return {
-			tabActive: this.props.tabActive
+			tabActive: this.props.tabActive,
+			mountedPanels: [this.props.tabActive]
 		};
 	},
 
 	componentWillReceiveProps(newProps) {
 		if (newProps.tabActive && newProps.tabActive !== this.props.tabActive) {
-			this.setState({tabActive: newProps.tabActive});
+			this.setState(previousState => {
+				if (previousState.mountedPanels.indexOf(newProps.tabActive) === -1) {
+					previousState.mountedPanels.push(newProps.tabActive);
+				}
+				previousState.tabActive = newProps.tabActive;
+				return previousState;
+			});
 		}
 	},
 
@@ -50,7 +57,13 @@ const Tabs = React.createClass({
 
 	setActive(index, e) {
 		e.preventDefault();
-		this.setState({tabActive: index});
+		this.setState(previousState => {
+			if (previousState.mountedPanels.indexOf(index) === -1) {
+				previousState.mountedPanels.push(index);
+			}
+			previousState.tabActive = index;
+			return previousState;
+		});
 	},
 
 	_getMenuItems() {
@@ -102,12 +115,16 @@ const Tabs = React.createClass({
 				tabActive === index && 'is-active'
 			);
 
+			const isMounted = (tabActive === index) || this.state.mountedPanels.indexOf(index + 1) > -1;
+
 			return (
 				<article
 					key={index}
 					className={classes}
 					>
-					{$panel}
+					{isMounted ? (
+						$panel
+					) : null}
 				</article>
 			);
 		});

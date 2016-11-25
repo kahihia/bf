@@ -1,5 +1,8 @@
 /* global window */
 
+import arrayShuffle from 'array-shuffle';
+import arrayChunk from 'array.chunk';
+
 export const ENV = JSON.parse(JSON.stringify(window.ENV || {}));
 
 export function categoriesSorting(catA, catB) {
@@ -13,10 +16,16 @@ export function categoriesSorting(catA, catB) {
 		return 0;
 	}
 
-	if (catA.name.toLowerCase() === 'другое') {
+	if (
+		catA.name.toLowerCase() === 'другое' ||
+		catA.name.toLowerCase() === 'разное'
+	) {
 		return 1;
 	}
-	if (catB.name.toLowerCase() === 'другое') {
+	if (
+		catB.name.toLowerCase() === 'другое' ||
+		catB.name.toLowerCase() === 'разное'
+	) {
 		return -1;
 	}
 
@@ -46,4 +55,8 @@ export function toggleClass(elem, className) {
 	}
 
 	elem.className = classString;
+}
+
+export function getRandomItems(items, size) {
+	return arrayChunk(arrayShuffle(items), size);
 }

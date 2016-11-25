@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% endcomment %}
 
-    <title>Черная Пятница 2016 в России - официальный сайт Real Black Friday</title>
-    <meta name="description" content="Настоящая Черная Пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов" />
+    <title>➤ Настоящая Черная пятница 2016 в России — Real Black Friday 2016</title>
+    <meta name="description" content="★★★★★ Настоящая Черная Пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки до 90% от крупнейших интернет-магазинов." />
     <meta name="keywords" content="" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -53,6 +53,8 @@
     <script src="{% static 'js/es5-sham.min.js' %}"></script>
     <script src="{% static 'js/ie8.js' %}"></script>
     <![endif]-->
+
+    <script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
 </head>
 <body>
 <!-- Google Tag Manager -->
@@ -72,7 +74,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="site-header-info__content">
             <div class="site-header-info__about">
                 <span class="site-header-info__text">
-                    Официальный сайт распродажи "Настоящая Черная Пятница" 2016 в России
+                    "Настоящая Черная Пятница" 2016 в России - официальный сайт Real Black Friday
                 </span>
             </div>
 
@@ -86,7 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </span>
             </div>
 
-            {% if SHOW_LOGIN_ON_LANDING %}
+            {% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING %}
             <div class="site-header-info__auth">
                 <div class="header-auth">
                     <a
@@ -231,13 +233,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <a name="anchor-about"></a>
 
     <div class="container">
-        <a href="http://project79232.tilda.ws/konkurs" target="_blank">
-            <img
-                class="about-section__gift"
-                src="{% static 'images/landing/action-section__gift.png' %}"
-                alt=""
-                />
-        </a>
+        <img
+            class="about-section__copter"
+            src="{% static 'images/landing/action-section__copter.png' %}"
+            alt=""
+            />
     </div>
 
     <div class="about-section__carousel js-about-section__carousel">
@@ -252,7 +252,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         </div>
 
                         <div class="about-section__text">
-                            <strong>Настоящая Черная Пятница 2016</strong>&nbsp;&mdash;<br>
+                            <strong>★ Настоящая Черная Пятница 2016</strong>&nbsp;&mdash;<br>
                             это масштабная онлайн-распродажа в ведущих<br>
                             интернет-магазинах и онлайн-сервисах<br>
                             России, Белоруссии и Казахстана.<br>
@@ -293,7 +293,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 Получи<br>
                                 скидки до 90%
                             </div>
-
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 data-toggle="modal"
@@ -309,6 +309,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -368,6 +369,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-4 col-xs-offset-3">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 100%;"
@@ -384,6 +386,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -441,6 +444,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -457,6 +461,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -513,6 +518,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -529,6 +535,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -585,6 +592,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -601,6 +609,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -658,6 +667,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -674,6 +684,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -731,6 +742,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -747,6 +759,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -805,6 +818,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -821,6 +835,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -877,6 +892,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -893,6 +909,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -949,6 +966,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
                     <div class="col-xs-7">
                         <div class="about-section__action">
+                            {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
                             <button
                                 class="about-section__action-link btn btn-primary btn-lg"
                                 style="position: absolute; top: 364px; left: 0; display: block; width: 370px;"
@@ -965,6 +983,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     alt=""
                                     />
                             </button>
+                            {% endif %}
 
                             <img
                                 class="about-section__action-img"
@@ -1103,6 +1122,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div><!-- subscribe-section -->
 
+{% if SHOW_MNOGO_BLOCK_ON_LANDING %}
+{# код Много.ру ломает модальные окна #}
+<a name="anchor-mnogoru"></a>
+<script>
+(function(d){var s = d.createElement('script');s.type = 'text/javascript';
+var get_params={};window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,function(str,key,value){get_params[key] = value;});
+s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"&date=" + (get_params.date==undefined?'':get_params.date);;d.getElementsByTagName('head')[0].appendChild(s);})(document);
+</script>
+<noindex>
+<div id="mnogoru_block" class="adaptive"></div>
+</noindex>
+{% endif %}
 
 <div class="text-section">
     <a name="anchor-text"></a>
@@ -1217,6 +1248,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </div><!-- text-section -->
 
+<div class="text-center" style="margin-top: 50px;">
+    <iframe width="886" height="498" src="https://www.youtube.com/embed/I9QhaYYX1Eg" frameborder="0" allowfullscreen></iframe>
+</div>
+
 
 <div class="discount-section">
     <a name="anchor-buyer"></a>
@@ -1279,6 +1314,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </li>
         </ul>
 
+        {% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
         <div class="discount-section__action">
             <button
                 class="btn btn-primary btn-lg"
@@ -1296,6 +1332,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     />
             </button>
         </div>
+        {% endif %}
     </div>
 </div><!-- discount-section -->
 
@@ -1436,6 +1473,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             Политика конфиденциальности
                         </a>
                     </li>
+
+                    <li class="simple-menu__item">
+                        <a class="simple-menu__link" href="/kontakty" target="_blank" rel="nofollow">
+                            Контакты
+                        </a>
+                    </li>
                 </ul>
 
                 {% comment %}
@@ -1502,7 +1545,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
 </footer><!-- site-footer -->
 
-
+{% if not SHOW_MNOGO_BLOCK_ON_LANDING %}
 <div
     class="modal fade"
     tabindex="-1"
@@ -1581,20 +1624,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
     </div>
 </div>
+{% endif %}
 
-{% comment %}
 <div class="mnogoru-gift" id="mnogoru-gift">
-    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
-    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
+    <img src="{% static 'images/landing/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/landing/mnogoru-gift-bg.png' %}" alt=""></a>
 </div>
-{% endcomment %}
 
-{% if SHOW_LOGIN_ON_LANDING %}
+{% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING %}
 {% include "landing/includes/auth-modal.html" %}
 {% endif %}
 
 
-<script src="{% static 'js/landing/jquery.v1.11.0.js' %}"></script>
 <script src="{% static 'js/landing/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/landing/jquery.countdown.js' %}"></script>
 <script src="{% static 'js/landing/jquery.bxslider.min.js' %}"></script>

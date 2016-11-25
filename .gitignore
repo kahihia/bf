@@ -20,3 +20,4 @@ webpack-stats.json
 npm-debug.log
 test-reports/
 .cache/
+/showcase/

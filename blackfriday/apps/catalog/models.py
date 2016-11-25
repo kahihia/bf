@@ -1,10 +1,28 @@
+import operator
+
+from functools import reduce
 from django.db import models
+from django.conf import settings
+
+from libs.db.fields import LongUrlField
+
+
+class CategoryQueryset(models.QuerySet):
+    def russians(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(products__country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+            )
+        ).distinct()
 
 
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=120, unique=True, verbose_name='Слаг')
     merchant = models.ForeignKey('advertisers.Merchant', blank=True, null=True, related_name='categories')
+
+    objects = models.Manager.from_queryset(CategoryQueryset)()
 
     class Meta:
         verbose_name = 'Категория'
@@ -17,7 +35,9 @@ class Category(models.Model):
 class ProductQueryset(models.QuerySet):
     def from_moderated_merchants(self):
         from apps.advertisers.models import ModerationStatus
-        return self.filter(merchant__moderation_status=ModerationStatus.confirmed)
+        return self.filter(
+            merchant__moderation_status=ModerationStatus.confirmed, merchant__slug__isnull=False
+        ).exclude(merchant__slug='')
 
     def teasers_on_main(self):
         return self.filter(is_teaser_on_main=True)
@@ -25,11 +45,19 @@ class ProductQueryset(models.QuerySet):
     def teasers(self):
         return self.filter(is_teaser=True)
 
+    def russians(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+            )
+        )
+
 
 class Product(models.Model):
-    merchant = models.ForeignKey('advertisers.Merchant', related_name='products')
+    merchant = models.ForeignKey('advertisers.Merchant', related_name='products', verbose_name='Магазин')
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products')
-    name = models.CharField(max_length=120, verbose_name='Название')
+    name = models.CharField(max_length=255, verbose_name='Название')
 
     price = models.IntegerField(verbose_name='Цена', null=True)
     old_price = models.IntegerField(verbose_name='Старая цена', null=True)
@@ -39,9 +67,9 @@ class Product(models.Model):
     is_teaser = models.BooleanField(verbose_name='Товар является тизером', default=False)
     is_teaser_on_main = models.BooleanField(verbose_name='Товар является тизером на главной', default=False)
     brand = models.CharField(verbose_name='Брэнд', max_length=255)
-    url = models.CharField(verbose_name='Ссылка', max_length=255)
+    url = LongUrlField(verbose_name='Ссылка')
     created_datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
-    image = models.URLField()
+    image = models.TextField()
     currency = models.CharField(max_length=10)
 
     objects = models.Manager.from_queryset(ProductQueryset)()

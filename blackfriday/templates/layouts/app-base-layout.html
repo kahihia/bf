@@ -24,7 +24,7 @@
     <meta name="description" content="{% block desctiption %}Настоящая Черная Пятница 24 и 25 ноября 2016 года: распродажи, акции и скидки от крупнейших интернет-магазинов{% endblock %}">
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
 
-    <meta name="referrer" content="origin-when-crossorigin">
+    <meta name="referrer" content="always">
 
     {% block meta %}{% endblock meta %}
 
@@ -48,8 +48,20 @@
     <script src="{% static 'js/es5-sham.min.js' %}"></script>
     <script src="{% static 'js/ie8.js' %}"></script>
     <![endif]-->
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WPFKGH');</script>
+    <!-- End Google Tag Manager -->
 </head>
 <body class="site">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WPFKGH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- begin site__content -->
 <div class="site__content">
@@ -195,24 +207,20 @@ window.DATA = {
         ajaxUrl: 'super_banners',
         ajaxUrlRoot: true,
         {% block superbanner %}
-            pages: 0,
+            // pagesCount: 0,
             isRandom: true,
             isControlsShown: true,
             isPagerShown: false,
-            data: [],
+            data: {{ superbanners|safe|default:"[]" }},
         {% endblock %}
         speed: 3000
     },
     headerMenu: [
         {name: 'Российские товары', url: '/russian-goods/'},
         {name: 'Все акции', url: '/actions/'},
-        {name: 'Все товары', url: '/merchants/'}
+        {name: 'Все товары', url: '/actions/#tab=2'}
     ],
-    categories: [
-        {% for item in categories %}
-        {id: {{ item.id }}, url: '/categories/{{ item.slug }}/', name: '{{ item.name }}'},
-        {% endfor %}
-    ],
+    categories: {{ categories|safe|default:"[]" }},
     footerCats: [
         {name: 'Российские товары', url: '/russian-goods/'},
         {name: 'Все акции', url: '/actions/'},
