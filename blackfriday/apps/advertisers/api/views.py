@@ -358,7 +358,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'showcase':
                 int(merchant.products.exists()),
             'logo_on_main':
-                int(bool(merchant.image) and
+                int(bool(merchant.image) and merchant.promo and
                     merchant.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()),
             'logo_at_cat':
                 int(merchant.logo_categories.count() >= 2),
