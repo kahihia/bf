@@ -76,7 +76,7 @@ class StatsUpdater:
         self.stats_to_update = []
 
 
-class MerchantStatsUpdate(StatsUpdater):
+class MerchantStatsUpdater(StatsUpdater):
     @staticmethod
     def parse_logs(file_name):
         counter = defaultdict(list)
