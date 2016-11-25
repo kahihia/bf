@@ -15,6 +15,7 @@ class ProductAdmin(admin.ModelAdmin):
         'thumb', 'name', 'brand', 'display_price', 'category', 'merchant',
     )
     list_display_links = ('name', )
+    list_filter = ('category', 'brand')
     search_fields = ('name', 'brand')
 
     def display_price(self, obj):
