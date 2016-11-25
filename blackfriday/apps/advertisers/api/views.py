@@ -20,7 +20,7 @@ from apps.advertisers.api.serializers.clients import MerchantNotificationsSerial
 from apps.mailing.utils import (
     send_merchant_creation_mail, send_moderation_success_mail, send_moderation_request_mail, send_moderation_fail_mail
 )
-from apps.reports.models import LogoStats, TeaserStats, BannerStats
+from apps.reports.models import LogoStats, TeaserStats, BannerStats, MerchantStats
 from libs.api.exceptions import BadRequest
 from libs.api.permissions import (
     IsAdmin, IsOwner, IsAuthenticated, IsAdvertiser, action_permission, IsManager, IsValidAdvertiser
@@ -256,12 +256,12 @@ class MerchantViewSet(viewsets.ModelViewSet):
         )
 
     @staticmethod
-    def create_report(template_name, file_name, params={}):
+    def create_report(template_name, file_name, context={}):
         output = io.BytesIO()
         weasyprint.HTML(
             string=render_to_string(
                 '{}.html'.format(template_name),
-                params
+                context
             )
         ).write_pdf(output)
         output.seek(0)
@@ -356,6 +356,16 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='act-report')
     def act_report(self, request, *args, **kwargs):
         merchant = self.get_object()
+        stats_qs = MerchantStats.objects.filter(merchant=merchant)
+        if stats_qs:
+            stats = stats_qs[0]
+        else:
+            stats = {
+                'times_shown': 0,
+                'times_clicked': 0,
+                'unique_visitors_shown': 0,
+                'unique_visitors_clicked': 0
+            }
 
         context = {
             'super_banner':
@@ -369,7 +379,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'showcase':
                 int(merchant.products.exists()),
             'logo_on_main':
-                int(bool(merchant.image) and merchant.promo and
+                int(bool(merchant.image and merchant.promo) and
                     merchant.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()),
             'logo_at_cat':
                 int(merchant.logo_categories.count() >= 2),
@@ -385,8 +395,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'teaser_on_main':
                 int(merchant.products.filter(is_teaser_on_main=True).exists()),
             'mailing':
-                None  # ToDo: how?
-
+                None,  # ToDo: how?
+            'stats':
+                stats
         }
 
         return self.create_report(
