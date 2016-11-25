@@ -14,7 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'thumb', 'name', 'brand', 'display_price', 'category', 'merchant',
     )
-    list_filter = ('category', 'brand')
+    list_display_links = ('name', )
     search_fields = ('name', 'brand')
 
     def display_price(self, obj):
@@ -27,6 +27,10 @@ class ProductAdmin(admin.ModelAdmin):
     display_price.short_description = 'Отображаемая цена'
 
     def thumb(self, obj):
-        return format_html('<img src="{}" alt="" style="max-width: 75px; max-height: 75px;"/>', obj.image)
+        return format_html(
+            '<a href="{}" target="_blank"><img src="{}" alt="" style="max-width: 75px; max-height: 75px;"/></a>',
+            obj.url,
+            obj.image
+        )
 
     thumb.short_description = 'Изображение'
