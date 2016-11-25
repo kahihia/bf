@@ -51,7 +51,7 @@ class AdvertiserProfile(models.Model):
         (AdvertiserType.SUPERNOVA, 'Сверхновая'),
     )
 
-    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR)
+    type = models.IntegerField(choices=TYPES, default=AdvertiserType.REGULAR, verbose_name='Тип')
 
     account = models.CharField(max_length=20, null=True, blank=True, verbose_name='Банковский счет')
     inn = models.CharField(max_length=12, null=True, blank=True, unique=True, verbose_name='ИНН')
