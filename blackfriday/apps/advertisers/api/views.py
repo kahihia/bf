@@ -36,7 +36,7 @@ from apps.showcase.renderers import render_all_pages
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant, ModerationStatus, BannerType, AdvertiserType, AdvertiserProfile
+from ..models import Banner, Merchant, ModerationStatus, BannerType, AdvertiserType, AdvertiserProfile, HeadBasis
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
@@ -403,9 +403,10 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'stats': stats,
             'merchant_name': merchant.name,
             'advertiser_name': merchant.advertiser.name,
-            'inn': profile.inn if profile.type == AdvertiserType.REGULAR else '&mdash;',
-            'kpp': profile.kpp if profile.type == AdvertiserType.REGULAR else '&mdash;',
-            'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[profile.head_basis].lower(),
+            'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[
+                profile.head_basis if profile else HeadBasis.charter].lower(),
             'site_url': settings.SITE_URL,
             'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all())
         }
