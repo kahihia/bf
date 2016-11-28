@@ -88,7 +88,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </span>
             </div>
 
-            {% if SHOW_LOGIN_ON_LANDING %}
+            {% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING and not LANDING_WITHOUT_BACKEND %}
             <div class="site-header-info__auth">
                 <div class="header-auth">
                     <a
@@ -213,11 +213,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
             <div class="col-xs-6">
                 <form
-                    class="party-section__form js-form-ajax"
                     id="apply-form-1"
-                    method="POST"
-                    action="/api/applications/"
+                    {% if LANDING_WITHOUT_BACKEND %}
+                        class="party-section__form"
+                        method="GET"
+                        action="mailto:{{ MANAGER_EMAILS|first }}"
+                        target="_blank"
+                    {% else %}
+                        class="party-section__form js-form-ajax"
+                        method="POST"
+                        action="/api/applications/"
+                    {% endif %}
                     >
+
+                    {% if LANDING_WITHOUT_BACKEND %}
+                        <input type="hidden" name="subject" value="Заявка на участие в Черной Пятнице">
+                        <input type="hidden" name="body" value="">
+
+                        {% if MANAGER_EMAILS|length > 1 %}
+                            <input type="hidden" name="cc" value="{{ MANAGER_EMAILS|slice:'1:'|join:',' }}">
+                        {% endif %}
+                    {% endif %}
+
                     <div class="row">
                         <div class="col-xs-5">
                             <div class="form-group">
