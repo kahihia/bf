@@ -36,7 +36,7 @@ from apps.showcase.renderers import render_all_pages
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant, ModerationStatus, BannerType
+from ..models import Banner, Merchant, ModerationStatus, BannerType, AdvertiserType, AdvertiserProfile
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
@@ -357,6 +357,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='act-report')
     def act_report(self, request, *args, **kwargs):
         merchant = self.get_object()
+        profile = merchant.advertiser.profile
 
         stats_qs = MerchantStats.objects.filter(merchant=merchant)
         if stats_qs:
@@ -375,7 +376,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             {
                 'description': service['description'],
                 'value': limits[service['tech_name']],
-                'is_boolean': limits['is_boolean']
+                'is_boolean': service['is_boolean']
             } for service in map(dict, map(partial(zip, ('tech_name', 'is_boolean', 'description')), [
                 ('superbanners', False, 'superbanners'),
                 ('teasers', False, 'teasers'),
@@ -397,11 +398,16 @@ class MerchantViewSet(viewsets.ModelViewSet):
             ])) if service['tech_name'] in limits
         ]
 
-
         context = {
-            'data': datetime.today(),
+            'date': datetime.today(),
             'stats': stats,
-            'merchant_name': merchant.name
+            'merchant_name': merchant.name,
+            'advertiser_name': merchant.advertiser.name,
+            'inn': profile.inn if profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'kpp': profile.kpp if profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[profile.head_basis].lower(),
+            'site_url': settings.SITE_URL,
+            'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all())
         }
 
         return self.create_report(
