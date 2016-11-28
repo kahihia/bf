@@ -3,6 +3,7 @@ import weasyprint
 
 from functools import partial
 from collections import defaultdict
+from datetime import datetime
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -35,7 +36,7 @@ from apps.showcase.renderers import render_all_pages
 from apps.banners.api.serializers import PartnerTinySerializer
 from apps.catalog.api.serializers import CategorySerializer
 
-from ..models import Banner, Merchant, ModerationStatus, BannerType
+from ..models import Banner, Merchant, ModerationStatus, BannerType, AdvertiserType, AdvertiserProfile
 from .filters import AdvertiserFilter, MerchantFilter
 
 from .serializers.clients import (AdvertiserSerializer, MerchantSerializer, MerchantListSerializer,
@@ -356,6 +357,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='act-report')
     def act_report(self, request, *args, **kwargs):
         merchant = self.get_object()
+        profile = merchant.advertiser.profile
+
         stats_qs = MerchantStats.objects.filter(merchant=merchant)
         if stats_qs:
             stats = stats_qs[0]
@@ -367,37 +370,44 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 'unique_visitors_clicked': 0
             }
 
+        limits = merchant.limits
+
+        services = [
+            {
+                'description': service['description'],
+                'value': limits[service['tech_name']],
+                'is_boolean': service['is_boolean']
+            } for service in map(dict, map(partial(zip, ('tech_name', 'is_boolean', 'description')), [
+                ('superbanners', False, 'superbanners'),
+                ('teasers', False, 'teasers'),
+                ('superbanner_categories', False, 'superbanner_categories'),
+                ('superbanner_on_main', True, 'superbanner_on_main'),
+                ('banners', False, 'banners'),
+                ('banner_on_main', True, 'banner_on_main'),
+                ('banner_in_mailing', True, 'banner_in_mailing'),
+                ('logo_categories', False, 'logo_categories'),
+                ('categories', False, 'categories'),
+                ('banner_positions', False, 'banner_positions'),
+                ('products', False, 'products'),
+                ('extra_banner_categories', False, 'extra_banner_categories'),
+                ('main_backgrounds', False, 'main_backgrounds'),
+                ('vertical_banners', False, 'vertical_banners'),
+                ('category_backgrounds', False, 'category_backgrounds'),
+                ('teasers_on_main', False, 'teasers_on_main'),
+                ('superbanner_in_mailing', False, 'superbanner_in_mailing')
+            ])) if service['tech_name'] in limits
+        ]
+
         context = {
-            'super_banner':
-                merchant.banners.filter(type=BannerType.SUPER).count(),
-            'logo':
-                int(bool(merchant.image)),
-            'description':
-                int(bool(merchant.description)),
-            'action_banner':
-                merchant.banners.filter(type=BannerType.ACTION).count(),
-            'showcase':
-                int(merchant.products.exists()),
-            'logo_on_main':
-                int(bool(merchant.image and merchant.promo) and
-                    merchant.promo.options.filter(value__gt=0, option__tech_name='logo_on_main').exists()),
-            'logo_at_cat':
-                int(merchant.logo_categories.count() >= 2),
-            'action_banner_at_cat':
-                merchant.banners.annotate(c=Count('categories')).filter(type=BannerType.ACTION, c__gte=2).count(),
-            'super_banner_at_cat':
-                int(merchant.banners.filter(type=BannerType.SUPER, categories__isnull=False).exists()),
-            'action_banner_on_main':
-                int(merchant.banners.filter(type=BannerType.ACTION, on_main=True).exists()),
-            'teaser_at_cat':
-                int(merchant.products.filter(is_teaser=True).count() >= 50 and
-                    merchant.products.filter(is_teaser=True).values('category').distinct().count() >= 2),
-            'teaser_on_main':
-                int(merchant.products.filter(is_teaser_on_main=True).exists()),
-            'mailing':
-                merchant.banner_mailings_count,
-            'stats':
-                stats
+            'date': datetime.today(),
+            'stats': stats,
+            'merchant_name': merchant.name,
+            'advertiser_name': merchant.advertiser.name,
+            'inn': profile.inn if profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'kpp': profile.kpp if profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[profile.head_basis].lower(),
+            'site_url': settings.SITE_URL,
+            'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all())
         }
 
         return self.create_report(
