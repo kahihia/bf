@@ -1,6 +1,6 @@
 /* global $ */
 
-var ts = new Date(2016, 10, 24, 0, 0);
+var ts = new Date(2017, 10, 25, 0, 0);
 
 if ((new Date()) > ts) {
 	// The new year is here! Count towards something else.
