@@ -2,6 +2,7 @@ import pytest
 
 from unittest.mock import patch
 
+from apps.advertisers.models import Merchant
 from apps.advertisers.tests.factories import MerchantFactory
 from apps.reports.models import LogoStats, MerchantStats
 from apps.reports.utils import StatsUpdater, MerchantStatsUpdater
@@ -14,6 +15,7 @@ def test_stats_updater_run():
     merchant = MerchantFactory.create()
     updater = StatsUpdater(
         stats_cls=LogoStats,
+        related_model_cls=Merchant,
         related_model_id_name='merchant_id'
     )
     test_value = 10
@@ -30,6 +32,7 @@ def test_merchant_stats_updater_run():
     merchant = MerchantFactory.create()
     updater = MerchantStatsUpdater(
         stats_cls=MerchantStats,
+        related_model_cls=Merchant,
         related_model_id_name='merchant_id'
     )
     test_value = [1, 1, 1, 2, 2]
