@@ -1,4 +1,4 @@
-/* global $ toastr */
+/* global $ document toastr */
 
 import Cookie from 'js-cookie';
 import MESSAGES from './messages.js';
@@ -18,6 +18,26 @@ $('.js-form-ajax').ajaxForm({
 	success: showResponse,
 	error: showError
 });
+
+$(document)
+	.on('submit', 'form#apply-form-1', function (event) {
+		let form = event.target;
+
+		form.body.value =
+			`Имя: ${form.name.value}\n` +
+			`Название организации: ${form.organizationName.value}\n` +
+			`Контактный телефон: ${form.phone.value}\n` +
+			`E-mail: ${form.email.value}`;
+
+		if (form.comment.value) {
+			form.body.value += `\nКомментарий:\n${form.comment.value}`;
+		}
+	})
+	.on('submit', 'form', function (event) {
+		setTimeout(function () {
+			event.target.reset();
+		}, 0);
+	});
 
 function showResponse(data) {
 	toastr.success(MESSAGES.subscribeSuccess);
