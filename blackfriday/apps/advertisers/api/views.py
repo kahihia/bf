@@ -3,6 +3,7 @@ import weasyprint
 
 from functools import partial
 from collections import defaultdict
+from datetime import datetime
 
 from django.conf import settings
 from django.core.mail import send_mail
@@ -369,6 +370,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             }
 
         limits = merchant.limits
+
         services = [
             {
                 'description': service['description'],
@@ -395,10 +397,17 @@ class MerchantViewSet(viewsets.ModelViewSet):
             ]))) if service['tech_name'] in limits
         ]
 
+
+        context = {
+            'data': datetime.today(),
+            'stats': stats,
+            'merchant_name': merchant.name
+        }
+
         return self.create_report(
             'reports/act_report',
             'Акт-отчет об указании услуг',
-            {}
+            context
         )
 
 
