@@ -374,7 +374,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 'description': service['description'],
                 'value': limits[service['tech_name']],
                 'is_boolean': limits['is_boolean']
-            } for service in map(dict(map(partial(zip, ('tech_name', 'is_boolean', 'description')), [
+            } for service in map(dict, map(partial(zip, ('tech_name', 'is_boolean', 'description')), [
                 ('superbanners', False, 'superbanners'),
                 ('teasers', False, 'teasers'),
                 ('superbanner_categories', False, 'superbanner_categories'),
@@ -392,7 +392,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 ('category_backgrounds', False, 'category_backgrounds'),
                 ('teasers_on_main', False, 'teasers_on_main'),
                 ('superbanner_in_mailing', False, 'superbanner_in_mailing')
-            ]))) if service['tech_name'] in limits
+            ])) if service['tech_name'] in limits
         ]
 
         return self.create_report(
