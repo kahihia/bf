@@ -1,7 +1,7 @@
 import factory
 from apps.catalog.tests.factories import CategoryFactory
 
-from apps.advertisers.models import ModerationStatus, BannerType
+from apps.advertisers.models import BannerType, HeadBasis
 from apps.catalog.models import Category
 
 
@@ -17,6 +17,7 @@ class AdvertiserProfileFactory(factory.django.DjangoModelFactory):
     contact_name = factory.Faker('name')
     contact_phone = factory.Faker('phone_number')
     head_name = factory.Faker('name')
+    head_basis = HeadBasis.charter
     type = 10
 
     class Meta:
