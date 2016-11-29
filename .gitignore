@@ -5,6 +5,7 @@
 node_modules
 /_media/
 /_static/
+/_screenshots/
 
 /blackfriday/settings/local.py
 /landing/
