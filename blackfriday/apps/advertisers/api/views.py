@@ -445,6 +445,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 'Визуальный отчет',
                 {
                     'site_url': settings.SITE_URL,
+                    'screenshot_url': settings.SCREENSHOT_URL,
                     'merchant_id': merchant.id
                 },
                 request
