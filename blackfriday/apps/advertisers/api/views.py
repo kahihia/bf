@@ -1,5 +1,6 @@
 import io
 import weasyprint
+import os.path
 
 from functools import partial
 from collections import defaultdict
@@ -13,7 +14,7 @@ from django.http.response import StreamingHttpResponse
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
-from rest_framework.exceptions import ValidationError, PermissionDenied
+from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
@@ -438,14 +439,18 @@ class MerchantViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['get'], url_path='visual-report')
     def visual_report(self, request, *args, **kwargs):
         merchant = self.get_object()
-        return self.create_report(
-            'reports/visual_report',
-            'Визуальный отчет',
-            {
-                'site_url': settings.SITE_URL
-            },
-            request
-        )
+        if os.path.isfile(os.path.join(settings.SCREENSHOT_ROOT, '{}.png'.format(merchant.id))):
+            return self.create_report(
+                'reports/visual_report',
+                'Визуальный отчет',
+                {
+                    'site_url': settings.SITE_URL,
+                    'merchant_id': merchant.id
+                },
+                request
+            )
+        else:
+            raise NotFound
 
 
 class BannerViewSet(viewsets.ModelViewSet):
