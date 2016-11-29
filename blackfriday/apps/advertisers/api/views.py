@@ -417,8 +417,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'stats': stats,
             'merchant_name': merchant.name,
             'advertiser_name': merchant.advertiser.name,
-            'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
-            'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR and profile.inn else '&mdash;',
+            'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR and profile.kpp else '&mdash;',
             'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[
                 profile.head_basis if profile else HeadBasis.proxy].lower(),
             'site_url': settings.SITE_URL,
