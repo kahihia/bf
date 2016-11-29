@@ -1,5 +1,6 @@
 import io
 import weasyprint
+import os.path
 
 from functools import partial
 from collections import defaultdict
@@ -257,13 +258,14 @@ class MerchantViewSet(viewsets.ModelViewSet):
         )
 
     @staticmethod
-    def create_report(template_name, file_name, context={}):
+    def create_report(template_name, file_name, context, request):
         output = io.BytesIO()
         weasyprint.HTML(
             string=render_to_string(
                 '{}.html'.format(template_name),
-                context
-            )
+                context,
+            ),
+            base_url=request.build_absolute_uri()
         ).write_pdf(output)
         output.seek(0)
         response = StreamingHttpResponse(output, content_type='application/pdf')
@@ -351,7 +353,11 @@ class MerchantViewSet(viewsets.ModelViewSet):
         return self.create_report(
             'reports/statistics',
             'Статистика размещения рекламных материалов',
-            {'elements': elements}
+            {
+                'elements': elements,
+                'site_url': settings.SITE_URL
+            },
+            request
         )
 
     @detail_route(methods=['get'], url_path='act-report')
@@ -372,50 +378,81 @@ class MerchantViewSet(viewsets.ModelViewSet):
 
         limits = merchant.limits
 
-        services = [
+        srvcs = [
             {
                 'description': service['description'],
                 'value': limits[service['tech_name']],
                 'is_boolean': service['is_boolean']
             } for service in map(dict, map(partial(zip, ('tech_name', 'is_boolean', 'description')), [
-                ('superbanners', False, 'superbanners'),
-                ('teasers', False, 'teasers'),
-                ('superbanner_categories', False, 'superbanner_categories'),
-                ('superbanner_on_main', True, 'superbanner_on_main'),
-                ('banners', False, 'banners'),
-                ('banner_on_main', True, 'banner_on_main'),
-                ('banner_in_mailing', True, 'banner_in_mailing'),
-                ('logo_categories', False, 'logo_categories'),
-                ('categories', False, 'categories'),
-                ('banner_positions', False, 'banner_positions'),
-                ('products', False, 'products'),
-                ('extra_banner_categories', False, 'extra_banner_categories'),
-                ('main_backgrounds', False, 'main_backgrounds'),
-                ('vertical_banners', False, 'vertical_banners'),
-                ('category_backgrounds', False, 'category_backgrounds'),
-                ('teasers_on_main', False, 'teasers_on_main'),
-                ('superbanner_in_mailing', False, 'superbanner_in_mailing')
+                ('superbanners', False, 'Супербаннеры'),
+                ('teasers', False, 'Товары-тизеры'),
+                ('superbanner_categories', False, 'Категории размещения супербаннеров'),
+                ('superbanner_on_main', True, 'Супербаннер на главной'),
+                ('banners', False, 'Акционные баннеры'),
+                ('banner_on_main', True, 'Акционный баннер на главной странице'),
+                ('banner_in_mailing', True, 'Акционный баннер в рассылке'),
+                ('logo_categories', False, 'Уникальные категории размещения логотипа'),
+                ('categories', False, 'Уникальные категории размещения товаров и акционных баннеров'),
+                ('banner_positions', False, 'Позиции размещения акционных баннеров в категориях'),
+                ('products', False, 'Товары'),
+                ('extra_banner_categories', False, 'Дополнительный баннер в категории'),
+                ('main_backgrounds', False, 'Фоны главной страницы'),
+                ('vertical_banners', False, 'Вертикальные баннеры'),
+                ('category_backgrounds', False, 'Фоны категорий'),
+                ('teasers_on_main', False, 'Товары-тизеры на главной странице'),
+                ('superbanner_in_mailing', False, 'Супербаннеры в рассылке')
             ])) if service['tech_name'] in limits
         ]
+
+        services = []
+        for srcv in srvcs:
+            service = {'description': srcv['description']}
+            if srcv['is_boolean']:
+                service['value'] = 'Есть' if srcv['value'] else 'Нет'
+            else:
+                service['value'] = '{} шт.'.format(srcv['value']) if srcv['value'] else None
+            services.append(service)
 
         context = {
             'date': datetime.today(),
             'stats': stats,
             'merchant_name': merchant.name,
             'advertiser_name': merchant.advertiser.name,
-            'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
-            'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR else '&mdash;',
+            'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR and profile.inn else '&mdash;',
+            'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR and profile.kpp else '&mdash;',
             'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[
-                profile.head_basis if profile else HeadBasis.charter].lower(),
+                profile.head_basis if profile else HeadBasis.proxy].lower(),
             'site_url': settings.SITE_URL,
-            'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all())
+            'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all()),
+            'services': services,
+            'head_name': profile.head_name if profile else None,
+            'head_appointment': profile.head_appointment if profile else None
         }
 
         return self.create_report(
             'reports/act_report',
             'Акт-отчет об указании услуг',
-            context
+            context,
+            request
         )
+
+    @detail_route(methods=['get'], url_path='visual-report')
+    def visual_report(self, request, *args, **kwargs):
+        merchant = self.get_object()
+        if os.path.isfile(os.path.join(settings.SCREENSHOT_ROOT, '{}.png'.format(merchant.id))):
+            return self.create_report(
+                'reports/visual_report',
+                'Визуальный отчет',
+                {
+                    'site_url': settings.SITE_URL,
+                    'merchant_id': merchant.id
+                },
+                request
+            )
+        else:
+            raise ValidationError({
+                'detail': 'Для данного магазина отсутствует скриншот'
+            })
 
 
 class BannerViewSet(viewsets.ModelViewSet):

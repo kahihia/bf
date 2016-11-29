@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
 import xhr from 'xhr';
-import {processErrors} from './admin/utils.js';
+import Glyphicon from './admin/components/glyphicon.jsx';
 
 (function () {
 	'use strict';
@@ -157,6 +157,11 @@ class MerchantListItem extends React.Component {
 						merchantId={id}
 						merchantName={name}
 						/>
+
+					<MerchantReportVisualButton
+						merchantId={id}
+						merchantName={name}
+						/>
 				</td>
 			</tr>
 		);
@@ -201,8 +206,6 @@ class MerchantReportActButton extends React.Component {
 			if (statusCode >= 200 && statusCode < 300) {
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Акт-отчет об оказании услуг - ${merchantName}.pdf`);
-			} else if (statusCode === 400) {
-				processErrors(data);
 			} else {
 				toastr.error('Не удалось получить акт-отчет об оказании услуг');
 			}
@@ -221,7 +224,8 @@ class MerchantReportActButton extends React.Component {
 				type="button"
 				disabled={this.state.isLoading}
 				>
-				{'Акт-отчёт об оказании услуг'}
+				<Glyphicon name="download-alt"/>
+				{' Акт-отчёт об оказании услуг'}
 			</button>
 		);
 	}
@@ -261,8 +265,6 @@ class MerchantReportStatisticsButton extends React.Component {
 			if (statusCode >= 200 && statusCode < 300) {
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Статистика размещения рекламных материалов - ${merchantName}.pdf`);
-			} else if (statusCode === 400) {
-				processErrors(data);
 			} else {
 				toastr.error('Не удалось получить статистику размещения рекламных материалов');
 			}
@@ -281,7 +283,8 @@ class MerchantReportStatisticsButton extends React.Component {
 				type="button"
 				disabled={this.state.isLoading}
 				>
-				{'Статистика размещения рекламных материалов'}
+				<Glyphicon name="download-alt"/>
+				{' Статистика размещения рекламных материалов'}
 			</button>
 		);
 	}
@@ -291,3 +294,61 @@ MerchantReportStatisticsButton.propTypes = {
 	merchantName: React.PropTypes.string.isRequired
 };
 // MerchantReportStatisticsButton.defaultProps = {};
+
+class MerchantReportVisualButton extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isLoading: false
+		};
+
+		this.handleClick = this.handleClick.bind(this);
+	}
+
+	requestMerchantReportVisual() {
+		this.setState({isLoading: true});
+		const {
+			merchantId,
+			merchantName
+		} = this.props;
+
+		xhr({
+			url: `/api/merchants/${merchantId}/visual-report/`,
+			method: 'GET',
+			responseType: 'arraybuffer'
+		}, (err, resp, data) => {
+			this.setState({isLoading: false});
+
+			const {statusCode} = resp;
+
+			if (statusCode >= 200 && statusCode < 300) {
+				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
+				saveAs(blob, `Отчет о визуальном размещении рекламных материалов - ${merchantName}.pdf`);
+			} else {
+				toastr.error('Не удалось получить отчет о визуальном размещении рекламных материалов');
+			}
+		});
+	}
+
+	handleClick() {
+		this.requestMerchantReportVisual();
+	}
+
+	render() {
+		return (
+			<button
+				className="btn btn-warning btn-sm btn-block"
+				onClick={this.handleClick}
+				type="button"
+				disabled={this.state.isLoading}
+				>
+				<Glyphicon name="download-alt"/>
+				{' Отчет о визуальном размещении рекламных материалов'}
+			</button>
+		);
+	}
+}
+MerchantReportVisualButton.propTypes = {
+	merchantId: React.PropTypes.number.isRequired,
+	merchantName: React.PropTypes.string.isRequired
+};

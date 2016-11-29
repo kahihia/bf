@@ -5,6 +5,9 @@ from .common import DJANGO_ROOT, PROJECT_ROOT
 MEDIA_ROOT = os.path.normpath(os.path.join(PROJECT_ROOT, '_media'))
 MEDIA_URL = '/media/'
 
+SCREENSHOT_ROOT = os.path.normpath(os.path.join(PROJECT_ROOT, '_screenshots'))
+SCREENSHOT_URL = '/screenshots/'
+
 STATIC_ROOT = os.path.normpath(os.path.join(PROJECT_ROOT, '_static'))
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (

@@ -1,3 +1,5 @@
+{% load staticfiles %}
+{% load humanize %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
@@ -25,6 +27,7 @@
 
         table {
             border-collapse: collapse;
+            table-layout: fixed;
         }
 
         p {
@@ -60,6 +63,19 @@
             padding: 0.13cm;
         }
 
+        .sign {
+            max-width: 110px;
+            max-height: 110px;
+            position: absolute;
+            margin-left: 20px;
+            margin-top: 35px;
+        }
+
+        .sign-text {
+            text-align: right;
+            margin: 40px 0px 10px
+        }
+
     </style>
 
 </head>
@@ -83,7 +99,7 @@
 <br/>
 
 <p class="text-align-justify text-indent">
-    ООО &quot;Эксперт Таун&quot; (ИНН 7801203510, КПП 780101001), именуемый в дальнейшем Исполнитель в лице Генерального директора Довладбегяна Леонида Леонидовича, действующего на основании Устава, составил, а {{ advertiser_name }} (ИНН {{ inn }}, КПП {{ kpp }}), именуемый в дальнейшем &quot;Заказчик&quot;, в лице /имя и должность лица/, действующего {{ head_basis }}, принял настоящий Отчет о нижеследующем:
+    ООО &quot;Эксперт Таун&quot; (ИНН 7801203510, КПП 780101001), именуемый в дальнейшем Исполнитель, в лице Генерального директора Довладбегяна Леонида Леонидовича, действующего на основании Устава, составил, а {{ advertiser_name }} (ИНН {{ inn|safe }}, КПП {{ kpp|safe }}), именуемый в дальнейшем &quot;Заказчик&quot;,{% if head_name %} которого представляет {% if head_appointment %}{{ head_appointment }} {% endif %}{{ head_name }}, действующий {{ head_basis }},{% endif %} принял настоящий Отчет о нижеследующем:
 </p>
 
 <p class="text-align-justify text-indent">
@@ -92,19 +108,53 @@
 
 <br/>
 
-<table width="629" cellpadding="5" cellspacing="0">
-    <col width="29">
-    <col width="336">
-    <col width="231">
+<table style="width: 100%" cellpadding="5" cellspacing="0">
     <tr>
-        <td>
+        <td style="width: 5%">
             <p>№</p>
         </td>
-        <td>
+        <td style="width: 60%">
             <p>Наименование услуги</p>
         </td>
-        <td>
+        <td style="width: 35%">
             <p>Количественный показатель</p>
+        </td>
+    </tr>
+    {% for service in services %}
+    <tr>
+        <td>
+            <p>{{ forloop.counter0|add:1 }}</p>
+        </td>
+        <td>
+            <p>{{ service.description }}</p>
+        </td>
+        <td>
+            <p>{% if service.value %}{{ service.value|safe }}{% else %}&mdash;{% endif %}</p>
+        </td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td>
+            <p>{{ services|length|add:1 }}</p>
+        </td>
+        <td>
+            <p>На страницу магазина на домене realblackfriday.ru было произведено переходов, зафиксировано уникальных посетителей</p>
+        </td>
+        <td>
+            <p>{{ stats.times_shown|intcomma }} (переходов)</p>
+            <p>{{ stats.unique_visitors_shown|intcomma }} (уникальных посетителей)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>{{ services|length|add:2 }}</p>
+        </td>
+        <td>
+            <p>С домена realblackfriday.ru на сайт Заказчика было произведено переходов, зафиксировано уникальных посетителей</p>
+        </td>
+        <td>
+            <p>{{ stats.times_clicked|intcomma }} (переходов)</p>
+            <p>{{ stats.unique_visitors_clicked|intcomma }} (уникальных посетителей)
         </td>
     </tr>
 </table>
@@ -112,7 +162,7 @@
 <br/>
 
 <p class="text-indent text-align-justify">
-    2. Настоящий отчет составлен о том, что, в соответствии с условиями Публичного договора-Оферта, Исполнитель оказал услуги, указанные в п.1. настоящего отчета, надлежащим образом на сумму&nbsp; {{ invoices_sum }} руб., без НДС.
+    2. Настоящий отчет составлен о том, что, в соответствии с условиями Публичного договора-Оферты, Исполнитель оказал услуги, указанные в п.1. настоящего отчета, надлежащим образом на сумму&nbsp; {{ invoices_sum|intcomma }} руб., без НДС.
 </p>
 
 <p class="text-indent text-align-justify">
@@ -120,27 +170,28 @@
 </p>
 
 <p class="text-indent text-align-justify">
-    4. Исполнитель подтверждает, что услуги оказаны в установленном объеме и их качество устроило Исполнителя полностью.
+    4. Исполнитель подтверждает, что услуги оказаны в установленном объеме и их качество устроило Заказчика полностью.
 </p>
 
 <p class="text-indent text-align-justify">
-    5. Настоящий Акт–Отчет  составлен в двух экземплярах, по одному для каждой Стороны.
+    5. Настоящий Акт–отчет  составлен в двух экземплярах, по одному для каждой Стороны.
 </p>
 
-<table width="639" cellpadding="5" cellspacing="0">
-    <col width="384">
-    <col width="233">
-    <tr>
-        <td>
-            <p>ИСПОЛНИТЕЛЬ</p>
-            <p> &lt;факсимильные печать и подпись&gt;/ Довладбегян Л.Л. /</p>
-        </td>
-        <td>
-            <p>ЗАКАЗЧИК</p>
-            <p>__________________/ Гусев  И.И. /</p>
-        </td>
-    </tr>
-</table>
+<div>
+    <img class="sign" src="{% static 'images/seal_sign.png' %}">
+    <table style="width: 100%;" cellpadding="5" cellspacing="0">
+        <tr>
+            <td style="width: 45%;">
+                <p>ИСПОЛНИТЕЛЬ</p>
+                <p class="sign-text">/ Довладбегян Л.Л. /</p>
+            </td>
+            <td>
+                <p>ЗАКАЗЧИК</p>
+                <p class="sign-text">{% if head_name %}/ {{ head_name }} /{% endif %}</p>
+            </td>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>
