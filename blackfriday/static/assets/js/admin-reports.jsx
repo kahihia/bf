@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import b from 'b_';
 import xhr from 'xhr';
-import {processErrors} from './admin/utils.js';
 import Glyphicon from './admin/components/glyphicon.jsx';
 
 (function () {
@@ -207,8 +206,6 @@ class MerchantReportActButton extends React.Component {
 			if (statusCode >= 200 && statusCode < 300) {
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Акт-отчет об оказании услуг - ${merchantName}.pdf`);
-			} else if (statusCode === 400) {
-				processErrors(data);
 			} else {
 				toastr.error('Не удалось получить акт-отчет об оказании услуг');
 			}
@@ -268,8 +265,6 @@ class MerchantReportStatisticsButton extends React.Component {
 			if (statusCode >= 200 && statusCode < 300) {
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Статистика размещения рекламных материалов - ${merchantName}.pdf`);
-			} else if (statusCode === 400) {
-				processErrors(data);
 			} else {
 				toastr.error('Не удалось получить статистику размещения рекламных материалов');
 			}
@@ -329,8 +324,6 @@ class MerchantReportVisualButton extends React.Component {
 			if (statusCode >= 200 && statusCode < 300) {
 				const blob = new Blob([data], {type: 'application/pdf;charset=utf-8'});
 				saveAs(blob, `Отчет о визуальном размещении рекламных материалов - ${merchantName}.pdf`);
-			} else if (statusCode === 400) {
-				processErrors(data);
 			} else {
 				toastr.error('Не удалось получить отчет о визуальном размещении рекламных материалов');
 			}

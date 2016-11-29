@@ -14,7 +14,7 @@ from django.http.response import StreamingHttpResponse
 
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import list_route, detail_route
-from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
+from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
@@ -450,7 +450,9 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 request
             )
         else:
-            raise NotFound
+            raise ValidationError({
+                'detail': 'Для данного магазина отсутствует скриншот'
+            })
 
 
 class BannerViewSet(viewsets.ModelViewSet):
