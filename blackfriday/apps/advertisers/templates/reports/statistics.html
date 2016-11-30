@@ -23,7 +23,7 @@
             margin-bottom: 2cm
         }
 
-        p{
+        p {
             margin-bottom: 0.25cm;
             direction: ltr;
             color: #000000;
@@ -31,7 +31,7 @@
             text-align: left;
             orphans: 2;
             widows: 2;
-            font-family: "Arial";
+            font-family: Arial, Helvetica, sans;
             font-size: 11pt;
         }
 
@@ -57,8 +57,8 @@
 
         td, th {
             border: 1px solid #000001;
-            padding-top: 0cm;
-            padding-bottom: 0cm;
+            padding-top: 0;
+            padding-bottom: 0;
             padding-left: 0.2cm;
             padding-right: 0.19cm;
         }
@@ -70,12 +70,14 @@
 <body>
 
 <p class="text-align-right">Приложение №2</p>
-<br/>
 
-<p class="text-align-center" style="margin-bottom: 0cm; line-height: 115%">
-<b>Статистика размещение рекламных материалов на срок с 23.11.2016г. по 30.11.2016г. на интернет-сайте {{ site_url }} в рамках рекламной акции &quot;Черная пятница&quot;.</b></p>
-<br/>
-<br/>
+<p class="text-align-center" style="margin-bottom: 0; line-height: 115%; font-weight: bold">
+    Статистика размещения рекламных материалов на срок<br>
+    с 23.11.2016г. по 30.11.2016г. на интернет-сайте<br>
+    {{ site_url }} в рамках рекламной акции<br>
+    &quot;Черная&nbsp;пятница&quot;.
+</p>
+<br>
 
 <table width="100%" cellpadding="7" cellspacing="0">
     <tr>
