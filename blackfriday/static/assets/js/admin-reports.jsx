@@ -153,12 +153,12 @@ class MerchantListItem extends React.Component {
 						merchantName={name}
 						/>
 
-					<MerchantReportStatisticsButton
+					<MerchantReportVisualButton
 						merchantId={id}
 						merchantName={name}
 						/>
 
-					<MerchantReportVisualButton
+					<MerchantReportStatisticsButton
 						merchantId={id}
 						merchantName={name}
 						/>
