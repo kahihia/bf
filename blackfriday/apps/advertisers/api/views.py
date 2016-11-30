@@ -421,7 +421,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'inn': profile.inn if profile and profile.type == AdvertiserType.REGULAR and profile.inn else '&mdash;',
             'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR and profile.kpp else '&mdash;',
             'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[
-                profile.head_basis if profile else HeadBasis.proxy].lower(),
+                profile.head_basis if profile and profile.head_basis else HeadBasis.proxy].lower(),
             'site_url': settings.SITE_URL,
             'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all()),
             'services': services,
