@@ -25,7 +25,7 @@ class StatsUpdaterCommand(BaseCommand):
         if not os.path.isfile(clicked_log_file):
             raise CommandError(error_msg % clicked_log_file)
 
-        self.updater.run(shown_log_file, clicked_log_file)
+        self.updater.run(clicked_file=clicked_log_file, shown_file=shown_log_file)
         self.stdout.write(self.style.SUCCESS(
             '{updater.stats_cls.__name__}: {updater.created_stats_number} '
             'created, {updater.updated_stats_number} updated'.format(
