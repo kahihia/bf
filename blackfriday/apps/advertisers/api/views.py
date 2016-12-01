@@ -71,7 +71,8 @@ class MerchantViewSet(viewsets.ModelViewSet):
         IsAuthenticated,
         IsValidAdvertiser & IsOwner & action_permission(
             'list', 'retrieve', 'create', 'update', 'partial_update',
-            'moderation', 'limits', 'available_options', 'logo_categories'
+            'moderation', 'limits', 'available_options', 'logo_categories',
+            'statistics', 'act_report', 'visual_report'
         ) |
         IsManager & action_permission(
             'list', 'retrieve', 'moderation'
