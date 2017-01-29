@@ -200,14 +200,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 {% endif %}
                                 >
 
-                            {% if not LANDING_WITHOUT_BACKEND %}
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
-                                    </label>
-                                </div>
-                            {% endif %}
-
                             <button class="btn btn-primary btn-lg" type="submit">
                                 <img
                                     src="{% static 'images/landing/aa-section__subscribe-submit-icon.png' %}"
@@ -1133,14 +1125,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             >
                     </div>
 
-                    {% if not LANDING_WITHOUT_BACKEND %}
-                    <div class="checkbox">
-                        <label>
-                            <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
-                        </label>
-                    </div>
-                    {% endif %}
-
                     <div class="form-group">
                         <button class="btn btn-primary btn-lg btn-block" type="submit">
                             Подписаться
@@ -1564,15 +1548,7 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
                 </div>
             </div>
 
-            <div class="col-xs-3">
-                <a class="akit-copy" href="http://www.akit.ru" target="_blank">
-                    <img class="akit-copy__logo" src="{% static 'images/landing/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
-                </a>
-
-                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" style="display: inline-block; margin: 10px 0 0 12px;">
-                    <img src="{% static 'images/landing/footer-mnogo-3.png' %}" alt="">
-                </a>
-            </div>
+            <div class="col-xs-3"></div>
 
             <div class="col-xs-12">
                 <div class="site-footer__b2b pull-right text-right">
@@ -1582,16 +1558,12 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
                 </div>
 
                 <div class="site-footer__project-by">
-                    Проект АКИТ. Для рекламодателей: <a href="tel:+78005053704" title="Бесплатный номер">+7 (800) 505-37-04</a>
+                    Для рекламодателей: <a href="tel:+78005053704" title="Бесплатный номер">+7 (800) 505-37-04</a>
                 </div>
 
                 <div class="site-footer__offer-text">
                     <p>
                         Предоставляя свой email, вы подтверждаете свою дееспособность, согласие на обработку персональных данных и принимаете условия <a href="/oferta" target="_blank" rel="nofollow">договора-оферты</a>.
-                    </p>
-
-                    <p style="font-size: 12px;">
-                        * Вступление в Клуб Много.ру подразумевает, что Вы согласны с правилами участия в Клубе и с фактом передачи указанных Вами имени и адреса электронной почты в Клуб Много.ру (www.mnogo.ru) для создания профиля в программе Много.ру
                     </p>
                 </div>
             </div>
@@ -1650,14 +1622,6 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
                     </div>
 
                     <div class="form-group">
-                        <div class="checkbox">
-                            <label>
-                                <input name="joinMnogoRu" value="true" type="checkbox" checked>Я хочу вступить в Клуб Много.ру* и получать призы
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <button
                             class="btn btn-default btn-block btn-lg"
                             type="submit"
@@ -1679,11 +1643,6 @@ s.src = 'https://www.mnogo.ru/partners_widgets/blackfriday/?i=1&charset=utf-8'+"
     </div>
 </div>
 {% endif %}
-
-<div class="mnogoru-gift" id="mnogoru-gift">
-    <img src="{% static 'images/landing/mnogoru-gift-toggler.png' %}" alt="">
-    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/landing/mnogoru-gift-bg.png' %}" alt=""></a>
-</div>
 
 {% if SHOW_LOGIN_ON_LANDING and not SHOW_MNOGO_BLOCK_ON_LANDING and not LANDING_WITHOUT_BACKEND %}
 {% include "landing/includes/auth-modal.html" %}
