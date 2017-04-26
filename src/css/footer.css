@@ -1,0 +1,30 @@
+.footer {
+	text-align: center;
+	padding-top: 70px;
+	padding-bottom: 70px;
+	position: relative;
+}
+
+.footer::before,
+.footer::after {
+	content: '';
+	display: block;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	position: absolute;
+	top: 0;
+}
+
+.footer .partner-support__link {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 9px;
+	margin-right: 9px;
+}
+
+@media (max-width: 740px) {
+	.footer::before,
+	.footer::after {
+		display: none;
+	}
+}

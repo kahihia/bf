@@ -1,0 +1,12 @@
+.description {
+	text-align: center;
+}
+
+.description__title {
+	font-size: 45px;
+	font-weight: bold;
+	color: #ff3a10;
+}
+
+.description__text {
+}

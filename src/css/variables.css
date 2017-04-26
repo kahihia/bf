@@ -1,0 +1,10 @@
+:root {
+    --font-family-base: 'Open Sans', sans-serif;
+    --font-size-base: 14px;
+    --line-height-base: 1.2;
+    --text-color: #fff;
+    --body-bg: #171717;
+    --link-color: #727272;
+    --link-hover-color: #547bbb;
+    --link-hover-decoration: underline;
+}

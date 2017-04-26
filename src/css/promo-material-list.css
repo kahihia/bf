@@ -1,0 +1,18 @@
+.promo-material-list {
+	margin-top: 50px;
+}
+
+.promo-material-list__list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.promo-material-list__item {
+}
+
+.promo-material-list__link {
+	text-decoration: underline;
+	display: inline-block;
+	padding: 2px 0;
+}

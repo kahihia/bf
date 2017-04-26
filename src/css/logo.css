@@ -1,0 +1,26 @@
+.logo {
+    text-align: center;
+    padding-top: 25px;
+	margin-bottom: -20px;
+}
+
+.logo__link {
+}
+
+.logo__link:hover .logo__image {
+	opacity: 0.75;
+}
+
+.logo__image {
+    display: inline-block;
+    vertical-align: middle;
+	max-width: 100%;
+	height: auto;
+	transition: opacity ease 0.3s;
+}
+
+@media (max-width: 740px) {
+	.logo {
+		margin-bottom: 0;
+	}
+}

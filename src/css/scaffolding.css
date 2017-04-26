@@ -1,0 +1,53 @@
+* {
+    box-sizing: border-box;
+}
+
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+
+html {
+    /* font-size: 10px; */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+body {
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    font-weight: 400;
+    line-height: var(--line-height-base);
+    color: var(--text-color);
+    background-color: var(--body-bg);
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color ease 0.3s;
+}
+
+a:hover,
+a:focus {
+    color: var(--link-hover-color);
+    text-decoration: var(--link-hover-decoration);
+}
+
+a:focus {
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+img {
+    vertical-align: middle;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: 400;
+    margin: 0;
+}
