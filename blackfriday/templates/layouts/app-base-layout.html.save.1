@@ -31,7 +31,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{% block og_url %}{{ SITE_URL }}{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}Настоящая Черная Пятница 2016 - официальный сайт BLACK FRIDAY{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Настоящая Черная Пятница 2017 - официальный сайт BLACK FRIDAY{% endblock %}">
     <meta property="og:description" content="{% block og_description %}Настоящая Черная Пятница с 24 по 26 ноября 2017 года: распродажи, акции и скидки от крупнейших интернет-магазинов{% endblock %}">
     <meta property="og:image" content="{{ SITE_URL }}{% static 'images/logo-share.png' %}">
 
@@ -135,7 +135,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
 
                         <div class="footer-social__list">
-                            <a href="https://www.facebook.com/realbfsale/" target="_blank" rel="noopener noreferrer">
+                            <a href="https://www.facebook.com/realbfsale" target="_blank" rel="noopener noreferrer">
                                 <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
                             </a>
 
@@ -154,12 +154,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <div class="footer__copyright col-sm-4 col-sm-offset-0">
                     <div class="footer-copy__placeholder">
-E-mail: <a href="mailto:hello@b-friday.com">hello@b-friday.com</a><br>
-Тел.: <a href="tel:88005053704">8 (800) 505-37-04</a><br>
-Адрес: 123317, Россия, г. Москва, Башня «Империя», Пресненская наб., д. 6, стр. 2<br><br>
-
-<strong>Контакты для СМИ</strong><br>
-E-mail: <a href="mailto:pr@b-friday.com">pr@b-friday.com</a> 
+                        <div class="footer-copy">
+                            <div class="footer-mnogo-right">
+                                <a href="http://mnogo.ru/anketa.html?range=1134" target="_blank" rel="noopener noreferrer">
+                                    <img src="{% static 'images/footer-mnogo-3.png' %}" alt="">
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -167,6 +168,11 @@ E-mail: <a href="mailto:pr@b-friday.com">pr@b-friday.com</a>
     </div>
 </div>
 <!-- end site__footer -->
+
+<div class="mnogoru-gift" id="mnogoru-gift">
+    <img src="{% static 'images/mnogoru-gift-toggler.png' %}" alt="">
+    <a href="http://mnogo.ru/anketa.html?range=1129" target="_blank" rel="noopener noreferrer"><img src="{% static 'images/mnogoru-gift-bg.png' %}" alt=""></a>
+</div>
 
 
 <script>

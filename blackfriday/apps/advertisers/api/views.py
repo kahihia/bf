@@ -356,7 +356,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'Статистика размещения рекламных материалов',
             {
                 'elements': elements,
-                'site_url': settings.SITE_URL
+                'site_url': settings.PROD_SITE_URL
             },
             request
         )
@@ -423,7 +423,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
             'kpp': profile.kpp if profile and profile.type == AdvertiserType.REGULAR and profile.kpp else '&mdash;',
             'head_basis': dict(AdvertiserProfile.HEAD_BASISES)[
                 profile.head_basis if profile and profile.head_basis else HeadBasis.proxy].lower(),
-            'site_url': settings.SITE_URL,
+            'site_url': settings.PROD_SITE_URL,
             'invoices_sum': sum(invoice.sum for invoice in merchant.invoices.all()),
             'services': services,
             'head_name': profile.head_name if profile else None,
@@ -445,7 +445,7 @@ class MerchantViewSet(viewsets.ModelViewSet):
                 'reports/visual_report',
                 'Визуальный отчет',
                 {
-                    'site_url': settings.SITE_URL,
+                    'site_url': settings.PROD_SITE_URL,
                     'screenshot_url': settings.SCREENSHOT_URL,
                     'merchant_id': merchant.id
                 },

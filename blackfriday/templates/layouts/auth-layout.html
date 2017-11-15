@@ -15,7 +15,7 @@
     <meta name="format-detection" content="address=no">
     <meta name="google" value="notranslate">
 
-    <title>{% block title %}Черная Пятница 2016 в России - официальный сайт Real Black Friday{% endblock title %}</title>
+    <title>{% block title %}Черная Пятница 2017 в России - официальный сайт Real Black Friday{% endblock title %}</title>
 
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
@@ -59,13 +59,15 @@
 
 <footer class="site-footer">
     <div class="site-footer__container">
+	{% comment %}
         <div class="copyrights">
             Проект АКИТ. Для рекламодателей: <a href="tel:88005053704" title="Бесплатный номер">+7 (800) 505-37-04</a>
-        </div><!--
-
-        --><a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
+        </div>
+	
+        <a class="akit-copy" href="http://www.akit.ru" target="_blank" rel="noopener noreferrer">
             <img class="akit-copy__logo" src="{% static 'images/auth/akit-logo.png' %}" alt="retail hotline" title="" />2016 © Ассоциация компаний интернет-торговли
         </a>
+	{% endcomment %}
     </div>
 </footer>
 

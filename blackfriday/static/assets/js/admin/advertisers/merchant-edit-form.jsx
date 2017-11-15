@@ -3,7 +3,7 @@
 import React from 'react';
 import xhr from 'xhr';
 import {TOKEN, MERCHANT_DESCRIPTION_LENGTH} from '../const.js';
-import {getFullUrl, hasRole} from '../utils.js';
+import {hasRole} from '../utils.js';
 import Form from '../components/form.jsx';
 import ControlLabel from '../components/control-label.jsx';
 import TextareaRich from '../components/textarea-rich.jsx';
@@ -31,7 +31,7 @@ class MerchantEditForm extends Form {
 					value: data.url || ''
 				},
 				slug: {
-					addon: `${getFullUrl('merchants')}`,
+					addon: `https://b-friday.com/merchant/`,
 					label: 'URL на сайте',
 					value: data.slug || '',
 					pattern: '^[a-z0-9-]+$',

@@ -106,9 +106,9 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_URL = '/admin/login/'
 SHOW_LOGIN_ON_LANDING = False
 
-DEFAULT_FROM_EMAIL = 'no-reply@realblackfriday.ru'
+DEFAULT_FROM_EMAIL = 'no-reply@b-friday.com'
 
-VERIFICATION_SUBJ = 'RealBlackFriday — активация учётной записи'
+VERIFICATION_SUBJ = 'B-friday.com — активация учётной записи'
 VERIFICATION_TTL_HOURS = 24
 INVOICE_TTL_DAYS = 5
 INVOICE_NEW_LIMIT = 5
@@ -121,9 +121,11 @@ DEFAULT_CATEGORY_SLUG = 'raznoe'
 DEFAULT_CATEGORY_NAME = 'Разное'
 
 TEST_RUNNER = 'libs.testing.runner.PytestTestRunner'
-LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_REDIRECT_URL = '/admin/merchants/'
 
-SITE_URL = 'https://realblackfriday.ru'
+SITE_URL = 'https://preview.b-friday.com'
+ADMIN_SITE_URL = 'http://lk.b-friday.com'
+PROD_SITE_URL = 'http://b-friday.com'
 
 PRODUCT_FILE_COLUMNS_MAPPING = {
     'наименование товара': 'name',
@@ -209,7 +211,7 @@ RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
 )
 SHOWCASE_ROOT = os.path.join(PROJECT_ROOT, 'showcase')
-SHOWCASE_ENABLED = False
+SHOWCASE_ENABLED = True #Changed
 
 POST_RENDERING_EXEC_PATH = None
 CHECK_IMAGE_URL = True
@@ -226,4 +228,4 @@ BATCH_SIZE = 1000
 REPORTS_ARE_AVAILABLE = False
 
 LANDING_WITHOUT_BACKEND = False
-SUBSCRIPTION_EMAIL = 'news@cmonday.ru'
+SUBSCRIPTION_EMAIL = 'no-reply@b-friday.com'

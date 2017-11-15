@@ -443,8 +443,8 @@ const FeedMaker = React.createClass({
 									onChange={this.handleChangeBindUrl}
 									>
 									<option value="url">url товара на сайте магазина</option>
-									<option value="url_cat">url категории на realblackfriday</option>
-									<option value="url_shop">url магазина на realblackfriday</option>
+									<option value="url_cat">url категории на b-friday</option>
+									<option value="url_shop">url магазина на b-friday</option>
 								</select>
 							</div>
 						</div>
@@ -458,8 +458,8 @@ const FeedMaker = React.createClass({
 									onChange={this.handleChangeBindUrlCat}
 									>
 									<option value="url">url товара на сайте магазина</option>
-									<option value="url_cat">url категории на realblackfriday</option>
-									<option value="url_shop">url магазина на realblackfriday</option>
+									<option value="url_cat">url категории на b-friday</option>
+									<option value="url_shop">url магазина на b-friday</option>
 								</select>
 							</div>
 						</div>
@@ -473,8 +473,8 @@ const FeedMaker = React.createClass({
 									onChange={this.handleChangeBindUrlShop}
 									>
 									<option value="url">url товара на сайте магазина</option>
-									<option value="url_cat">url категории на realblackfriday</option>
-									<option value="url_shop">url магазина на realblackfriday</option>
+									<option value="url_cat">url категории на b-friday</option>
+									<option value="url_shop">url магазина на b-friday</option>
 								</select>
 							</div>
 						</div>
