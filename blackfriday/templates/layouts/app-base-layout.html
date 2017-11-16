@@ -72,6 +72,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <div class="super-header">
         <div class="container">
+
             <div class="row row-main">
                 <div class="col-md-3">
 
@@ -136,12 +137,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                         <div class="footer-social__list">
                             <a href="https://www.facebook.com/realbfsale/" target="_blank" rel="noopener noreferrer">
-                                <img src="{% static 'icons/social-fb.png' %}" class="icon" alt="" />
+                                <img src="{% static 'icons/fb.png' %}" class="icon" alt="" width="32px"/>
                             </a>
 
                             <a href="https://vk.com/realbf" target="_blank" rel="noopener noreferrer">
-                                <img src="{% static 'icons/social-vk.png' %}" class="icon" alt="" />
+                                <img src="{% static 'icons/vk.png' %}" class="icon" alt=""  width="32px"/>
                             </a>
+                            <a href="https://t.me/bestofrbf" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/tg.png' %}" class="icon" alt=""  width="32px"/>
+                            </a>
+                            <a href="https://ok.ru/group/54598756401250" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/ok.png' %}" class="icon" alt=""  width="32px"/>
+                            </a>
+                            <a href="https://www.instagram.com/realbfsale/" target="_blank" rel="noopener noreferrer">
+                                <img src="{% static 'icons/insta.png' %}" class="icon" alt=""  width="32px"/>
+                            </a>
+                        </div>
+                        <div class="partners" style="margin-top: 20px;">
+                            <div class="row">
+                                <div class="col-xs-4 text-left">
+                                    <a href="http://raec.ru" target="_blank" rel="noopener noreferrer">
+                                        <img src="{% static 'icons/logos/raek.png' %}" style="display: inline-block; height: 32px;"/>
+                                    </a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://rocit.ru" target="_blank" rel="noopener noreferrer">
+                                        <img src="{% static 'icons/logos/rocit.png' %}" style="display: inline-block; height: 32px;" />
+                                    </a>
+                                </div>
+                                <div class="col-xs-4 text-right">
+                                    <a href="http://ledagency.ru" target="_blank" rel="noopener noreferrer">
+                                        <img src="{% static 'icons/logos/led.png' %}" style="display: inline-block;  height: 32px;"/>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -154,12 +184,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
                 <div class="footer__copyright col-sm-4 col-sm-offset-0">
                     <div class="footer-copy__placeholder">
+
+                         <a href="http://www.hotline.rocit.ru/" target="_blank" rel="noopener noreferrer">
+                        Горячая линия РОЦИТ
+                         </a><br><br>
 E-mail: <a href="mailto:hello@b-friday.com">hello@b-friday.com</a><br>
 Тел.: <a href="tel:88005053704">8 (800) 505-37-04</a><br>
 Адрес: 123317, Россия, г. Москва, Башня «Империя», Пресненская наб., д. 6, стр. 2<br><br>
 
 <strong>Контакты для СМИ</strong><br>
-E-mail: <a href="mailto:pr@b-friday.com">pr@b-friday.com</a> 
+E-mail: <a href="mailto:pr@b-friday.com">pr@b-friday.com</a>
                     </div>
                 </div>
             </div>
@@ -190,13 +224,13 @@ window.DATA = {
         speed: 3000
     },
     headerMenu: [
-        {name: 'Российские товары', url: '/russian-goods/'},
+        {name: 'Иностранные магазины', url: '/russian-goods/'},
         {name: 'Все акции', url: '/actions/'},
         {name: 'Все товары', url: '/actions/#tab=2'}
     ],
     categories: {{ categories|safe|default:"[]" }},
     footerCats: [
-        {name: 'Российские товары', url: '/russian-goods/'},
+        {name: 'Иностранные интернет-магазины', url: '/russian-goods/'},
         {name: 'Все акции', url: '/actions/'},
         {name: 'Все участники', url: '/merchants/'},
         {name: 'Партнеры', url: '/partners/'}
