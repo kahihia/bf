@@ -10,7 +10,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
 objbfrus.zapuskbanner = function () {
     var vstavcss = document.createElement("link");
-    vstavcss.href = "banner_yand.css";
+    vstavcss.href = "/banner_yand.css";
     vstavcss.rel = "stylesheet";
 
     document.getElementsByTagName("head")[0].appendChild(vstavcss);
