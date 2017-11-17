@@ -1,0 +1,67 @@
+#banner_yandex{
+position: absolute;
+top: 0;
+left: 0;
+background-color: #fff;
+z-index: 999;
+display: table;
+padding: 15px;
+box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.36);
+
+}
+
+.cloze_bf_yand{
+width: 25px;
+height: 25px;
+background:url(/cloze.png);
+margin-left: auto;
+cursor: pointer;
+}
+
+.yand_logo{
+width: 187px;
+height: 35px;
+background:url(/yand.png);
+margin: 0 auto;
+margin-top: 20px;
+}
+
+.textobl_yand{
+width: 500px;
+margin: 0 auto;
+margin-top: 25px;
+}
+
+.bezopas_pokupki{
+font-weight:bold;
+font-size: 20px;
+color: #26175c;
+}
+
+.spisok_okno_yandex{
+margin: 0;
+padding: 0;
+margin-top:10px;
+}
+
+.spisok_okno_yandex li{
+background:url(/galka.png) no-repeat;
+background-position: left;
+list-style: none;
+padding-left:30px;
+font-size: 18px;
+color: #26175c;
+}
+
+.hochu_kupit{
+margin: 0 auto;
+display: table;
+margin-top: 20px;
+font-size: 18px;
+color: #fff;
+font-weight:bold;
+background-color: #b213f9;
+padding: 10px 40px;
+box-shadow: 3px 2px 20px #999999;
+margin-bottom:20px
+}
