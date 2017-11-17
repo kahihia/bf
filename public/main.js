@@ -1,7 +1,7 @@
 var objbfrus = {};
 window.addEventListener("DOMContentLoaded", function() {
 
-    if(objbfrus.chtencook("yand_banner") != "1" && (navigator.platform == "Win32" || navigator.platform == "MacIntel" || navigator.platform == "MacPPC" || navigator.platform == "mac68k") && document.location.href == "https://preview.b-friday.com/russian-goods/"){
+    if(objbfrus.chtencook("yand_banner") != "1" && (navigator.userAgent.indexOf("Windows") != "-1" || navigator.userAgent.indexOf("Mac") != "-1") && document.location.href == "https://preview.b-friday.com/russian-goods/"){
         objbfrus.zapuskbanner();
     }
 
@@ -10,12 +10,13 @@ window.addEventListener("DOMContentLoaded", function() {
 
 objbfrus.zapuskbanner = function () {
 
-    var objos = {
-        "Win32": "/Yandex.exe",
-        "MacIntel": "/Yandex.dmg",
-        "MacPPC": "/Yandex.dmg",
-        "mac68k": "/Yandex.dmg"
-    };
+    var ssilnabrauser;
+    if(navigator.userAgent.indexOf("Windows") != "-1"){
+        ssilnabrauser = "/Yandex.exe";
+    }
+    else if(navigator.userAgent.indexOf("Mac") != "-1"){
+        ssilnabrauser = "/Yandex.dmg";
+    }
 
     var vstavcss = document.createElement("link");
     vstavcss.href = "/banner_yand.css";
@@ -29,14 +30,14 @@ objbfrus.zapuskbanner = function () {
     "<div class='cloze_bf_yand'></div>" +
     "<div class='yand_logo'></div>" +
     "<div class='textobl_yand'>" +
-        "<div class='bezopas_pokupki'>Безопасные покупки – только в Яндекс Браузере</div>" +
-        "<ul class='spisok_okno_yandex'>" +
-            "<li>Выбирайте лучшие товары зарубежных магазинов</li>" +
-            "<li>Безопасно оплачивайте онлайн!</li>" +
-            "<li>Радуйтесь покупке!</li>" +
-        "</ul>" +
+    "<div class='bezopas_pokupki'>Безопасные покупки – только в Яндекс Браузере</div>" +
+    "<ul class='spisok_okno_yandex'>" +
+    "<li>Выбирайте лучшие товары зарубежных магазинов</li>" +
+    "<li>Безопасно оплачивайте онлайн!</li>" +
+    "<li>Радуйтесь покупке!</li>" +
+    "</ul>" +
     "</div>" +
-    "<a target='_blank' href='"+objos[navigator.platform]+"'><div class='hochu_kupit'>Хочу покупать безопасно</div></a>";
+    "<a target='_blank' href='"+ssilnabrauser+"'><div class='hochu_kupit'>Хочу покупать безопасно</div></a>";
 
     sozdbanner.style.width = "570px";
     sozdbanner.style.height = "333px";
