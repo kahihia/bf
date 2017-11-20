@@ -137,8 +137,8 @@ def category(category_id, russian=False, is_preview=False):
 
     if russian:
         context['categoriesRus'] = json.render(
-            RussianCategorySerializer(
-                Category.objects.russians(),
+            ForeignCategorySerializer(
+                Category.objects.foreign(),
                 many=True
             ).data
         )
