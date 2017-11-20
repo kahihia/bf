@@ -9,7 +9,7 @@ from apps.users.mixins import RolePermissionMixin
 from apps.catalog.models import Category
 from apps.advertisers.models import Merchant
 
-from apps.showcase.controllers import main_page, actions, merchants, category, russiangoods, partners, merchant
+from apps.showcase.controllers import main_page, actions, merchants, category, russiangoods, foreigngoods, partners, merchant
 
 
 class MainPreview(LoginRequiredMixin, RolePermissionMixin, View):
@@ -52,7 +52,7 @@ class ForeignGoodsPreview(LoginRequiredMixin, RolePermissionMixin, View):
     allowed_roles = ['admin']
 
     def get(self, request):
-        return HttpResponse(content=russiangoods())
+        return HttpResponse(content=foreigngoods())
 
 
 class PartnersPreview(LoginRequiredMixin, RolePermissionMixin, View):

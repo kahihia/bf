@@ -211,7 +211,7 @@ RUSSIAN_PRODUCTS_KEYWORDS = (
     'россия', 'russia', 'рф', 'российская федерация'
 )
 FOREIGN_PRODUCTS_KEYWORDS = (
-    'Иностранный123'
+    'Иностранный123', 'иностранный123'
 )
 SHOWCASE_ROOT = os.path.join(PROJECT_ROOT, 'showcase')
 SHOWCASE_ENABLED = True #Changed
