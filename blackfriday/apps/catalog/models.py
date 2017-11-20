@@ -16,6 +16,14 @@ class CategoryQueryset(models.QuerySet):
             )
         ).distinct()
 
+    def foreign(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(products__country__icontains=key) for key in settings.FOREIGN_PRODUCTS_KEYWORDS]
+            )
+        ).distinct()
+
 
 class Category(models.Model):
     name = models.CharField(max_length=120, unique=True, verbose_name='Название')
@@ -50,6 +58,14 @@ class ProductQueryset(models.QuerySet):
             reduce(
                 operator.__or__,
                 [models.Q(country__icontains=key) for key in settings.RUSSIAN_PRODUCTS_KEYWORDS]
+            )
+        )
+
+    def foreign(self):
+        return self.filter(
+            reduce(
+                operator.__or__,
+                [models.Q(country__icontains=key) for key in settings.FOREIGN_PRODUCTS_KEYWORDS]
             )
         )
 

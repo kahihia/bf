@@ -76,6 +76,21 @@ def russiangoods(is_preview=False):
     return render_to_string('showcase/russiangoods.html', context)
 
 
+def foreigngoods(is_preview=False):
+    qs = Product.objects.from_moderated_merchants().filter(merchant__is_active=True).foreign()
+    context = {
+        'products': json.render(ProductSerializer(qs, many=True).data),
+        'teasers': json.render(ProductSerializer(qs.teasers(), many=True).data),
+        'categories': json.render(CategorySerializer(Category.objects.all(), many=True).data),
+        'categoriesRus': json.render(ForeignCategorySerializer(Category.objects.foreign(), many=True).data)
+    }
+
+    if is_preview:
+        context['is_preview'] = True
+
+    return render_to_string('showcase/foreigngoods.html', context)
+
+
 def category(category_id, russian=False, is_preview=False):
     products = Product.objects.from_moderated_merchants().filter(category__id=category_id, merchant__is_active=True)
     if russian:

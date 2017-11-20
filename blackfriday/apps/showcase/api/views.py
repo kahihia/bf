@@ -49,6 +49,13 @@ class StaticGeneratorViewSet(viewsets.GenericViewSet):
         render_russiangoods.delay(True)
         return Response()
 
+    @list_route(methods=['post', 'options'])
+    def foreigngoods(self, request, *args, **kwargs):
+        if request.method == 'OPTIONS':
+            raise MethodNotAllowed(request.method)
+        render_foreigngoods.delay(True)
+        return Response()
+
     @list_route(methods=['post', 'options'], url_path='all-pages')
     def all_pages(self, request, *args, **kwargs):
         if request.method == 'OPTIONS':
@@ -80,6 +87,18 @@ class StaticGeneratorRussianCategoriesView(views.APIView):
             raise NotFound
 
         render_russian_category.delay(pk, True)
+        return Response()
+
+class StaticGeneratorForeignCategoriesView(views.APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            Category.objects.russians().get(pk=pk)
+        except:
+            raise NotFound
+
+        render_foreign_category.delay(pk, True)
         return Response()
 
 

@@ -3,7 +3,7 @@ from django.conf.urls import url
 
 from .views import (
     StaticGeneratorViewSet, StaticGeneratorCategoriesView,
-    StaticGeneratorRussianCategoriesView, StaticGeneratorMerchantView
+    StaticGeneratorRussianCategoriesView, StaticGeneratorForeignCategoriesView, StaticGeneratorMerchantView
 )
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^static-generator/categories/(?P<pk>\d+)/$', StaticGeneratorCategoriesView.as_view()),
     url(r'^static-generator/merchants/(?P<pk>\d+)/$', StaticGeneratorMerchantView.as_view()),
     url(r'^static-generator/russian-categories/(?P<pk>\d+)/$', StaticGeneratorRussianCategoriesView.as_view()),
+    url(r'^static-generator/foreign-categories/(?P<pk>\d+)/$', StaticGeneratorForeignCategoriesView.as_view()),
 ]
 
 urlpatterns += router.urls

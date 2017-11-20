@@ -48,6 +48,13 @@ class RussianGoodsPreview(LoginRequiredMixin, RolePermissionMixin, View):
         return HttpResponse(content=russiangoods())
 
 
+class ForeignGoodsPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request):
+        return HttpResponse(content=russiangoods())
+
+
 class PartnersPreview(LoginRequiredMixin, RolePermissionMixin, View):
     allowed_roles = ['admin']
 
@@ -72,6 +79,17 @@ class RussianCategoryPreview(LoginRequiredMixin, RolePermissionMixin, View):
     def get(self, request, pk):
         try:
             Category.objects.russians().get(pk=pk)
+        except Category.DoesNotExist:
+            raise Http404
+        return HttpResponse(content=category(pk, True))
+
+
+class ForeignCategoryPreview(LoginRequiredMixin, RolePermissionMixin, View):
+    allowed_roles = ['admin']
+
+    def get(self, request, pk):
+        try:
+            Category.objects.foreign().get(pk=pk)
         except Category.DoesNotExist:
             raise Http404
         return HttpResponse(content=category(pk, True))

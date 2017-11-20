@@ -45,6 +45,12 @@ RussianCategorySerializer = serializer_factory(
     url=serializers.SerializerMethodField(),
     get_url=lambda self, obj: '/russian-goods/{}'.format(obj.slug),
 )
+ForeignCategorySerializer = serializer_factory(
+    cls_name='catalog.Category',
+    fields=('id', 'name', 'url'),
+    url=serializers.SerializerMethodField(),
+    get_url=lambda self, obj: '/foreign-goods/{}'.format(obj.slug),
+)
 SuperbannerSerializer = serializer_factory(
     cls_name='advertisers.Banner',
     fields=('id', 'image', 'url', 'merchant'),
