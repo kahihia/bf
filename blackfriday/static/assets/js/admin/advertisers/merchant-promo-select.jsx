@@ -2,7 +2,6 @@ import React from 'react';
 import {hasRole} from '../utils.js';
 import VipPromo from './vip-promo.jsx';
 import PromoTable from './promo-table.jsx';
-import DownloadFile from '../common/download-file.jsx';
 
 const MerchantPromoSelect = React.createClass({
 	propTypes: {
@@ -24,12 +23,6 @@ const MerchantPromoSelect = React.createClass({
 				<h2>
 					{'Рекламные пакеты '}
 
-					<DownloadFile
-						href="/com_offer"
-						name="Скачать презентацию"
-						icon="file-pdf"
-						size="3,9 MB"
-						/>
 				</h2>
 
 				<div className="promo-chooser">

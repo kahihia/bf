@@ -70,9 +70,26 @@ def render_russian_category(category_id, exec_script=False):
 
 
 @job
+def render_foreign_category(category_id, exec_script=False):
+    try:
+        cat = Category.objects.foreign().get(id=category_id)
+    except Category.DoesNotExist:
+        sys.stderr.write('Такой категории не существует или в ней нет иностранных товаров\n')
+    else:
+        render_to_file('foreign-goods/{}/index.html'.format(cat.slug), category(category_id, True), exec_script)
+        sys.stdout.write('иностранные товары — категория {cat.name}\n'.format(cat=cat))
+
+
+@job
 def render_russiangoods(exec_script=False):
     render_to_file('russian-goods/index.html', russiangoods(), exec_script)
     sys.stdout.write('российские товары\n')
+
+
+@job
+def render_foreigngoods(exec_script=False):
+    render_to_file('foreign-goods/index.html', foreigngoods(), exec_script)
+    sys.stdout.write('иностранные товары\n')
 
 
 @job
@@ -80,6 +97,7 @@ def render_all_pages(exec_script=False):
     category_ids = list(Category.objects.values_list('id', flat=True))
     merchant_ids = list(Merchant.objects.moderated().filter(is_active=True).values_list('id', flat=True))
     russian_category_ids = list(Category.objects.russians().values_list('id', flat=True))
+    foreign_category_ids = list(Category.objects.foreign().values_list('id', flat=True))
     connection.close()
     with concurrent.futures.ProcessPoolExecutor(max_workers=settings.RENDER_WORKER_COUNT) as executor:
         executor.submit(render_actions)
@@ -87,12 +105,15 @@ def render_all_pages(exec_script=False):
         executor.submit(render_main)
         executor.submit(render_partners)
         executor.submit(render_russiangoods)
+        executor.submit(render_foreigngoods)
         for cat_id in category_ids:
             executor.submit(render_category, cat_id)
         for m_id in merchant_ids:
             executor.submit(render_merchant, m_id)
         for cat_id in russian_category_ids:
             executor.submit(render_russian_category, cat_id)
+        for cat_id in foreign_category_ids:
+            executor.submit(render_foreign_category, cat_id)
     if (
         exec_script and
         settings.POST_RENDERING_EXEC_PATH and

@@ -190,9 +190,6 @@ class MerchantProductList extends React.Component {
 
 				<div className="panel panel-default">
 					<div className="panel-body">
-						<p>
-							{'Товары у которых в стране производства указано: Россия, Russia, РФ, Российская Федерация дополнительно попадают в раздел "Товары российского производства".'}
-						</p>
 
 						<p>
 							<button

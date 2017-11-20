@@ -48,7 +48,7 @@ import {action3} from './app/retailrocket.js';
 		const m = (
 			<div className="categories-rus">
 				<div className="categories-rus__title">
-					{'Товары российского производства'}
+					{'Лучшие скидки иностранных интернет магазинов'}
 				</div>
 
 				<SimpleMenu
