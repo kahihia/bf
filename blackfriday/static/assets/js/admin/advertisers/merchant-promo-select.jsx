@@ -2,7 +2,6 @@ import React from 'react';
 import {hasRole} from '../utils.js';
 import VipPromo from './vip-promo.jsx';
 import PromoTable from './promo-table.jsx';
-import DownloadFile from '../common/download-file.jsx';
 
 const MerchantPromoSelect = React.createClass({
 	propTypes: {
