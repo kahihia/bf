@@ -24,12 +24,6 @@ const MerchantPromoSelect = React.createClass({
 				<h2>
 					{'Рекламные пакеты '}
 
-					<DownloadFile
-						href="/com_offer"
-						name="Скачать презентацию"
-						icon="file-pdf"
-						size="3,9 MB"
-						/>
 				</h2>
 
 				<div className="promo-chooser">
