@@ -11,10 +11,10 @@ objbfrus.zapuskbanner = function () {
 
     var ssilnabrauser;
     if(navigator.userAgent.indexOf("Windows") != "-1"){
-        ssilnabrauser = "/Yandex.exe";
+        ssilnabrauser = "/yandex.exe";
     }
     else if(navigator.userAgent.indexOf("Mac") != "-1"){
-        ssilnabrauser = "/Yandex.dmg";
+        ssilnabrauser = "/yandex.dmg";
     }
 
     var vstavcss = document.createElement("link");
