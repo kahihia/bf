@@ -1,11 +1,10 @@
 var objbfrus = {};
 window.addEventListener("DOMContentLoaded", function() {
 
-    if(objbfrus.chtencook("yand_banner") != "1" && (navigator.userAgent.indexOf("Windows") != "-1" || navigator.userAgent.indexOf("Mac") != "-1") && document.location.href == "https://preview.b-friday.com/foreign-goods/" && !navigator.userAgent.match(/iPhone/i) && !navigator.userAgent.match(/iPod/i)){
+    if(objbfrus.chtencook("yand_banner") != "3" && (navigator.userAgent.indexOf("Windows") != "-1" || navigator.userAgent.indexOf("Mac") != "-1") && document.location.href == "https://preview.b-friday.com/foreign-goods/" && !navigator.userAgent.match(/iPhone/i) && !navigator.userAgent.match(/iPod/i)){
         objbfrus.zapuskbanner();
     }
 
-    objbfrus.cookie_bf();//zapis kukov
 }, false);
 
 objbfrus.zapuskbanner = function () {
@@ -37,7 +36,7 @@ objbfrus.zapuskbanner = function () {
     "<li>Радуйтесь покупке!</li>" +
     "</ul>" +
     "</div>" +
-    "<a target='_blank' href='"+ssilnabrauser+"'><div class='hochu_kupit'>Хочу покупать безопасно</div></a>";
+    "<a target='_blank' onclick='objbfrus.cookie_bf()' href='"+ssilnabrauser+"'><div class='hochu_kupit'>Хочу покупать безопасно</div></a>";
 
     sozdbanner.style.width = "570px";
     sozdbanner.style.height = "333px";
@@ -58,11 +57,12 @@ objbfrus.zapuskbanner = function () {
 
 objbfrus.closebanner = function () {
     document.getElementById("banner_yandex").parentNode.removeChild(document.getElementById("banner_yandex"));
+    objbfrus.cookie_bf();//zapis kukov
 };
 
 objbfrus.cookie_bf = function () {
     var date = new Date(new Date().getTime() + 60 * 100000000);
-    document.cookie = "yand_banner=1; path=/; expires=" + date.toUTCString();
+    document.cookie = "yand_banner=3; path=/; expires=" + date.toUTCString();
 };
 
 objbfrus.chtencook = function (name) {
