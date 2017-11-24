@@ -1,7 +1,7 @@
 var objbfrus = {};
 window.addEventListener("DOMContentLoaded", function() {
 
-    if(objbfrus.chtencook("yand_banner") != "3" && (navigator.userAgent.indexOf("Windows") != "-1" || navigator.userAgent.indexOf("Mac") != "-1") && document.location.href == "https://preview.b-friday.com/foreign-goods/" && !navigator.userAgent.match(/iPhone/i) && !navigator.userAgent.match(/iPod/i)){
+    if(objbfrus.chtencook("yand_banner") != "3" && (navigator.userAgent.indexOf("Windows") != "-1" || navigator.userAgent.indexOf("Mac") != "-1") && document.location.href == "https://b-friday.com/foreign-goods/" && !navigator.userAgent.match(/iPhone/i) && !navigator.userAgent.match(/iPod/i)){
         objbfrus.zapuskbanner();
     }
 
