@@ -123,7 +123,7 @@ DEFAULT_CATEGORY_NAME = 'Разное'
 TEST_RUNNER = 'libs.testing.runner.PytestTestRunner'
 LOGIN_REDIRECT_URL = '/admin/merchants/'
 
-SITE_URL = 'https://preview.b-friday.com'
+SITE_URL = 'https://b-friday.com'
 ADMIN_SITE_URL = 'http://lk.b-friday.com'
 PROD_SITE_URL = 'http://b-friday.com'
 
